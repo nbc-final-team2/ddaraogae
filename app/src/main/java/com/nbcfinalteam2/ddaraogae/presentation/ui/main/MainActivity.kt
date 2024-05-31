@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.main
+package com.nbcfinalteam2.ddaraogae.presentation.ui.main
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
