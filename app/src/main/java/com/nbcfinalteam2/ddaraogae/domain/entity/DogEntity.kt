@@ -1,7 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.domain.entity
 
 data class DogEntity(
-    val id: Long,
+    val id: String,
     val name: String,
     val age: Int,
     val lineage: String,

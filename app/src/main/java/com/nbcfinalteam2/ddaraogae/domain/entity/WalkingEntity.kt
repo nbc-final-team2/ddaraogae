@@ -3,7 +3,7 @@ package com.nbcfinalteam2.ddaraogae.domain.entity
 import java.util.Date
 
 data class WalkingEntity (
-    val id: Long,
+    val id: String,
     val dogId: Long,
     val timeTaken: Int,
     val distance: Double,
