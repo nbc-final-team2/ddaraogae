@@ -81,16 +81,55 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
             <TextView
+                android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="30dp"
                 android:text="성별*"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="30dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText" />
 
+            <RadioGroup
+                android:id="@+id/rg_genderGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+                <RadioButton
+                    android:layout_width="83dp"
+                    android:layout_height="wrap_content"
+                    android:text="남자"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/radio_button_selector"
+                    android:gravity="center"/>
+
+                <RadioButton
+                    android:layout_width="83dp"
+                    android:layout_height="wrap_content"
+                    android:text="여자"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/radio_button_selector"
+                    android:gravity="center"/>
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="나이"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rg_genderGroup"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
