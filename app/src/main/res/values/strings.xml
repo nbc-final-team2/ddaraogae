@@ -21,4 +21,23 @@
     <string name="walk_finish_stamp">오늘 모은 산책 도장</string>
     <string name="walk_finish_done">산책 끝!</string>
 
+    <!-- login -->
+    <string name="login_title">따라오개에서\n산책을 시작해 볼까요?</string>
+    <string name="login">로그인</string>
+    <string name="login_email">이메일</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login_account">계정이 없으신가요?</string>
+    <string name="login_signup">회원가입</string>
+    <string name="login_sns">SNS 로그인</string>
+    <string name="login_google">Google 로그인</string>
+
+    <!-- signup -->
+    <string name="signup_title">환영합니다!\n이메일과 비밀번호를\n입력해주세요.</string>
+    <string name="signup_email">이메일</string>
+    <string name="signup_email_warning">이메일 형식이 유효하지 않습니다.</string>
+    <string name="signup_password">8~16자 영어/숫자 조합으로 입력</string>
+    <string name="signup_password_warning">비밀번호 형식이 유효하지 않습니다.</string>
+    <string name="signup_password_check">비밀번호 확인</string>
+    <string name="signup_password_check_warning">비밀번호와 일치하지 않습니다.</string>
+    <string name="signup_complete">완료</string>
 </resources>
