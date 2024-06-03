@@ -100,14 +100,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.52" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_walk_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_small_10"
+            android:gravity="center"
             android:text="0.0km"
             android:textSize="@dimen/text_body"
             android:textStyle="bold"
@@ -134,6 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_small_10"
+            android:gravity="center"
             android:text="00:00"
             android:textSize="@dimen/text_body"
             android:textStyle="bold"
