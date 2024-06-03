@@ -2,11 +2,13 @@
 <resources>
     <dimen name="margin_extra_lager">36dp</dimen>
     <dimen name="margin_extra_large">32dp</dimen>
+    <dimen name="margin_larger_30">30dp</dimen>
     <dimen name="margin_larger">28dp</dimen>
     <dimen name="margin_large">24dp</dimen>
     <dimen name="margin_medium">20dp</dimen>
     <dimen name="margin_small">16dp</dimen>
     <dimen name="margin_smaller">12dp</dimen>
+    <dimen name="margin_extra_small_10">10dp</dimen>
     <dimen name="margin_extra_small">8dp</dimen>
     <dimen name="margin_extra_smaller">4dp</dimen>
 
