@@ -216,6 +216,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:background="@drawable/bg_edit_area"
                 android:gravity="clip_horizontal"
                 android:hint="반려견의 성격이나 메모를 입력해주세요."
@@ -225,11 +226,13 @@
                 android:padding="@dimen/padding_small"
                 android:textColorHint="@color/brown"
                 android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_editCompleted"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_memo" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_editCompleted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
@@ -238,10 +241,10 @@
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_memo" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
