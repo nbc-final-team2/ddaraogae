@@ -1,7 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+=======
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".presentation.ui.walk.WalkFragment">
+
+    <FrameLayout
+        android:id="@+id/fl_walk_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/fl_walk_current"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="140dp"
+        android:background="@drawable/oval_walk_current"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/fl_walk_map">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_walk_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_current" />
+    </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_walk_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rec_walk_info"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/cl_walk_controller"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_info_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:text="내배캠동물병원"
+            android:textSize="@dimen/text_text"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_info_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="내배캠시 내배캠구 내배캠1길 11-1"
+            android:textSize="@dimen/text_caption" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_info_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="00-0000-0000"
+            android:textSize="@dimen/text_caption" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_walk_controller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <FrameLayout
+            android:id="@+id/fl_walk_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_walk_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_walk_start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small_10"
+            android:gravity="center"
+            android:text="0.0km"
+            android:textSize="@dimen/text_body"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tv_walk_distance_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_walk_distance_title"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_distance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small_10"
+            android:layout_marginEnd="56dp"
+            android:layout_marginBottom="@dimen/margin_extra_small_10"
+            android:text="@string/walk_walking_distance"
+            android:textColor="@color/brown"
+            android:textSize="@dimen/text_caption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_walk_start"
+            app:layout_constraintTop_toBottomOf="@+id/tv_walk_distance" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small_10"
+            android:gravity="center"
+            android:text="00:00"
+            android:textSize="@dimen/text_body"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tv_walk_time_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_walk_time_title"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="@dimen/margin_extra_small_10"
+            android:layout_marginBottom="@dimen/margin_extra_small_10"
+            android:text="@string/walk_walking_time"
+            android:textColor="@color/brown"
+            android:textSize="@dimen/text_caption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_walk_start"
+            app:layout_constraintTop_toBottomOf="@+id/tv_walk_distance" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_walk_dogs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/btn_walk_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_walk_dogs" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_walk_start"
+        android:layout_width="220sp"
+        android:layout_height="60sp"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:background="@drawable/rec_walk_start"
+        android:text="@string/walk_start"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_content"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+>>>>>>> develop
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
