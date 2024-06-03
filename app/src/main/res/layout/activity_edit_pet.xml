@@ -57,28 +57,21 @@
                 android:layout_margin="@dimen/margin_medium"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@+id/cv_imageRadius"
+                app:layout_constraintBottom_toTopOf="@+id/iv_dogThumbnail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topBar"
                 tools:listitem="@layout/item_edit_pet_dog_selection" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_imageRadius"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_dogThumbnail"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_marginTop="50dp"
-                app:cardCornerRadius="100dp"
+                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_dogArea">
-
-                <ImageView
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_background" />
-            </androidx.cardview.widget.CardView>
+                app:layout_constraintTop_toBottomOf="@+id/rv_dogArea"/>
 
             <TextView
                 android:id="@+id/tv_name"
@@ -90,7 +83,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_imageRadius" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_dogThumbnail" />
 
             <EditText
                 android:id="@+id/et_name"
