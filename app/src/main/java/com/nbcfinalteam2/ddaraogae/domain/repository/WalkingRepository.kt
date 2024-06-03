@@ -1,7 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.domain.repository
 
 import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
-import java.util.Date
 
 interface WalkingRepository {
     suspend fun getWalkingListByDogIdAndPeriod(dogId: String, start: Long, end: Long): List<WalkingEntity>
