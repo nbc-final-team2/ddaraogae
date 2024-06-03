@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_finish_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.walk.FinishActivity">
 
     <TextView
         android:id="@+id/tv_finish_title"
@@ -11,21 +13,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
         android:text="@string/walk_finish_title"
-        android:textSize="@dimen/text_subtitle"
+        android:textSize="@dimen/text_body"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_finish_x"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
-        android:src="@drawable/ic_x"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_finish_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_finish_title" />
 
     <FrameLayout
         android:id="@+id/fl_finish_line"
@@ -36,23 +28,31 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_finish_title" />
 
     <ScrollView
+        android:id="@+id/sv_finish"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fl_finish_line">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_finish"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <FrameLayout
-                android:id="@+id/frameLayout"
-                android:layout_width="300dp"
-                android:layout_height="220dp"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/grey"
+            <ImageView
+                android:id="@+id/iv_finish_map"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:background="@drawable/rec_map_result"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_sample"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -61,19 +61,19 @@
                 android:id="@+id/tv_finish_walking_time_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_lager"
+                android:layout_marginTop="@dimen/margin_larger_30"
                 android:layout_marginEnd="@dimen/margin_extra_lager"
                 android:text="@string/walk_finish_walking_time"
                 android:textColor="@color/brown"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toStartOf="@+id/fl_finish_line2"
-                app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_finish_map" />
 
             <TextView
                 android:id="@+id/tv_finish_walking_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_extra_small_10"
                 android:text="00분 00초"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
@@ -86,24 +86,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_lager"
-                android:layout_marginTop="@dimen/margin_extra_lager"
-                android:text="@string/walk_finish_walking_distance"
+                android:text="@string/walk_finish_walking_time"
                 android:textColor="@color/brown"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintStart_toEndOf="@+id/fl_finish_line2"
-                app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+                app:layout_constraintTop_toTopOf="@+id/tv_finish_walking_time_title" />
 
             <TextView
                 android:id="@+id/tv_finish_walking_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
                 android:text="0.0 km"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_finish_walking_time"
                 app:layout_constraintEnd_toEndOf="@+id/tv_finish_walking_distance_title"
                 app:layout_constraintStart_toStartOf="@+id/tv_finish_walking_distance_title"
-                app:layout_constraintTop_toBottomOf="@+id/tv_finish_walking_distance_title" />
+                app:layout_constraintTop_toTopOf="@+id/tv_finish_walking_time" />
 
             <FrameLayout
                 android:id="@+id/fl_finish_line2"
@@ -120,8 +119,8 @@
                 android:id="@+id/tv_finish_with_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:text="@string/walk_finish_withDogs"
+                android:layout_marginTop="@dimen/margin_larger_30"
+                android:text="@string/walk_finish_with_dogs"
                 android:textSize="@dimen/text_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +130,7 @@
                 android:id="@+id/rv_finish_dogs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +143,7 @@
                 android:id="@+id/tv_finish_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="0000년 0월 0일 0요일"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -155,7 +154,7 @@
                 android:id="@+id/fl_finish_line3"
                 android:layout_width="80dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:background="@color/brown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -165,7 +164,7 @@
                 android:id="@+id/tv_finish_stamp_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/walk_finish_stamp"
                 android:textSize="@dimen/text_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -176,9 +175,11 @@
                 android:id="@+id/rv_finish_stamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_finish_stamp_title"

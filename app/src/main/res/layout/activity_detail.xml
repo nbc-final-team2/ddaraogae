@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/cl_detail_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.home.DetailActivity">
 
     <TextView
-        android:id="@+id/tv_finish_title"
+        android:id="@+id/tv_detail_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
@@ -20,38 +20,40 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_finish_x"
+        android:id="@+id/iv_detail_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:src="@drawable/ic_back"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_finish_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_detail_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_finish_title" />
+        app:layout_constraintTop_toTopOf="@+id/tv_detail_title" />
 
     <FrameLayout
-        android:id="@+id/fl_finish_line"
+        android:id="@+id/fl_detail_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/margin_small"
         android:background="@color/grey"
-        app:layout_constraintTop_toBottomOf="@+id/tv_finish_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_detail_title" />
 
     <ScrollView
+        android:id="@+id/sv_detail"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fl_finish_line">
+        app:layout_constraintTop_toBottomOf="@+id/fl_detail_line">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/iv_map"
+                android:id="@+id/iv_detail_map"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
                 android:layout_marginStart="@dimen/margin_medium"
@@ -67,7 +69,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_finish_walking_time_title"
+                android:id="@+id/tv_detail_walking_time_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger_30"
@@ -75,57 +77,57 @@
                 android:text="@string/home_detail_walking_time"
                 android:textColor="@color/brown"
                 android:textSize="@dimen/text_caption"
-                app:layout_constraintEnd_toStartOf="@+id/fl_finish_line2"
-                app:layout_constraintTop_toBottomOf="@+id/iv_map" />
+                app:layout_constraintEnd_toStartOf="@+id/fl_detail_line2"
+                app:layout_constraintTop_toBottomOf="@+id/iv_detail_map" />
 
             <TextView
-                android:id="@+id/tv_finish_walking_time"
+                android:id="@+id/tv_detail_walking_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_small_10"
                 android:text="00분 00초"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/tv_finish_walking_time_title"
-                app:layout_constraintStart_toStartOf="@+id/tv_finish_walking_time_title"
-                app:layout_constraintTop_toBottomOf="@+id/tv_finish_walking_time_title" />
+                app:layout_constraintEnd_toEndOf="@+id/tv_detail_walking_time_title"
+                app:layout_constraintStart_toStartOf="@+id/tv_detail_walking_time_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_walking_time_title" />
 
             <TextView
-                android:id="@+id/tv_finish_walking_distance_title"
+                android:id="@+id/tv_detail_walking_distance_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_lager"
                 android:text="@string/home_detail_walking_distance"
                 android:textColor="@color/brown"
                 android:textSize="@dimen/text_caption"
-                app:layout_constraintStart_toEndOf="@+id/fl_finish_line2"
-                app:layout_constraintTop_toTopOf="@+id/tv_finish_walking_time_title" />
+                app:layout_constraintStart_toEndOf="@+id/fl_detail_line2"
+                app:layout_constraintTop_toTopOf="@+id/tv_detail_walking_time_title" />
 
             <TextView
-                android:id="@+id/tv_finish_walking_distance"
+                android:id="@+id/tv_detail_walking_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.0 km"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_finish_walking_time"
-                app:layout_constraintEnd_toEndOf="@+id/tv_finish_walking_distance_title"
-                app:layout_constraintStart_toStartOf="@+id/tv_finish_walking_distance_title"
-                app:layout_constraintTop_toTopOf="@+id/tv_finish_walking_time" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_detail_walking_time"
+                app:layout_constraintEnd_toEndOf="@+id/tv_detail_walking_distance_title"
+                app:layout_constraintStart_toStartOf="@+id/tv_detail_walking_distance_title"
+                app:layout_constraintTop_toTopOf="@+id/tv_detail_walking_time" />
 
             <FrameLayout
-                android:id="@+id/fl_finish_line2"
+                android:id="@+id/fl_detail_line2"
                 android:layout_width="1dp"
                 android:layout_height="80dp"
                 android:background="@color/brown"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_finish_walking_time"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_detail_walking_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_finish_walking_time_title"
+                app:layout_constraintTop_toTopOf="@+id/tv_detail_walking_time_title"
                 app:layout_constraintVertical_bias="0.304" />
 
             <TextView
-                android:id="@+id/tv_finish_with_title"
+                android:id="@+id/tv_detail_with_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_larger_30"
@@ -133,10 +135,10 @@
                 android:textSize="@dimen/text_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fl_finish_line2" />
+                app:layout_constraintTop_toBottomOf="@+id/fl_detail_line2" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_finish_dogs"
+                android:id="@+id/rv_detail_dogs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
@@ -144,12 +146,12 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_finish_with_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_with_title"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_finish_dogs" />
 
             <TextView
-                android:id="@+id/tv_finish_date"
+                android:id="@+id/tv_detail_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
@@ -157,20 +159,20 @@
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_finish_dogs" />
+                app:layout_constraintTop_toBottomOf="@+id/rv_detail_dogs" />
 
             <FrameLayout
-                android:id="@+id/fl_finish_line3"
+                android:id="@+id/fl_detail_line3"
                 android:layout_width="80dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:background="@color/brown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_finish_date" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_date" />
 
             <TextView
-                android:id="@+id/tv_finish_stamp_title"
+                android:id="@+id/tv_detail_stamp_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
@@ -178,10 +180,10 @@
                 android:textSize="@dimen/text_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fl_finish_line3" />
+                app:layout_constraintTop_toBottomOf="@+id/fl_detail_line3" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_finish_stamp"
+                android:id="@+id/rv_detail_stamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
@@ -191,7 +193,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_finish_stamp_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_stamp_title"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_finish_stamp" />
 
