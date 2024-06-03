@@ -6,6 +6,7 @@ import com.nbcfinalteam2.ddaraogae.domain.entity.UserEntity
 interface AuthRepository {
     suspend fun signInWithEmail(emailAuthEntity: EmailAuthEntity): Boolean
     suspend fun signUpWithEmail(emailAuthEntity: EmailAuthEntity): Boolean
+    suspend fun signInWithGoogle(idToken: String): Boolean
     fun signOut()
     fun getCurrentUser(): UserEntity?
 }

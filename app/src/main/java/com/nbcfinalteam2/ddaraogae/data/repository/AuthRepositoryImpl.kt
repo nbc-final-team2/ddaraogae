@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.data.repository
 
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
@@ -17,6 +18,12 @@ class AuthRepositoryImpl: AuthRepository {
 
     override suspend fun signUpWithEmail(emailAuthEntity: EmailAuthEntity): Boolean {
         val result = firebaseAuth.createUserWithEmailAndPassword(emailAuthEntity.email, emailAuthEntity.password).await()
+        return result.user != null
+    }
+
+    override suspend fun signInWithGoogle(idToken: String): Boolean {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+        val result = firebaseAuth.signInWithCredential(firebaseCredential).await()
         return result.user != null
     }
 
