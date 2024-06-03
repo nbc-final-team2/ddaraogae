@@ -49,10 +49,10 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
-                android:background="@drawable/rec_map_result"
+                android:background="@drawable/rec_mini_map"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_sample"
+                android:src="@drawable/img_sample_mini_map"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
