@@ -45,7 +45,7 @@
             <ImageView
                 android:id="@+id/iv_finish_map"
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
+                android:layout_height="230sp"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
@@ -176,15 +176,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginBottom="@dimen/margin_medium"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_finish_stamp_title"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_finish_stamp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_finish_done"
+                android:layout_width="match_parent"
+                android:layout_height="55sp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="@drawable/rec_finish_done"
+                android:text="@string/walk_finish_done"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_body"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_finish_stamp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

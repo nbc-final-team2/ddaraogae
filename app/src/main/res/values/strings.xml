@@ -19,6 +19,6 @@
     <string name="walk_finish_walking_km">km</string>
     <string name="walk_finish_with_dogs">오늘 산책을 함께한 반려견</string>
     <string name="walk_finish_stamp">오늘 모은 산책 도장</string>
-    <string name="walk_finish_done">오늘 모은 산책 도장</string>
+    <string name="walk_finish_done">산책 끝!</string>
 
 </resources>
