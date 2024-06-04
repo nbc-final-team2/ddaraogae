@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:gravity="center"
-        android:text="마이페이지"
+        android:text="@string/mypage_title"
         android:textSize="@dimen/text_body"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="30dp"
-        android:text="정보 수정"
+        android:text="@string/mypage_information_edit_title"
         android:textSize="@dimen/text_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
-        android:text="나의 반려견 정보 수정"
+        android:text="@string/mypage_information_dog_edit"
         android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_titleInformationEdit" />
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="30dp"
-        android:text="설정"
+        android:text="@string/mypage_setting_title"
         android:textSize="@dimen/text_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
-        android:text="다크테마"
+        android:text="@string/mypage_setting_dark_theme"
         android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_titleSettings" />
@@ -123,7 +123,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="30dp"
-        android:text="회원 관리"
+        android:text="@string/mypage_membership_management_title"
         android:textSize="@dimen/text_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -134,17 +134,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
-        android:text="로그아웃"
+        android:text="@string/mypage_membership_management_sign_out"
         android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_titleUserManager" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/tv_signDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
-        android:text="회원탈퇴"
+        android:text="@string/mypage_membership_management_delete"
         android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_signOut" />
@@ -157,14 +157,14 @@
         android:background="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_signDelete" />
 
     <TextView
         android:id="@+id/tv_privacyPolicy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
-        android:text="개인정보처리방침"
+        android:text="@string/mypage_privacy_policy"
         android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_withdrawal" />

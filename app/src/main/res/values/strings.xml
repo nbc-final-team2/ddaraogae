@@ -39,4 +39,15 @@
     <string name="walk_finish_stamp">오늘 모은 산책 도장</string>
     <string name="walk_finish_done">산책 끝!</string>
 
+    <!-- mypage -->
+    <string name="mypage_title">마이페이지</string>
+    <string name="mypage_information_edit_title">정보 수정</string>
+    <string name="mypage_information_dog_edit">나의 반려견 정보 수정</string>
+    <string name="mypage_setting_title">설정</string>
+    <string name="mypage_setting_dark_theme">다크테마</string>
+    <string name="mypage_membership_management_title">회원 관리</string>
+    <string name="mypage_membership_management_sign_out">로그아웃</string>
+    <string name="mypage_membership_management_delete">회원탈퇴</string>
+    <string name="mypage_privacy_policy">개인정보처리방침</string>
+
 </resources>
