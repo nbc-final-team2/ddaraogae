@@ -46,9 +46,9 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
 
     private fun initMapView() {
         val fm = supportFragmentManager
-        val mapFragment = fm.findFragmentById(R.id.fragment_walk) as MapFragment?
+        val mapFragment = fm.findFragmentById(R.id.fragment_map_finish) as MapFragment?
             ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.fragment_walk, it).commit()
+                fm.beginTransaction().add(R.id.fragment_map_finish, it).commit()
             }
         // fragment의 getMapAsync() 메서드로 OnMapReadyCallback 콜백을 등록하면 비동기로 NaverMap 객체를 얻을 수 있다.
         mapFragment.getMapAsync(this)
@@ -71,9 +71,7 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         this.naverMap = naverMap
         // 현재 위치
         naverMap.locationSource = locationSource
-        // 현재 위치 버튼 기능
-        naverMap.uiSettings.isLocationButtonEnabled = true
-        // 위치를 추적하면서 카메라도 따라 움직인다.
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        // 줌 버튼 삭제해버리기
+        naverMap.uiSettings.isZoomControlEnabled = false
     }
 }
