@@ -1,7 +1,8 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
+import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,9 +13,14 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.CameraUpdate.scrollTo
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -36,9 +42,16 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
+    //위치 서비스가 gps를 사용해서 위치를 확인
+    lateinit var fusedLocationClient: FusedLocationProviderClient
+    //위치 값 요청에 대한 갱신 정보를 받는 변수
+    lateinit var locationCallback: LocationCallback
 
+    // latLng 변수를 멤버 변수로 선언합니다.
+    private var latLng: LatLng = LatLng(37.566610, 126.978403)
     private val latLngList = mutableListOf<LatLng>()
     private var polyline = PolylineOverlay()
+    private lateinit var cameraPosition: CameraPosition
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +105,12 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true
         // 위치를 추적하면서 카메라도 따라 움직인다.
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        
+        
 
+        // 위치 정보 받겠다고 선언하는 곳
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        updateLocation()
 
         // 현재 위치 추적 시작
         startTracking()
@@ -105,6 +123,55 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    fun updateLocation() {
+        val locationRequest = LocationRequest.create().apply {
+            interval = 1000
+            fastestInterval = 500
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult?.let {
+                    for (location in it.locations) {
+                        Log.d("위치정보", "위도: ${location.latitude} 경도: ${location.longitude}")
+                        setLastLocation(location)
+                    }
+                }
+            }
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest, locationCallback,
+            Looper.myLooper()!!
+        )
+    }
+
+    fun setLastLocation(lastLocation: Location) {
+        val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+
+
+        cameraPosition = CameraPosition(latLng, 15.0)
+        naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition))
+        // CameraPosition 클래스는 Builder 패턴이 아니기 때문에 Builder()를 사용할 수 없습니다.
+        // 대신에 CameraPosition 클래스의 생성자를 사용하여 직접 객체를 생성해야 합니다.
+        //따라서 CameraPosition.Builder().target(latLng).zoom(15.0f).build() 대신에
+        // CameraPosition(latLng, 15.0f)와 같이 생성자를 사용하여 CameraPosition 객체를 생성할 수 있습니다.
+        //따라서 setLastLocation() 함수에서 다음과 같이 수정할 수 있습니다:
+    }
+
     private fun startTracking() {
         // 실제로는 사용자의 위치를 받아오는 로직을 추가해야 합니다.
         // 여기서는 임의의 위치로 테스트합니다.
@@ -112,9 +179,12 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
             override fun run() {
-                val lat = 37.5666102 + Math.random() * 0.01 // 임의의 위도 생성
-                val lng = 126.9783881 + Math.random() * 0.01 // 임의의 경도 생성
-                val newLatLng = LatLng(lat, lng)
+                // 위치가 업데이트되지 않은 경우에는 기존의 latLng를 사용합니다.
+                val newLatLng = if (latLngList.isEmpty()) {
+                    latLng
+                } else {
+                    latLngList.last()
+                }
 
                 // 현재 위치를 지도 중심으로 이동
                 val cameraUpdate = CameraUpdate.scrollTo(newLatLng)
