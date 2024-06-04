@@ -1,20 +1,22 @@
 package com.nbcfinalteam2.ddaraogae.data.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class Weather (
-    val coord : WeatherCoord,
-    val weather: List<WeatherWeather>,
-    val main : WeatherMain,
+    @SerializedName("coord") val coord : WeatherCoord?,
+    @SerializedName("weather") val weather: List<WeatherWeather>?,
+    @SerializedName("main") val main : WeatherMain?
 )
 
 data class WeatherCoord (
-    val lat: Double, //위도
-    val lon : Double //경도
+    @SerializedName("lat") val lat: Double?, //위도
+    @SerializedName("lon") val lon : Double? //경도
 )
 
 data class WeatherWeather (
-    val id : Long, //기상 조건 id
+    @SerializedName("id") val id : Long? //기상 조건 id
 )
 
 data class WeatherMain (
-    val temp : Double, //기온
+    @SerializedName("temp") val temp : Double? //기온
 )
