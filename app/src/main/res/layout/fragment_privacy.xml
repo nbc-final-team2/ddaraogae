@@ -31,8 +31,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="@dimen/margin_medium"
         android:text="@string/mypage_privacy_text"
         app:layout_constraintEnd_toEndOf="parent"
