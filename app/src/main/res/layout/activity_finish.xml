@@ -41,10 +41,11 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_finish"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:context=".naver_map.FinishActivity">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_finish_map"
+            <FrameLayout
+                android:id="@+id/fragment_map_finish"
                 android:layout_width="match_parent"
                 android:layout_height="230sp"
                 android:layout_marginStart="@dimen/margin_medium"
@@ -68,7 +69,7 @@
                 android:textColor="@color/brown"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toStartOf="@+id/fl_finish_line2"
-                app:layout_constraintTop_toBottomOf="@+id/iv_finish_map" />
+                app:layout_constraintTop_toBottomOf="@+id/fragment_map_finish" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_finish_walking_time"
