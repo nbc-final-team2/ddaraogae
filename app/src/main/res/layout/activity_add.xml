@@ -52,6 +52,8 @@
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 android:layout_marginTop="50dp"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/brown"
                 android:src="@drawable/ic_launcher_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
