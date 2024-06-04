@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.1"
+circleimageview = "3.1.0"
 firebaseBom = "33.1.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -10,10 +11,12 @@ appcompat = "1.6.1"
 material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
+mpandroidchart = "v3.1.0"
 playServicesAuth = "21.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx" }
@@ -25,6 +28,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+mpandroid-chart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
