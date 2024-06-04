@@ -49,12 +49,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    // Networking with Retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
-
+    //Networking with Retrofit
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
 
     //firebase
     implementation(platform(libs.firebase.bom))
@@ -71,10 +70,10 @@ dependencies {
 
     //UnitTest
     testImplementation(libs.junit)
-    testImplementation("org.mockito:mockito-core:3.11.2")
-    testImplementation("org.mockito:mockito-inline:3.11.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.1")
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockwebserver)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
