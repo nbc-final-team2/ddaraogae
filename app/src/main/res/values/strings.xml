@@ -84,4 +84,14 @@
     <string name="mypage_edit_pet_dog_memo_title">메모</string>
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
+
+    <!-- item - home - history -->
+    <string name="item_home_history_date">2024.05.28 17:38</string>
+    <string name="item_home_history_location">광진구 화양동</string>
+    <string name="item_home_history_distance">1.3km</string>
+    <string name="item_home_history_duration">32분</string>
+    <string name="item_home_history_stamp">2개</string>
+    <string name="item_home_history_distance_label">산책 거리</string>
+    <string name="item_home_history_duration_label">산책 시간</string>
+    <string name="item_home_history_stamp_label">산책 도장</string>
 </resources>

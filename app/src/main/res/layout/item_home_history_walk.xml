@@ -24,7 +24,7 @@
                 android:id="@+id/tv_walkHistoryDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2024.05.28 17:38"
+                android:text="@string/item_home_history_date"
                 android:textColor="@color/dark_grey"
                 android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_smaller"
-                android:text="광진구 화양동"
+                android:text="@string/item_home_history_location"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_walkHistoryDate" />
@@ -43,22 +43,23 @@
             <TextView
                 android:id="@+id/tv_distance"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
-                android:text="1.3km"
+                android:text="@string/item_home_history_distance"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/tv_duration"
                 app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/tv_distanceLabel"
                 app:layout_constraintTop_toBottomOf="@id/tv_location" />
 
             <TextView
                 android:id="@+id/tv_duration"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
-                android:text="32분"
+                android:text="@string/item_home_history_duration"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/tv_stamp"
@@ -69,9 +70,9 @@
             <TextView
                 android:id="@+id/tv_stamp"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:gravity="center"
-                android:text="2개"
+                android:text="@string/item_home_history_stamp"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -80,42 +81,44 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_location" />
 
             <TextView
-                android:id="@+id/tv_distance_label"
+                android:id="@+id/tv_distanceLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="산책 거리"
+                android:text="@string/item_home_history_distance_label"
                 android:textColor="@color/dark_grey"
                 android:textSize="10sp"
-                app:layout_constraintEnd_toStartOf="@id/tv_duration_label"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_durationLabel"
+                app:layout_constraintEnd_toStartOf="@id/tv_durationLabel"
                 app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_distance" />
 
             <TextView
-                android:id="@+id/tv_duration_label"
+                android:id="@+id/tv_durationLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="산책 시간"
+                android:text="@string/item_home_history_duration_label"
                 android:textColor="@color/dark_grey"
                 android:textSize="10sp"
-                app:layout_constraintEnd_toStartOf="@id/tv_stamp_label"
+                app:layout_constraintEnd_toStartOf="@id/tv_stampLabel"
                 app:layout_constraintHorizontalWeight="1"
-                app:layout_constraintStart_toEndOf="@id/tv_distance_label"
+                app:layout_constraintStart_toEndOf="@id/tv_distanceLabel"
                 app:layout_constraintTop_toBottomOf="@id/tv_duration" />
 
             <TextView
-                android:id="@+id/tv_stamp_label"
+                android:id="@+id/tv_stampLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="산책 도장"
+                android:text="@string/item_home_history_stamp_label"
                 android:textColor="@color/dark_grey"
                 android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_durationLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontalWeight="1"
-                app:layout_constraintStart_toEndOf="@id/tv_duration_label"
+                app:layout_constraintStart_toEndOf="@id/tv_durationLabel"
                 app:layout_constraintTop_toBottomOf="@id/tv_stamp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
