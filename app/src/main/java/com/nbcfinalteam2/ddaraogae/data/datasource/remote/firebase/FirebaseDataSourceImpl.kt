@@ -90,8 +90,8 @@ class FirebaseDataSourceImpl(
         val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING)
             .whereEqualTo(FIELD_DOG_ID, dogId)
-            .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, start)
-            .whereLessThanOrEqualTo(FIELD_GET_DATETIME, end)
+            .whereGreaterThanOrEqualTo(FIELD_START_DATETIME, start)
+            .whereLessThanOrEqualTo(FIELD_START_DATETIME, end)
             .get().await()
             .map {
                 it.id to it.toObject(WalkingDto::class.java)
@@ -128,5 +128,6 @@ class FirebaseDataSourceImpl(
 
         private const val FIELD_DOG_ID = "dogId"
         private const val FIELD_GET_DATETIME = "getDateTime"
+        private const val FIELD_START_DATETIME = "startDateTime"
     }
 }
