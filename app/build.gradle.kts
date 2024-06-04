@@ -39,10 +39,10 @@ android {
 dependencies {
 
     // MPAndroidChart
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.mpandroid.chart)
 
     // CircleImageView
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation(libs.circleimageview)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
