@@ -1,6 +1,6 @@
-package com.nbcfinalteam2.ddaraogae.data.mapper.model
+package com.nbcfinalteam2.ddaraogae.domain.entity
 
-data class WeatherItemModel (
+data class WeatherEntity (
     val id : Long,
     val temperature: Double,
     val pm25: Double,

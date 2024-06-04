@@ -1,7 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.domain.repository
 
-import com.nbcfinalteam2.ddaraogae.data.mapper.model.WeatherItemModel
+import com.nbcfinalteam2.ddaraogae.domain.entity.WeatherEntity
 
 interface WeatherRepository {
-    suspend fun getWeatherData(lat: String, lon: String): WeatherItemModel
+    suspend fun getWeatherData(lat: String, lon: String): WeatherEntity
 }
