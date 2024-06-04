@@ -33,8 +33,8 @@ class WeatherRepositoryImplTest {
 
     @Test
     fun `getWeatherData returns correct data`() = runBlocking {
-        val lat = "126.98"
-        val lon = "37.56"
+        val lon = "126.98"
+        val lat = "37.56"
 
         val weatherResponse = MockResponse()
             .setResponseCode(200)
@@ -42,8 +42,8 @@ class WeatherRepositoryImplTest {
                 """
                 {
                   "coord": {
-                    "lon": 37.56,
-                    "lat": 126.98
+                    "lon": 126.98,
+                    "lat": 37.46
                   },
                   "weather": [
                     {
@@ -77,14 +77,14 @@ class WeatherRepositoryImplTest {
         mockWebServer.enqueue(weatherResponse)
         mockWebServer.enqueue(dustResponse)
 
-        `when`(retrofitDataSource.getWeather(lat, lon)).thenReturn(
+        `when`(retrofitDataSource.getWeather(lat = lat, lon = lon)).thenReturn(
             Weather(
                 coord = WeatherCoord(lat = 37.57, lon = 126.98),
                 weather = listOf(WeatherWeather(id = 800)),
                 main = WeatherMain(temp = 23.0)
             )
         )
-        `when`(retrofitDataSource.getDust(lat, lon)).thenReturn(
+        `when`(retrofitDataSource.getDust(lat = lat, lon = lon)).thenReturn(
             Dust(
                 list = listOf(
                     DustList(

@@ -34,12 +34,5 @@ object RetrofitClient {
         .client(createOkHttpClient())
         .build()
 
-    private val dustRetrofit = Retrofit.Builder()
-        .baseUrl(WEATHER_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(createOkHttpClient())
-        .build()
-
     val weatherNetwork : RetrofitDataSource  = weatherRetrofit.create(RetrofitDataSource::class.java)
-    val dustNetwork : RetrofitDataSource  = dustRetrofit.create(RetrofitDataSource::class.java)
 }

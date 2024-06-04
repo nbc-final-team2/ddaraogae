@@ -7,8 +7,8 @@ import com.nbcfinalteam2.ddaraogae.domain.repository.WeatherRepository
 
 class WeatherRepositoryImpl(private val retrofitDataSource: RetrofitDataSource) : WeatherRepository {
     override suspend fun getWeatherData(lat: String, lon: String): WeatherEntity {
-        val weatherResponse = retrofitDataSource.getWeather(lat, lon)
-        val dustResponse = retrofitDataSource.getDust(lat, lon)
+        val weatherResponse = retrofitDataSource.getWeather(lat = lat, lon = lon)
+        val dustResponse = retrofitDataSource.getDust(lat = lat, lon = lon)
         val weatherItem = WeatherMapper.toWeatherData(weatherResponse, dustResponse)
         return weatherItem
     }
