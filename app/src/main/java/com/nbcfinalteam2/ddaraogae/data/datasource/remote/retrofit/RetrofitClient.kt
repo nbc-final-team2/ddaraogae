@@ -24,6 +24,7 @@ object RetrofitClient {
             .readTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .addNetworkInterceptor(httpLoggingInterceptor)
+            .addInterceptor(RetrofitInterceptor)
             .build()
     }
 

@@ -10,7 +10,6 @@ interface RetrofitDataSource {
     suspend fun getWeather(
         @Query("lat") lat: String,
         @Query("lon") lon: String,
-        @Query("appid") appid: String = Key.API_KEY,
         @Query("units") units: String = "metric",
     ) : Weather
 
@@ -18,6 +17,5 @@ interface RetrofitDataSource {
     suspend fun getDust(
         @Query("lat") lat: String,
         @Query("lon") lon: String,
-        @Query("appid") appid: String = Key.API_KEY
     ) : Dust
 }
