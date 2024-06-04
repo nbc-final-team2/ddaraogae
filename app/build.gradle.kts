@@ -43,6 +43,12 @@ android {
 
 dependencies {
 
+    // MPAndroidChart
+    implementation(libs.mpandroid.chart)
+
+    // CircleImageView
+    implementation(libs.circleimageview)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
