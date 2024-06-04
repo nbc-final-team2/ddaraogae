@@ -8,17 +8,16 @@ import retrofit2.http.Query
 interface RetrofitDataSource {
     @GET("weather")
     suspend fun getWeather(
-        @Query("lat") lat: String = "126.986",
-        @Query("lon") lon: String = "37.541",
+        @Query("lat") lat: String = "37.57",
+        @Query("lon") lon: String = "126.98",
         @Query("appid") appid: String = Key.API_KEY,
         @Query("units") units: String = "metric",
-        @Query("lang") lang: String = "kr"
     ) : Weather
 
     @GET("air_pollution")
     suspend fun getDust(
-        @Query("lat") lat: String = "126.986",
-        @Query("lon") lon: String = "37.541",
+        @Query("lat") lat: String = "37.57",
+        @Query("lon") lon: String = "126.98",
         @Query("appid") appid: String = Key.API_KEY
     ) : Dust
 }
