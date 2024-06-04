@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ddaraogae_client_id" translatable="false">"여기 큰따옴표 안에 id를 넣어주세용"</string>
+    <string name="ddaraogae_client_id" translatable="false">""</string>
 </resources>
