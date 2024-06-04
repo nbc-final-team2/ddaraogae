@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit
 
-import com.nbcfinalteam2.ddaraogae.BuildConfig
 import com.nbcfinalteam2.ddaraogae.data.dto.Dust
 import com.nbcfinalteam2.ddaraogae.data.dto.Weather
 import retrofit2.http.GET
@@ -11,7 +10,7 @@ interface RetrofitDataSource {
     suspend fun getWeather(
         @Query("lat") lat: String = "126.986",
         @Query("lon") lon: String = "37.541",
-        @Query("appid") appid: String = BuildConfig.WEATHER_API_KEY,
+        @Query("appid") appid: String = Key.API_KEY,
         @Query("units") units: String = "metric",
         @Query("lang") lang: String = "kr"
     ) : Weather
@@ -20,6 +19,6 @@ interface RetrofitDataSource {
     suspend fun getDust(
         @Query("lat") lat: String = "126.986",
         @Query("lon") lon: String = "37.541",
-        @Query("appid") appid: String = BuildConfig.WEATHER_API_KEY
+        @Query("appid") appid: String = Key.API_KEY
     ) : Dust
 }
