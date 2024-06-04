@@ -21,6 +21,12 @@
     <string name="home_detail_with_dogs">산책을 함께한 반려견</string>
     <string name="home_detail_stamp">받은 산책 도장</string>
 
+    <!-- home - history -->
+    <string name="home_history_title">산책 모아보기</string>
+    <string name="home_history_walk_graph_title">산책 그래프</string>
+    <string name="home_history_stamp_title">이번주 산책 도장</string>
+    <string name="home_history_walk_history">산책기록</string>
+
     <!-- walk -->
     <string name="walk_start">산책하기</string>
     <string name="walk_walking_distance">거리</string>
