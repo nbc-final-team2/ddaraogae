@@ -18,14 +18,14 @@
 
             <TextView
                 android:id="@+id/tv_appBar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
                 android:gravity="center"
                 android:text="반려견 정보"
-                android:textSize="28sp"
+                android:textSize="@dimen/text_body"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/tv_edit"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,8 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
                 android:text="수정하기"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/topBar"
+                android:textSize="@dimen/text_text"
+                app:layout_constraintBottom_toTopOf="@+id/topBar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +80,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="40dp"
                 android:text="이름*"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_dogThumbnail" />
@@ -97,7 +97,7 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:textColorHint="@color/brown"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_name" />
@@ -109,7 +109,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="30dp"
                 android:text="성별*"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_name" />
@@ -151,7 +151,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="30dp"
                 android:text="나이"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rg_genderGroup" />
@@ -168,7 +168,7 @@
                 android:inputType="number"
                 android:padding="@dimen/padding_small"
                 android:textColorHint="@color/brown"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_age" />
@@ -180,7 +180,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="30dp"
                 android:text="견종"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_age" />
@@ -211,7 +211,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="30dp"
                 android:text="메모"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_breed" />
@@ -232,7 +232,7 @@
                 android:maxLines="3"
                 android:padding="@dimen/padding_small"
                 android:textColorHint="@color/brown"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_caption"
                 app:layout_constraintBottom_toTopOf="@+id/btn_editCompleted"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -246,7 +246,7 @@
                 android:background="@drawable/bg_btn_edit"
                 android:text="수정 완료"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_body"
                 android:textStyle="bold"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"

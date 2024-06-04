@@ -18,7 +18,7 @@
         android:layout_margin="@dimen/margin_medium"
         android:gravity="center"
         android:text="마이페이지"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_body"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="30dp"
         android:text="정보 수정"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="나의 반려견 정보 수정"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_titleInformationEdit" />
 
@@ -83,7 +83,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="30dp"
         android:text="설정"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="다크테마"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_titleSettings" />
 
@@ -124,7 +124,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="30dp"
         android:text="회원 관리"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3" />
@@ -135,7 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="로그아웃"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_titleUserManager" />
 
@@ -145,7 +145,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="회원탈퇴"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_signOut" />
 
@@ -165,7 +165,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="개인정보처리방침"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_withdrawal" />
 

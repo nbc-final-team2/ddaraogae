@@ -12,7 +12,7 @@
         android:layout_margin="@dimen/margin_medium"
         android:gravity="center"
         android:text="개인정보처리방침"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_body"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
