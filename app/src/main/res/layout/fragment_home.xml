@@ -120,10 +120,10 @@
                         android:layout_marginTop="18dp"
                         android:layout_marginBottom="18dp"
                         android:scaleType="centerCrop"
-                        tools:src="@drawable/ic_launcher_background"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather"
+                        tools:src="@drawable/ic_launcher_background" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_location"
@@ -185,10 +185,10 @@
                         android:id="@+id/iv_fineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        tools:src="@drawable/ic_launcher_background"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toStartOf="@+id/tv_fineDust"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_fineDust" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_fineDust"
+                        tools:src="@drawable/ic_launcher_background" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_fineDustConditions"
@@ -206,10 +206,10 @@
                         android:id="@+id/iv_ultraFineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        tools:src="@drawable/ic_launcher_background"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toStartOf="@+id/tv_ultraFineDust"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_ultraFineDust" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_ultraFineDust"
+                        tools:src="@drawable/ic_launcher_background" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_ultraFineDustConditions"
