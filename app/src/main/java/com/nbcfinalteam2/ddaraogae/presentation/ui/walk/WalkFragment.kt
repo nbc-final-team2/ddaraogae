@@ -1,13 +1,8 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +10,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.CameraUpdate.scrollTo
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -25,7 +18,6 @@ import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
-import java.util.TimerTask
 
 class WalkFragment : Fragment(), OnMapReadyCallback {
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -38,9 +30,6 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
-
-    private val latLngList = mutableListOf<LatLng>()
-    private var polyline = PolylineOverlay()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +56,7 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         // Fragment -> Activity
         // 데이터 보내, Activity에 가보자.
-        binding.btnNext.setOnClickListener{
+        binding.btnNext.setOnClickListener {
             val intent = Intent(getActivity(), FinishActivity::class.java)
             startActivity(intent)
         }
@@ -104,45 +93,5 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true
         // 위치를 추적하면서 카메라도 따라 움직인다.
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
-
-
-        // 현재 위치 추적 시작
-        startTracking()
-
-        // Polyline 초기화
-        polyline = PolylineOverlay().apply {
-            width = 10
-            color = resources.getColor(R.color.red)
-            map = naverMap
-        }
-    }
-
-    private fun startTracking() {
-        // 실제로는 사용자의 위치를 받아오는 로직을 추가해야 합니다.
-        // 여기서는 임의의 위치로 테스트합니다.
-        val timer = java.util.Timer()
-        val handler = Handler(Looper.getMainLooper())
-        val task = object : TimerTask() {
-            override fun run() {
-                //  기록
-                naverMap.addOnCameraChangeListener { _, _ ->
-                    // 카메라 이동 감지 시 현재 위치의 LatLng을 기록
-                    val currentLatLng = naverMap.cameraPosition.target
-                    latLngList.add(currentLatLng)
-                    // 리스트에 담긴 LatLng들을 사용하여 Polyline을 그릴 수 있음
-                    Log.d("latlngList", latLngList.toString())
-                }
-
-                // Polyline 갱신
-                // 좌표가 2개 이상인 경우에만 Polyline을 그림
-                if (latLngList.size >= 2) {
-                    handler.post {
-                        polyline.coords = latLngList
-                    }
-                }
-            }
-        }
-        // TimerTask를 스케줄링
-        timer.schedule(task, 0, 3000) // 3초마다 위치 업데이트
     }
 }
