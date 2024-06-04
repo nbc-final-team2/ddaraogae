@@ -9,10 +9,10 @@ import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
 interface FirebaseDataSource {
 
     //dog
-    suspend fun getDogList(): List<DogDto>
+    suspend fun getDogList(): List<Pair<String, DogDto>>
     suspend fun getDogById(dogId: String): DogDto?
     suspend fun insertDog(dogDto: DogDto)
-    suspend fun updateDog(dogDto: DogDto)
+    suspend fun updateDog(dogId: String, dogDto: DogDto)
     suspend fun deleteDog(dogId: String)
 
     //spot
