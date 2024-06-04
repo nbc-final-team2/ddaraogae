@@ -48,10 +48,10 @@
                 android:text="@string/item_home_history_distance"
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tv_distanceLabel"
                 app:layout_constraintEnd_toStartOf="@id/tv_duration"
                 app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/tv_distanceLabel"
                 app:layout_constraintTop_toBottomOf="@id/tv_location" />
 
             <TextView

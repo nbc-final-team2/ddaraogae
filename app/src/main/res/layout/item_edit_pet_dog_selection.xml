@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
-        android:text="{dogname}"
-        android:textSize="16sp"
+        android:text="@string/item_mypage_edit_pet_dog_name"
+        android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_dogImage" />

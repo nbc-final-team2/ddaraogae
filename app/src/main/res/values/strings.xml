@@ -94,4 +94,7 @@
     <string name="item_home_history_distance_label">산책 거리</string>
     <string name="item_home_history_duration_label">산책 시간</string>
     <string name="item_home_history_stamp_label">산책 도장</string>
+
+    <!-- item - mypage - edit - pet -->
+    <string name="item_mypage_edit_pet_dog_name">{dogname}</string>
 </resources>
