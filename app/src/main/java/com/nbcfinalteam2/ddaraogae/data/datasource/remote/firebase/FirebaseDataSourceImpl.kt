@@ -1,24 +1,19 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
-import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.getValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
-import com.nbcfinalteam2.ddaraogae.data.dto.SpotDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 class FirebaseDataSourceImpl(
-    private val firebaseRef: DatabaseReference,
     private val firebaseFs: FirebaseFirestore
 ): FirebaseDataSource {
 
-    val fbAuth = Firebase.auth
+    private val fbAuth = Firebase.auth
 
     override suspend fun getDogList(): List<Pair<String, DogDto>> {
         val uid = getUserUid()
@@ -64,11 +59,7 @@ class FirebaseDataSourceImpl(
             .delete().await()
     }
 
-    override suspend fun getSpotList(): List<SpotDto> {
-        return emptyList()
-    }
-
-    override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Long, end: Long): Int {
+    override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Date, end: Date): Int {
         val uid = getUserUid()
 
         val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
@@ -82,32 +73,40 @@ class FirebaseDataSourceImpl(
     }
 
     override suspend fun insertStamp(stampDto: StampDto) {
-        val key = firebaseRef.child("STAMPS").push().key
+        val uid = getUserUid()
 
-        if(key != null) {
-            val newData = stampDto.copy(id = key)
-            firebaseRef.child("STAMPS").child(key).setValue(newData)
-        }
+        firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_STAMPS)
+            .add(stampDto).await()
     }
 
     override suspend fun getWalkingListByDogIdAndPeriod(
         dogId: String,
-        start: Long,
-        end: Long
-    ): List<WalkingDto> {
-        //todo 복합쿼리 지원 안하는 문제
-        val snapshot = firebaseRef.child("WALKING")
-            .orderByChild("startDateTime").startAt(start.toDouble()).endAt(end.toDouble())
-            .get()
-            .await()
+        start: Date,
+        end: Date
+    ): List<Pair<String, WalkingDto>> {
+        val uid = getUserUid()
 
-        return snapshot.children.map {
-            it.getValue<WalkingDto>()!!
-        }
+        val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING)
+            .whereEqualTo(FIELD_DOG_ID, dogId)
+            .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, start)
+            .whereLessThanOrEqualTo(FIELD_GET_DATETIME, end)
+            .get().await()
+            .map {
+                it.id to it.toObject(WalkingDto::class.java)
+            }
+
+        return queriedList
     }
 
     override suspend fun getWalkingById(walkingId: String): WalkingDto? {
-        return firebaseRef.child("WALKING").child(walkingId).get().await().getValue<WalkingDto>()
+        val uid = getUserUid()
+
+        return firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING).document(walkingId)
+            .get().await()
+            .toObject(WalkingDto::class.java)
     }
 
     override suspend fun insertWalkingData(walkingDto: WalkingDto) {
