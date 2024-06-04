@@ -112,18 +112,14 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
             override fun run() {
-                val lat = 37.5666102 + Math.random() * 0.01 // 임의의 위도 생성
-                val lng = 126.9783881 + Math.random() * 0.01 // 임의의 경도 생성
-                val newLatLng = LatLng(lat, lng)
-
-                // 현재 위치를 지도 중심으로 이동
-                val cameraUpdate = CameraUpdate.scrollTo(newLatLng)
-                handler.post {
-                    naverMap.moveCamera(cameraUpdate)
+                //  기록
+                naverMap.addOnCameraChangeListener { _, _ ->
+                    // 카메라 이동 감지 시 현재 위치의 LatLng을 기록
+                    val currentLatLng = naverMap.cameraPosition.target
+                    latLngList.add(currentLatLng)
+                    // 리스트에 담긴 LatLng들을 사용하여 Polyline을 그릴 수 있음
+                    Log.d("latlngList", latLngList.toString())
                 }
-
-                // 현재 위치를 리스트에 추가
-                latLngList.add(newLatLng)
 
                 // Polyline 갱신
                 // 좌표가 2개 이상인 경우에만 Polyline을 그림
