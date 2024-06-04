@@ -77,14 +77,14 @@ class WeatherRepositoryImplTest {
         mockWebServer.enqueue(weatherResponse)
         mockWebServer.enqueue(dustResponse)
 
-        `when`(retrofitDataSource.getWeather(lat, lon)).thenReturn(
+        `when`(retrofitDataSource.getWeather(lat = lat, lon = lon)).thenReturn(
             Weather(
                 coord = WeatherCoord(lat = 37.57, lon = 126.98),
                 weather = listOf(WeatherWeather(id = 800)),
                 main = WeatherMain(temp = 23.0)
             )
         )
-        `when`(retrofitDataSource.getDust(lat, lon)).thenReturn(
+        `when`(retrofitDataSource.getDust(lat = lat, lon = lon)).thenReturn(
             Dust(
                 list = listOf(
                     DustList(
