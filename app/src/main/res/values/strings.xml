@@ -54,4 +54,20 @@
     <string name="mypage_privacy_title">개인정보처리방침</string>
     <string name="mypage_privacy_text">본 개인정보 처리방침은..</string>
 
+    <!-- mypage - edit - pet -->
+    <string name="mypage_edit_pet_title">반려견 정보</string>
+    <string name="mypage_edit_pet_edit_button">수정하기</string>
+    <string name="mypage_edit_pet_dog_name_title">이름*</string>
+    <string name="mypage_edit_pet_dog_name_hint">이름</string>
+    <string name="mypage_edit_pet_dog_gender_title">성별*</string>
+    <string name="mypage_edit_pet_dog_gender_male">남자</string>
+    <string name="mypage_edit_pet_dog_gender_female">여자</string>
+    <string name="mypage_edit_pet_dog_age_title">나이</string>
+    <string name="mypage_edit_pet_dog_age_hint">나이를 입력해주세요.</string>
+    <string name="mypage_edit_pet_dog_breed_title">견종</string>
+    <string name="mypage_edit_pet_dog_breed_hint">견종을 입력해주세요</string>
+    <string name="mypage_edit_pet_dog_memo_title">메모</string>
+    <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
+    <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
+
 </resources>
