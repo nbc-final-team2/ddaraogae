@@ -120,7 +120,7 @@
                         android:layout_marginTop="18dp"
                         android:layout_marginBottom="18dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_launcher_background"
+                        tools:src="@drawable/ic_launcher_background"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
@@ -185,7 +185,7 @@
                         android:id="@+id/iv_fineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_launcher_background"
+                        tools:src="@drawable/ic_launcher_background"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toStartOf="@+id/tv_fineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_fineDust" />
@@ -206,7 +206,7 @@
                         android:id="@+id/iv_ultraFineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_launcher_background"
+                        tools:src="@drawable/ic_launcher_background"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toStartOf="@+id/tv_ultraFineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_ultraFineDust" />
