@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_medium">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_dogGraph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_todayWeather"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_weatherIcon"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -125,7 +125,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                         app:layout_constraintStart_toEndOf="@+id/iv_weatherIcon"
                         app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_fineDust"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
                         app:layout_constraintStart_toEndOf="@+id/tv_location"
                         app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_ultraFineDust"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
                         app:layout_constraintStart_toEndOf="@+id/tv_fineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_locationTemperature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                         app:layout_constraintStart_toStartOf="@+id/tv_location"
                         app:layout_constraintTop_toBottomOf="@+id/tv_location" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_locationConditions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                         app:layout_constraintStart_toEndOf="@+id/tv_locationTemperature"
                         app:layout_constraintTop_toBottomOf="@+id/tv_location" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_fineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
@@ -190,7 +190,7 @@
                         app:layout_constraintStart_toStartOf="@+id/tv_fineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_fineDust" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_fineDustConditions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -202,7 +202,7 @@
                         app:layout_constraintStart_toEndOf="@+id/iv_fineDustIcon"
                         app:layout_constraintTop_toBottomOf="@+id/tv_fineDust" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_ultraFineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
@@ -211,7 +211,7 @@
                         app:layout_constraintStart_toStartOf="@+id/tv_ultraFineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_ultraFineDust" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_ultraFineDustConditions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
