@@ -50,7 +50,6 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/tv_distanceLabel"
                 app:layout_constraintEnd_toStartOf="@id/tv_duration"
-                app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_location" />
 
@@ -63,7 +62,6 @@
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/tv_stamp"
-                app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toEndOf="@id/tv_distance"
                 app:layout_constraintTop_toBottomOf="@id/tv_location" />
 
@@ -76,7 +74,6 @@
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toEndOf="@id/tv_duration"
                 app:layout_constraintTop_toBottomOf="@id/tv_location" />
 
@@ -90,7 +87,6 @@
                 android:textSize="@dimen/text_mini"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_durationLabel"
                 app:layout_constraintEnd_toStartOf="@id/tv_durationLabel"
-                app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_distance" />
 
@@ -103,7 +99,6 @@
                 android:textColor="@color/dark_grey"
                 android:textSize="@dimen/text_mini"
                 app:layout_constraintEnd_toStartOf="@id/tv_stampLabel"
-                app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toEndOf="@id/tv_distanceLabel"
                 app:layout_constraintTop_toBottomOf="@id/tv_duration" />
 
@@ -117,7 +112,6 @@
                 android:textSize="@dimen/text_mini"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_durationLabel"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontalWeight="1"
                 app:layout_constraintStart_toEndOf="@id/tv_durationLabel"
                 app:layout_constraintTop_toBottomOf="@id/tv_stamp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
