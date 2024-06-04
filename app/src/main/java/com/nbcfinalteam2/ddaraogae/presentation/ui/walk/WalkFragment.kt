@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -29,6 +30,8 @@ import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.util.TimerTask
 
 class WalkFragment : Fragment(), OnMapReadyCallback {
@@ -179,29 +182,62 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
             override fun run() {
-                // 위치가 업데이트되지 않은 경우에는 기존의 latLng를 사용합니다.
-                val newLatLng = if (latLngList.isEmpty()) {
-                    latLng
-                } else {
-                    latLngList.last()
+//                // 위치가 업데이트되지 않은 경우에는 기존의 latLng를 사용합니다.
+//                val newLatLng = if (latLngList.isEmpty()) {
+//                    latLng
+//                } else {
+//                    latLngList.last()
+//                }
+                if (ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return
                 }
+//                var location : Location
+                lifecycleScope.launch {
+                    val location = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).await()
+                    // 현재 위치를 받아왔다. PRIoRITY는 왜 deprcated 되는지 확이나자, await한 이유는 원래 비동기해야하는 작업이기 떄문에
+                    // await보다는 listener룰 사용하면 성공 실패여부에 따라 다른 처리를 할 수 있다.
+                    // 위치 받는걸 기다리게 하기 위해 await을 썼다.
+                    // lifecycle은 새로운 코루틴을 사용한 것
+                    // 이 안에서 하는건 새로운 일꾼이 하고 있는 것, 비동기이며 오래걸리는 작업이다보니 listener를 달아야하는데 급하게 await을 사용,
+                    // 그래서 await을 안쓰면 아래 코드들이 먼저 실행될 수 있음
 
-                // 현재 위치를 지도 중심으로 이동
-                val cameraUpdate = CameraUpdate.scrollTo(newLatLng)
-                handler.post {
-                    naverMap.moveCamera(cameraUpdate)
-                }
+                    val newLatLng = LatLng(location.latitude, location.longitude)
+                    Log.d("latLngList", latLngList.toString())
+                    Log.d("newLatLng", newLatLng.toString())
 
-                // 현재 위치를 리스트에 추가
-                latLngList.add(newLatLng)
-
-                // Polyline 갱신
-                // 좌표가 2개 이상인 경우에만 Polyline을 그림
-                if (latLngList.size >= 2) {
+                    // 현재 위치를 지도 중심으로 이동
+                    val cameraUpdate = CameraUpdate.scrollTo(newLatLng)
                     handler.post {
-                        polyline.coords = latLngList
+                        naverMap.moveCamera(cameraUpdate)
+                    }
+
+                    // 현재 위치를 리스트에 추가
+                    latLngList.add(newLatLng)
+
+                    // Polyline 갱신
+                    // 좌표가 2개 이상인 경우에만 Polyline을 그림
+                    if (latLngList.size >= 2) {
+                        handler.post {
+                            polyline.coords = latLngList
+                        }
                     }
                 }
+
+
             }
         }
         // TimerTask를 스케줄링
