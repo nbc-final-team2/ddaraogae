@@ -33,8 +33,8 @@ class WeatherRepositoryImplTest {
 
     @Test
     fun `getWeatherData returns correct data`() = runBlocking {
-        val lat = "126.98"
-        val lon = "37.56"
+        val lon = "126.98"
+        val lat = "37.56"
 
         val weatherResponse = MockResponse()
             .setResponseCode(200)
@@ -42,8 +42,8 @@ class WeatherRepositoryImplTest {
                 """
                 {
                   "coord": {
-                    "lon": 37.56,
-                    "lat": 126.98
+                    "lon": 126.98,
+                    "lat": 37.46
                   },
                   "weather": [
                     {
