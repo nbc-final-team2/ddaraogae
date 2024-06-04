@@ -4,7 +4,6 @@ import java.util.Date
 
 data class StampDto(
     val stampNum: Int? = null,
-    val dogId: Long? = null,
     val getDateTime: Date? = null,
     val name: String? = null,
 )

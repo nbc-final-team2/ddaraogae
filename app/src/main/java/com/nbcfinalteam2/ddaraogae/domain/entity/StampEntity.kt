@@ -4,11 +4,7 @@ import java.util.Date
 
 data class StampEntity(
     val id: String,
-    val spotId: String,
-    val walkingId: String,
-    val dogId: String,
+    val stampNum: Int,
     val getDateTime: Date,
-    val latitude: Double,
-    val longitude: Double,
     val name: String
 )
