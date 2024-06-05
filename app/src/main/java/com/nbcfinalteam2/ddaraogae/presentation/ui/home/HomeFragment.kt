@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -37,76 +38,82 @@ class HomeFragment : Fragment() {
         setupWalkGraphForEmptyData()
     }
 
-    private fun setupWalkGraphForEmptyData() {
-        /* 산책 데이터가 없을시 초기 화면 */
+    private fun walkGraphSettingsForEmptyData(lineChart: LineChart) {
+        lineChart.apply {
+            axisRight.isEnabled = false // 차트의 오른쪽 Y축 표시 여부
+            legend.isEnabled = false // 범례 표시 여부
+            description.isEnabled = false // 범례 옆에 표시되는 차트 설명 사용 여부
+            setDrawGridBackground(true) // 차트의 안쪽 색깔 지정 여부
+            setGridBackgroundColor(resources.getColor(R.color.grey, null)) // 차트의 안쪽 색깔 지정
+            setTouchEnabled(false) // 차트 터치 여부
+            setPinchZoom(false) // 차트 확대,축소 여부 (손가락으로 확대 축소)
+            setScaleEnabled(false) // 차트 확대 여부
+            isDragXEnabled = false // 차트의 x축 드래그 여부
+            isDragYEnabled = false // 차트의 y축 드래그 여부
+        }
+    }
 
-        val lineChart = binding.lcArea
-
-        val yAxisRight: YAxis = lineChart.axisRight
-        yAxisRight.isEnabled = false
-
-        val legend = lineChart.legend
-        legend.isEnabled = false // 범례 여부
-
-        lineChart.setDrawGridBackground(true) // 차트(그리드) 배경색 설정
-        lineChart.setGridBackgroundColor(resources.getColor(R.color.grey, null))
-        lineChart.description.isEnabled = false // 차트 설명
-        lineChart.setTouchEnabled(false) // 그래프 터치 여부
-        lineChart.setPinchZoom(false) // pinch 줌 여부 ( 손가락으로 확대 축소 하는것 )
-        lineChart.setScaleEnabled(false) // 그래프 확대 여부
-        lineChart.isDragXEnabled = false // x축으로 드래그 여부
-        lineChart.isDragYEnabled = false // y축으로 드래그 여부
-
-        // 차트 데이터를 넣지 않으면  차트 그림이 사라짐
-        val entries = ArrayList<Entry>()
-        for (i in 1..7) {
-            entries.add(Entry(i.toFloat(), 0f))
+    private fun walkGraphChartDataForEmptyData(lineChart: LineChart) {
+        val walkData = ArrayList<Entry>().apply {
+            for (i in 1..7) {
+                add(Entry(i.toFloat(), 0f))
+            }
         }
 
-        val dataSet = LineDataSet(entries, "").apply {
+        val dataSet = LineDataSet(walkData, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
             color = resources.getColor(R.color.grey, null)
             valueTextColor = resources.getColor(R.color.black, null)
-            lineWidth = 2f // 라인 두께
-            setDrawCircles(false) // 마커 표시 여부
+            setDrawCircles(false)
             setDrawCircleHole(false)
-            setDrawValues(false) // 데이터 값 표시 여부 ( 차트 안에 그릴것인지 )
+            setDrawValues(false)
         }
+        lineChart.data = LineData(dataSet)
+    }
 
-        val lineData = LineData(dataSet)
-        lineChart.data = lineData
-
-        // x축 (아래쪽)
-        val xAxis: XAxis = lineChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.granularity = 1f
-        xAxis.setLabelCount(7, true)
-        xAxis.axisMinimum = 1f
-        xAxis.axisMaximum = 7f
-        xAxis.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                return "${value.toInt()}"
-            }
-        }
-
-        // y축 (왼쪽)
-        val yAxisLeft: YAxis = lineChart.axisLeft
-        yAxisLeft.axisMinimum = 0f
-        yAxisLeft.axisMaximum = 12f
-        yAxisLeft.granularity = 3f
-        yAxisLeft.setLabelCount(5, true)
-        yAxisLeft.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                return when (value) {
-                    1f -> "1km"
-                    3f -> "3km"
-                    6f -> "6km"
-                    9f -> "9km"
-                    12f -> "12km"
-                    else -> ""
+    private fun walkGraphXAxisForEmptyData(xAxis: XAxis) {
+        xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM
+            granularity = 1f
+            setLabelCount(7, true)
+            axisMinimum = 1f
+            axisMaximum = 7f
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return "${value.toInt()}"
                 }
             }
         }
+    }
+
+    private fun walkGraphYAxisForEmptyData(yAxis: YAxis) {
+        yAxis.apply {
+            axisMinimum = 0f
+            axisMaximum = 12f
+            granularity = 3f
+            setLabelCount(5, true)
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return when (value) {
+                        1f -> "1km"
+                        3f -> "3km"
+                        6f -> "6km"
+                        9f -> "9km"
+                        12f -> "12km"
+                        else -> ""
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupWalkGraphForEmptyData() {
+        /* 산책 데이터가 없을시 초기 화면 */
+        val lineChart = binding.lcArea
+        walkGraphSettingsForEmptyData(lineChart)
+        walkGraphChartDataForEmptyData(lineChart)
+        walkGraphXAxisForEmptyData(lineChart.xAxis)
+        walkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     override fun onDestroyView() {
