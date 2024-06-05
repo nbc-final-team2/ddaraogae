@@ -28,9 +28,6 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
 
-    private val latLngList = mutableListOf<LatLng>()
-    private var polyline = PolylineOverlay()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
