@@ -15,6 +15,7 @@ class WalkActivity : AppCompatActivity() {
 
         setFragment(WalkFragment())
     }
+
     private fun setFragment(frag: Fragment) {
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.fragment_container_view_walk, frag)
