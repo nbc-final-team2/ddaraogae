@@ -27,6 +27,7 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
@@ -51,9 +52,7 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
     lateinit var locationCallback: LocationCallback
 
     // latLng 변수를 멤버 변수로 선언합니다.
-    private var latLng: LatLng = LatLng(37.566610, 126.978403)
     private val latLngList = mutableListOf<LatLng>()
-    private var polyline = PolylineOverlay()
     private lateinit var cameraPosition: CameraPosition
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +82,9 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         // 데이터 보내, Activity에 가보자.
         binding.btnNext.setOnClickListener {
             val intent = Intent(getActivity(), FinishActivity::class.java)
+            // latLng 리스트를 FinishActivity로 전달합니다.
+            // putExtra() 메서드를 사용하여 리스트를 전달할 수 있습니다.
+            intent.putExtra("latLngList", latLngList.toTypedArray())
             startActivity(intent)
         }
     }
@@ -128,12 +130,8 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         // 현재 위치 추적 시작
         startTracking()
 
-        // Polyline 초기화
-        polyline = PolylineOverlay().apply {
-            width = 10
-            color = resources.getColor(R.color.red)
-            map = naverMap
-        }
+//        // Polyline 초기화
+//        drawPolyLine(latLngList)
     }
 
     fun updateLocation() {
@@ -237,17 +235,7 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
 
                     // 현재 위치를 리스트에 추가
                     latLngList.add(newLatLng)
-
-                    // Polyline 갱신
-                    // 좌표가 2개 이상인 경우에만 Polyline을 그림
-                    if (latLngList.size >= 2) {
-                        handler.post {
-                            polyline.coords = latLngList
-                        }
-                    }
                 }
-
-
             }
         }
         // TimerTask를 스케줄링
