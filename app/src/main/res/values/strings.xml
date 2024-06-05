@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">따라오개</string>
 
+    <!-- main -->
+    <string name="main_home">홈</string>
+    <string name="main_walk">산책</string>
+    <string name="main_mypage">마이페이지</string>
+
     <!-- home -->
     <string name="home_title">반가워요!</string>
     <string name="home_walk_graph_title">{dogname}의 산책 그래프</string>

@@ -39,9 +39,6 @@ android {
         viewBinding = true
         dataBinding = true
     }
-    viewBinding{
-        enable = true
-    }
 }
 
 dependencies {
@@ -57,6 +54,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    //jetpack navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.dynamic.features.fragment)
 
     //Networking with Retrofit
     implementation(libs.retrofit.core)
@@ -87,8 +89,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //Glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
+    // Testing Navigation
+    androidTestImplementation(libs.androidx.navigation.testing)
 
 
 }
