@@ -38,7 +38,18 @@ class HomeFragment : Fragment() {
         setupWalkGraphForEmptyData()
     }
 
+    private fun setupWalkGraphForEmptyData() {
+        /* 산책 데이터가 없을시 초기 화면 */
+        val lineChart = binding.lcArea
+        walkGraphSettingsForEmptyData(lineChart)
+        walkGraphXAxisForEmptyData(lineChart.xAxis)
+        walkGraphYAxisForEmptyData(lineChart.axisLeft)
+    }
+
     private fun walkGraphSettingsForEmptyData(lineChart: LineChart) {
+        /* 라인차트 생성및 화면설정*/
+        lineChart.data = LineData()
+
         lineChart.apply {
             axisRight.isEnabled = false // 차트의 오른쪽 Y축 표시 여부
             legend.isEnabled = false // 범례 표시 여부
@@ -53,67 +64,36 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun walkGraphChartDataForEmptyData(lineChart: LineChart) {
-        val walkData = ArrayList<Entry>().apply {
-            for (i in 1..7) {
-                add(Entry(i.toFloat(), 0f))
-            }
-        }
-
-        val dataSet = LineDataSet(walkData, "").apply {
-            axisDependency = YAxis.AxisDependency.LEFT
-            color = resources.getColor(R.color.grey, null)
-            valueTextColor = resources.getColor(R.color.black, null)
-            setDrawCircles(false)
-            setDrawCircleHole(false)
-            setDrawValues(false)
-        }
-        lineChart.data = LineData(dataSet)
-    }
-
     private fun walkGraphXAxisForEmptyData(xAxis: XAxis) {
+        /* 차트의 x축 설정 */
         xAxis.apply {
-            position = XAxis.XAxisPosition.BOTTOM
-            granularity = 1f
-            setLabelCount(7, true)
-            axisMinimum = 1f
-            axisMaximum = 7f
-            valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return "${value.toInt()}"
-                }
-            }
+            position = XAxis.XAxisPosition.BOTTOM // X축의 위치 설정
+            setLabelCount(7, true) // x축에 표시될 레이블의 갯수 설정, force = 어떠한 변화가 있어도 강제로 7개만 보이도록
+            axisMinimum = 1f // x축의 최솟값 설정
+            axisMaximum = 7f // x축의 최댓값 설정
         }
     }
 
     private fun walkGraphYAxisForEmptyData(yAxis: YAxis) {
+        /* 차트의 y축 설정 */
         yAxis.apply {
-            axisMinimum = 0f
-            axisMaximum = 12f
-            granularity = 3f
-            setLabelCount(5, true)
+            setLabelCount(5, true) // y축에 표시될 레이블의 갯수 설정, force = 어떠한 변화가 있어도 강제로 5개만 보이도록
+            axisMinimum = 1f // y축의 최솟값
+            axisMaximum = 5f // y축의 최댓값
+            // (y축)에 km를 붙이기 위한 작업
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return when (value) {
                         1f -> "1km"
-                        3f -> "3km"
-                        6f -> "6km"
-                        9f -> "9km"
-                        12f -> "12km"
+                        2f -> "3km"
+                        3f -> "6km"
+                        4f -> "9km"
+                        5f -> "12km"
                         else -> ""
                     }
                 }
             }
         }
-    }
-
-    private fun setupWalkGraphForEmptyData() {
-        /* 산책 데이터가 없을시 초기 화면 */
-        val lineChart = binding.lcArea
-        walkGraphSettingsForEmptyData(lineChart)
-        walkGraphChartDataForEmptyData(lineChart)
-        walkGraphXAxisForEmptyData(lineChart.xAxis)
-        walkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     override fun onDestroyView() {
