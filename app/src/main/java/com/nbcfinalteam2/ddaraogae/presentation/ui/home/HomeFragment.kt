@@ -42,6 +42,21 @@ class HomeFragment : Fragment() {
 
         val lineChart = binding.lcArea
 
+        val yAxisRight: YAxis = lineChart.axisRight
+        yAxisRight.isEnabled = false
+
+        val legend = lineChart.legend
+        legend.isEnabled = false // 범례 여부
+
+        lineChart.setDrawGridBackground(true) // 차트(그리드) 배경색 설정
+        lineChart.setGridBackgroundColor(resources.getColor(R.color.grey, null))
+        lineChart.description.isEnabled = false // 차트 설명
+        lineChart.setTouchEnabled(false) // 그래프 터치 여부
+        lineChart.setPinchZoom(false) // pinch 줌 여부 ( 손가락으로 확대 축소 하는것 )
+        lineChart.setScaleEnabled(false) // 그래프 확대 여부
+        lineChart.isDragXEnabled = false // x축으로 드래그 여부
+        lineChart.isDragYEnabled = false // y축으로 드래그 여부
+
         // 차트 데이터를 넣지 않으면  차트 그림이 사라짐
         val entries = ArrayList<Entry>()
         for (i in 1..7) {
@@ -92,19 +107,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
-        val yAxisRight: YAxis = lineChart.axisRight
-        yAxisRight.isEnabled = false
-
-        val legend = lineChart.legend
-        legend.isEnabled = false // 범례 여부
-
-        lineChart.setDrawGridBackground(true) // 차트(그리드) 배경색 설정
-        lineChart.setGridBackgroundColor(resources.getColor(R.color.grey, null))
-
-        lineChart.description.isEnabled = false // 차트 설명
-
-        lineChart.invalidate() // 차트 새로고침
     }
 
     override fun onDestroyView() {

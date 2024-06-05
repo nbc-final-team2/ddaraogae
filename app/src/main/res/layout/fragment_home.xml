@@ -80,6 +80,20 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_dogGraph" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="최근 산책 데이터가 없어요."
+                        android:textSize="@dimen/text_mini"
+                        android:background="@drawable/bg_walk_graph_no_data"
+                        android:padding="@dimen/padding_small"
+                        android:elevation="20dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@+id/lc_area"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/lc_area"
+                        app:layout_constraintTop_toTopOf="@+id/lc_area" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
