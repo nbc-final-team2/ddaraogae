@@ -9,5 +9,5 @@ data class WalkingEntity (
     val distance: Double,
     val startDateTime: Date,
     val endDateTime: Date,
-    val path: String,
+    val path: List<LatLngEntity>,
 )

@@ -1,5 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.data.mapper
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
@@ -48,7 +50,7 @@ object FirebaseMapper {
         distance = distance?:0.0,
         startDateTime = startDateTime?:Date(),
         endDateTime = endDateTime?:Date(),
-        path = path?:""
+        path = Gson().fromJsonToList(path?:"")
     )
 
     fun WalkingEntity.toDto() = WalkingDto(
@@ -57,6 +59,9 @@ object FirebaseMapper {
         distance = distance,
         startDateTime = startDateTime,
         endDateTime = endDateTime,
-        path = path
+        path = Gson().toJson(path)
     )
 }
+
+inline fun <reified T> Gson.fromJsonToList(json: String): List<T> =
+    fromJson(json, object : TypeToken<List<T>>() {}.type)
