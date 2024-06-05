@@ -1,7 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -26,7 +26,8 @@ import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FinishActivity : FragmentActivity(), OnMapReadyCallback {
 
@@ -60,10 +61,6 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
             ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
             initMapView()
-            // polyline
-            // Intent에서 latLng 리스트를 받아옵니다.
-            val latLngList = intent.getSerializableExtra("latLngList") as? List<LatLng> ?: emptyList()
-            drawPolyLine(latLngList)
         }
     }
 
@@ -101,11 +98,16 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
         // 현재 위치를 가져와서 지도에 표시
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         updateLocation()
+
+        // Draw polyline
+        val latLngList = intent.getSerializableExtra("latLngList") as? Array<LatLng> ?: emptyArray()
+        drawPolyLine(latLngList.toList())
     }
 
-    fun updateLocation() {
-        val locationRequest = LocationRequest.create().apply {
+    private fun updateLocation() {
+        @Suppress("DEPRECATION") val locationRequest = LocationRequest.create().apply {
             interval = 1000
             fastestInterval = 500
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -154,27 +156,20 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
 
-    fun drawPolyLine(latLngList: List<LatLng>) {
-//            coords = latLngList
-        // Polyline 갱신
-        // 좌표가 2개 이상인 경우에만 Polyline을 그림
-//            if (latLngList.size >= 2) {
-//                handler.post {
-//                    polyline.coords = latLngList
-//                }
-//            }
-        // 좌표가 2개 이상인 경우에만 Polyline을 그립니다.
+    private fun drawPolyLine(latLngList: List<LatLng>) {
+//         좌표가 2개 이상인 경우에만 Polyline을 그립니다.
         if (latLngList.size >= 2) {
 
             // Main 코루틴 컨텍스트를 사용하여 UI 업데이트를 수행합니다.
-            GlobalScope.launch(Dispatchers.Main) {
+            lifecycleScope.launch(Dispatchers.Main) {
                 polyline.apply {
                     // UI 업데이트는 여기서 수행됩니다.
-                    polyline.width = 10
-                    polyline.color = resources.getColor(R.color.red)
-                    polyline.map = naverMap
+                    width = 10
+                    color = resources.getColor(R.color.red)
+                    coords = latLngList
+                    map = naverMap
 
-                    polyline.coords = latLngList
+
                     Log.d("latLngList", latLngList.toString())
                     Log.d("map", polyline.map.toString())
                 }

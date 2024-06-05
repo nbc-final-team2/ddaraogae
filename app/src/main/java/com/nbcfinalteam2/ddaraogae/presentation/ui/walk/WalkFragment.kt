@@ -1,9 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -27,7 +27,6 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
@@ -46,8 +45,10 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
+
     //위치 서비스가 gps를 사용해서 위치를 확인
     lateinit var fusedLocationClient: FusedLocationProviderClient
+
     //위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationCallback: LocationCallback
 
@@ -81,7 +82,7 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         // Fragment -> Activity
         // 데이터 보내, Activity에 가보자.
         binding.btnNext.setOnClickListener {
-            val intent = Intent(getActivity(), FinishActivity::class.java)
+            val intent = Intent(activity, FinishActivity::class.java)
             // latLng 리스트를 FinishActivity로 전달합니다.
             // putExtra() 메서드를 사용하여 리스트를 전달할 수 있습니다.
             intent.putExtra("latLngList", latLngList.toTypedArray())
@@ -121,7 +122,6 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         // 위치를 추적하면서 카메라도 따라 움직인다.
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
-        
 
         // 위치 정보 받겠다고 선언하는 곳
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -215,7 +215,10 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
                 }
 //                var location : Location
                 lifecycleScope.launch {
-                    val location = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).await()
+                    val location = fusedLocationClient.getCurrentLocation(
+                        LocationRequest.PRIORITY_HIGH_ACCURACY,
+                        null
+                    ).await()
                     // 현재 위치를 받아왔다. PRIoRITY는 왜 deprcated 되는지 확이나자, await한 이유는 원래 비동기해야하는 작업이기 떄문에
                     // await보다는 listener룰 사용하면 성공 실패여부에 따라 다른 처리를 할 수 있다.
                     // 위치 받는걸 기다리게 하기 위해 await을 썼다.
