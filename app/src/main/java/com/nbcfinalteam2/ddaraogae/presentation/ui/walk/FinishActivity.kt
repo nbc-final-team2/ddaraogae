@@ -3,9 +3,11 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -34,24 +36,19 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
     private val binding by lazy { ActivityFinishBinding.inflate(layoutInflater) }
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
-
     private val PERMISSIONS = arrayOf(
-        android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
-
     //위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationCallback: LocationCallback
-
     //위치 서비스가 gps를 사용해서 위치를 확인
     lateinit var fusedLocationClient: FusedLocationProviderClient
-
     private var polyline = PolylineOverlay()
     private lateinit var cameraPosition: CameraPosition
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +84,7 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         return true
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         // 현재 위치
@@ -102,8 +99,10 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         updateLocation()
 
         // Draw polyline
-        val latLngList = intent.getSerializableExtra("latLngList") as? Array<LatLng> ?: emptyArray()
-        drawPolyLine(latLngList.toList())
+        val latLngList = intent.getParcelableArrayExtra("latLngList", LatLng::class.java)
+        Log.d("onMapReady()", "asd")
+        Log.d("onMapReady()", latLngList?.toList().toString())
+        drawPolyLine(latLngList!!.toList())
     }
 
     private fun updateLocation() {
@@ -157,6 +156,7 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
 
 
     private fun drawPolyLine(latLngList: List<LatLng>) {
+        Log.d("drawPolyLine()", "invoked()")
 //         좌표가 2개 이상인 경우에만 Polyline을 그립니다.
         if (latLngList.size >= 2) {
 
@@ -170,8 +170,7 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
                     map = naverMap
 
 
-                    Log.d("latLngList", latLngList.toString())
-                    Log.d("map", polyline.map.toString())
+                    Log.d("drawPolyLine()", "size efficient")
                 }
             }
         }

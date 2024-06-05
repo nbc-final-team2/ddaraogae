@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -35,29 +36,58 @@ import kotlinx.coroutines.tasks.await
 import java.util.TimerTask
 
 class WalkFragment : Fragment(), OnMapReadyCallback {
-    private val LOCATION_PERMISSION_REQUEST_CODE = 5000
 
+    private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private val PERMISSIONS = arrayOf(
-        android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
     )
     private lateinit var binding: FragmentWalkBinding
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
-
     //위치 서비스가 gps를 사용해서 위치를 확인
     lateinit var fusedLocationClient: FusedLocationProviderClient
-
     //위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationCallback: LocationCallback
-
-    // latLng 변수를 멤버 변수로 선언합니다.
-    private val latLngList = mutableListOf<LatLng>()
     private lateinit var cameraPosition: CameraPosition
 
+    private val latLngList = mutableListOf<LatLng>()
+    private var isTracking = false // 위치 추적 여부를 나타내는 변수 추가
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("onCreated()", "asd")
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentWalkBinding.inflate(inflater, container, false)
+        Log.d("onCreateView()", "asd")
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("onViewCreated()", "asd")
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(
                 requireActivity(),
@@ -67,27 +97,20 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         } else {
             initMapView()
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentWalkBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         // Fragment -> Activity
-        // 데이터 보내, Activity에 가보자.
         binding.btnNext.setOnClickListener {
             val intent = Intent(activity, FinishActivity::class.java)
             // latLng 리스트를 FinishActivity로 전달합니다.
             // putExtra() 메서드를 사용하여 리스트를 전달할 수 있습니다.
             intent.putExtra("latLngList", latLngList.toTypedArray())
+            Log.d("buttonListener()", latLngList.toString())
             startActivity(intent)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("onStart()", "asd")
     }
 
     private fun initMapView() {
@@ -114,6 +137,7 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(naverMap: NaverMap) {
+        Log.d("onMapReady()", "asd")
         this.naverMap = naverMap
         // 현재 위치
         naverMap.locationSource = locationSource
@@ -121,28 +145,38 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true
         // 위치를 추적하면서 카메라도 따라 움직인다.
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
-
-
         // 위치 정보 받겠다고 선언하는 곳
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         updateLocation()
 
-        // 현재 위치 추적 시작
-        startTracking()
-
-//        // Polyline 초기화
-//        drawPolyLine(latLngList)
+        // 위치 추적 시작 버튼 클릭 리스너 설정
+        binding.btnWalkStart.setOnClickListener {
+            startOrStopTracking()
+        }
     }
 
-    fun updateLocation() {
-        val locationRequest = LocationRequest.create().apply {
+    private fun startOrStopTracking() {
+        if (isTracking) {
+            // 위치 추적 중지
+            stopTracking()
+        } else {
+            // 위치 추적 시작
+            startTracking()
+        }
+    }
+
+    private fun stopTracking() {
+        isTracking = false // 위치 추적 중지
+    }
+
+    private fun updateLocation() {
+        @Suppress("DEPRECATION") val locationRequest = LocationRequest.create().apply {
             interval = 1000
             fastestInterval = 500
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult?.let {
@@ -172,8 +206,6 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
 
     fun setLastLocation(lastLocation: Location) {
         val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
-
-
         cameraPosition = CameraPosition(latLng, 15.0)
         naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition))
         // CameraPosition 클래스는 Builder 패턴이 아니기 때문에 Builder()를 사용할 수 없습니다.
@@ -184,36 +216,17 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun startTracking() {
+        // 위치 추적 중인 경우에는 다시 시작하지 않음
+        if (isTracking) return
+        isTracking = true // 위치 추적 시작
+
         // 실제로는 사용자의 위치를 받아오는 로직을 추가해야 합니다.
         // 여기서는 임의의 위치로 테스트합니다.
         val timer = java.util.Timer()
         val handler = Handler(Looper.getMainLooper())
         val task = object : TimerTask() {
+            @SuppressLint("MissingPermission")
             override fun run() {
-//                // 위치가 업데이트되지 않은 경우에는 기존의 latLng를 사용합니다.
-//                val newLatLng = if (latLngList.isEmpty()) {
-//                    latLng
-//                } else {
-//                    latLngList.last()
-//                }
-                if (ActivityCompat.checkSelfPermission(
-                        requireActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        requireActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return
-                }
-//                var location : Location
                 lifecycleScope.launch {
                     val location = fusedLocationClient.getCurrentLocation(
                         LocationRequest.PRIORITY_HIGH_ACCURACY,
@@ -225,7 +238,6 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
                     // lifecycle은 새로운 코루틴을 사용한 것
                     // 이 안에서 하는건 새로운 일꾼이 하고 있는 것, 비동기이며 오래걸리는 작업이다보니 listener를 달아야하는데 급하게 await을 사용,
                     // 그래서 await을 안쓰면 아래 코드들이 먼저 실행될 수 있음
-
                     val newLatLng = LatLng(location.latitude, location.longitude)
                     Log.d("latLngList", latLngList.toString())
                     Log.d("newLatLng", newLatLng.toString())
@@ -235,7 +247,6 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
                     handler.post {
                         naverMap.moveCamera(cameraUpdate)
                     }
-
                     // 현재 위치를 리스트에 추가
                     latLngList.add(newLatLng)
                 }
