@@ -1,12 +1,14 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
+<<<<<<< HEAD
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
+=======
+import android.content.Intent
+import android.content.pm.PackageManager
+>>>>>>> develop
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +22,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
+<<<<<<< HEAD
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
+=======
+>>>>>>> develop
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -30,9 +35,12 @@ import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
+<<<<<<< HEAD
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.TimerTask
+=======
+>>>>>>> develop
 
 class WalkFragment : Fragment(), OnMapReadyCallback {
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -50,12 +58,15 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
     //위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationCallback: LocationCallback
 
+<<<<<<< HEAD
     // latLng 변수를 멤버 변수로 선언합니다.
     private var latLng: LatLng = LatLng(37.566610, 126.978403)
     private val latLngList = mutableListOf<LatLng>()
     private var polyline = PolylineOverlay()
     private lateinit var cameraPosition: CameraPosition
 
+=======
+>>>>>>> develop
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!hasPermission()) {
@@ -75,6 +86,16 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
     ): View? {
         binding = FragmentWalkBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Fragment -> Activity
+        // 데이터 보내, Activity에 가보자.
+        binding.btnNext.setOnClickListener {
+            val intent = Intent(getActivity(), FinishActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initMapView() {
@@ -108,6 +129,7 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true
         // 위치를 추적하면서 카메라도 따라 움직인다.
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+<<<<<<< HEAD
         
         
 
@@ -242,5 +264,7 @@ class WalkFragment : Fragment(), OnMapReadyCallback {
         }
         // TimerTask를 스케줄링
         timer.schedule(task, 0, 3000) // 3초마다 위치 업데이트
+=======
+>>>>>>> develop
     }
 }
