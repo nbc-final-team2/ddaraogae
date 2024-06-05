@@ -107,6 +107,7 @@
                     android:layout_width="84dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_medium"
+                    android:checked="true"
                     android:background="@drawable/radio_button_selector"
                     android:button="@android:color/transparent"
                     android:gravity="center"
@@ -227,7 +228,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
-                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/et_memo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

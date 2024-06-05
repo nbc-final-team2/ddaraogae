@@ -7,8 +7,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_dogImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:padding="@dimen/padding_small"
         app:civ_border_color="@color/very_soft_orange"
         app:layout_constraintEnd_toEndOf="parent"

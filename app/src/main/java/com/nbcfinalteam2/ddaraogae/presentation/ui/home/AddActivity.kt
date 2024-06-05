@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.FirebaseDataSourceImpl
-import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.DogModel
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -57,7 +57,7 @@ class AddActivity : AppCompatActivity(){
         addPetData()
     }
     private fun addPetData() = with(binding){
-        var gender= 0
+        var gender= false
 
         ivDogThumbnail.setOnClickListener{
             Log.d("test_click", "click")
@@ -68,8 +68,8 @@ class AddActivity : AppCompatActivity(){
         }
         //성별 선택
         rgGenderGroup.setOnCheckedChangeListener { radioGroup, id ->
-            if(id == rbFemale.id) gender = 1
-            else gender = 0
+            if(id == rbFemale.id) gender = true
+            else gender = false
         }
         //완료 버튼 클릭 시 데이터 추가
         btnEditCompleted.setOnClickListener{
@@ -80,13 +80,13 @@ class AddActivity : AppCompatActivity(){
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
                 //gender 추가 필요
-                val newDog = DogDto("", name, age, breed, memo, imageFile.toString())
+                val newDog = DogModel("", name, gender, age, breed, memo, imageFile.toString())
                 Log.d("testDog", "${newDog}")
                 addPet(newDog)
             }
         }
     }
-    private fun addPet(newDog : DogDto) {
+    private fun addPet(newDog : DogModel) {
         lifecycleScope.launch {
             //FirebaseDataSourceImpl().insertDog(newDog)
         }

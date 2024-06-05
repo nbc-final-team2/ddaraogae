@@ -32,8 +32,11 @@
         <activity
             android:name=".presentation.ui.home.DetailActivity"
             android:exported="false" />
+
+        <activity android:name=".presentation.ui.mypage.EditPetActivity"
+            android:exported="false"/>
         <activity
-            android:name=".presentation.ui.mypage.EditPetActivity"
+            android:name=".presentation.ui.mypage.DetailPetActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

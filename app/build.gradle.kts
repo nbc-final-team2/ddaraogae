@@ -88,7 +88,10 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.12.0")
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
 
