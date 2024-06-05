@@ -39,6 +39,9 @@ android {
         viewBinding = true
         dataBinding = true
     }
+    viewBinding{
+        enable = true
+    }
 }
 
 dependencies {
@@ -83,6 +86,9 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.12.0")
 
 
 }
