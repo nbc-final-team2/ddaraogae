@@ -28,10 +28,21 @@ class HistoryActivity : AppCompatActivity() {
             insets
         }
         setupWalkGraph()
+        setupListener()
     }
 
     private fun setupWalkGraph() {
         setupWalkGraphForEmptyData()
+    }
+
+    private fun setupListener() {
+        moveToBack()
+    }
+
+    private fun moveToBack() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setupWalkGraphForEmptyData() {
