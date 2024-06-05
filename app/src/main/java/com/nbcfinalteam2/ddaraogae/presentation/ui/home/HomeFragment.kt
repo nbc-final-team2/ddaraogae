@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,18 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupWalkGraph()
+        setupListener()
+    }
+
+    private fun setupListener() {
+        moveToHistory()
+    }
+
+    private fun moveToHistory() {
+        binding.cvGraph.setOnClickListener {
+            val intent = Intent(context, HistoryActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupWalkGraph() {
