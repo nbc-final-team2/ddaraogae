@@ -59,7 +59,6 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.navigation.dynamic.features.fragment)
-    implementation(libs.androidx.navigation.compose)
 
     //Networking with Retrofit
     implementation(libs.retrofit.core)
