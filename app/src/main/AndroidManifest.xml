@@ -21,8 +21,11 @@
             android:value="@string/ddaraogae_client_id" />
 
         <activity
-        android:name=".presentation.ui.walk.FinishActivity"
-        android:exported="false" />
+            android:name=".presentation.ui.home.HistoryActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".presentation.ui.walk.FinishActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.ui.walk.WalkActivity"
             android:exported="false" />
