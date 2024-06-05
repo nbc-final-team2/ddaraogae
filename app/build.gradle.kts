@@ -55,6 +55,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
+    //jetpack navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.dynamic.features.fragment)
+
     //Networking with Retrofit
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
@@ -83,6 +88,9 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Testing Navigation
+    androidTestImplementation(libs.androidx.navigation.testing)
 
 
 }
