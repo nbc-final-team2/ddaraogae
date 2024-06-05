@@ -34,55 +34,61 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupWalkGraph() {
+        setupWalkGraphForEmptyData()
+    }
+
+    private fun setupWalkGraphForEmptyData() {
+        /* 산책 데이터가 없을시 초기 화면 */
+
         val lineChart = binding.lcArea
 
-        // 차트 데이터 ( x축과 y축 )
+        // 차트 데이터를 넣지 않으면  차트 그림이 사라짐
         val entries = ArrayList<Entry>()
-        entries.add(Entry(1f, 3f))
-        entries.add(Entry(2f, 7f))
-        entries.add(Entry(3f, 6f))
-        entries.add(Entry(4f, 10f))
-        entries.add(Entry(5f, 4f))
-        entries.add(Entry(6f, 8f))
-        entries.add(Entry(7f, 6f))
+        for (i in 1..7) {
+            entries.add(Entry(i.toFloat(), 0f))
+        }
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
-            color = resources.getColor(androidx.constraintlayout.widget.R.color.material_blue_grey_950, null)
+            color = resources.getColor(R.color.grey, null)
             valueTextColor = resources.getColor(R.color.black, null)
             lineWidth = 2f // 라인 두께
-            circleRadius = 4f // 원 크기
+            setDrawCircles(false) // 마커 표시 여부
             setDrawCircleHole(false)
-            setDrawValues(true)
+            setDrawValues(false) // 데이터 값 표시 여부 ( 차트 안에 그릴것인지 )
         }
 
         val lineData = LineData(dataSet)
         lineChart.data = lineData
 
-        // x축 ( 아래쪽 )
+        // x축 (아래쪽)
         val xAxis: XAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.granularity = 1f
         xAxis.setLabelCount(7, true)
+        xAxis.axisMinimum = 1f
+        xAxis.axisMaximum = 7f
         xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return "${value.toInt()}일"
+                return "${value.toInt()}"
             }
         }
 
-        // y축 ( 왼쪽 )
+        // y축 (왼쪽)
         val yAxisLeft: YAxis = lineChart.axisLeft
         yAxisLeft.axisMinimum = 0f
-        yAxisLeft.granularity = 0.5f
+        yAxisLeft.axisMaximum = 12f
+        yAxisLeft.granularity = 3f
+        yAxisLeft.setLabelCount(5, true)
         yAxisLeft.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 return when (value) {
-                    0.5f -> "0.5km"
                     1f -> "1km"
-                    2f -> "2km"
                     3f -> "3km"
-                    5f -> "5km"
-                    else -> "${value.toInt()}km"
+                    6f -> "6km"
+                    9f -> "9km"
+                    12f -> "12km"
+                    else -> ""
                 }
             }
         }
@@ -90,13 +96,17 @@ class HomeFragment : Fragment() {
         val yAxisRight: YAxis = lineChart.axisRight
         yAxisRight.isEnabled = false
 
-        // 범례 ( 차트 아래에 범례를 표시할지 말지 )
         val legend = lineChart.legend
-        legend.isEnabled = false
+        legend.isEnabled = false // 범례 여부
 
-        lineChart.description.isEnabled = false
+        lineChart.setDrawGridBackground(true) // 차트(그리드) 배경색 설정
+        lineChart.setGridBackgroundColor(resources.getColor(R.color.grey, null))
+
+        lineChart.description.isEnabled = false // 차트 설명
+
         lineChart.invalidate() // 차트 새로고침
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
