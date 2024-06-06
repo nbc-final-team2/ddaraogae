@@ -17,7 +17,7 @@
         tools:src="@drawable/ic_launcher_background" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/dogName"
+        android:id="@+id/tv_dogName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/item_home_dog_selection_name"

@@ -18,6 +18,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var dogProfileAdapter: DogProfileAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,12 +31,18 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupAdapter()
         setupWalkGraph()
         setupListener()
     }
 
     private fun setupListener() {
         moveToHistory()
+    }
+
+    private fun setupAdapter() {
+        dogProfileAdapter = DogProfileAdapter(emptyList())
+        binding.rvDogArea.adapter = dogProfileAdapter
     }
 
     private fun moveToHistory() {
