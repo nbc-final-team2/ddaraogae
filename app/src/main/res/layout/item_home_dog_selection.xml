@@ -20,7 +20,7 @@
         android:id="@+id/dogName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/item_mypage_edit_pet_dog_name"
+        android:text="@string/item_home_dog_selection_name"
         android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
