@@ -15,7 +15,7 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OnClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -43,11 +43,32 @@ class HomeFragment : Fragment() {
 
     private fun setupAdapter() {
         val test = listOf(
-            DogEntity("1", "Buddy", 0, 3, "Golden Retriever", "Loves playing fetch", "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg"),
-            DogEntity("1", "Buddy", 0, 3, "Golden Retriever", "Loves playing fetch", "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg")
+            DogEntity(
+                "1",
+                "Buddy",
+                0,
+                3,
+                "Golden Retriever",
+                "Loves playing fetch",
+                "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg"
+            ),
+            DogEntity(
+                "1",
+                "Buddy",
+                0,
+                3,
+                "Golden Retriever",
+                "Loves playing fetch",
+                "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg"
             )
-        dogProfileAdapter = DogProfileAdapter(test)
+        )
+        dogProfileAdapter = DogProfileAdapter(test, this)
         binding.rvDogArea.adapter = dogProfileAdapter
+    }
+
+    private fun moveToAdd() {
+        val intent = Intent(context, AddActivity::class.java)
+        startActivity(intent)
     }
 
     private fun moveToHistory() {
@@ -122,5 +143,9 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onAddClick() {
+        moveToAdd()
     }
 }
