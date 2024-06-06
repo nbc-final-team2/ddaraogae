@@ -21,7 +21,6 @@ object NetworkModule {
     private const val WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
     @Provides
-    @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
@@ -33,7 +32,6 @@ object NetworkModule {
     }
 
     @Provides
-    @Singleton
     fun provideRetrofitInterceptorOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
@@ -48,7 +46,6 @@ object NetworkModule {
     }
 
     @Provides
-    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(WEATHER_BASE_URL)
@@ -58,7 +55,6 @@ object NetworkModule {
     }
 
     @Provides
-    @Singleton
     fun provideWeatherService(retrofit: Retrofit): WeatherApiService {
         return retrofit.create(WeatherApiService::class.java)
     }
