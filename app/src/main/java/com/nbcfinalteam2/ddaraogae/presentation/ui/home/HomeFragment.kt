@@ -14,6 +14,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
 class HomeFragment : Fragment(), OnClickListener {
 
@@ -106,15 +107,19 @@ class HomeFragment : Fragment(), OnClickListener {
             isDragXEnabled = false // 차트의 x축 드래그 여부
             isDragYEnabled = false // 차트의 y축 드래그 여부
         }
+        lineChart.invalidate() // 차트 갱신
     }
 
     private fun walkGraphXAxisForEmptyData(xAxis: XAxis) {
+        DateFormatter.generateLast7Days() // 날짜 생성
+
         /* 차트의 x축 설정 */
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM // X축의 위치 설정
             setLabelCount(7, true) // x축에 표시될 레이블의 갯수 설정, force = 어떠한 변화가 있어도 강제로 7개만 보이도록
-            axisMinimum = 1f // x축의 최솟값 설정
-            axisMaximum = 7f // x축의 최댓값 설정
+            axisMinimum = 0f // x축의 최솟값 설정
+            axisMaximum = 6f // x축의 최댓값 설정
+            valueFormatter = DateFormatter // x축 실시간 날짜 설정
         }
     }
 
