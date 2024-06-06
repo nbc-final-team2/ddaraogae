@@ -29,6 +29,7 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignUpWithEmailUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.SignUpWithEmailUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateDogUseCaseImpl
 import dagger.Binds
@@ -112,7 +113,7 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindSignUpWithEmailUseCase(
-        signUpGoogleUseCaseImpl: SignInWithGoogleUseCaseImpl
+        signUpWithEmailUseCaseImpl: SignUpWithEmailUseCaseImpl
     ): SignUpWithEmailUseCase
 
     @Binds
