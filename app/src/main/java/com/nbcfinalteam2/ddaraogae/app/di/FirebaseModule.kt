@@ -20,4 +20,5 @@ object FirebaseModule {
 
     @Provides
     fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth
+
 }
