@@ -23,6 +23,16 @@ class AddActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        binding.etMemo
+        setupListener()
+    }
+
+    private fun setupListener() {
+        moveToBack()
+    }
+
+    private fun moveToBack() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
     }
 }
