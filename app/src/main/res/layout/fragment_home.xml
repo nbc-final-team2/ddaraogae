@@ -128,6 +128,29 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/appCompatTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:layout_marginEnd="@dimen/margin_medium"
+                        android:text="@string/home_weather_real_time_data"
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/text_mini"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_weatherRenewal"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="18dp"
+                        android:src="@drawable/ic_renewal"
+                        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_weatherIcon"
                         android:layout_width="50dp"

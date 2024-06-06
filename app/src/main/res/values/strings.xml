@@ -18,6 +18,7 @@
     <string name="home_weather_fine_dust_conditions">좋음</string>
     <string name="home_weather_ultra_fine_dust_conditions">나쁨</string>
     <string name="home_walk_graph_no_data">최근 산책 데이터가 없어요.</string>
+    <string name="home_weather_real_time_data">2024.05.28 17:38</string>
 
     <!-- home - detail-->
     <string name="home_detail_title">산책 이력</string>
