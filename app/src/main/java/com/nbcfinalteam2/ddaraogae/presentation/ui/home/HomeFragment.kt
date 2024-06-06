@@ -13,6 +13,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
+import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 
 class HomeFragment : Fragment() {
 
@@ -41,7 +42,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        dogProfileAdapter = DogProfileAdapter(emptyList())
+        val test = listOf(
+            DogEntity("1", "Buddy", 0, 3, "Golden Retriever", "Loves playing fetch", "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg"),
+            DogEntity("1", "Buddy", 0, 3, "Golden Retriever", "Loves playing fetch", "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg")
+            )
+        dogProfileAdapter = DogProfileAdapter(test)
         binding.rvDogArea.adapter = dogProfileAdapter
     }
 
