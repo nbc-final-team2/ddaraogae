@@ -22,20 +22,27 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-
-        if (BuildConfig.DEBUG) {
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        } else {
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.NONE
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofitInterceptorOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
 
         return OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
-            .addNetworkInterceptor(httpLoggingInterceptor)
+            .addNetworkInterceptor(loggingInterceptor)
             .addInterceptor(RetrofitInterceptor)
             .build()
     }
