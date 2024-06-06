@@ -22,7 +22,7 @@
 
         <activity
             android:name=".presentation.ui.home.AddActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".presentation.ui.home.HistoryActivity"
             android:exported="false" />
