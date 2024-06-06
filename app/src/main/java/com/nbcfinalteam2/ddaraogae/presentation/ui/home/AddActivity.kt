@@ -9,7 +9,10 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 
 class AddActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAddBinding
+
+    private val binding: ActivityAddBinding by lazy {
+        ActivityAddBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,5 +23,6 @@ class AddActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        binding.etMemo
     }
 }
