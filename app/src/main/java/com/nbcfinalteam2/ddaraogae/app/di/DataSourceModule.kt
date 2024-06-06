@@ -15,5 +15,5 @@ abstract class DataSourceModule {
     abstract fun bindFirebaseDataSource(
         firebaseDataSourceImpl: FirebaseDataSourceImpl
     ): FirebaseDataSource
-    
+
 }

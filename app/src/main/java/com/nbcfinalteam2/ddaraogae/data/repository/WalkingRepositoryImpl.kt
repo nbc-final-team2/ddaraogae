@@ -6,8 +6,9 @@ import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.WalkingRepository
 import java.util.Date
+import javax.inject.Inject
 
-class WalkingRepositoryImpl(
+class WalkingRepositoryImpl @Inject constructor(
     private val firebaseDateSource: FirebaseDataSource
 ): WalkingRepository {
     override suspend fun getWalkingListByDogIdAndPeriod(
