@@ -5,4 +5,5 @@ data class WeatherEntity (
     val temperature: Double,
     val pm25: Double,
     val pm10: Double,
+    val city: String,
 )

@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.app.di
 
 import com.nbcfinalteam2.ddaraogae.BuildConfig
+import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.CityApiService
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.KakaoInterceptor
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.SearchApiService
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.WeatherApiService
@@ -11,7 +12,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
+import retrofit2.Retrofit.Builder
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
@@ -82,14 +83,14 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideRetrofitBuilder(): Retrofit.Builder {
-        return Retrofit.Builder()
+    fun provideRetrofitBuilder(): Builder {
+        return Builder()
             .addConverterFactory(GsonConverterFactory.create())
     }
 
     @Provides
     fun provideWeatherService(
-        retrofitBuilder: Retrofit.Builder,
+        retrofitBuilder: Builder,
         @WeatherInterceptorOkHttpClient okHttpClient: OkHttpClient
     ): WeatherApiService {
         return retrofitBuilder
@@ -101,7 +102,7 @@ object NetworkModule {
 
     @Provides
     fun provideKakaoService(
-        retrofitBuilder: Retrofit.Builder,
+        retrofitBuilder: Builder,
         @KakaoInterceptorOkHttpClient okHttpClient: OkHttpClient
     ): SearchApiService {
         return retrofitBuilder
@@ -109,5 +110,16 @@ object NetworkModule {
             .client(okHttpClient)
             .build()
             .create(SearchApiService::class.java)
+    }
+
+    @Provides
+    fun provideCityService(
+        retrofitBuilder: Builder
+    ): CityApiService {
+        return retrofitBuilder
+            .baseUrl(KAKAO_BASE_URL)
+            .client(OkHttpClient())
+            .build()
+            .create(CityApiService::class.java)
     }
 }
