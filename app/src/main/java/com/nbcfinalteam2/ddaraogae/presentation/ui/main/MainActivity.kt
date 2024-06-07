@@ -10,13 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityMainBinding
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 
 /**
  * 업체 검색 test code를 사용하기 위해서는 아래 EntryPoint code 주석을 해지해야 합니다.
@@ -26,8 +20,6 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,15 +42,13 @@ class MainActivity : AppCompatActivity() {
      * 삭제 시 TestViewModel도 함께 삭제해주셔야 합니다.
      */
     private val viewModel: TestViewModel by viewModels()
+    private val lat = "위도 입력" //위도 lat
+    private val lng = "경도 입력" //경도 lng
     private fun testApiCall() {
-        val lat = "" //위도 lat
-        val lng = "" //경도 lng
         viewModel.fetchStoreData(lat, lng)
-
         viewModel.storeData.observe(this) {
-            val data = it
-            Log.d("MainActivity", "store data: $data")
-
+            val store = it
+            Log.d("MainActivity", "store data: $store")
         }
     }
 }
