@@ -24,7 +24,7 @@ object FirebaseMapper {
     fun DogEntity.toDto() = DogDto(
         name = name,
         gender = gender,
-        age = gender,
+        age = age,
         lineage = lineage,
         memo = memo,
         thumbnailUrl = thumbnailUrl

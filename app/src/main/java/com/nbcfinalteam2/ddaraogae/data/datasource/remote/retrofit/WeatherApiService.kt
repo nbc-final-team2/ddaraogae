@@ -4,7 +4,7 @@ import com.nbcfinalteam2.ddaraogae.data.dto.Dust
 import com.nbcfinalteam2.ddaraogae.data.dto.Weather
 import retrofit2.http.*
 
-interface RetrofitDataSource {
+interface WeatherApiService {
     @GET("weather")
     suspend fun getWeather(
         @Query("lat") lat: String,

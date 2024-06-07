@@ -1,18 +1,18 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import kotlinx.coroutines.tasks.await
 import java.util.Date
+import javax.inject.Inject
 
-class FirebaseDataSourceImpl(): FirebaseDataSource {
-    private val firebaseFs = Firebase.firestore
-    private val fbAuth = Firebase.auth
+class FirebaseDataSourceImpl @Inject constructor(
+    private val firebaseFs: FirebaseFirestore,
+    private val fbAuth: FirebaseAuth
+): FirebaseDataSource {
 
     override suspend fun getDogList(): List<Pair<String, DogDto>> {
         val uid = getUserUid()
