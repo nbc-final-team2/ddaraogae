@@ -1,5 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.domain.entity
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class DogEntity(
     val id: String,
     val name: String,
@@ -8,4 +12,4 @@ data class DogEntity(
     val lineage: String?,
     val memo: String?,
     val thumbnailUrl: String?,
-)
+) : Parcelable
