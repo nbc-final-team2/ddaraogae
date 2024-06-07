@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,6 +14,8 @@ class AddActivity : AppCompatActivity() {
     private val binding: ActivityAddBinding by lazy {
         ActivityAddBinding.inflate(layoutInflater)
     }
+
+    private val addViewModel: AddViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

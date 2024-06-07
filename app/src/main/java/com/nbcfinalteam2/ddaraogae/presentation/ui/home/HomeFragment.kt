@@ -16,7 +16,9 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OnClickListener {
 
     private var _binding: FragmentHomeBinding? = null
@@ -46,28 +48,7 @@ class HomeFragment : Fragment(), OnClickListener {
     }
 
     private fun setupAdapter() {
-        // 테스트 코드
-        val test = listOf(
-            DogEntity(
-                "1",
-                "Buddy",
-                0,
-                3,
-                "Golden Retriever",
-                "Loves playing fetch",
-                "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg"
-            ),
-            DogEntity(
-                "1",
-                "Buddy",
-                0,
-                3,
-                "Golden Retriever",
-                "Loves playing fetch",
-                "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg"
-            )
-        )
-        dogProfileAdapter = DogProfileAdapter(test, this)
+        dogProfileAdapter = DogProfileAdapter(emptyList(), this)
         binding.rvDogArea.adapter = dogProfileAdapter
     }
 
