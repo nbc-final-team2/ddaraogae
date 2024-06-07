@@ -35,7 +35,6 @@ class LoginViewModel @Inject constructor(
 
     fun signInGoogle(idToken: String) = viewModelScope.launch {
         val successSignInGoogle = signInWithGoogleUseCase(idToken)
-        Log.d("살려줘엉어어어어어", "${successSignInGoogle}")
         successSignInGoogle?.let { successToken ->
             _uiState.update { prev ->
                 prev.copy(
