@@ -10,8 +10,8 @@ class StoreRepositoryImpl @Inject constructor(
     private val storeApiService: SearchApiService
 ) : StoreRepository {
     override suspend fun getStoreData(lat: String, lng: String): List<StoreEntity> {
-        val storeResponseForHospital = storeApiService.getStoreForHospital(x = lng, y = lat)
-        val storeResponseForFood = storeApiService.getStoreForFood(x = lng, y = lat)
+        val storeResponseForHospital = storeApiService.getStore(x = lng, y = lat, query = "동물병원")
+        val storeResponseForFood = storeApiService.getStore(x = lng, y = lat, query = "애견동반")
         val storeItemList = StoreMapper.toStoreData(storeResponseForHospital, storeResponseForFood)
         return storeItemList
     }
