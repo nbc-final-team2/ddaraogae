@@ -9,9 +9,10 @@ import javax.inject.Inject
 class StoreRepositoryImpl @Inject constructor(
     private val storeApiService: SearchApiService
 ) : StoreRepository {
-    override suspend fun getStoreData(): List<StoreEntity> {
-        val storeResponse = storeApiService.getStore()
-        val storeItemList = StoreMapper.toStoreData(storeResponse)
+    override suspend fun getStoreData(lng: String, lat: String): List<StoreEntity> {
+        val storeResponseForHospital = storeApiService.getStoreForHospital(x = lat, y = lng)
+        val storeResponseForFood = storeApiService.getStoreForFood(x = lat, y = lng)
+        val storeItemList = StoreMapper.toStoreData(storeResponseForHospital, storeResponseForFood)
         return storeItemList
     }
 }

@@ -7,12 +7,24 @@ import retrofit2.http.Query
 
 interface SearchApiService {
     @GET("v2/local/search/keyword.json")
-    suspend fun getStore(
+    suspend fun getStoreForHospital(
         @Header("Authorization") key: String = Key.KAKAO_API_KEY,
         @Query("query") query: String = "동물병원",
-        @Query("x") x: String = "37.5560294", //longitude
-        @Query("y") y: String = "127.0872547", //latitude
+        @Query("x") x: String,
+        @Query("y") y: String,
         @Query("page") page: String = "1",
         @Query("sort") sort: String = "distance",
+        @Query("radius") radius: String = "3000",
     ) : Store
+
+    @GET("v2/local/search/keyword.json")
+    suspend fun getStoreForFood(
+        @Header("Authorization") key: String = Key.KAKAO_API_KEY,
+        @Query("query") query: String = "애견동반",
+        @Query("x") x: String,
+        @Query("y") y: String,
+        @Query("page") page: String = "1",
+        @Query("sort") sort: String = "distance",
+        @Query("radius") radius: String = "3000",
+        ) : Store
 }
