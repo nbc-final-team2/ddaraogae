@@ -2,7 +2,6 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
@@ -10,7 +9,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogAddBinding
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 
-class DogProfileAdapter(private var items: List<DogEntity>, private val onAddClickListener: OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DogProfileAdapter(private var items: List<DogEntity>, private val onAddClickListener: OnClickListener, private val onDogClickListener: OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val DOG_ADD = 0
@@ -48,7 +47,7 @@ class DogProfileAdapter(private var items: List<DogEntity>, private val onAddCli
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is SelectionViewHolder -> holder.bind(items[position])
+            is SelectionViewHolder -> holder.bind(items[position], onDogClickListener)
             is AddViewHolder -> holder.bind(onAddClickListener)
         }
     }
@@ -58,12 +57,15 @@ class DogProfileAdapter(private var items: List<DogEntity>, private val onAddCli
     }
 
     class SelectionViewHolder(private val binding: ItemHomeDogSelectionBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: DogEntity) {
+        fun bind(item: DogEntity, onDogClickListener: OnClickListener) {
             binding.apply {
                 Glide.with(ivDogImage.context)
                     .load(item.thumbnailUrl)
                     .into(ivDogImage)
                 tvDogName.text = item.name
+                ivDogImage.setOnClickListener {
+                    onDogClickListener.onDogClick(item)
+                }
             }
         }
     }

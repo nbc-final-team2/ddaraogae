@@ -53,28 +53,7 @@ class HomeFragment : Fragment(), OnClickListener {
     }
 
     private fun setupAdapter() {
-//        // 테스트 코드
-//        val test = listOf(
-//            DogEntity(
-//                "1",
-//                "Buddy",
-//                0,
-//                3,
-//                "Golden Retriever",
-//                "Loves playing fetch",
-//                ""
-//            ),
-//            DogEntity(
-//                "1",
-//                "Buddy",
-//                0,
-//                3,
-//                "Golden Retriever",
-//                "Loves playing fetch",
-//                "https://www.urbanbrush.net/web/wp-content/uploads/edd/2022/11/urbanbrush-20221108214712319041.jpg"
-//            )
-//        )
-        dogProfileAdapter = DogProfileAdapter(emptyList(), this)
+        dogProfileAdapter = DogProfileAdapter(emptyList(), this, this)
         binding.rvDogArea.adapter = dogProfileAdapter
     }
 
@@ -182,5 +161,9 @@ class HomeFragment : Fragment(), OnClickListener {
 
     override fun onAddClick() {
         moveToAdd()
+    }
+
+    override fun onDogClick(dogData: DogEntity) {
+        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
     }
 }
