@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -80,6 +82,10 @@ dependencies {
     // FusedLocationSource
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    //Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
     //UnitTest
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
@@ -94,4 +100,8 @@ dependencies {
     androidTestImplementation(libs.androidx.navigation.testing)
 
 
+}
+
+kapt {
+    correctErrorTypes = true
 }

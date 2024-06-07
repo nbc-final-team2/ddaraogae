@@ -5,8 +5,9 @@ import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toDto
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.StampRepository
 import java.util.Date
+import javax.inject.Inject
 
-class StampRepositoryImpl(
+class StampRepositoryImpl @Inject constructor(
     private val firebaseDateSource: FirebaseDataSource
 ): StampRepository {
     override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Date, end: Date): Int {

@@ -5,8 +5,9 @@ import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toDto
 import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.DogRepository
+import javax.inject.Inject
 
-class DogRepositoryImpl(
+class DogRepositoryImpl @Inject constructor(
     private val firebaseDateSource: FirebaseDataSource
 ): DogRepository {
     override suspend fun getDogList(): List<DogEntity> {

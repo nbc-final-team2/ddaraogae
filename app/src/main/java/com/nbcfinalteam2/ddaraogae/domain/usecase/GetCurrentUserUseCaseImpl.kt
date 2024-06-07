@@ -2,8 +2,9 @@ package com.nbcfinalteam2.ddaraogae.domain.usecase
 
 import com.nbcfinalteam2.ddaraogae.domain.entity.UserEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.AuthRepository
+import javax.inject.Inject
 
-class GetCurrentUserUseCaseImpl(
+class GetCurrentUserUseCaseImpl @Inject constructor(
     private val authRepository: AuthRepository
 ): GetCurrentUserUseCase {
     override suspend fun invoke(): UserEntity? = authRepository.getCurrentUser()

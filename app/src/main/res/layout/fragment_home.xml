@@ -88,7 +88,7 @@
                         android:background="@drawable/bg_walk_graph_no_data"
                         android:elevation="20dp"
                         android:padding="@dimen/padding_small"
-                        android:text="최근 산책 데이터가 없어요."
+                        android:text="@string/home_walk_graph_no_data"
                         android:textSize="@dimen/text_mini"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@+id/lc_area"

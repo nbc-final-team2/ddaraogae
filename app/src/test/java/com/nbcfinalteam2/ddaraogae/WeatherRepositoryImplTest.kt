@@ -1,6 +1,6 @@
 package com.nbcfinalteam2.ddaraogae
 
-import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.RetrofitDataSource
+import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.WeatherApiService
 import com.nbcfinalteam2.ddaraogae.data.dto.*
 import com.nbcfinalteam2.ddaraogae.data.mapper.WeatherMapper
 import com.nbcfinalteam2.ddaraogae.data.repository.WeatherRepositoryImpl
@@ -14,7 +14,7 @@ import org.mockito.Mockito.`when`
 
 class WeatherRepositoryImplTest {
     private lateinit var mockWebServer: MockWebServer
-    private lateinit var retrofitDataSource: RetrofitDataSource
+    private lateinit var weatherApiService: WeatherApiService
     private lateinit var weatherRepository: WeatherRepository
 
     @Before
@@ -22,8 +22,8 @@ class WeatherRepositoryImplTest {
         mockWebServer = MockWebServer()
         mockWebServer.start()
 
-        retrofitDataSource = mock(RetrofitDataSource::class.java)
-        weatherRepository = WeatherRepositoryImpl(retrofitDataSource)
+        weatherApiService = mock(WeatherApiService::class.java)
+        weatherRepository = WeatherRepositoryImpl(weatherApiService)
     }
 
     @After
@@ -77,14 +77,14 @@ class WeatherRepositoryImplTest {
         mockWebServer.enqueue(weatherResponse)
         mockWebServer.enqueue(dustResponse)
 
-        `when`(retrofitDataSource.getWeather(lat = lat, lon = lon)).thenReturn(
+        `when`(weatherApiService.getWeather(lat = lat, lon = lon)).thenReturn(
             Weather(
                 coord = WeatherCoord(lat = 37.57, lon = 126.98),
                 weather = listOf(WeatherWeather(id = 800)),
                 main = WeatherMain(temp = 23.0)
             )
         )
-        `when`(retrofitDataSource.getDust(lat = lat, lon = lon)).thenReturn(
+        `when`(weatherApiService.getDust(lat = lat, lon = lon)).thenReturn(
             Dust(
                 list = listOf(
                     DustList(
