@@ -9,8 +9,10 @@ object StoreMapper {
             StoreEntity(
                 placeName = it.place_name,
                 categoryGroupName = it.category_group_name ?: "none",
-                address = it.address_name,
-                phone = it.phone
+                address = it.road_address_name,
+                phone = it.phone,
+                lat = it.y,
+                lng = it.x
             )
         }
     }
