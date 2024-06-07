@@ -14,7 +14,6 @@ object StoreMapper {
                 phone = it.phone,
                 lat = it.y,
                 lng = it.x
-                //id 추가
             )
         }
         val resultForFood = storeResponseForFood.documents.map {
