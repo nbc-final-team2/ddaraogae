@@ -9,7 +9,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddActivity : AppCompatActivity() {
 
     private val binding: ActivityAddBinding by lazy {
@@ -60,7 +62,6 @@ class AddActivity : AppCompatActivity() {
                     memo = memo,
                     thumbnailUrl = thumbnailUrl
                 )
-
                 addViewModel.addDog(dogData)
                 finish()
             }

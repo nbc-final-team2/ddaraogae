@@ -20,16 +20,13 @@ class HomeViewModel @Inject constructor(
     private val _dogList = MutableLiveData<List<DogEntity>>()
     val dogList: LiveData<List<DogEntity>> get() = _dogList
 
+    /** 유저데이터 함수로 뺴서 한번에 검사 */
 
-    init {
-        loadDogs()
-    }
-
-    private fun loadDogs() {
+    fun loadDogs() {
         viewModelScope.launch {
-            val user = getCurrentUserUseCase.invoke()
+            val user = getCurrentUserUseCase()
             user?.let {
-                _dogList.value = getDogListUseCase.invoke()
+                _dogList.value = getDogListUseCase().orEmpty()
             }
         }
     }
