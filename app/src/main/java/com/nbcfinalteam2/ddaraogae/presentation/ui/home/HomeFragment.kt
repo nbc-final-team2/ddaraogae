@@ -19,7 +19,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), OnClickListener {
+class HomeFragment : Fragment(), DogProfileAdapter.OnClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -53,13 +53,13 @@ class HomeFragment : Fragment(), OnClickListener {
     }
 
     private fun setupAdapter() {
-        dogProfileAdapter = DogProfileAdapter(emptyList(), this, this)
+        dogProfileAdapter = DogProfileAdapter(this,this)
         binding.rvDogArea.adapter = dogProfileAdapter
     }
 
     private fun observeViewModel() {
         homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
-            dogProfileAdapter.updateData(dogs)
+            dogProfileAdapter.submitList(dogs)
         }
     }
 
@@ -89,6 +89,7 @@ class HomeFragment : Fragment(), OnClickListener {
     }
 
     private fun setupWalkGraph() {
+
         setupWalkGraphForEmptyData()
     }
 
