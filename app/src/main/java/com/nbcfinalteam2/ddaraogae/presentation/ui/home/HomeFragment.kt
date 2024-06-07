@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -21,6 +22,7 @@ class HomeFragment : Fragment(), OnClickListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var dogProfileAdapter: DogProfileAdapter
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +38,7 @@ class HomeFragment : Fragment(), OnClickListener {
         setupAdapter()
         setupWalkGraph()
         setupListener()
+        observeViewModel()
     }
 
     private fun setupListener() {
@@ -43,6 +46,7 @@ class HomeFragment : Fragment(), OnClickListener {
     }
 
     private fun setupAdapter() {
+        // 테스트 코드
         val test = listOf(
             DogEntity(
                 "1",
@@ -65,6 +69,12 @@ class HomeFragment : Fragment(), OnClickListener {
         )
         dogProfileAdapter = DogProfileAdapter(test, this)
         binding.rvDogArea.adapter = dogProfileAdapter
+    }
+
+    private fun observeViewModel() {
+        homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
+            dogProfileAdapter.updateData(dogs)
+        }
     }
 
     private fun moveToAdd() {

@@ -10,11 +10,16 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogAddBinding
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 
-class DogProfileAdapter(private val items: List<DogEntity>, private val onAddClickListener: OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DogProfileAdapter(private var items: List<DogEntity>, private val onAddClickListener: OnClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val DOG_ADD = 0
         private const val DOG_SELECTION = 1
+    }
+
+    fun updateData(newItems: List<DogEntity>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
