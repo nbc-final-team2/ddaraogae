@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.app.di
 
 import com.nbcfinalteam2.ddaraogae.BuildConfig
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.RetrofitInterceptor
+import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.SearchApiService
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.WeatherApiService
 import dagger.Module
 import dagger.Provides
@@ -16,8 +17,8 @@ import java.util.concurrent.TimeUnit
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     private const val WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/"
+    private const val KAKAO_BASE_URL = "https://dapi.kakao.com/"
 
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
@@ -34,7 +35,6 @@ object NetworkModule {
     fun provideRetrofitInterceptorOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
-
         return OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
@@ -45,17 +45,25 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
-            .baseUrl(WEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
-            .build()
     }
 
     @Provides
-    fun provideWeatherService(retrofit: Retrofit): WeatherApiService {
-        return retrofit.create(WeatherApiService::class.java)
+    fun provideWeatherService(retrofitBuilder: Retrofit.Builder): WeatherApiService {
+        return retrofitBuilder
+            .baseUrl(WEATHER_BASE_URL)
+            .build()
+            .create(WeatherApiService::class.java)
     }
 
+    @Provides
+    fun provideKakaoService(retrofitBuilder: Retrofit.Builder): SearchApiService {
+        return retrofitBuilder
+            .baseUrl(KAKAO_BASE_URL)
+            .build()
+            .create(SearchApiService::class.java)
+    }
 }
