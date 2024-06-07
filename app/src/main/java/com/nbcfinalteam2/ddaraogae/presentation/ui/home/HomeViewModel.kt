@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getDogListUseCase: GetDogListUseCase,
+    private val getDogListUseCase: GetDogListUseCase
 ) : ViewModel() {
 
     private val _dogList = MutableLiveData<List<DogEntity>>()
@@ -29,6 +29,10 @@ class HomeViewModel @Inject constructor(
                 _dogList.value = getDogListUseCase().orEmpty()
             }
         }
+    }
+
+    fun loadTodayWeather() {
+
     }
 }
 

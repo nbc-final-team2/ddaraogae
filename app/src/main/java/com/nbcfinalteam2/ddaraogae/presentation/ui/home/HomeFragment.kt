@@ -41,7 +41,6 @@ class HomeFragment : Fragment(), OnClickListener {
         setupWalkGraph()
         setupListener()
         observeViewModel()
-
     }
 
     override fun onResume() {
@@ -94,6 +93,19 @@ class HomeFragment : Fragment(), OnClickListener {
         binding.cvGraph.setOnClickListener {
             val intent = Intent(context, HistoryActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun todayWeather() {
+        with(binding) {
+            val weatherIcon = ivWeatherIcon.setImageResource(R.drawable.ic_launcher_background)
+            val location = tvLocation.text.toString()
+            val fineDust = tvFineDust.text.toString()
+            val ultraFineDust = tvUltraFineDust.text.toString()
+            val locationTemperature = tvLocationTemperature.text.toString()
+            val locationConditions = tvLocationConditions.text.toString()
+            val fineDustStatusIcon = ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
+            val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
         }
     }
 
@@ -171,5 +183,4 @@ class HomeFragment : Fragment(), OnClickListener {
     override fun onAddClick() {
         moveToAdd()
     }
-
 }
