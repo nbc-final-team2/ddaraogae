@@ -1,115 +1,132 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.getValue
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
-import com.nbcfinalteam2.ddaraogae.data.dto.SpotDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import kotlinx.coroutines.tasks.await
+import java.util.Date
+import javax.inject.Inject
 
-class FirebaseDataSourceImpl(
-    private val firebaseRef: DatabaseReference
+class FirebaseDataSourceImpl @Inject constructor(
+    private val firebaseFs: FirebaseFirestore,
+    private val fbAuth: FirebaseAuth
 ): FirebaseDataSource {
-    override suspend fun getDogList(): List<DogDto> {
-        val snapshot = firebaseRef.child("DOGS").get().await()
-        val dogList = mutableListOf<DogDto>()
 
-        for (childSnapshot in snapshot.children) {
-            val dog = childSnapshot.getValue<DogDto>()
-            dog?.let {
-                dogList.add(it)
+    override suspend fun getDogList(): List<Pair<String, DogDto>> {
+        val uid = getUserUid()
+
+        return firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_DOGS)
+            .get().await()
+            .map {
+                it.id to it.toObject(DogDto::class.java)
             }
-        }
-
-        return dogList
     }
 
     override suspend fun getDogById(dogId: String): DogDto? {
-        return firebaseRef.child("DOGS").child(dogId).get().await().getValue<DogDto>()
+        val uid = getUserUid()
+
+        return firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_DOGS).document(dogId)
+            .get().await()
+            .toObject(DogDto::class.java)
     }
 
     override suspend fun insertDog(dogDto: DogDto) {
-        val key = firebaseRef.child("DOGS").push().key
+        val uid = getUserUid()
 
-        if(key != null) {
-            val newData = dogDto.copy(id = key)
-            firebaseRef.child("DOGS").child(key).setValue(newData)
-        }
+        firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_DOGS)
+            .add(dogDto).await()
     }
 
-    override suspend fun updateDog(dogDto: DogDto) {
-        val key = dogDto.id
+    override suspend fun updateDog(dogId: String, dogDto: DogDto) {
+        val uid = getUserUid()
 
-        if(key != null) {
-            firebaseRef.child("DOGS").child(key).setValue(dogDto)
-        }
+        firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_DOGS).document(dogId)
+            .set(dogDto).await()
     }
 
     override suspend fun deleteDog(dogId: String) {
-        firebaseRef.child("DOGS").child(dogId).removeValue()
+        val uid = getUserUid()
+
+        firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_DOGS).document(dogId)
+            .delete().await()
     }
 
-    override suspend fun getSpotList(): List<SpotDto> {
-        val snapshot = firebaseRef.child("SPOTS").get().await()
-        val spotList = mutableListOf<SpotDto>()
+    override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Date, end: Date): Int {
+        val uid = getUserUid()
 
-        for (childSnapshot in snapshot.children) {
-            val spot = childSnapshot.getValue<SpotDto>()
-            spot?.let {
-                spotList.add(it)
-            }
-        }
+        val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_STAMPS)
+            .whereEqualTo(FIELD_DOG_ID, dogId)
+            .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, start)
+            .whereLessThanOrEqualTo(FIELD_GET_DATETIME, end)
+            .get().await()
 
-        return spotList
-    }
-
-    override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Long, end: Long): Int {
-        val snapshot = firebaseRef.child("STAMPS")
-            .orderByChild("dogId").equalTo(dogId)
-            .orderByChild("getDateTime").startAt(start.toDouble()).endAt(end.toDouble())
-            .get()
-            .await()
-
-        return snapshot.childrenCount.toInt()
+        return queriedList.size()
     }
 
     override suspend fun insertStamp(stampDto: StampDto) {
-        val key = firebaseRef.child("STAMPS").push().key
+        val uid = getUserUid()
 
-        if(key != null) {
-            val newData = stampDto.copy(id = key)
-            firebaseRef.child("STAMPS").child(key).setValue(newData)
-        }
+        firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_STAMPS)
+            .add(stampDto).await()
     }
 
     override suspend fun getWalkingListByDogIdAndPeriod(
         dogId: String,
-        start: Long,
-        end: Long
-    ): List<WalkingDto> {
-        //todo 복합쿼리 지원 안하는 문제
-        val snapshot = firebaseRef.child("WALKING")
-            .orderByChild("startDateTime").startAt(start.toDouble()).endAt(end.toDouble())
-            .get()
-            .await()
+        start: Date,
+        end: Date
+    ): List<Pair<String, WalkingDto>> {
+        val uid = getUserUid()
 
-        return snapshot.children.map {
-            it.getValue<WalkingDto>()!!
-        }
+        val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING)
+            .whereEqualTo(FIELD_DOG_ID, dogId)
+            .whereGreaterThanOrEqualTo(FIELD_START_DATETIME, start)
+            .whereLessThanOrEqualTo(FIELD_START_DATETIME, end)
+            .get().await()
+            .map {
+                it.id to it.toObject(WalkingDto::class.java)
+            }
+
+        return queriedList
     }
 
     override suspend fun getWalkingById(walkingId: String): WalkingDto? {
-        return firebaseRef.child("WALKING").child(walkingId).get().await().getValue<WalkingDto>()
+        val uid = getUserUid()
+
+        return firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING).document(walkingId)
+            .get().await()
+            .toObject(WalkingDto::class.java)
     }
 
     override suspend fun insertWalkingData(walkingDto: WalkingDto) {
-        val key = firebaseRef.child("WALKING").push().key
+        val uid = getUserUid()
 
-        if(key != null) {
-            val newData = walkingDto.copy(id = key)
-            firebaseRef.child("WALKING").child(key).setValue(newData)
-        }
+        firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING).add(walkingDto)
     }
 
+    private fun getUserUid(): String {
+        return fbAuth.currentUser?.uid?:throw Exception("UNKNOWN USER")
+    }
+
+    companion object {
+        private const val PATH_USERDATA = "userData"
+        private const val PATH_DOGS = "dogs"
+        private const val PATH_STAMPS = "stamps"
+        private const val PATH_WALKING = "walking"
+
+        private const val FIELD_DOG_ID = "dogId"
+        private const val FIELD_GET_DATETIME = "getDateTime"
+        private const val FIELD_START_DATETIME = "startDateTime"
+    }
 }
