@@ -4,8 +4,11 @@ import com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit.SearchApiServ
 import com.nbcfinalteam2.ddaraogae.data.mapper.StoreMapper
 import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.StoreRepository
+import javax.inject.Inject
 
-class StoreRepositoryImpl(private val storeApiService: SearchApiService) : StoreRepository {
+class StoreRepositoryImpl @Inject constructor(
+    private val storeApiService: SearchApiService
+) : StoreRepository {
     override suspend fun getStoreData(): List<StoreEntity> {
         val storeResponse = storeApiService.getStore()
         val storeItemList = StoreMapper.toStoreData(storeResponse)
