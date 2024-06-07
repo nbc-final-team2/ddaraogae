@@ -9,7 +9,7 @@ object RetrofitInterceptor: Interceptor {
         val originalUrl = originalRequest.url
 
         val newUrl = originalUrl.newBuilder()
-            .addQueryParameter("appid", Key.API_KEY)
+            .addQueryParameter("appid", Key.WEATHER_API_KEY)
             .build()
 
         val newRequest = originalRequest.newBuilder()
