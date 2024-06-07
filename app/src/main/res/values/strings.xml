@@ -8,7 +8,7 @@
 
     <!-- home -->
     <string name="home_title">반가워요!</string>
-    <string name="home_walk_graph_title">내 반려견의 산책 그래프</string>
+    <string name="home_walk_graph_title">반려견을 선택하거나 추가해주세요!</string>
     <string name="home_weather_title">오늘의 날씨</string>
     <string name="home_weather_location">홍성군</string>
     <string name="home_weather_fine_dust">미세먼지</string>
