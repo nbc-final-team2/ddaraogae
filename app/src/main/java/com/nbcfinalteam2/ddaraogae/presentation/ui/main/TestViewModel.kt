@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
-import com.nbcfinalteam2.ddaraogae.domain.entity.WeatherEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,25 +23,11 @@ class TestViewModel @Inject constructor(
     private val _storeData = MutableLiveData<List<StoreEntity>>()
     val storeData: LiveData<List<StoreEntity>> = _storeData
 
-    private val _weatherData = MutableLiveData<WeatherEntity>()
-    val weatherData: LiveData<WeatherEntity> = _weatherData
-
     fun fetchStoreData(lat: String, lng: String) {
         viewModelScope.launch {
             try {
                 val storeDataList = getStoreDataUseCase(lat, lng)
                 _storeData.value = storeDataList
-            } catch (e: Exception) {
-                // 에러 처리
-            }
-        }
-    }
-
-    fun fetchWeatherData(lat: String, lng: String) {
-        viewModelScope.launch {
-            try {
-                val weather = getWeatherUseCase(lat, lng)
-                _weatherData.value = weather
             } catch (e: Exception) {
                 // 에러 처리
             }

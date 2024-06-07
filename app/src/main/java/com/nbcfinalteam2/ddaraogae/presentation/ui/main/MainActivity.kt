@@ -50,11 +50,5 @@ class MainActivity : AppCompatActivity() {
             val store = it
             Log.d("MainActivity", "store data: $store")
         }
-
-        viewModel.fetchWeatherData(lat, lng)
-        viewModel.weatherData.observe(this) {
-            val weather = it
-            Log.d("MainActivity", "weather data: $weather")
-        }
     }
 }
