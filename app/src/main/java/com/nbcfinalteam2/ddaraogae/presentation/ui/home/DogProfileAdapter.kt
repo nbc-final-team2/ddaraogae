@@ -12,8 +12,8 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 
 class DogProfileAdapter(
-    private val onAddClickListener: OnClickListener,
-    private val onDogClickListener: OnClickListener
+    private val onAddClickListener: HomeOnClickListener,
+    private val onDogClickListener: HomeOnClickListener
 ) : ListAdapter<DogEntity, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -81,7 +81,7 @@ class DogProfileAdapter(
 
     class SelectionViewHolder(private val binding: ItemHomeDogSelectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: DogEntity, onDogClickListener: OnClickListener) {
+        fun bind(item: DogEntity, onDogClickListener: HomeOnClickListener) {
             binding.apply {
                 Glide.with(ivDogImage.context)
                     .load(item.thumbnailUrl)
@@ -96,7 +96,7 @@ class DogProfileAdapter(
 
     class AddViewHolder(private val binding: ItemHomeDogAddBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(onAddClickListener: OnClickListener) {
+        fun bind(onAddClickListener: HomeOnClickListener) {
             binding.apply {
                 Glide.with(ivDogAdd.context)
                     .load(R.drawable.ic_dog_add)

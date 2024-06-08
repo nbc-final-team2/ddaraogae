@@ -19,7 +19,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), OnClickListener {
+class HomeFragment : Fragment(), HomeOnClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
