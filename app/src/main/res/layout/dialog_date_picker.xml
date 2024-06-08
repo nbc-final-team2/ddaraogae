@@ -35,12 +35,9 @@
             android:background="?attr/selectableItemBackgroundBorderless" />
     </LinearLayout>
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gridview_months"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:verticalSpacing="16dp"
-        android:horizontalSpacing="16dp"
-        android:gravity="center" />
+        android:layout_marginTop="@dimen/margin_medium" />
 </LinearLayout>
