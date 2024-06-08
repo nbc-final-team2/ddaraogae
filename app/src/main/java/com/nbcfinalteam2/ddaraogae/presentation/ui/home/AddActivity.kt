@@ -1,11 +1,13 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.protobuf.Empty
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
@@ -30,7 +32,7 @@ class AddActivity : AppCompatActivity() {
             insets
         }
         setupListener()
-        editDogCompleted()
+        validationCheck()
     }
 
     private fun setupListener() {
@@ -64,6 +66,28 @@ class AddActivity : AppCompatActivity() {
                 )
                 addViewModel.addDog(dogData)
                 finish()
+            }
+        }
+    }
+
+    private fun validationCheck() {
+        binding.btnEditCompleted.setOnClickListener {
+            val name = binding.etName.text.toString()
+            val gender = binding.rgGenderGroup.checkedRadioButtonId
+
+            when {
+                gender == - 1 && name.isEmpty() -> {
+                    Toast.makeText(this, "반려견의 이름과 성별을 선택해주세요!", Toast.LENGTH_SHORT).show()
+                }
+                name.isEmpty() -> {
+                    Toast.makeText(this, "반려견 이름을 입력해주세요!", Toast.LENGTH_SHORT).show()
+                }
+                gender == -1 -> {
+                    Toast.makeText(this, "성별을 선택해 주세요!", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    editDogCompleted()
+                }
             }
         }
     }
