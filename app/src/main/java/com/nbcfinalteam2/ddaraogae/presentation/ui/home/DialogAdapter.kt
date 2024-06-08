@@ -17,7 +17,7 @@ class DialogAdapter(private val onMonthClickListener: OnClickListener) : Recycle
     }
 
     override fun onBindViewHolder(holder: DialogAdapter.ViewHolder, position: Int) {
-        holder.bind(months[position], position + 1)
+        holder.bind(months[position], position + 1, onMonthClickListener)
     }
 
     override fun getItemCount(): Int {
@@ -25,12 +25,11 @@ class DialogAdapter(private val onMonthClickListener: OnClickListener) : Recycle
     }
 
     class ViewHolder(private val binding: ItemDialogDatePickerBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(month: String, monthNumber: Int) {
+        fun bind(month: String, monthNumber: Int, onMonthClickListener: OnClickListener) {
             binding.tvMonths.text = month
             binding.tvMonths.setOnClickListener {
-
+                onMonthClickListener.onMonthClick(monthNumber)
             }
         }
     }
-
 }
