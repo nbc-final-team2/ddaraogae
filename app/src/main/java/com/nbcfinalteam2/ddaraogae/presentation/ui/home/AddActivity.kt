@@ -31,7 +31,7 @@ class AddActivity : AppCompatActivity() {
         if (uri != null) {
             contentResolver.takePersistableUriPermission(
                 uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                Intent.FLAG_GRANT_READ_URI_PERMISSION // 다른 앱에서 이미지를 가져올 수 있도록 설정 ( 사진이나 파일등 )
             )
             thumbnailUri = uri
             binding.ivDogThumbnail.setImageURI(uri)
