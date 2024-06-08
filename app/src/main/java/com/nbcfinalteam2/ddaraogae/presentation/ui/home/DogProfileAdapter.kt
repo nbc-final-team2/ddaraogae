@@ -107,9 +107,4 @@ class DogProfileAdapter(
             }
         }
     }
-
-    interface OnClickListener {
-        fun onAddClick()
-        fun onDogClick(dog: DogEntity)
-    }
 }
