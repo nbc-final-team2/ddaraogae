@@ -33,7 +33,7 @@ class HomeViewModel @Inject constructor(
 
     fun selectedDogDisplay() {
         viewModelScope.launch {
-
+            //TODO()반려견을 선택하거나 추가해주세요를 비동기처리해야함
         }
     }
 
