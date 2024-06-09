@@ -20,22 +20,24 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState.init())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
-    fun getCurrentUser() = viewModelScope.launch {
-        val getCurrentUser = getCurrentUserUseCase()
-        var currentUser = if (getCurrentUser != null) true
-        else false
-        currentUser?.let { user ->
-            _uiState.update { prev ->
-                prev.copy(
-                    currentUser = user
-                )
+    init {
+        viewModelScope.launch {
+            val getCurrentUser = getCurrentUserUseCase()
+            var currentUser = if (getCurrentUser != null) true
+            else false
+            currentUser.let { user ->
+                _uiState.update { prev ->
+                    prev.copy(
+                        successGoogleLogin = user
+                    )
+                }
             }
         }
     }
 
     fun signInGoogle(idToken: String) = viewModelScope.launch {
         val successSignInGoogle = signInWithGoogleUseCase(idToken)
-        successSignInGoogle?.let { successToken ->
+        successSignInGoogle.let { successToken ->
             _uiState.update { prev ->
                 prev.copy(
                     successGoogleLogin = successSignInGoogle
@@ -43,5 +45,4 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
 }
