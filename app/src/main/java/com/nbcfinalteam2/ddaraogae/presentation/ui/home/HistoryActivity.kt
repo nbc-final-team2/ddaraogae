@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,6 +22,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private lateinit var binding: ActivityHistoryBinding
     private lateinit var dialogAdapter: DialogAdapter
+    private val historyViewModel: HistoryViewModel by viewModels()
     private var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +118,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
     }
 
+    /** 어댑터로 뺄지 고민중 */
+    /** xml중 text를 strings로 안바꾼거 있나 확인 */
+    /** MVVM패턴으로 바꿀것 */
     private fun showMonthYearPickerDialog() {
         val dialogBinding = DialogDatePickerBinding.inflate(layoutInflater)
         val dialog = Dialog(this)
