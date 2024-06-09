@@ -84,7 +84,6 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         // 현재 위치
@@ -94,15 +93,12 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         // 위치 추적 모드 설정
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
+
         // 현재 위치를 가져와서 지도에 표시
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         updateLocation()
 
-        // Draw polyline
-        val latLngList = intent.getParcelableArrayExtra("latLngList", LatLng::class.java)
-        Log.d("onMapReady()", "asd")
-        Log.d("onMapReady()", latLngList?.toList().toString())
-        drawPolyLine(latLngList!!.toList())
+
     }
 
     private fun updateLocation() {
@@ -115,6 +111,7 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         locationCallback = object : LocationCallback() {
+            @RequiresApi(Build.VERSION_CODES.TIRAMISU)
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult?.let {
                     for (location in it.locations) {
@@ -141,6 +138,7 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun setLastLocation(lastLocation: Location) {
         val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
 
@@ -152,6 +150,12 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         //따라서 CameraPosition.Builder().target(latLng).zoom(15.0f).build() 대신에
         // CameraPosition(latLng, 15.0f)와 같이 생성자를 사용하여 CameraPosition 객체를 생성할 수 있습니다.
         //따라서 setLastLocation() 함수에서 다음과 같이 수정할 수 있습니다:
+
+        // Draw polyline
+        val latLngList = intent.getParcelableArrayExtra("latLngList", LatLng::class.java)
+        Log.d("onMapReady()", "asd")
+        Log.d("onMapReady()", latLngList?.toList().toString())
+        drawPolyLine(latLngList!!.toList())
     }
 
 
