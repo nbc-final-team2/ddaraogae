@@ -16,7 +16,7 @@ class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getDogListUseCase: GetDogListUseCase
 ) : ViewModel() {
-
+    // UI용 모델 만들어서 넣을것
     private val _dogList = MutableLiveData<List<DogEntity>>()
     val dogList: LiveData<List<DogEntity>> get() = _dogList
 

@@ -26,6 +26,14 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     private lateinit var dogProfileAdapter: DogProfileAdapter
     private val homeViewModel: HomeViewModel by viewModels()
 
+    override fun onAddClick() {
+        moveToAdd()
+    }
+
+    override fun onDogClick(dogData: DogEntity) {
+        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,15 +45,19 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupAdapter()
         setupWalkGraph()
         setupListener()
+        setupAdapter()
         observeViewModel()
     }
 
     override fun onResume() {
         super.onResume()
         homeViewModel.loadDogs()
+    }
+
+    private fun setupWalkGraph() {
+        setupWalkGraphForEmptyData()
     }
 
     private fun setupListener() {
@@ -86,10 +98,6 @@ class HomeFragment : Fragment(), HomeOnClickListener {
             val fineDustStatusIcon = ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
             val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
         }
-    }
-
-    private fun setupWalkGraph() {
-        setupWalkGraphForEmptyData()
     }
 
     private fun setupWalkGraphForEmptyData() {
@@ -157,13 +165,5 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onAddClick() {
-        moveToAdd()
-    }
-
-    override fun onDogClick(dogData: DogEntity) {
-        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
     }
 }

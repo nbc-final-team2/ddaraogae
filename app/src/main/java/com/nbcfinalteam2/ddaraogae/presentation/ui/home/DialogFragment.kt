@@ -25,7 +25,11 @@ class DialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        operationForYearAndDisplay()
+        setupMonthButtons()
+    }
 
+    private fun operationForYearAndDisplay() {
         binding.tvYear.text = selectedYear.toString()
 
         binding.btnPrevYear.setOnClickListener {
@@ -37,7 +41,6 @@ class DialogFragment : DialogFragment() {
             selectedYear++
             binding.tvYear.text = selectedYear.toString()
         }
-        setupMonthButtons()
     }
 
     private fun setupMonthButtons() {
@@ -46,7 +49,7 @@ class DialogFragment : DialogFragment() {
                 btnMonth1, btnMonth2, btnMonth3,
                 btnMonth4, btnMonth5, btnMonth6,
                 btnMonth7, btnMonth8, btnMonth9,
-                btnMonth10,btnMonth11, btnMonth12
+                btnMonth10, btnMonth11, btnMonth12
             )
             months.forEachIndexed { index, button ->
                 button.setOnClickListener {

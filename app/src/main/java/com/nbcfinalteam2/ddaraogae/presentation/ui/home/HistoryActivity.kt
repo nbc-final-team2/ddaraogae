@@ -22,6 +22,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     private lateinit var binding: ActivityHistoryBinding
     private val historyViewModel: HistoryViewModel by viewModels()
 
+    override fun onMonthClick(year: Int, monthNumber: Int) {
+        Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
+        historyViewModel.setSelectedDate(year, monthNumber)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHistoryBinding.inflate(layoutInflater)
@@ -122,10 +127,5 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 }
             }
         }
-    }
-
-    override fun onMonthClick(year: Int, monthNumber: Int) {
-        Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
-        historyViewModel.setSelectedDate(year, monthNumber)
     }
 }
