@@ -8,6 +8,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -38,6 +41,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         setupWalkGraph()
         setupListener()
         setupDatePicker()
+        setupObserve()
     }
 
     private fun setupWalkGraph() {
@@ -48,9 +52,20 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         moveToBack()
     }
 
+    private fun setupAdapter(dialogBinding: DialogDatePickerBinding, year: Int, dialog: Dialog) {
+        dialogAdapter = DialogAdapter(year, dialog,this)
+        dialogBinding.rvCalendarArea.adapter = dialogAdapter
+    }
+
     private fun setupDatePicker() {
         binding.tvSelectedCalendar.setOnClickListener {
             showMonthYearPickerDialog()
+        }
+    }
+
+    private fun setupObserve() {
+        historyViewModel.selectedDate.observe(this) {date ->
+            binding.tvSelectedCalendar.text = date
         }
     }
 
@@ -131,28 +146,22 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         dialogBinding.btnPrevYear.setOnClickListener {
             selectedYear--
             dialogBinding.tvYear.text = selectedYear.toString()
-            updateDialog(dialogBinding, selectedYear, dialog)
+            setupAdapter(dialogBinding, selectedYear, dialog)
         }
 
         dialogBinding.btnNextYear.setOnClickListener {
             selectedYear++
             dialogBinding.tvYear.text = selectedYear.toString()
-            updateDialog(dialogBinding, selectedYear, dialog)
+            setupAdapter(dialogBinding, selectedYear, dialog)
         }
 
-        updateDialog(dialogBinding, selectedYear, dialog)
+        setupAdapter(dialogBinding, selectedYear, dialog)
 
         dialog.show()
     }
 
-    private fun updateDialog(dialogBinding: DialogDatePickerBinding, year: Int, dialog: Dialog) {
-        dialogAdapter = DialogAdapter(year, dialog,this)
-        dialogBinding.rvCalendarArea.apply {
-            adapter = dialogAdapter
-        }
-    }
-
     override fun onMonthClick(year: Int, monthNumber: Int) {
         Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
+        historyViewModel.setSelectedDate(year, monthNumber)
     }
 }
