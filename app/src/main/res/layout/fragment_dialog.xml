@@ -7,22 +7,22 @@
     android:padding="@dimen/padding_small">
 
     <!-- 연도 -->
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_prev_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_media_previous"
+        android:src="@drawable/ic_left"
+        app:layout_constraintBottom_toBottomOf="@id/tv_year"
+        app:layout_constraintEnd_toStartOf="@+id/tv_year"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/tv_year" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="2024"
+        android:text="@string/home_history_dialog_year"
         android:textSize="@dimen/text_text"
         app:layout_constraintEnd_toStartOf="@id/btn_next_year"
         app:layout_constraintStart_toEndOf="@id/btn_prev_year"
@@ -32,126 +32,154 @@
         android:id="@+id/btn_next_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_media_next"
+        android:src="@drawable/ic_right"
+        app:layout_constraintBottom_toBottomOf="@id/tv_year"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/tv_year" />
+        app:layout_constraintStart_toEndOf="@+id/tv_year"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 달 -->
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_1"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="1월"
+        android:layout_marginStart="@dimen/margin_extra_smaller"
         android:layout_marginTop="@dimen/margin_small"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_year"
+        android:layout_marginEnd="@dimen/margin_extra_smaller"
+        android:layout_marginBottom="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_1"
         app:layout_constraintEnd_toStartOf="@id/btn_month_2"
-        app:layout_constraintHorizontal_chainStyle="spread" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_year" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_2"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="2월"
+        android:layout_marginStart="@dimen/margin_extra_smaller"
         android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_extra_smaller"
+        android:layout_marginBottom="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_2"
+        app:layout_constraintEnd_toStartOf="@id/btn_month_3"
         app:layout_constraintStart_toEndOf="@id/btn_month_1"
-        app:layout_constraintTop_toBottomOf="@id/tv_year"
-        app:layout_constraintEnd_toStartOf="@id/btn_month_3" />
+        app:layout_constraintTop_toBottomOf="@id/tv_year" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_3"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="3월"
+        android:layout_marginStart="@dimen/margin_extra_smaller"
         android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_extra_smaller"
+        android:layout_marginBottom="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_3"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_month_2"
-        app:layout_constraintTop_toBottomOf="@id/tv_year"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_year" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_4"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="4월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_4"
+        app:layout_constraintEnd_toStartOf="@id/btn_month_5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_1"
-        app:layout_constraintEnd_toStartOf="@id/btn_month_5" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_1" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_5"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="5월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_5"
+        app:layout_constraintEnd_toStartOf="@id/btn_month_6"
         app:layout_constraintStart_toEndOf="@id/btn_month_4"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_2"
-        app:layout_constraintEnd_toStartOf="@id/btn_month_6" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_2" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_6"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="6월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_6"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_month_5"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_3"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_3" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_7"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="7월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_7"
+        app:layout_constraintEnd_toStartOf="@id/btn_month_8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_4"
-        app:layout_constraintEnd_toStartOf="@id/btn_month_8" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_4" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_8"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="8월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_8"
+        app:layout_constraintEnd_toStartOf="@id/btn_month_9"
         app:layout_constraintStart_toEndOf="@id/btn_month_7"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_5"
-        app:layout_constraintEnd_toStartOf="@id/btn_month_9" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_5" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_9"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="9월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_9"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_month_8"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_6"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_6" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_10"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="10월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_10"
+        app:layout_constraintEnd_toStartOf="@id/btn_month_11"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_7"
-        app:layout_constraintEnd_toStartOf="@id/btn_month_11" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_7" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_11"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="11월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_11"
+        app:layout_constraintEnd_toStartOf="@id/btn_month_12"
         app:layout_constraintStart_toEndOf="@id/btn_month_10"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_8"
-        app:layout_constraintEnd_toStartOf="@id/btn_month_12" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_8" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_month_12"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="12월"
+        android:layout_margin="@dimen/margin_extra_smaller"
+        android:background="@drawable/bg_dialog_month"
+        android:text="@string/home_history_dialog_month_12"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/btn_month_11"
-        app:layout_constraintTop_toBottomOf="@id/btn_month_9"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btn_month_9" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 
