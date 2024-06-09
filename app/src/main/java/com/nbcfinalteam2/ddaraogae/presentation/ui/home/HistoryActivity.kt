@@ -19,8 +19,10 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityHistoryBinding
 import com.nbcfinalteam2.ddaraogae.databinding.DialogDatePickerBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
+@AndroidEntryPoint
 class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private lateinit var binding: ActivityHistoryBinding
