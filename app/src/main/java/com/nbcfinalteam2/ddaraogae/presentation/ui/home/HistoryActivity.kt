@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
-import android.app.Dialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,23 +14,19 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityHistoryBinding
-import com.nbcfinalteam2.ddaraogae.databinding.DialogDatePickerBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Calendar
 
 @AndroidEntryPoint
 class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private lateinit var binding: ActivityHistoryBinding
-    private lateinit var dialogAdapter: DialogAdapter
     private val historyViewModel: HistoryViewModel by viewModels()
-    private var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -51,19 +46,16 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         moveToBack()
     }
 
-    private fun setupAdapter(dialogBinding: DialogDatePickerBinding, year: Int, dialog: Dialog) {
-        dialogAdapter = DialogAdapter(year, dialog,this)
-        dialogBinding.rvCalendarArea.adapter = dialogAdapter
-    }
-
     private fun setupDatePicker() {
         binding.tvSelectedCalendar.setOnClickListener {
-            showMonthYearPickerDialog()
+            val dialog = DialogFragment()
+            dialog.setOnMonthClickListener(this)
+            dialog.show(supportFragmentManager, "")
         }
     }
 
     private fun setupObserve() {
-        historyViewModel.selectedDate.observe(this) {date ->
+        historyViewModel.selectedDate.observe(this) { date ->
             binding.tvSelectedCalendar.text = date
         }
     }
@@ -130,33 +122,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 }
             }
         }
-    }
-
-    /** xml중 text를 strings로 안바꾼거 있나 확인 */
-    /** 구조를 좀더 우아하고 견고하게 생각해볼것 (튜터님들한테 여쭤보기) */
-    /** recyclerview말고 텍스트 넣는거 고려해보기 */
-    private fun showMonthYearPickerDialog() {
-        val dialogBinding = DialogDatePickerBinding.inflate(layoutInflater)
-        val dialog = Dialog(this)
-        dialog.setContentView(dialogBinding.root)
-
-        dialogBinding.tvYear.text = selectedYear.toString()
-
-        dialogBinding.btnPrevYear.setOnClickListener {
-            selectedYear--
-            dialogBinding.tvYear.text = selectedYear.toString()
-            setupAdapter(dialogBinding, selectedYear, dialog)
-        }
-
-        dialogBinding.btnNextYear.setOnClickListener {
-            selectedYear++
-            dialogBinding.tvYear.text = selectedYear.toString()
-            setupAdapter(dialogBinding, selectedYear, dialog)
-        }
-
-        setupAdapter(dialogBinding, selectedYear, dialog)
-
-        dialog.show()
     }
 
     override fun onMonthClick(year: Int, monthNumber: Int) {
