@@ -89,7 +89,6 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     }
 
     private fun setupWalkGraph() {
-
         setupWalkGraphForEmptyData()
     }
 

@@ -31,6 +31,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun selectedDogDisplay() {
+        viewModelScope.launch {
+
+        }
+    }
+
     fun loadTodayWeather() {
 
     }

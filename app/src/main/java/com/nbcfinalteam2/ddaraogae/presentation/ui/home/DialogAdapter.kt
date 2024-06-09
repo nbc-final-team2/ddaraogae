@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nbcfinalteam2.ddaraogae.databinding.ItemDialogDatePickerBinding
 
-class DialogAdapter(private val year: Int, private val dialog: Dialog,private val onMonthClickListener: HistoryOnClickListener) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
+class DialogAdapter(private val year: Int, private val dialog: Dialog, private val onMonthClickListener: HistoryOnClickListener) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
 
     private val months = arrayOf(
         "1월", "2월", "3월", "4월", "5월", "6월",

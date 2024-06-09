@@ -8,9 +8,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -135,9 +132,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
     }
 
-    /** 어댑터로 뺄지 고민중 */
     /** xml중 text를 strings로 안바꾼거 있나 확인 */
-    /** MVVM패턴으로 바꿀것 */
+    /** 구조를 좀더 우아하고 견고하게 생각해볼것 (튜터님들한테 여쭤보기) */
+    /** recyclerview말고 텍스트 넣는거 고려해보기 */
     private fun showMonthYearPickerDialog() {
         val dialogBinding = DialogDatePickerBinding.inflate(layoutInflater)
         val dialog = Dialog(this)
