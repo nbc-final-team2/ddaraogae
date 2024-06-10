@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.location.Location
+import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
@@ -28,8 +29,18 @@ class LocationService: Service() {
             5000
         ).build()
     }
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            for(location in locationResult.locations) {
+                locationList.add(location.toLatLng())
+                Log.d("onLocationResult()", locationList.toString())
+            }
+        }
+    }
 
-    private val locationList = mutableListOf<LatLng>()
+    private val binder = LocalBinder()
+
+    val locationList = mutableListOf<LatLng>()
 
     override fun onCreate() {
         super.onCreate()
@@ -56,8 +67,15 @@ class LocationService: Service() {
         return START_STICKY
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
+    override fun onBind(p0: Intent?): IBinder {
+        return binder
+    }
+
+    fun stopService() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        locationList.clear()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
     override fun onDestroy() {
@@ -76,14 +94,6 @@ class LocationService: Service() {
     }
 
     private fun startLocationUpdates() {
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                for(location in locationResult.locations) {
-                    locationList.add(location.toLatLng())
-                    Log.d("onLocationResult()", locationList.toString())
-                }
-            }
-        }
 
         try {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
@@ -97,9 +107,11 @@ class LocationService: Service() {
         private val latitude: Double,
         private val longitude: Double
     )
-
     private fun Location.toLatLng() = LatLng(latitude = latitude, longitude = longitude)
 
+    inner class LocalBinder: Binder() {
+        fun getService(): LocationService = this@LocationService
+    }
 
     companion object {
         private const val CHANNEL_ID = "LocationServiceChannel"
