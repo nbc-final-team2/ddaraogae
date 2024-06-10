@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.LineChart
@@ -25,6 +26,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     private val binding get() = _binding!!
     private lateinit var dogProfileAdapter: DogProfileAdapter
     private val homeViewModel: HomeViewModel by viewModels()
+    private var selectedDogInfo: DogInfo? = null
 
     override fun onAddClick() {
         moveToAdd()
@@ -33,6 +35,8 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     override fun onDogClick(dogData: DogInfo) {
         binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
         homeViewModel.selectedWalkGraphDogName(dogData.name)
+        selectedDogInfo = dogData
+
     }
 
     override fun onCreateView(
@@ -87,8 +91,14 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
     private fun moveToHistory() {
         binding.cvGraph.setOnClickListener {
-            val intent = Intent(context, HistoryActivity::class.java)
-            startActivity(intent)
+            val dogInfo = selectedDogInfo
+            if (dogInfo != null) {
+                val intent = Intent(context, HistoryActivity::class.java)
+                intent.putExtra("DOG_INFO", dogInfo)
+                startActivity(intent)
+            } else {
+                Toast.makeText(context, "선택된 반려견이 없습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

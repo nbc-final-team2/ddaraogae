@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +15,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityHistoryBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +23,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private lateinit var binding: ActivityHistoryBinding
     private val historyViewModel: HistoryViewModel by viewModels()
+    private lateinit var dogInfo: DogInfo
 
     override fun onMonthClick(year: Int, monthNumber: Int) {
         Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
@@ -39,8 +42,8 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
         setupWalkGraph()
         setupListener()
-        setupDatePicker()
         setupObserve()
+        getDogInfo()
     }
 
     private fun setupWalkGraph() {
@@ -48,6 +51,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     }
 
     private fun setupListener() {
+        setupDatePicker()
         moveToBack()
     }
 
@@ -62,6 +66,20 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     private fun setupObserve() {
         historyViewModel.selectedDate.observe(this) { date ->
             binding.tvSelectedCalendar.text = date
+        }
+    }
+
+    private fun getDogInfo() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("DOG_INFO", DogInfo::class.java)?.let {
+                dogInfo = it
+                historyViewModel.setDogInfo(dogInfo)
+            }
+        } else {
+            intent.getParcelableExtra<DogInfo>("DOG_INFO")?.let {
+                dogInfo = it
+                historyViewModel.setDogInfo(dogInfo)
+            }
         }
     }
 

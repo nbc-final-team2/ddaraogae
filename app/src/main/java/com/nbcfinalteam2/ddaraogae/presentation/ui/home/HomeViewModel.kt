@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getDogListUseCase: GetDogListUseCase
+    private val getDogListUseCase: GetDogListUseCase,
 ) : ViewModel() {
     // UI용 모델 만들어서 넣을것
     private val _dogList = MutableLiveData<List<DogInfo>>()

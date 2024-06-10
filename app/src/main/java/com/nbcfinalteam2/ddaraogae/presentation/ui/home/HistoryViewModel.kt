@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +18,9 @@ class HistoryViewModel @Inject constructor(
     private val _selectedDate = MutableLiveData<String>()
     val selectedDate: LiveData<String> get() = _selectedDate
 
+    private val _dogInfo = MutableLiveData<DogInfo>()
+    val dogInfo: LiveData<DogInfo> get() = _dogInfo
+
     fun setSelectedDate(year: Int, month: Int) {
         viewModelScope.launch {
             val user = getCurrentUserUseCase()
@@ -25,4 +29,10 @@ class HistoryViewModel @Inject constructor(
             }
         }
     }
+
+    fun setDogInfo(dog: DogInfo) {
+        _dogInfo.value = dog
+    }
 }
+
+// 여기서 강아지 아이디값을 가져와서 처리해야함
