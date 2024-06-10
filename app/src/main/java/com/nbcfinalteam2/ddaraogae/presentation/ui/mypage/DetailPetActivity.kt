@@ -3,7 +3,6 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,17 +12,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
-import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class DetailPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailPetBinding
     private lateinit var adapter: DetailPetAdapter
-    private var dogData = DogModel()
+    private var dogData = DogItemModel("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
-    private var dogDataList = listOf<DogModel>()
+    private var dogDataList = listOf<DogItemModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailPetBinding.inflate(layoutInflater)
@@ -46,7 +47,7 @@ class DetailPetActivity : AppCompatActivity() {
                     initView(0)
                 }
         }
-        viewModel.loadPetList()
+       // viewModel.loadPetList()
 
         adapter.setItemClickListener(object : DetailPetAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
@@ -56,6 +57,7 @@ class DetailPetActivity : AppCompatActivity() {
     }
 
     private fun initView(position: Int) = with(binding) {
+        dogData = dogDataList[position]
         Glide.with(this@DetailPetActivity)
             .load(dogDataList[position].thumbnailUrl)
             .into(ivDogThumbnail)
@@ -63,7 +65,7 @@ class DetailPetActivity : AppCompatActivity() {
         tvPetAge.text = dogDataList[position].age.toString()
         tvPetBreed.text = dogDataList[position].lineage
         tvPetMemo.text = dogDataList[position].memo
-        if (dogDataList[position].gender == true) {
+        if (dogDataList[position].gender == 1) {
             tvFemale.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
                     this.root.context,

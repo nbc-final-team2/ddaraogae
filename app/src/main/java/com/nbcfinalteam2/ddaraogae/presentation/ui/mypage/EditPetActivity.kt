@@ -11,13 +11,15 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import java.io.File
 
 class EditPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPetBinding
     private lateinit var imageFile: File
-    private lateinit var dogData: DogModel
+    private lateinit var dogData: DogItemModel
 
     private val galleryPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -36,7 +38,7 @@ class EditPetActivity : AppCompatActivity() {
             imageUri?.let {
                 imageFile = File(getRealPathFromURI(it))
                 Glide.with(this)
-                    .load(imageUri)
+                    .load(it)
                     .fitCenter()
                     .into(binding.ivDogThumbnail)
 
@@ -57,9 +59,9 @@ class EditPetActivity : AppCompatActivity() {
 
     private fun initView() = with(binding) {
         val intent = intent
-        dogData = intent.getSerializableExtra("dogData") as DogModel
+        dogData = intent.getParcelableExtra("dogData")!!
         //gender 적용부
-        if(dogData.gender == true) rbFemale.isChecked = true
+        if(dogData.gender == 1) rbFemale.isChecked = true
         else rbMale.isChecked = true
         Glide.with(this@EditPetActivity)
             .load(dogData.thumbnailUrl)
@@ -73,7 +75,7 @@ class EditPetActivity : AppCompatActivity() {
     }
 
     private fun changeDogData() = with(binding) {
-        var gender = false
+        var gender = 0
         ivDogThumbnail.setOnClickListener {
             Log.d("test_click", "click")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -82,13 +84,13 @@ class EditPetActivity : AppCompatActivity() {
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
         rgGenderGroup.setOnCheckedChangeListener { radioGroup, id ->
-            if (id == rbFemale.id) gender = true
-            else gender = false
+            if (id == rbFemale.id) gender = 1
+            else gender = 0
         }
         btnEditCompleted.setOnClickListener {
             if (etName.text!!.isEmpty()) Toast.makeText(
                 this@EditPetActivity,
-                "이름은 필수 작성 항목입니다!",
+                R.string.please_add_name,
                 Toast.LENGTH_SHORT
             ).show()
             else {
@@ -97,7 +99,7 @@ class EditPetActivity : AppCompatActivity() {
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
                 //gender 추가 필요
-                val changeDog = DogModel("", name,gender, age, breed, memo, imageFile.toString())
+                val changeDog = DogItemModel("", name,gender, age, breed, memo, imageFile.toString())
                 Log.d("testDog", "${changeDog}")
                 changePet(changeDog)
             }
@@ -120,7 +122,7 @@ class EditPetActivity : AppCompatActivity() {
         return result
     }
 
-    private fun changePet(changeDog: DogModel) {
+    private fun changePet(changeDog: DogItemModel) {
 
     }
 }

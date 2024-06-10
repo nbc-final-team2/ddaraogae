@@ -12,9 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.FirebaseDataSourceImpl
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
-import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.DogModel
+import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -38,7 +38,7 @@ class AddActivity : AppCompatActivity(){
             imageUri?.let {
                 imageFile = File(getRealPathFromURI(it))
                 Glide.with(this)
-                    .load(imageUri)
+                    .load(it)
                     .fitCenter()
                     .into(binding.ivDogThumbnail)
 
@@ -57,7 +57,7 @@ class AddActivity : AppCompatActivity(){
         addPetData()
     }
     private fun addPetData() = with(binding){
-        var gender= false
+        var gender= 0
 
         ivDogThumbnail.setOnClickListener{
             Log.d("test_click", "click")
@@ -68,27 +68,27 @@ class AddActivity : AppCompatActivity(){
         }
         //성별 선택
         rgGenderGroup.setOnCheckedChangeListener { radioGroup, id ->
-            if(id == rbFemale.id) gender = true
-            else gender = false
+            if(id == rbFemale.id) gender = 1
+            else gender = 0
         }
         //완료 버튼 클릭 시 데이터 추가
         btnEditCompleted.setOnClickListener{
-            if(etName.text!!.isEmpty()) Toast.makeText(this@AddActivity, "이름은 필수 작성 항목입니다!", Toast.LENGTH_SHORT).show()
+            if(etName.text!!.isEmpty()) Toast.makeText(this@AddActivity, R.string.please_add_name, Toast.LENGTH_SHORT).show()
             else {
                 val name = etName.text.toString()
                 val age = etAge.text.toString().toInt()
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
                 //gender 추가 필요
-                val newDog = DogModel("", name, gender, age, breed, memo, imageFile.toString())
+                val newDog = DogItemModel("", name, gender, age, breed, memo, imageFile.toString())
                 Log.d("testDog", "${newDog}")
                 addPet(newDog)
             }
         }
     }
-    private fun addPet(newDog : DogModel) {
+    private fun addPet(newDog : DogItemModel) {
         lifecycleScope.launch {
-            //FirebaseDataSourceImpl().insertDog(newDog)
+
         }
     }
 

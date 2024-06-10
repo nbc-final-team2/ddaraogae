@@ -29,7 +29,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/bt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back"
+                android:background="@null"
+                android:layout_marginLeft="@dimen/margin_medium"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_appBar"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_appBar"/>
             <View
                 android:id="@+id/topBar"
                 android:layout_width="match_parent"

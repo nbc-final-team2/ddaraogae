@@ -4,13 +4,25 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.databinding.ItemEditPetDogSelectionBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 
-class DetailPetAdapter(val context: Context) : RecyclerView.Adapter<DetailPetAdapter.ItemViewHolder>() {
-    var items = listOf<DogModel>()
+class DetailPetAdapter(val context: Context) : ListAdapter<DogItemModel,DetailPetAdapter.ItemViewHolder>(
+    object :DiffUtil.ItemCallback<DogItemModel>(){
+        override fun areItemsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
+            return oldItem == newItem
+        }
+    }
+) {
+    var items = listOf<DogItemModel>()
     private lateinit var itemClickListener: OnItemClickListener
     interface OnItemClickListener{
         fun onClick(v: View, position: Int)
@@ -19,7 +31,7 @@ class DetailPetAdapter(val context: Context) : RecyclerView.Adapter<DetailPetAda
         this.itemClickListener = onItemClickListener
     }
     inner class ItemViewHolder(private val binding:ItemEditPetDogSelectionBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(dogData:DogModel) = with(binding){
+        fun bind(dogData: DogItemModel) = with(binding){
             Glide.with(context)
                 .load(dogData.thumbnailUrl)
                 .into(ivDogImage)

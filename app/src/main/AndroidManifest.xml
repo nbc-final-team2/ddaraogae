@@ -5,9 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
     <application
         android:name=".app.DdaraogaeApplication"
@@ -36,11 +33,20 @@
         <activity
             android:name=".presentation.ui.home.DetailActivity"
             android:exported="false" />
-
-        <activity android:name=".presentation.ui.mypage.EditPetActivity"
-            android:exported="false"/>
+<!--        <activity-->
+<!--            android:name=".presentation.ui.main.MainActivity"-->
+<!--            android:exported="false" />-->
+        <activity
+            android:name=".presentation.ui.mypage.EditPetActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.ui.mypage.DetailPetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.ui.home.AddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
