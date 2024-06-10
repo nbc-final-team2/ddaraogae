@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
-import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +30,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
         moveToAdd()
     }
 
-    override fun onDogClick(dogData: DogEntity) {
+    override fun onDogClick(dogData: DogInfo) {
         binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
         homeViewModel.selectedWalkGraphDogName(dogData.name)
     }

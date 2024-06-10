@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -94,7 +95,7 @@ class AddActivity : AppCompatActivity() {
                 val memo = etMemo.text.toString()
                 val thumbnailUrl = thumbnailUri.toString() // 여긴 프로필 클릭했을때 처리해야함
 
-                val dogData = DogEntity(
+                val dogData = DogInfo(
                     id = "",
                     name = name,
                     gender = gender,

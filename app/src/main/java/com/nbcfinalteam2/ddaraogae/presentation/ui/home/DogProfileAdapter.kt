@@ -9,23 +9,23 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogAddBinding
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
-import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 class DogProfileAdapter(
     private val onAddClickListener: HomeOnClickListener,
     private val onDogClickListener: HomeOnClickListener
-) : ListAdapter<DogEntity, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+) : ListAdapter<DogInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private const val DOG_ADD = 0
         private const val DOG_SELECTION = 1
 
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DogEntity>() {
-            override fun areItemsTheSame(oldItem: DogEntity, newItem: DogEntity): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DogInfo>() {
+            override fun areItemsTheSame(oldItem: DogInfo, newItem: DogInfo): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: DogEntity, newItem: DogEntity): Boolean {
+            override fun areContentsTheSame(oldItem: DogInfo, newItem: DogInfo): Boolean {
                 return oldItem == newItem
             }
         }
@@ -81,7 +81,7 @@ class DogProfileAdapter(
 
     class SelectionViewHolder(private val binding: ItemHomeDogSelectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: DogEntity, onDogClickListener: HomeOnClickListener) {
+        fun bind(item: DogInfo, onDogClickListener: HomeOnClickListener) {
             binding.apply {
                 Glide.with(ivDogImage.context)
                     .load(item.thumbnailUrl)

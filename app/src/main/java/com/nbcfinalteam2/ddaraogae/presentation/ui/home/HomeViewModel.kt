@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,8 +18,8 @@ class HomeViewModel @Inject constructor(
     private val getDogListUseCase: GetDogListUseCase
 ) : ViewModel() {
     // UI용 모델 만들어서 넣을것
-    private val _dogList = MutableLiveData<List<DogEntity>>()
-    val dogList: LiveData<List<DogEntity>> get() = _dogList
+    private val _dogList = MutableLiveData<List<DogInfo>>()
+    val dogList: LiveData<List<DogInfo>> get() = _dogList
 
     private val _dogName = MutableLiveData<String>()
     val dogName: LiveData<String> get() = _dogName
@@ -29,7 +30,19 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val user = getCurrentUserUseCase()
             user?.let {
-                _dogList.value = getDogListUseCase().orEmpty()
+                val dogEntities = getDogListUseCase().orEmpty()
+                val dogInfo = dogEntities.map { entitiy ->
+                    DogInfo(
+                        id = entitiy.id,
+                        name = entitiy.name,
+                        gender = entitiy.gender,
+                        age = entitiy.age,
+                        lineage = entitiy.lineage,
+                        memo = entitiy.memo,
+                        thumbnailUrl = entitiy.thumbnailUrl
+                    )
+                }
+                _dogList.value = dogInfo
             }
         }
     }
