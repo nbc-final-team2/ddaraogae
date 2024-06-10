@@ -7,15 +7,13 @@ import com.nbcfinalteam2.ddaraogae.domain.entity.WeatherEntity
 
 object WeatherMapper {
     fun toWeatherData(weather: WeatherDto, dust: DustDto, address: CityDto) : WeatherEntity {
-        var addressData = address.documents?.get(0)
-        if (addressData == null) { addressData = address.documents?.get(1) }
-        val cityData = addressData?.region3depthName ?: addressData?.region2depthName ?: addressData?.region1depthName
+        val cityData = address.documents[0].region3depthName
 
         val weatherData = WeatherEntity(
-            id = weather.weather?.firstOrNull()?.id,
-            temperature = weather.main?.temp,
-            pm10 = dust.list?.firstOrNull()?.components?.pm10,
-            pm25 = dust.list?.firstOrNull()?.components?.pm25,
+            id = weather.weather[0].id,
+            temperature = weather.main.temp,
+            pm10 = dust.list[0].components.pm10,
+            pm25 = dust.list[0].components.pm25,
             city = cityData
         )
 
