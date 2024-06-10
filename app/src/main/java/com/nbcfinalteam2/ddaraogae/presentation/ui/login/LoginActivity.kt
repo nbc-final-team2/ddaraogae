@@ -25,7 +25,19 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private lateinit var googleSignInClient: GoogleSignInClient
     private val viewModel: LoginViewModel by viewModels()
-    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Log.w(TAG, "구글 로그인에 실패했습니다.", e)
+            }
+        }
+        else Log.e(TAG, "Google Result Error ${result}")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(view)
 
         initGoogle()
-        clickGoogleLoginButton()
+        clickLoginButton()
         getStateGoogleLogin()
     }
 
@@ -45,30 +57,24 @@ class LoginActivity : AppCompatActivity() {
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-
-        //onStart()보다 먼저 호출 되어야 함
-        activityResultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                        try {
-                            val account = task.getResult(ApiException::class.java)!!
-                            Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                            firebaseAuthWithGoogle(account.idToken!!)
-                        } catch (e: ApiException) {
-                            Log.w(TAG, "구글 로그인에 실패했습니다.", e)
-                        }
-                    }
-                else Log.e(TAG, "Google Result Error ${result}")
-            }
     }
 
-    private fun clickGoogleLoginButton() {
-        //Id, Email request
+    private fun clickLoginButton() {
+        //click LoginButton
+        binding.btLogin.setOnClickListener {
+
+        }
+
+        //click google Login Button
         binding.ibtLoginGoogle.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             Log.d("cliockclcickc", "클릭 했슴돠")
             activityResultLauncher.launch(signInIntent)
+        }
+
+        //click SignUp Button
+        binding.tvLoginSignup.setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
         }
     }
 
@@ -96,6 +102,5 @@ class LoginActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "GoogleActivity"
-        //private const val RC_SIGN_IN = 9001
     }
 }

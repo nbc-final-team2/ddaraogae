@@ -6,7 +6,7 @@ data class LoginUiState(
     ) {
     companion object{
         fun init() = LoginUiState(
-            successGoogleLogin = true
+            successGoogleLogin = false
         )
     }
 }
