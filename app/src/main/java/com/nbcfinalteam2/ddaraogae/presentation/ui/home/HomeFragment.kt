@@ -33,7 +33,6 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     }
 
     override fun onDogClick(dogData: DogInfo) {
-        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
         homeViewModel.selectedWalkGraphDogName(dogData.name)
         selectedDogInfo = dogData
 
