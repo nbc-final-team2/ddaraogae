@@ -1,10 +1,10 @@
 package com.nbcfinalteam2.ddaraogae.data.mapper
 
-import com.nbcfinalteam2.ddaraogae.data.dto.Store
+import com.nbcfinalteam2.ddaraogae.data.dto.StoreDto
 import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
 
 object StoreMapper {
-    fun toStoreData(storeResponseForHospital: Store, storeResponseForFood: Store): List<StoreEntity> {
+    fun toStoreData(storeResponseForHospital: StoreDto, storeResponseForFood: StoreDto): List<StoreEntity> {
         val resultForHospital = storeResponseForHospital.documents.map {
             StoreEntity(
                 id = it.id,

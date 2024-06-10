@@ -1,6 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit
 
-import com.nbcfinalteam2.ddaraogae.data.dto.City
+import com.nbcfinalteam2.ddaraogae.data.dto.CityDto
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -11,5 +11,5 @@ interface CityApiService {
         @Header("Authorization") Authorization: String = Key.KAKAO_API_KEY,
         @Query("x") x: String,
         @Query("y") y: String,
-    ) : City
+    ) : CityDto
 }

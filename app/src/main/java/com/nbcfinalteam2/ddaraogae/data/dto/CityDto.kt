@@ -2,7 +2,7 @@ package com.nbcfinalteam2.ddaraogae.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class City(
+data class CityDto(
     @SerializedName("documents") val documents: List<Address>?
 )
 
