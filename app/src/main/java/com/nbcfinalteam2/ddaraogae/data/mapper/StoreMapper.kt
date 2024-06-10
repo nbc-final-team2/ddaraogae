@@ -8,9 +8,9 @@ object StoreMapper {
         val resultForHospital = storeResponseForHospital.documents.map {
             StoreEntity(
                 id = it.id,
-                placeName = it.place_name,
-                categoryGroupName = it.category_group_name ?: "none",
-                address = it.road_address_name,
+                placeName = it.placeName,
+                categoryGroupName = it.categoryGroupName ?: "none",
+                address = it.roadAddressName,
                 phone = it.phone,
                 lat = it.y,
                 lng = it.x
@@ -19,9 +19,9 @@ object StoreMapper {
         val resultForFood = storeResponseForFood.documents.map {
             StoreEntity(
                 id = it.id,
-                placeName = it.place_name,
-                categoryGroupName = it.category_group_name ?: "none",
-                address = it.road_address_name,
+                placeName = it.placeName,
+                categoryGroupName = it.categoryGroupName ?: "none",
+                address = it.roadAddressName,
                 phone = it.phone,
                 lat = it.y,
                 lng = it.x
