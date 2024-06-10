@@ -23,10 +23,7 @@ class HistoryViewModel @Inject constructor(
 
     fun setSelectedDate(year: Int, month: Int) {
         viewModelScope.launch {
-            val user = getCurrentUserUseCase()
-            user?.let {
-                _selectedDate.value = "${year}년 ${month}월"
-            }
+            _selectedDate.value = "${year}년 ${month}월"
         }
     }
 
@@ -34,5 +31,3 @@ class HistoryViewModel @Inject constructor(
         _dogInfo.value = dog
     }
 }
-
-// 여기서 강아지 아이디값을 가져와서 처리해야함

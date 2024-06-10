@@ -67,6 +67,10 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         historyViewModel.selectedDate.observe(this) { date ->
             binding.tvSelectedCalendar.text = date
         }
+
+        historyViewModel.dogInfo.observe(this) {dog ->
+            binding.tvWalkGraphDogName.text = "${dog.name}의 산책 그래프"
+        }
     }
 
     private fun getDogInfo() {
