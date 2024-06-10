@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
 
         initGoogle()
         clickLoginButton()
-        getStateGoogleLogin()
+        getStateLogin()
     }
 
     private fun initGoogle() {
@@ -62,13 +62,15 @@ class LoginActivity : AppCompatActivity() {
     private fun clickLoginButton() {
         //click LoginButton
         binding.btLogin.setOnClickListener {
+            val email = binding.etLoginEmail.text.toString().trim()
+            val password = binding.etLoginPassword.text.toString().trim()
+            viewModel.signInEmail(email, password)
 
         }
 
         //click google Login Button
         binding.ibtLoginGoogle.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
-            Log.d("cliockclcickc", "클릭 했슴돠")
             activityResultLauncher.launch(signInIntent)
         }
 
@@ -78,11 +80,12 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun getStateGoogleLogin(){
+    //로그인 한 이력이 있으면 바로 홈 페이지 이동
+    private fun getStateLogin(){
         lifecycleScope.launch {
             viewModel.uiState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
-                    updateUI(state.successGoogleLogin)
+                    updateUI(state.successLogin)
                 }
         }
     }
@@ -93,6 +96,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.signInGoogle(idToken)
     }
 
+    //로그인 상태가 true면 홈으로 이동
     private fun updateUI(user: Boolean) {
         if (user) {
             startActivity(Intent(this, MainActivity::class.java))

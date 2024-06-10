@@ -1,12 +1,12 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 data class LoginUiState(
-    val successGoogleLogin:Boolean,
+    val successLogin:Boolean,
 
     ) {
     companion object{
         fun init() = LoginUiState(
-            successGoogleLogin = false
+            successLogin = false
         )
     }
 }
