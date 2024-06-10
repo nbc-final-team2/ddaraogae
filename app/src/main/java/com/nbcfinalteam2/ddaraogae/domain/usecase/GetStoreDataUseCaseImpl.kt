@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetStoreDataUseCaseImpl @Inject constructor(
     private val storeRepository: StoreRepository
 ): GetStoreDataUseCase {
-    override suspend fun invoke(lat: String, lng: String): List<StoreEntity> = storeRepository.getStoreData(lat, lng)
+    override suspend fun invoke(lat: String, lng: String): List<StoreEntity>? = storeRepository.getStoreData(lat, lng)
 }

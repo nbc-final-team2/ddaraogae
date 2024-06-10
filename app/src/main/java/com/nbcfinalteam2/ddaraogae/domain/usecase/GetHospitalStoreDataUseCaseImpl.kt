@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class GetHospitalStoreDataUseCaseImpl @Inject constructor(
     private val storeRepository: StoreRepository
-): GetStoreDataUseCase {
-    override suspend fun invoke(lat: String, lng: String): List<StoreEntity> = storeRepository.getHospitalData(lat, lng)
+): GetHospitalStoreDataUseCase {
+    override suspend fun invoke(lat: String, lng: String): List<StoreEntity>? = storeRepository.getHospitalData(lat, lng)
 }
