@@ -80,7 +80,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
         }
 
         homeViewModel.dogName.observe(viewLifecycleOwner) {dogName ->
-            binding.tvDogGraph.text = "$dogName 산책 그래프"
+            binding.tvDogGraph.text = "${dogName}의 산책 그래프"
         }
     }
 
