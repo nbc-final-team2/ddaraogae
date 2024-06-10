@@ -1,12 +1,12 @@
 package com.nbcfinalteam2.ddaraogae.data.mapper
 
 import com.nbcfinalteam2.ddaraogae.data.dto.CityDto
-import com.nbcfinalteam2.ddaraogae.data.dto.Dust
+import com.nbcfinalteam2.ddaraogae.data.dto.DustDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WeatherDto
 import com.nbcfinalteam2.ddaraogae.domain.entity.WeatherEntity
 
 object WeatherMapper {
-    fun toWeatherData(weather: WeatherDto, dust: Dust, address: CityDto) : WeatherEntity {
+    fun toWeatherData(weather: WeatherDto, dust: DustDto, address: CityDto) : WeatherEntity {
         var addressData = address.documents?.firstOrNull()
         if (addressData == null) { addressData = address.documents?.get(1) }
         val cityData = addressData?.region3depthName ?: addressData?.region2depthName ?: addressData?.region1depthName ?: ""

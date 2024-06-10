@@ -1,6 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.retrofit
 
-import com.nbcfinalteam2.ddaraogae.data.dto.Dust
+import com.nbcfinalteam2.ddaraogae.data.dto.DustDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WeatherDto
 import retrofit2.http.*
 
@@ -16,5 +16,5 @@ interface WeatherApiService {
     suspend fun getDust(
         @Query("lat") lat: String,
         @Query("lon") lon: String,
-    ) : Dust
+    ) : DustDto
 }
