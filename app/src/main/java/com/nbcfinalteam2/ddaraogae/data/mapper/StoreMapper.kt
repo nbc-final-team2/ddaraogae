@@ -12,8 +12,6 @@ object StoreMapper {
                 categoryGroupName = it.categoryGroupName ?: "none",
                 address = it.roadAddressName,
                 phone = it.phone,
-                lat = it.y,
-                lng = it.x
             )
         }
         val resultForFood = storeResponseForFood.documents.map {
@@ -23,8 +21,6 @@ object StoreMapper {
                 categoryGroupName = it.categoryGroupName ?: "none",
                 address = it.roadAddressName,
                 phone = it.phone,
-                lat = it.y,
-                lng = it.x
             )
         }
         val combinedList = (resultForHospital + resultForFood).distinctBy { it.id }
