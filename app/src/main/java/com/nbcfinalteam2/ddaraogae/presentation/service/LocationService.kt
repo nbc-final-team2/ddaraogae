@@ -9,7 +9,6 @@ import android.location.Location
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -33,7 +32,6 @@ class LocationService: Service() {
         override fun onLocationResult(locationResult: LocationResult) {
             for(location in locationResult.locations) {
                 locationList.add(location.toLatLng())
-                Log.d("onLocationResult()", locationList.toString())
             }
         }
     }
@@ -55,8 +53,8 @@ class LocationService: Service() {
         )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("따라오개")
-            .setContentText("산책 중..")
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.is_walking))
             .setSmallIcon(R.drawable.ic_walk)
             .setContentIntent(pendingIntent)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
