@@ -40,7 +40,7 @@ class LoginViewModel @Inject constructor(
         successSignInGoogle.let { successToken ->
             _uiState.update { prev ->
                 prev.copy(
-                    successGoogleLogin = successSignInGoogle
+                    successGoogleLogin = successToken
                 )
             }
         }
