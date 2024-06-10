@@ -1,7 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.data.dto
 
 import com.google.gson.annotations.SerializedName
-
+//StoreDto 반영 취소
 data class StoreDto(
     @SerializedName("documents") val documents: List<Document>,
     @SerializedName("meta") val meta: Meta,
