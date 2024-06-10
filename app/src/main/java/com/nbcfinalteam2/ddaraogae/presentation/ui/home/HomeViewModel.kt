@@ -20,6 +20,9 @@ class HomeViewModel @Inject constructor(
     private val _dogList = MutableLiveData<List<DogEntity>>()
     val dogList: LiveData<List<DogEntity>> get() = _dogList
 
+    private val _dogName = MutableLiveData<String>()
+    val dogName: LiveData<String> get() = _dogName
+
     /** 유저데이터 함수로 뺴서 한번에 검사 */
 
     fun loadDogs() {
@@ -31,9 +34,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun selectedDogDisplay() {
+    fun selectedWalkGraphDogName(dogName: String) {
         viewModelScope.launch {
-            //TODO()반려견을 선택하거나 추가해주세요를 비동기처리해야함
+            _dogName.value = dogName
         }
     }
 

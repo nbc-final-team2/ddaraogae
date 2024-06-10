@@ -32,6 +32,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
     override fun onDogClick(dogData: DogEntity) {
         binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
+        homeViewModel.selectedWalkGraphDogName(dogData.name)
     }
 
     override fun onCreateView(
@@ -72,6 +73,10 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     private fun observeViewModel() {
         homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
             dogProfileAdapter.submitList(dogs)
+        }
+
+        homeViewModel.dogName.observe(viewLifecycleOwner) {dogName ->
+            binding.tvDogGraph.text = "$dogName 산책 그래프"
         }
     }
 
