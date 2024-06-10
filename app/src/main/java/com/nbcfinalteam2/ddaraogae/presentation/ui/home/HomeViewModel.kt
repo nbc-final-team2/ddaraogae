@@ -5,10 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
+import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,13 +20,20 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getDogListUseCase: GetDogListUseCase,
+    private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase
 ) : ViewModel() {
-    // UI용 모델 만들어서 넣을것
+
     private val _dogList = MutableLiveData<List<DogInfo>>()
     val dogList: LiveData<List<DogInfo>> get() = _dogList
 
     private val _dogName = MutableLiveData<String>()
     val dogName: LiveData<String> get() = _dogName
+
+    private val _walkData = MutableLiveData<List<WalkingEntity>>()
+    val walkData: LiveData<List<WalkingEntity>> get() = _walkData
+
+    private val _hasWalkData = MutableLiveData<Boolean>()
+    val hasWalkData: LiveData<Boolean> get() = _hasWalkData
 
     /** 유저데이터 함수로 뺴서 한번에 검사 */
 
@@ -32,25 +42,36 @@ class HomeViewModel @Inject constructor(
             val user = getCurrentUserUseCase()
             user?.let {
                 val dogEntities = getDogListUseCase().orEmpty()
-                val dogInfo = dogEntities.map { entitiy ->
+                val dogInfo = dogEntities.map { entity ->
                     DogInfo(
-                        id = entitiy.id,
-                        name = entitiy.name,
-                        gender = entitiy.gender,
-                        age = entitiy.age,
-                        lineage = entitiy.lineage,
-                        memo = entitiy.memo,
-                        thumbnailUrl = entitiy.thumbnailUrl
+                        id = entity.id,
+                        name = entity.name,
+                        gender = entity.gender,
+                        age = entity.age,
+                        lineage = entity.lineage,
+                        memo = entity.memo,
+                        thumbnailUrl = entity.thumbnailUrl
                     )
                 }
                 _dogList.value = dogInfo
             }
         }
     }
-
-    fun selectedWalkGraphDogName(dogName: String) {
+    /** dogid 추가한것 확인할것 */
+    fun selectedWalkGraphDogName(dogName: String, dogId: String) {
         viewModelScope.launch {
             _dogName.value = dogName
+            loadWalkData(dogId)
+        }
+    }
+
+    private fun loadWalkData(dogId: String) {
+        viewModelScope.launch {
+            val startDate = DateFormatter.getStartDate()
+            val endDate = DateFormatter.getEndDate()
+            val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
+            _walkData.value = walkEntities
+            _hasWalkData.value = walkEntities.isNotEmpty()
         }
     }
 

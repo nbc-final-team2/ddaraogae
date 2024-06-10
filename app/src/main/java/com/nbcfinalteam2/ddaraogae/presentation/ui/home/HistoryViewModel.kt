@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
 
     private val _selectedDate = MutableLiveData<String>()

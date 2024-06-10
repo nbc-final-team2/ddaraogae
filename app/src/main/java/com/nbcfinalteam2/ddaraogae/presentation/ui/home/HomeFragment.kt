@@ -11,10 +11,13 @@ import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
+import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,9 +34,9 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     override fun onAddClick() {
         moveToAdd()
     }
-
+    /** dog id값 넣어준것 확인할것 */
     override fun onDogClick(dogData: DogInfo) {
-        homeViewModel.selectedWalkGraphDogName(dogData.name)
+        homeViewModel.selectedWalkGraphDogName(dogData.name, dogData.id)
         selectedDogInfo = dogData
 
     }
@@ -49,7 +52,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupWalkGraph()
+//        setupWalkGraph()
         setupListener()
         setupAdapter()
         observeViewModel()
@@ -60,9 +63,9 @@ class HomeFragment : Fragment(), HomeOnClickListener {
         homeViewModel.loadDogs()
     }
 
-    private fun setupWalkGraph() {
-        setupWalkGraphForEmptyData()
-    }
+//    private fun setupWalkGraph() {
+//        setupWalkGraphForEmptyData()
+//    }
 
     private fun setupListener() {
         moveToHistory()
@@ -80,6 +83,14 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
         homeViewModel.dogName.observe(viewLifecycleOwner) {dogName ->
             binding.tvDogGraph.text = "${dogName}의 산책 그래프"
+        }
+        /** 옵저빙 확인할것 */
+        homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
+            if (walkData.isEmpty()) {
+                setupWalkGraphForEmptyData()
+            } else {
+                setupWalkGraphForHaveData(walkData)
+            }
         }
     }
 
@@ -111,6 +122,85 @@ class HomeFragment : Fragment(), HomeOnClickListener {
             val locationConditions = tvLocationConditions.text.toString()
             val fineDustStatusIcon = ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
             val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
+        }
+    }
+
+    private fun setupWalkGraphForHaveData(walkData: List<WalkingEntity>) {
+        val lineChart = binding.lcArea
+        walkGraphSettingsForHaveData(lineChart)
+        walkGraphXAxisForHaveData(lineChart.xAxis)
+        walkGraphYAxisForHaveData(lineChart.axisLeft)
+
+        val entries = ArrayList<Entry>()
+
+        val sortedData = walkData.sortedBy { it.startDateTime }
+        sortedData.forEachIndexed { index, walkingEntity ->
+            entries.add(Entry(index.toFloat(), walkingEntity.distance.toFloat()))
+        }
+
+        val dataSet = LineDataSet(entries, "").apply {
+            axisDependency = YAxis.AxisDependency.LEFT
+            color = resources.getColor(R.color.grey, null)
+            valueTextColor = resources.getColor(R.color.black, null)
+            lineWidth = 2f
+            setDrawCircles(true)
+            setDrawCircleHole(false)
+            setDrawValues(true)
+        }
+        val lineData = LineData(dataSet)
+        lineChart.data = lineData
+        lineChart.invalidate()
+    }
+
+    private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
+        /* 라인차트 생성 및 화면 설정 */
+        lineChart.apply {
+            axisRight.isEnabled = false // 차트의 오른쪽 Y축 표시 여부
+            legend.isEnabled = false // 범례 표시 여부
+            description.isEnabled = false // 범례 옆에 표시되는 차트 설명 사용 여부
+            setDrawGridBackground(true) // 차트의 안쪽 색깔 지정 여부
+            setGridBackgroundColor(resources.getColor(R.color.grey, null)) // 차트의 안쪽 색깔 지정
+            setTouchEnabled(true) // 차트 터치 여부
+            setPinchZoom(true) // 차트 확대, 축소 여부 (손가락으로 확대 축소)
+            setScaleEnabled(true) // 차트 확대 여부
+            isDragXEnabled = true // 차트의 X축 드래그 여부
+            isDragYEnabled = true // 차트의 Y축 드래그 여부
+        }
+        lineChart.invalidate() // 차트 갱신
+    }
+
+    private fun walkGraphXAxisForHaveData(xAxis: XAxis) {
+        DateFormatter.generateLast7Days() // 날짜 생성
+
+        /* 차트의 X축 설정 */
+        xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM // X축의 위치 설정
+            setLabelCount(7, true) // X축에 표시될 레이블의 개수 설정, force = 어떠한 변화가 있어도 강제로 7개만 보이도록
+            axisMinimum = 0f // X축의 최솟값 설정
+            axisMaximum = 6f // X축의 최댓값 설정
+            valueFormatter = DateFormatter // X축 실시간 날짜 설정
+        }
+    }
+
+    private fun walkGraphYAxisForHaveData(yAxis: YAxis) {
+        /* 차트의 Y축 설정 */
+        yAxis.apply {
+            setLabelCount(5, true) // Y축에 표시될 레이블의 개수 설정, force = 어떠한 변화가 있어도 강제로 5개만 보이도록
+            axisMinimum = 1f // Y축의 최솟값
+            axisMaximum = 5f // Y축의 최댓값
+            // (Y축)에 km를 붙이기 위한 작업
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return when (value) {
+                        1f -> "1km"
+                        2f -> "3km"
+                        3f -> "6km"
+                        4f -> "9km"
+                        5f -> "12km"
+                        else -> ""
+                    }
+                }
+            }
         }
     }
 
