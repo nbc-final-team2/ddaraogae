@@ -9,7 +9,7 @@ object WeatherMapper {
     fun toWeatherData(weather: Weather, dust: Dust, address: City) : WeatherEntity {
         var addressData = address.documents?.firstOrNull()
         if (addressData == null) { addressData = address.documents?.get(1) }
-        val cityData = addressData?.region_3depth_name ?: addressData?.region_2depth_name ?: addressData?.region_1depth_name ?: ""
+        val cityData = addressData?.region3depthName ?: addressData?.region2depthName ?: addressData?.region1depthName ?: ""
 
         val weatherData = WeatherEntity(
             id = weather.weather?.firstOrNull()?.id ?: 0L,
