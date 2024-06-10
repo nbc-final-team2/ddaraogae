@@ -1,0 +1,124 @@
+<resources>
+    <string name="app_name">따라오개</string>
+
+    <!-- main -->
+    <string name="main_home">홈</string>
+    <string name="main_walk">산책</string>
+    <string name="main_mypage">마이페이지</string>
+
+    <!-- home -->
+    <string name="home_title">반가워요!</string>
+    <string name="home_walk_graph_title">{dogname}의 산책 그래프</string>
+    <string name="home_weather_title">오늘의 날씨</string>
+    <string name="home_weather_location">홍성군</string>
+    <string name="home_weather_fine_dust">미세먼지</string>
+    <string name="home_weather_ultra_fine_dust">초미세먼지</string>
+    <string name="home_weather_location_temperature">25℃</string>
+    <string name="home_weather_location_conditions">맑음</string>
+    <string name="home_weather_fine_dust_conditions">좋음</string>
+    <string name="home_weather_ultra_fine_dust_conditions">나쁨</string>
+
+    <!-- home - detail-->
+    <string name="home_detail_title">산책 이력</string>
+    <string name="home_detail_walking_time">산책 시간</string>
+    <string name="home_detail_walking_distance">산책 거리</string>
+    <string name="home_detail_walking_km">km</string>
+    <string name="home_detail_with_dogs">산책을 함께한 반려견</string>
+    <string name="home_detail_stamp">받은 산책 도장</string>
+
+    <!-- home - history -->
+    <string name="home_history_title">산책 모아보기</string>
+    <string name="home_history_walk_graph_title">산책 그래프</string>
+    <string name="home_history_stamp_title">이번주 산책 도장</string>
+    <string name="home_history_walk_history">산책기록</string>
+
+    <!-- home - add -->
+    <string name="home_add_title">반려견 정보</string>
+    <string name="home_add_dog_name_title">이름*</string>
+    <string name="home_add_dog_name_hint">이름</string>
+    <string name="home_add_dog_gender_title">성별*</string>
+    <string name="home_add_dog_gender_male">남자</string>
+    <string name="home_add_dog_gender_female">여자</string>
+    <string name="home_add_dog_age_title">나이</string>
+    <string name="home_add_dog_age_hint">나이를 입력해주세요.</string>
+    <string name="home_add_dog_breed_title">견종</string>
+    <string name="home_add_dog_breed_hint">견종을 입력해주세요</string>
+    <string name="home_add_dog_memo_title">메모</string>
+    <string name="home_add_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
+    <string name="home_add_edit_completed_button">완료</string>
+
+    <!-- walk -->
+    <string name="walk_start">산책하기</string>
+    <string name="walk_walking_distance">거리</string>
+    <string name="walk_walking_time">시간</string>
+    <string name="walk_finish_title">산책 완료</string>
+    <string name="walk_finish_walking_time">산책 시간</string>
+    <string name="walk_finish_walking_distance">산책 거리</string>
+    <string name="walk_finish_walking_km">km</string>
+    <string name="walk_finish_with_dogs">오늘 산책을 함께한 반려견</string>
+    <string name="walk_finish_stamp">오늘 모은 산책 도장</string>
+    <string name="walk_finish_done">산책 끝!</string>
+
+    <!-- mypage -->
+    <string name="mypage_title">마이페이지</string>
+    <string name="mypage_information_edit_title">정보 수정</string>
+    <string name="mypage_information_dog_edit">나의 반려견 정보 수정</string>
+    <string name="mypage_setting_title">설정</string>
+    <string name="mypage_setting_dark_theme">다크테마</string>
+    <string name="mypage_membership_management_title">회원 관리</string>
+    <string name="mypage_membership_management_sign_out">로그아웃</string>
+    <string name="mypage_membership_management_delete">회원탈퇴</string>
+    <string name="mypage_privacy_policy">개인정보처리방침</string>
+
+    <!-- mypage - privacy -->
+    <string name="mypage_privacy_title">개인정보처리방침</string>
+    <string name="mypage_privacy_text">본 개인정보 처리방침은..</string>
+
+    <!-- mypage - edit - pet -->
+    <string name="mypage_edit_pet_title">반려견 정보</string>
+    <string name="mypage_edit_pet_edit_button">수정하기</string>
+    <string name="mypage_edit_pet_dog_name_title">이름*</string>
+    <string name="mypage_edit_pet_dog_name_hint">이름</string>
+    <string name="mypage_edit_pet_dog_gender_title">성별*</string>
+    <string name="mypage_edit_pet_dog_gender_male">남자</string>
+    <string name="mypage_edit_pet_dog_gender_female">여자</string>
+    <string name="mypage_edit_pet_dog_age_title">나이</string>
+    <string name="mypage_edit_pet_dog_age_hint">나이를 입력해주세요.</string>
+    <string name="mypage_edit_pet_dog_breed_title">견종</string>
+    <string name="mypage_edit_pet_dog_breed_hint">견종을 입력해주세요</string>
+    <string name="mypage_edit_pet_dog_memo_title">메모</string>
+    <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
+    <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
+
+    <!-- item - home - history -->
+    <string name="item_home_history_date">2024.05.28 17:38</string>
+    <string name="item_home_history_location">광진구 화양동</string>
+    <string name="item_home_history_distance">1.3km</string>
+    <string name="item_home_history_duration">32분</string>
+    <string name="item_home_history_stamp">2개</string>
+    <string name="item_home_history_distance_label">산책 거리</string>
+    <string name="item_home_history_duration_label">산책 시간</string>
+    <string name="item_home_history_stamp_label">산책 도장</string>
+
+    <!-- item - mypage - edit - pet -->
+    <string name="item_mypage_edit_pet_dog_name">{dogname}</string>
+    <!-- login -->
+    <string name="login_title">따라오개에서\n산책을 시작해 볼까요?</string>
+    <string name="login">로그인</string>
+    <string name="login_email">이메일</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login_account">계정이 없으신가요?</string>
+    <string name="login_signup">회원가입</string>
+    <string name="login_sns">SNS 로그인</string>
+    <string name="login_google">Google 로그인</string>
+
+    <!-- signup -->
+    <string name="signup_title">환영합니다!\n이메일과 비밀번호를\n입력해주세요.</string>
+    <string name="signup_email">이메일</string>
+    <string name="signup_email_warning">이메일 형식이 유효하지 않습니다.</string>
+    <string name="signup_password">8~16자 영어/숫자 조합으로 입력</string>
+    <string name="signup_password_warning">비밀번호 형식이 유효하지 않습니다.</string>
+    <string name="signup_password_check">비밀번호 확인</string>
+    <string name="signup_password_check_warning">비밀번호와 일치하지 않습니다.</string>
+    <string name="signup_complete">완료</string>
+</resources>
