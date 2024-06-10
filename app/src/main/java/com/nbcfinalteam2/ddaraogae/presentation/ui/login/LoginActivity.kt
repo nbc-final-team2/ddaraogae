@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
         //onStart()보다 먼저 호출 되어야 함
         activityResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RC_SIGN_IN) {
+                if (result.resultCode == RESULT_OK) {
                         val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                         try {
                             val account = task.getResult(ApiException::class.java)!!
@@ -96,6 +96,6 @@ class LoginActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "GoogleActivity"
-        private const val RC_SIGN_IN = 9001
+        //private const val RC_SIGN_IN = 9001
     }
 }
