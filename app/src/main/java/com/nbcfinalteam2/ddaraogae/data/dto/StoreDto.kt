@@ -2,7 +2,7 @@ package com.nbcfinalteam2.ddaraogae.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Store(
+data class StoreDto(
     @SerializedName("documents") val documents: List<Document>?,
 )
 

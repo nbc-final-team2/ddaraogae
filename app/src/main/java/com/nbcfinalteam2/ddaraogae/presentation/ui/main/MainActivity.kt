@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
      * 삭제 시 TestViewModel도 함께 삭제해주셔야 합니다.
      */
     private val viewModel: TestViewModel by viewModels()
-    private val lat = "위도 입력" //위도 lat
-    private val lng = "경도 입력" //경도 lng
+    private val lat = "37.5602945934345" //위도 lat
+    private val lng = "127.081526307691" //경도 lng
     private fun testApiCall() {
         viewModel.fetchStoreData(lat, lng)
         viewModel.storeData.observe(this) {

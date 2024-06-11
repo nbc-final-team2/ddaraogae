@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +17,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class TestViewModel @Inject constructor(
-    private val getStoreDataUseCase: GetStoreDataUseCase
+    private val getStoreDataUseCase: GetStoreDataUseCase,
+    private val getWeatherUseCase: GetWeatherDataUseCase
 ) : ViewModel() {
     private val _storeData = MutableLiveData<List<StoreEntity>>()
     val storeData: LiveData<List<StoreEntity>> = _storeData
