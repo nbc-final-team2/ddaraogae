@@ -85,11 +85,5 @@ class HomeViewModel @Inject constructor(
             _isWalkData.value = walkInfo.isEmpty()
         }
     }
-
-//    fun loadTodayWeather(lat: ) {
-//        viewModelScope.launch {
-//            getWeatherDataUseCase()
-//        }
-//    }
 }
 

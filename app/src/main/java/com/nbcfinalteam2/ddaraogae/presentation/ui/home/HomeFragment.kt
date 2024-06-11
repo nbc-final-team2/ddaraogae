@@ -125,7 +125,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
             val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
         }
     }
-    // 경로값 EmptyList로 주고 경로값 아무거나
+    /** 경로값 EmptyList로 주고 경로값 아무거나 */
     private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>) {
         val lineChart = binding.lcArea
         walkGraphSettingsForHaveData(lineChart)
