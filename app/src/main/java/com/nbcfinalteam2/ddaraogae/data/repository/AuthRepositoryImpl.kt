@@ -28,6 +28,10 @@ class AuthRepositoryImpl @Inject constructor(
         return result.user != null
     }
 
+    override suspend fun deleteAccount() {
+        firebaseAuth.currentUser?.delete()?.await()
+    }
+
     override fun signOut() {
         firebaseAuth.signOut()
     }
