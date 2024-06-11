@@ -71,8 +71,10 @@ class HomeFragment : Fragment() {
         homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
             if (walkData.isEmpty()) {
                 setupWalkGraphForEmptyData()
+                binding.tvWalkData.visibility = View.VISIBLE
             } else {
                 setupWalkGraphForHaveData(walkData)
+                binding.tvWalkData.visibility = View.GONE
             }
         }
     }
@@ -95,18 +97,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun todayWeather() {
-        with(binding) {
-            val weatherIcon = ivWeatherIcon.setImageResource(R.drawable.ic_launcher_background)
-            val location = tvLocation.text.toString()
-            val fineDust = tvFineDust.text.toString()
-            val ultraFineDust = tvUltraFineDust.text.toString()
-            val locationTemperature = tvLocationTemperature.text.toString()
-            val locationConditions = tvLocationConditions.text.toString()
-            val fineDustStatusIcon = ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
-            val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
-        }
-    }
     /** 경로값 EmptyList로 주고 경로값 아무거나 */
     private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>) {
         val lineChart = binding.lcArea
@@ -252,5 +242,18 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun todayWeather() {
+        with(binding) {
+            val weatherIcon = ivWeatherIcon.setImageResource(R.drawable.ic_launcher_background)
+            val location = tvLocation.text.toString()
+            val fineDust = tvFineDust.text.toString()
+            val ultraFineDust = tvUltraFineDust.text.toString()
+            val locationTemperature = tvLocationTemperature.text.toString()
+            val locationConditions = tvLocationConditions.text.toString()
+            val fineDustStatusIcon = ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
+            val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
+        }
     }
 }
