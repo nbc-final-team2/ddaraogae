@@ -1,14 +1,10 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.os.Parcelable
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -23,11 +19,15 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
-import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FinishActivity : FragmentActivity() {
+
+    //TODO: 바인딩처리만 될거고 서비스가 안죽어서 이렇게 하면 안된다.
+    //TODO: intent로 넘겨줘...
+    // 버튼으로 종료할때 데이터 저장해서 intent 넘기기
+
 
     private val binding by lazy { ActivityFinishBinding.inflate(layoutInflater) }
 
@@ -42,26 +42,14 @@ class FinishActivity : FragmentActivity() {
     private lateinit var cameraPosition: CameraPosition
     private lateinit var cameraUpdate: CameraUpdate
 
-    private var locationService: LocationService? = null
-    private var bound = false
-
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as LocationService.LocalBinder
-            locationService = binder.getService()
-            bound = true
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            locationService = null
-            bound = false
-        }
-    }
-        //TODO: 버튼애 리스너를 달아놓고 bind됫는지 확인하고 값을 가져온다, 서비스
-        //값 가져오고, map이나 다른 함수로 변환해도된다.
+    private lateinit var locationList: MutableList<Location>
 
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+    //TODO: 버튼애 리스너를 달아놓고 bind됫는지 확인하고 값을 가져온다, 서비스
+    //값 가져오고, map이나 다른 함수로 변환해도된다.
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
@@ -70,24 +58,13 @@ class FinishActivity : FragmentActivity() {
         } else {
             initMapView()
         }
-    }
 
-    override fun onStart() { //TODO: 바운드가 트루인지 확인 연결해주는 작업 필요, 아래 stop()처럼
-        super.onStart()
-        if (!bound) {
-            Intent(this, LocationService::class.java).also { intent ->
-                bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-            }
-            updatePolylineFromService()
-            Log.d("onStart-updatePoly", updatePolylineFromService().toString())
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (bound) {
-            unbindService(serviceConnection)
-            bound = false
+        // Retrieve the location list from the intent
+        locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayListExtra<Location>("locationList")?.toMutableList() ?: mutableListOf()
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableArrayListExtra<Location>("locationList")?.toMutableList() ?: mutableListOf()
         }
     }
 
@@ -108,10 +85,10 @@ class FinishActivity : FragmentActivity() {
             //
             naverMap.addOnLocationChangeListener {
                 /* TODO: 위치 정보 불러오는 서비스가 필요하다.*/
-//                drawPolyLine(latLngList)
-//                Log.d("drawPolyLine", drawPolyLine(latLngList).toString())
-//                setCameraOnPolyLine(latLngList)
-//                Log.d("setCameraOn", setCameraOnPolyLine(latLngList).toString())
+                drawPolyLine()
+                Log.d("drawPolyLine", drawPolyLine().toString())
+                setCameraOnPolyLine()
+                Log.d("setCameraOn", setCameraOnPolyLine().toString())
 //                updatePolylineFromService()
             }
         }
@@ -128,37 +105,30 @@ class FinishActivity : FragmentActivity() {
         return true
     }
 
-    private fun updatePolylineFromService() {
-        locationService?.let { service ->
-            val locationList = service.locationList
-            if (locationList.isNotEmpty()) {
-                drawPolyLine(locationList)
-                setCameraOnPolyLine(locationList)
+    private fun drawPolyLine() {
+        if (locationList.isNotEmpty()) {
+            Log.d("drawPolyLine", "Invoked with ${locationList.size} locations")
+            if (locationList.size >= 2) {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    polyline.apply {
+                        width = 10
+                        color = resources.getColor(R.color.red, null)
+                        coords = locationList.map {
+                            LatLng(it.latitude, it.longitude)
+                        }
+                        map = naverMap
+                        Log.d("drawPolyLine", "Polyline drawn with ${coords.size} points")
+                    }
+                }
             } else {
-                Log.d("updatePolylineFromService", "Location list is empty")
+                Log.d("drawPolyLine", "Not enough points to draw polyline")
             }
+        } else {
+            Log.d("drawPolyLine", "Location list is empty")
         }
     }
 
-    private fun drawPolyLine(locationList: List<LocationService.LatLng>){
-        Log.d("drawPolyLine", "Invoked with ${locationList.size} locations")
-        if (locationList.size >= 2) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                polyline.apply {
-                    width = 10
-                    color = resources.getColor(R.color.red, null)
-                    coords = locationList.map {
-                        LatLng(it.latitude, it.longitude)
-                    }
-                    map = naverMap
-                    Log.d("drawPolyLine", "Polyline drawn with ${coords.size} points")
-                }
-            }
-        } else {
-            Log.d("drawPolyLine", "Not enough points to draw polyline")
-        }
-    }
-    private fun setCameraOnPolyLine(locationList: List<LocationService.LatLng>) {
+    private fun setCameraOnPolyLine() {
         /*
         TODO: 위도 경도의 최대값과 최소값을 통해 중심점을 찾아 카메라포지션을 잡을 수 있을까?
         TODO: '위치 정보를 불러왔을때' 조건을 추가해주면 되겠다.
