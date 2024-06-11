@@ -24,28 +24,15 @@
         app:layout_constraintLeft_toLeftOf="parent"/>
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_signup_email"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.70"
         android:hint="@string/signup_email"
         android:background="@drawable/login_box"
         android:paddingLeft="20dp"
         android:maxLength="30"
         android:layout_marginTop="70dp"
         app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
-        app:layout_constraintRight_toLeftOf="@+id/ib_email_check"
         app:layout_constraintTop_toBottomOf="@+id/tv_signup_title"/>
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/ib_email_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/signup_authentication"
-        android:text="@string/signup_check_email"
-        android:textColor="@color/white"
-        app:layout_constraintLeft_toRightOf="@+id/et_signup_email"
-        app:layout_constraintEnd_toEndOf="@+id/et_signup_password"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/et_signup_email"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_signup_email_warning"
@@ -104,17 +91,29 @@
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check"
         app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"/>
-
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_authentication"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:background="@drawable/rec_finish_done"
+        android:text="@string/signup_email_authentication"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_body"
+        app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
+        app:layout_constraintBottom_toTopOf="@+id/bt_signup"/>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="184dp"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:background="@drawable/rec_finish_done"
+        android:backgroundTint="@color/grey"
         android:text="@string/signup_complete"
         android:textColor="@color/white"
         android:textSize="@dimen/text_body"
         app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
-        app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,8 +8,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
@@ -23,6 +23,8 @@ import java.util.regex.Pattern
 class SignUpActivity:AppCompatActivity() {
     private lateinit var binding:ActivitySignUpBinding
     private val viewModel:SignUpViewModel by viewModels()
+    private lateinit var email: String
+    private lateinit var password: String
     private var signUpState = false
     private var correctEmail = false
     private var correctPassword = false
@@ -34,17 +36,20 @@ class SignUpActivity:AppCompatActivity() {
         setContentView(view)
 
         checkAuthentication()
+        clickEmailAuthentication()
         clickSignupButton()
-        checkEmailState()
+        checkEmailDuplicateState()
         binding.ibtBack.setOnClickListener { finish() }
     }
-    private fun checkEmailState(){
+
+    //email 중복 상태 체크
+    private fun checkEmailDuplicateState(){
         lifecycleScope.launch {
             viewModel.emailState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
                     if (!state) Toast.makeText(
                         this@SignUpActivity,
-                        "존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요.",
+                        R.string.signup_email_check,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -77,16 +82,34 @@ class SignUpActivity:AppCompatActivity() {
             }
         })
     }
-    private fun clickSignupButton(){
-        binding.btSignup.setOnClickListener {
-            val email = binding.etSignupEmail.text.toString().trim()
-            val password = binding.etSignupPassword.text.toString().trim()
+
+    //이메일 인증 버튼 클릭
+    private fun clickEmailAuthentication(){
+        binding.btAuthentication.setOnClickListener {
+            email = binding.etSignupEmail.text.toString().trim()
+            password = binding.etSignupPassword.text.toString().trim()
+
             if(!correctEmail) Toast.makeText(this, R.string.signup_email_warning, Toast.LENGTH_SHORT).show()
             else if (!correctPassword) Toast.makeText(this, R.string.signup_password_warning, Toast.LENGTH_SHORT).show()
             else if (!correctPasswordCheck) Toast.makeText(this, R.string.signup_password_check_warning, Toast.LENGTH_SHORT).show()
-            else signUp(email, password)
+            else {
+                //아이디, 비밀번호 값 수정 금지
+                binding.etSignupEmail.isEnabled = true
+                binding.etSignupPassword.isEnabled = true
+
+                /**이메일 인증 로직 추가**/
+
+            }
         }
     }
+    //회원가입 버튼 클릭 시 동작
+    private fun clickSignupButton(){
+        binding.btSignup.setOnClickListener {
+            signUp(email, password)
+        }
+    }
+
+    //회원가입 로직
     private fun signUp(email : String, password:String){
         viewModel.signUp(email, password)
         lifecycleScope.launch {
@@ -106,6 +129,8 @@ class SignUpActivity:AppCompatActivity() {
         }
 
     }
+
+    //email, password 유효성 검사
     private fun checkEmail() : Boolean{
         val email = binding.etSignupEmail.text.toString().trim()
         val emailPatternCheck = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
