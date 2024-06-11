@@ -2,7 +2,7 @@ package com.nbcfinalteam2.ddaraogae.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Dust(
+data class DustDto(
     @SerializedName("list") val list: List<DustList>?
 )
 
