@@ -112,11 +112,41 @@ class FinishActivity : FragmentActivity() {
                     color = resources.getColor(R.color.red)
                     coords = latLngList
                     map = naverMap
-
-
                     Log.d("drawPolyLine()", "size efficient")
                 }
             }
         }
+    }
+    private fun setCameraOnPolyLine(latLngList: List<LatLng>) {
+        /*
+        TODO: 위도 경도의 최대값과 최소값을 통해 중심점을 찾아 카메라포지션을 잡을 수 있을까?
+        TODO: '위치 정보를 불러왔을때' 조건을 추가해주면 되겠다.
+        */
+        var latMin = latLngList[0].latitude
+        var latMax = latLngList[0].latitude
+        var lngMin = latLngList[0].longitude
+        var lngMax = latLngList[0].longitude
+
+        // 모든 위치를 순회하며 최대/최소값 업데이트
+        for (latLng in latLngList) {
+            if (latLng.latitude < latMin) latMin = latLng.latitude
+            if (latLng.latitude > latMax) latMax = latLng.latitude
+            if (latLng.longitude < lngMin) lngMin = latLng.longitude
+            if (latLng.longitude > lngMax) lngMax = latLng.longitude
+        }
+
+        // 최대값과 최소값의 평균을 계산하여 중심점 찾기
+        val centerLat = (latMin + latMax) / 2
+        val centerLng = (lngMin + lngMax) / 2
+        val center = LatLng(centerLat, centerLng)
+
+        // 중심점을 사용하여 카메라 포지션 설정 (줌 레벨은 15로 설정)
+        cameraPosition = CameraPosition(center, 15.0)
+
+        // 카메라 업데이트 생성
+        cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
+
+        // NaverMap에 카메라 업데이트 적용
+        naverMap.moveCamera(cameraUpdate)
     }
 }
