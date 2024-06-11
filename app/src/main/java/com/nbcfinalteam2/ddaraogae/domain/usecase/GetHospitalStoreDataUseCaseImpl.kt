@@ -4,8 +4,8 @@ import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.StoreRepository
 import javax.inject.Inject
 
-class GetStoreDataUseCaseImpl @Inject constructor(
+class GetHospitalStoreDataUseCaseImpl @Inject constructor(
     private val storeRepository: StoreRepository
-): GetStoreDataUseCase {
-    override suspend fun invoke(lat: String, lng: String): List<StoreEntity>? = storeRepository.getStoreData(lat, lng)
+): GetHospitalStoreDataUseCase {
+    override suspend fun invoke(lat: String, lng: String): List<StoreEntity>? = storeRepository.getHospitalData(lat, lng)
 }
