@@ -13,8 +13,8 @@ import java.util.Date
 object FirebaseMapper {
     fun DogDto.toEntity(id: String) = DogEntity(
         id = id,
-        name = name?:"",
-        gender = gender?:0,
+        name = name,
+        gender = gender,
         age = age,
         lineage = lineage,
         memo = memo,
@@ -32,9 +32,9 @@ object FirebaseMapper {
 
     fun StampDto.toEntity(id: String) = StampEntity(
         id = id,
-        stampNum = stampNum?:-1,
-        getDateTime = getDateTime?: Date(),
-        name = name?:""
+        stampNum = stampNum,
+        getDateTime = getDateTime,
+        name = name
     )
 
     fun StampEntity.toDto() = StampDto(
@@ -45,11 +45,11 @@ object FirebaseMapper {
 
     fun WalkingDto.toEntity(id: String) = WalkingEntity(
         id = id,
-        dogId = dogId?:"",
-        timeTaken = timeTaken?:0,
-        distance = distance?:0.0,
-        startDateTime = startDateTime?:Date(),
-        endDateTime = endDateTime?:Date(),
+        dogId = dogId,
+        timeTaken = timeTaken,
+        distance = distance,
+        startDateTime = startDateTime,
+        endDateTime = endDateTime,
         path = Gson().fromJsonToList(path?:"")
     )
 
