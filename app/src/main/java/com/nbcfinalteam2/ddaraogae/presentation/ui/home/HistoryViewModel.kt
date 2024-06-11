@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
