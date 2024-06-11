@@ -52,7 +52,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        setupWalkGraph()
+        setupWalkGraph()
         setupListener()
         setupAdapter()
         observeViewModel()
@@ -63,9 +63,9 @@ class HomeFragment : Fragment(), HomeOnClickListener {
         homeViewModel.loadDogs()
     }
 
-//    private fun setupWalkGraph() {
-//        setupWalkGraphForEmptyData()
-//    }
+    private fun setupWalkGraph() {
+        setupWalkGraphForEmptyData()
+    }
 
     private fun setupListener() {
         moveToHistory()
