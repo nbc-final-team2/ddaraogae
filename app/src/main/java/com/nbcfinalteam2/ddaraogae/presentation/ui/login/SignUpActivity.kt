@@ -35,8 +35,22 @@ class SignUpActivity:AppCompatActivity() {
 
         checkAuthentication()
         clickSignupButton()
+        checkEmailState()
         binding.ibtBack.setOnClickListener { finish() }
     }
+    private fun checkEmailState(){
+        lifecycleScope.launch {
+            viewModel.emailState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    if (!state) Toast.makeText(
+                        this@SignUpActivity,
+                        "존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+    }
+
     private fun checkAuthentication() = with(binding){
         etSignupEmail.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(p0: Editable?) {}
