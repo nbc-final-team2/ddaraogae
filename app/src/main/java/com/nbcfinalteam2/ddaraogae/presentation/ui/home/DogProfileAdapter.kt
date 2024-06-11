@@ -12,7 +12,8 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 class DogProfileAdapter(
-    private val onDogClickListener: HomeOnClickListener
+    private val onDogClick: (DogInfo) -> Unit,
+    private val onAddClick: () -> Unit
 ) : ListAdapter<DogInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -46,7 +47,7 @@ class DogProfileAdapter(
                     parent,
                     false
                 )
-                AddViewHolder(binding)
+                AddViewHolder(binding, onAddClick)
             }
 
             DOG_SELECTION -> {
@@ -55,7 +56,7 @@ class DogProfileAdapter(
                     parent,
                     false
                 )
-                SelectionViewHolder(binding)
+                SelectionViewHolder(binding, onDogClick)
             }
 
             else -> throw IllegalArgumentException("Error")
@@ -63,14 +64,10 @@ class DogProfileAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (position == currentList.size) {
-            if (holder is AddViewHolder) {
-                holder.bind(onDogClickListener)
-            }
-        } else {
-            if (holder is SelectionViewHolder) {
-                holder.bind(getItem(position), onDogClickListener)
-            }
+        if (holder is AddViewHolder) {
+            holder.bind()
+        } else if (holder is SelectionViewHolder) {
+            holder.bind(getItem(position))
         }
     }
 
@@ -78,30 +75,34 @@ class DogProfileAdapter(
         return currentList.size + 1
     }
 
-    class SelectionViewHolder(private val binding: ItemHomeDogSelectionBinding) :
+    class SelectionViewHolder(
+        private val binding: ItemHomeDogSelectionBinding,
+        private val onDogClick: (DogInfo) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: DogInfo, onDogClickListener: HomeOnClickListener) {
+        fun bind(item: DogInfo) {
             binding.apply {
                 Glide.with(ivDogImage.context)
                     .load(item.thumbnailUrl)
                     .into(ivDogImage)
                 tvDogName.text = item.name
                 ivDogImage.setOnClickListener {
-                    onDogClickListener.onDogClick(item)
+                    onDogClick(item)
                 }
             }
         }
     }
 
-    class AddViewHolder(private val binding: ItemHomeDogAddBinding) :
+    class AddViewHolder(
+        private val binding: ItemHomeDogAddBinding,
+        private val onAddClick: () -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(onAddClickListener: HomeOnClickListener) {
+        fun bind() {
             binding.apply {
                 Glide.with(ivDogAdd.context)
                     .load(R.drawable.ic_dog_add)
                     .into(ivDogAdd)
                 ivDogAdd.setOnClickListener {
-                    onAddClickListener.onAddClick()
+                    onAddClick
                 }
             }
         }

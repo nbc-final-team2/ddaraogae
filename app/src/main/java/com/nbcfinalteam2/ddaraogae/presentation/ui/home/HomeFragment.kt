@@ -17,27 +17,17 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
-import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
-import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), HomeOnClickListener {
+class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var dogProfileAdapter: DogProfileAdapter
     private val homeViewModel: HomeViewModel by viewModels()
-
-    override fun onAddClick() {
-        moveToAdd()
-    }
-    /** dog id값 넣어준것 확인할것 */
-    override fun onDogClick(dogData: DogInfo) {
-        homeViewModel.selectDog(dogData)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +60,10 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     }
 
     private fun setupAdapter() {
-        dogProfileAdapter = DogProfileAdapter(this)
+        dogProfileAdapter = DogProfileAdapter(
+            onDogClick = { dogData -> homeViewModel.selectDog(dogData) },
+            onAddClick = { moveToAdd() }
+        )
         binding.rvDogArea.adapter = dogProfileAdapter
     }
 
