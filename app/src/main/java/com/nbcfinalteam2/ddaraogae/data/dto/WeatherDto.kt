@@ -2,7 +2,7 @@ package com.nbcfinalteam2.ddaraogae.data.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Weather (
+data class WeatherDto (
     @SerializedName("coord") val coord : WeatherCoord?,
     @SerializedName("weather") val weather: List<WeatherWeather>?,
     @SerializedName("main") val main : WeatherMain?

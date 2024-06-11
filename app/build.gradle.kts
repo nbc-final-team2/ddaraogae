@@ -99,6 +99,9 @@ dependencies {
     // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
 
+    //google 로그인
+    implementation("com.google.gms:google-services:4.4.2")
+
 
 }
 

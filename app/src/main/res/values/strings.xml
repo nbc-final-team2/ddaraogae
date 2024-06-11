@@ -123,6 +123,7 @@
     <string name="signup_password_check">비밀번호 확인</string>
     <string name="signup_password_check_warning">비밀번호와 일치하지 않습니다.</string>
     <string name="signup_complete">완료</string>
+    <string name="signup_check_email">인증하기</string>
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>
