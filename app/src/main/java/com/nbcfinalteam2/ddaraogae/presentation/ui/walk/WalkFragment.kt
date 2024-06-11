@@ -12,15 +12,20 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.InfoWindow
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class WalkFragment : Fragment() {
     private var _binding: FragmentWalkBinding? = null
@@ -35,8 +40,6 @@ class WalkFragment : Fragment() {
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
     private lateinit var cameraPosition: CameraPosition
     private lateinit var cameraUpdate: CameraUpdate /*TODO: 나중에 animate을 위해 남김*/
-
-    private val latLngList = mutableListOf<LatLng>() // FinishActivity로 보낼 list /* TODO: intent때매 임시로 배치, 나중에 지울 예정*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,10 +80,6 @@ class WalkFragment : Fragment() {
         // Fragment -> Activity
         binding.btnNext.setOnClickListener {
             val intent = Intent(activity, FinishActivity::class.java)
-            // latLng 리스트를 FinishActivity로 전달합니다.
-            // putExtra() 메서드를 사용하여 리스트를 전달할 수 있습니다.
-            intent.putExtra("latLngList", latLngList.toTypedArray())
-            Log.d("buttonListener()", latLngList.toString())
             startActivity(intent)
         }
     }
@@ -138,12 +137,41 @@ class WalkFragment : Fragment() {
 //        cameraUpdate.animate(CameraAnimation.Easing)
     }
 
-    private fun spotMarker() {
-        /* TODO:
-        *   1. 처음 맵이 생성될때 위치정보에 따른 Marker 띄워주기
-        *   2. 위치 거리가 '몇미터' 이상 변경됬을때 Marker 재생성하기
-        *   3. 마커 세팅*/
-    }
+//    private fun spotMarker() {
+//        /* TODO:
+//        *   1. 처음 맵이 생성될때 위치정보에 따른 Marker 띄워주기
+//        *   2. 위치 거리가 '몇미터' 이상 변경됬을때 Marker 재생성하기
+//        *   3. 마커 세팅*/
+//        lifecycleScope.launch(Dispatchers.Main) {
+//            for (latLng in latLngList) {
+//                val marker = Marker()
+//                marker.position = latLng
+//                marker.map = naverMap
+//                Log.d("spotMarker", "Marker added at: ${latLng.latitude}, ${latLng.longitude}")
+//
+//                val contentString = "".trimIndent()
+//
+//                val infoWindow = InfoWindow().apply {
+//                    adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
+//                        override fun getText(infoWindow: InfoWindow): CharSequence {
+//                            return contentString
+//                        }
+//                    }
+//                }
+//
+//                marker.setOnClickListener {
+//                    if (infoWindow.isAdded) {
+//                        infoWindow.close()
+//                    } else {
+//                        infoWindow.open(marker)
+//                    }
+//                    true
+//                }
+//
+//                infoWindow.open(marker)
+//            }
+//        }
+//    }
 }
 
 
