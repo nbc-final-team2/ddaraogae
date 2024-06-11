@@ -28,11 +28,18 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
+import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class WalkFragment : Fragment() {
+
+    @Inject
+    lateinit var getStoreDataUseCase: GetStoreDataUseCase // Inject the use case
     private var _binding: FragmentWalkBinding? = null
     private val binding get() = _binding!!
 
@@ -92,6 +99,9 @@ class WalkFragment : Fragment() {
             // for ActivityCompat#requestPermissions for more details.
             return
         }
+        // Dependency injection initialization
+        (requireActivity().application as MyApplication).appComponent.inject(this)
+
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(
                 requireActivity(),
@@ -110,6 +120,7 @@ class WalkFragment : Fragment() {
         binding.btnWalkStart.setOnClickListener {
             toggleLocationService()
         }
+        spotMarker()
     }
 
     override fun onStart() {
@@ -201,41 +212,56 @@ class WalkFragment : Fragment() {
         }
     }
 
-//    private fun spotMarker() {
-//        /* TODO:
-//        *   1. 처음 맵이 생성될때 위치정보에 따른 Marker 띄워주기
-//        *   2. 위치 거리가 '몇미터' 이상 변경됬을때 Marker 재생성하기
-//        *   3. 마커 세팅*/
-//        lifecycleScope.launch(Dispatchers.Main) {
-//            for (latLng in latLngList) {
-//                val marker = Marker()
-//                marker.position = latLng
-//                marker.map = naverMap
-//                Log.d("spotMarker", "Marker added at: ${latLng.latitude}, ${latLng.longitude}")
-//
-//                val contentString = "".trimIndent()
-//
-//                val infoWindow = InfoWindow().apply {
-//                    adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-//                        override fun getText(infoWindow: InfoWindow): CharSequence {
-//                            return contentString
-//                        }
-//                    }
-//                }
-//
-//                marker.setOnClickListener {
-//                    if (infoWindow.isAdded) {
-//                        infoWindow.close()
-//                    } else {
-//                        infoWindow.open(marker)
-//                    }
-//                    true
-//                }
-//
-//                infoWindow.open(marker)
-//            }
-//        }
-//    }
+    private fun spotMarker() {
+        /* TODO:
+        *   1. 처음 맵이 생성될때 위치정보에 따른 Marker 띄워주기
+        *   2. 위치 거리가 '몇미터' 이상 변경됬을때 Marker 재생성하기
+        *   3. 마커 세팅*/
+        lifecycleScope.launch {
+            try {
+                // Assuming you want to use the current location to get nearby stores
+                val currentLocation = locationSource.lastLocation ?: return@launch
+                val lat = currentLocation.latitude.toString()
+                val lng = currentLocation.longitude.toString()
+
+                // Get stored data using the use case
+                val storeData = getStoreDataUseCase(lat, lng)
+
+                // Show markers on the map
+                withContext(Dispatchers.Main) {
+                    storeData?.forEach { store ->
+                        val latLng = LatLng(store.lat, store.lng)
+                        val marker = Marker()
+                        marker.position = latLng
+                        marker.map = naverMap
+
+                        val contentString = store.name // Assuming `store` has a `name` property
+
+                        val infoWindow = InfoWindow().apply {
+                            adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
+                                override fun getText(infoWindow: InfoWindow): CharSequence {
+                                    return contentString
+                                }
+                            }
+                        }
+
+                        marker.setOnClickListener {
+                            if (infoWindow.isAdded) {
+                                infoWindow.close()
+                            } else {
+                                infoWindow.open(marker)
+                            }
+                            true
+                        }
+
+                        infoWindow.open(marker)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("spotMarker", "Failed to get store data", e)
+            }
+        }
+    }
 }
 
 
