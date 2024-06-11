@@ -85,13 +85,13 @@ class AddActivity : AppCompatActivity() {
             ).show()
             else {
                 val name = etName.text.toString()
-                val age = etAge.text?.toString()?.toInt()
-                val breed = etBreed.text?.toString() ?: null
-                val memo = etMemo.text?.toString() ?: null
-                val image = if(imageFile.toString().isEmpty()) null else imageFile.toString()
+                val breed = etBreed.text.toString()
+                val memo = etMemo.text.toString()
+                val age = if(etAge.text.toString().isEmpty()) null else etAge.text.toString().toInt()
+                val image = imageFile.toString().ifEmpty { null }
 
                 val newDog = DogItemModel("", name, gender, age, breed, memo, image)
-                Log.d("testDog", "${newDog}")
+                Log.d("testDog", "$newDog")
                 addPet(newDog)
                 finish()
 
@@ -99,10 +99,12 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
+    //강아지 추가 함수
     private fun addPet(newDog: DogItemModel) {
         viewModel.insertDog(newDog)
     }
 
+    //uri -> file로 변환
     private fun getRealPathFromURI(uri: Uri): String {
         val buildName = Build.MANUFACTURER
         if (buildName.equals("Xiaomi")) {

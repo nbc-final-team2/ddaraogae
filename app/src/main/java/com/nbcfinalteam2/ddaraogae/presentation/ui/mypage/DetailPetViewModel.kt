@@ -24,33 +24,40 @@ class DetailPetViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(DetailDogUiState.init())
     val uiState: StateFlow<DetailDogUiState> = _uiState.asStateFlow()
 
-    init {
-        getDogList()
-    }
-    private fun getDogList() = viewModelScope.launch{
-        val loadPetList = getDogListUseCase()
-        val petList = loadPetList.map {
-            DogItemModel(
-                it.id,
-                it.name,
-                it.gender,
-                it.age,
-                it.lineage,
-                it.memo,
-                it.thumbnailUrl
-            )
-        }
-        petList.let { list ->
-            _uiState.update { prev ->
-                prev.copy(
-                    listPet = list,
-                    pet = list[0]
+    fun getDogList() = viewModelScope.launch{
+        try{
+            val loadPetList = getDogListUseCase()
+            val petList = loadPetList.map {
+                DogItemModel(
+                    it.id,
+                    it.name,
+                    it.gender,
+                    it.age,
+                    it.lineage,
+                    it.memo,
+                    it.thumbnailUrl
                 )
+            }
+            petList.let { list ->
+                _uiState.update { prev ->
+                    prev.copy(
+                        listPet = list,
+                        pet = list[0],
+                        listPetEmpty = false
+                    )
+                }
+            }
+        } catch (e:IndexOutOfBoundsException){
+            Log.e("error : detailPetViewModel", "$e")
+                _uiState.update { prev ->
+                    prev.copy(
+                        listPetEmpty = true
+                    )
+
             }
         }
     }
     fun deleteDogData(dogId:String) = viewModelScope.launch{
         deleteDogUseCase(dogId)
-        getDogList()
     }
 }

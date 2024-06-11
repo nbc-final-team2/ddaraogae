@@ -32,9 +32,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupWalkGraph()
         setupListener()
-        binding.buttonTest.setOnClickListener {
-            startActivity(Intent(requireActivity(), AddActivity::class.java))
-        }
     }
 
     private fun setupListener() {
