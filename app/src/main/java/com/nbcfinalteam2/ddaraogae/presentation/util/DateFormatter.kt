@@ -24,16 +24,24 @@ object DateFormatter : ValueFormatter() {
         }.reversed()
     }
 
-    fun getDates(): List<String> {
+    private fun getDates(): List<String> {
         if (!this::dates.isInitialized) {
             generateLast7Days()
         }
         return dates
     }
 
+    fun getLast7Days(): List<String> {
+        return getDates()
+    }
+
     override fun getFormattedValue(value: Float): String {
         val index = value.toInt()
         return if (index >= 0 && index < dates.size) dates[index] else ""
+    }
+
+    fun formatDate(date: Date?): String {
+        return date?.let { dateFormat.format(it) } ?: ""
     }
 
     fun getStartDateForWeek(): Date {
@@ -74,5 +82,9 @@ object DateFormatter : ValueFormatter() {
         val calendar = Calendar.getInstance()
         calendar.set(year, month - 1, 1) // 0: 1월, 1: 2월, 월은 0부터 시작해서 -1, 1은 그 달의 첫 번쨰 날
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH) // 현재 설정된 연도와 월에 대한 일수 반환 ( 윤년 = 29일 반환, 4월 = 30일 반환 )
+    }
+
+    fun testDate(dateStr: String): Date {
+        return dateFormat.parse(dateStr)
     }
 }

@@ -1,7 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,26 +104,34 @@ class HomeFragment : Fragment() {
         val lineChart = binding.lcArea
         walkGraphSettingsForHaveData(lineChart)
         walkGraphXAxisForHaveData(lineChart.xAxis)
-        walkGraphYAxisForHaveData(lineChart.axisLeft)
 
         val entries = ArrayList<Entry>()
+        val dateDistanceMap = walkData.groupBy { DateFormatter.formatDate(it.startDateTime) }
+            .mapValues { entry -> entry.value.sumOf { it.distance ?: 0.0 }}
 
-        val sortedData = walkData.sortedBy { it.startDateTime }
-        sortedData.forEachIndexed { index, walkingEntity ->
-            entries.add(Entry(index.toFloat(), walkingEntity.distance?.toFloat() ?: 0f)) /** nullable 처리 확인할 것 */
+        DateFormatter.getLast7Days().forEachIndexed { index, date ->
+            val distance = dateDistanceMap[date] ?: 0.0
+            Log.d("WalkGraph", "Date: $date, Distance: $distance")
+            entries.add(Entry(index.toFloat(), distance.toFloat()))
         }
+
+        val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
+        walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
-            color = resources.getColor(R.color.grey, null)
+            color = Color.parseColor("#7598c9") // 라인 색상
             valueTextColor = resources.getColor(R.color.black, null)
             lineWidth = 2f
             setDrawCircles(true)
-            setDrawCircleHole(false)
+            setCircleColor(Color.parseColor("#7598c9")) // 라인 꼭짓점 색상
+            setDrawCircleHole(true)
             setDrawValues(true)
+            mode = LineDataSet.Mode.LINEAR
         }
         val lineData = LineData(dataSet)
         lineChart.data = lineData
+
         lineChart.invalidate()
     }
 
@@ -133,11 +143,11 @@ class HomeFragment : Fragment() {
             description.isEnabled = false // 범례 옆에 표시되는 차트 설명 사용 여부
             setDrawGridBackground(true) // 차트의 안쪽 색깔 지정 여부
             setGridBackgroundColor(resources.getColor(R.color.grey, null)) // 차트의 안쪽 색깔 지정
-            setTouchEnabled(true) // 차트 터치 여부
-            setPinchZoom(true) // 차트 확대, 축소 여부 (손가락으로 확대 축소)
-            setScaleEnabled(true) // 차트 확대 여부
-            isDragXEnabled = true // 차트의 X축 드래그 여부
-            isDragYEnabled = true // 차트의 Y축 드래그 여부
+            setTouchEnabled(false) // 차트 터치 여부
+            setPinchZoom(false) // 차트 확대, 축소 여부 (손가락으로 확대 축소)
+            setScaleEnabled(false) // 차트 확대 여부
+            isDragXEnabled = false // 차트의 X축 드래그 여부
+            isDragYEnabled = false // 차트의 Y축 드래그 여부
         }
         lineChart.invalidate() // 차트 갱신
     }
@@ -155,23 +165,19 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun walkGraphYAxisForHaveData(yAxis: YAxis) {
-        /* 차트의 Y축 설정 */
+    private fun walkGraphYAxisForHaveData(yAxis: YAxis, maxDistance: Float) {
         yAxis.apply {
-            setLabelCount(5, true) // Y축에 표시될 레이블의 개수 설정, force = 어떠한 변화가 있어도 강제로 5개만 보이도록
-            axisMinimum = 1f // Y축의 최솟값
-            axisMaximum = 5f // Y축의 최댓값
-            // (Y축)에 km를 붙이기 위한 작업
+            axisMinimum = 0f // y축의 최솟값 설정
+            axisMaximum = when { // y축의 최댓값 설정
+                // 최대 거리 + 1을 해서 y축의 최댓값을 지정함 ( Int로 변환 )
+                maxDistance >= 3 -> (maxDistance / 1).toInt() * 1 + 1f
+                maxDistance >= 1 -> (maxDistance / 0.5).toInt() * 0.5f + 0.5f
+                else -> (maxDistance / 0.1).toInt() * 0.1f + 0.1f
+            }
+
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return when (value) {
-                        1f -> "1km"
-                        2f -> "3km"
-                        3f -> "6km"
-                        4f -> "9km"
-                        5f -> "12km"
-                        else -> ""
-                    }
+                    return "${value}km"
                 }
             }
         }

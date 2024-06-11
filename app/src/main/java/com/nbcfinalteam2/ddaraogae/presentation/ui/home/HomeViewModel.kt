@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -61,7 +62,7 @@ class HomeViewModel @Inject constructor(
         }
     }
     /** dogid 추가한것 확인할것 */
-    fun selectedWalkGraphDogName(dogName: String, dogId: String) {
+    private fun selectedWalkGraphDogName(dogName: String, dogId: String) {
         viewModelScope.launch {
             _dogName.value = dogName
             loadWalkData(dogId)
@@ -91,7 +92,39 @@ class HomeViewModel @Inject constructor(
             }
             _walkData.value = walkInfo
             _isWalkData.value = walkInfo.isNotEmpty()
+            setDummyWalkData()
         }
+    }
+
+    fun setDummyWalkData() = viewModelScope.launch {
+        // 최근 7일간의 날짜를 가져옴
+        val dates = DateFormatter.getLast7Days()
+
+        // 각 날짜에 산책 거리를 할당
+        val list = dates.mapIndexed { index, date ->
+            val distance = when (index) {
+                0 -> 1.2
+                1 -> 0.5
+                2 -> 0.1
+                3 -> 3.2
+                4 -> 1.0
+                5 -> 2.3
+                6 -> 1.5
+                else -> 0.0
+            }
+            Log.d("DummyData", "Date: $date, Distance: $distance")
+            WalkingInfo(
+                id = null,
+                dogId = null,
+                timeTaken = null,
+                distance = distance,
+                startDateTime = DateFormatter.testDate(date),
+                endDateTime = DateFormatter.testDate(date),
+                path = emptyList()
+            )
+        }
+
+        _walkData.value = list
     }
 }
 
