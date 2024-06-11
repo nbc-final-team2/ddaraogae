@@ -10,6 +10,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByDogIdAndPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByDogIdAndPeriodUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingByIdUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
@@ -121,4 +123,8 @@ abstract class UseCaseModule {
         updateDogUseCaseImpl: UpdateDogUseCaseImpl
     ): UpdateDogUseCase
 
+    @Binds
+    abstract fun bindGetStoreDataUseCase(
+        getStoreDataUseCaseImpl: GetStoreDataUseCaseImpl
+    ): GetStoreDataUseCase
 }
