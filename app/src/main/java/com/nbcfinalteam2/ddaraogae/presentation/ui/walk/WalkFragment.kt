@@ -9,38 +9,29 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.overlay.InfoWindow
-import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
-import com.nbcfinalteam2.ddaraogae.app.DdaraogaeApplication
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
-import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WalkFragment : Fragment() {
 
-    @Inject
-    lateinit var getStoreDataUseCase: GetStoreDataUseCase // Inject the use case
+    private val viewModel: WalkTestViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
     private val binding get() = _binding!!
 
@@ -100,8 +91,6 @@ class WalkFragment : Fragment() {
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        // Dependency injection initialization
-        (requireActivity().application as DdaraogaeApplication).appComponent.inject(this)
 
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(
@@ -219,50 +208,8 @@ class WalkFragment : Fragment() {
         *   2. 위치 거리가 '몇미터' 이상 변경됬을때 Marker 재생성하기
         *   3. 마커 세팅*/
         // 내 위치, addon, 받아온 데이터 기반으로 marker띄우기
-        lifecycleScope.launch {
-            try {
-                // Assuming you want to use the current location to get nearby stores
-                val currentLocation = locationSource.lastLocation ?: return@launch
-                val lat = currentLocation.latitude.toString()
-                val lng = currentLocation.longitude.toString()
-
-                // Get stored data using the use case
-                val storeData = getStoreDataUseCase(lat, lng)
-
-                // Show markers on the map
-                withContext(Dispatchers.Main) {
-                    storeData?.forEach { store ->
-                        val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
-                        val marker = Marker()
-                        marker.position = latLng
-                        marker.map = naverMap
-
-                        val contentString = store.placeName // Assuming `store` has a `name` property
-
-                        val infoWindow = InfoWindow().apply {
-                            adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-                                override fun getText(infoWindow: InfoWindow): CharSequence {
-                                    return contentString.toString()
-                                }
-                            }
-                        }
-
-                        marker.setOnClickListener {
-                            if (infoWindow.isAdded) {
-                                infoWindow.close()
-                            } else {
-                                infoWindow.open(marker)
-                            }
-                            true
-                        }
-
-                        infoWindow.open(marker)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("spotMarker", "Failed to get store data", e)
-            }
-        }
+        val latLng = LatLng(lat)
+//        viewModel.fetchStoreData()
     }
 }
 

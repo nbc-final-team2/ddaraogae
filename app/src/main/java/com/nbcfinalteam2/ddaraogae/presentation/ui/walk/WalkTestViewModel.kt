@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.main
+package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,12 +11,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * main activity에서 검색 api 테스트 할 때 사용하는 viewmodel 입니다.
- * 테스트 후 제거해주세요.
- */
 @HiltViewModel
-class TestViewModel @Inject constructor(
+class WalkTestViewModel @Inject constructor(
     private val getStoreDataUseCase: GetStoreDataUseCase,
     private val getWeatherUseCase: GetWeatherDataUseCase
 ) : ViewModel() {
