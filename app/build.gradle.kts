@@ -83,7 +83,7 @@ dependencies {
     implementation("com.naver.maps:map-sdk:3.18.0")
 
     // FusedLocationSource
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation(libs.play.services.location)
 
     //Hilt
     implementation(libs.hilt.android)
@@ -101,6 +101,9 @@ dependencies {
 
     // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
+
+    //google 로그인
+    implementation("com.google.gms:google-services:4.4.2")
 
 
 }
