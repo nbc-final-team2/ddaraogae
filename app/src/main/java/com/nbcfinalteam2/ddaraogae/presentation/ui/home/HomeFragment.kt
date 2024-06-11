@@ -30,16 +30,13 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     private val binding get() = _binding!!
     private lateinit var dogProfileAdapter: DogProfileAdapter
     private val homeViewModel: HomeViewModel by viewModels()
-    private var selectedDogInfo: DogInfo? = null
 
     override fun onAddClick() {
         moveToAdd()
     }
     /** dog id값 넣어준것 확인할것 */
     override fun onDogClick(dogData: DogInfo) {
-        homeViewModel.selectedWalkGraphDogName(dogData.name, dogData.id)
-        selectedDogInfo = dogData
-
+        homeViewModel.selectDog(dogData)
     }
 
     override fun onCreateView(
@@ -102,7 +99,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
     private fun moveToHistory() {
         binding.cvGraph.setOnClickListener {
-            val dogInfo = selectedDogInfo
+            val dogInfo = homeViewModel.selectedDogInfo.value
             if (dogInfo != null) {
                 val intent = Intent(context, HistoryActivity::class.java)
                 intent.putExtra("DOG_INFO", dogInfo)

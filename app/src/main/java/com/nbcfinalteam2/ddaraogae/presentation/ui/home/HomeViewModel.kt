@@ -29,6 +29,9 @@ class HomeViewModel @Inject constructor(
     private val _dogName = MutableLiveData<String>()
     val dogName: LiveData<String> get() = _dogName
 
+    private val _selectedDogInfo = MutableLiveData<DogInfo>()
+    val selectedDogInfo: LiveData<DogInfo> get() = _selectedDogInfo
+
     private val _walkData = MutableLiveData<List<WalkingInfo>>()
     val walkData: LiveData<List<WalkingInfo>> get() = _walkData
 
@@ -63,6 +66,11 @@ class HomeViewModel @Inject constructor(
             _dogName.value = dogName
             loadWalkData(dogId)
         }
+    }
+
+    fun selectDog(dogInfo: DogInfo) {
+        _selectedDogInfo.value = dogInfo
+        selectedWalkGraphDogName(dogInfo.name, dogInfo.id)
     }
 
     private fun loadWalkData(dogId: String) {
