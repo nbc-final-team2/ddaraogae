@@ -124,7 +124,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
             val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
         }
     }
-
+    // 경로값 EmptyList로 주고 경로값 아무거나
     private fun setupWalkGraphForHaveData(walkData: List<WalkingEntity>) {
         val lineChart = binding.lcArea
         walkGraphSettingsForHaveData(lineChart)
@@ -135,7 +135,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
 
         val sortedData = walkData.sortedBy { it.startDateTime }
         sortedData.forEachIndexed { index, walkingEntity ->
-            entries.add(Entry(index.toFloat(), walkingEntity.distance.toFloat()))
+            entries.add(Entry(index.toFloat(), walkingEntity.distance?.toFloat() ?: 0f)) /** nullable 처리 확인할 것 */
         }
 
         val dataSet = LineDataSet(entries, "").apply {

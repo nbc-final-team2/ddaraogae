@@ -44,9 +44,9 @@ class HomeViewModel @Inject constructor(
                 val dogEntities = getDogListUseCase().orEmpty()
                 val dogInfo = dogEntities.map { entity ->
                     DogInfo(
-                        id = entity.id,
-                        name = entity.name,
-                        gender = entity.gender,
+                        id = entity.id!!,
+                        name = entity.name!!,
+                        gender = entity.gender!!,
                         age = entity.age,
                         lineage = entity.lineage,
                         memo = entity.memo,
