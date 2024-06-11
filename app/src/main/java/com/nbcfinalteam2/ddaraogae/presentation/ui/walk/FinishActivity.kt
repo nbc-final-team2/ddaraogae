@@ -78,6 +78,8 @@ class FinishActivity : FragmentActivity() {
             Intent(this, LocationService::class.java).also { intent ->
                 bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
             }
+            updatePolylineFromService()
+            Log.d("onStart-updatePoly", updatePolylineFromService().toString())
         }
     }
 
@@ -110,7 +112,7 @@ class FinishActivity : FragmentActivity() {
 //                Log.d("drawPolyLine", drawPolyLine(latLngList).toString())
 //                setCameraOnPolyLine(latLngList)
 //                Log.d("setCameraOn", setCameraOnPolyLine(latLngList).toString())
-                updatePolylineFromService()
+//                updatePolylineFromService()
             }
         }
     }
@@ -129,29 +131,31 @@ class FinishActivity : FragmentActivity() {
     private fun updatePolylineFromService() {
         locationService?.let { service ->
             val locationList = service.locationList
-            drawPolyLine(locationList)
-            setCameraOnPolyLine(locationList)
+            if (locationList.isNotEmpty()) {
+                drawPolyLine(locationList)
+                setCameraOnPolyLine(locationList)
+            } else {
+                Log.d("updatePolylineFromService", "Location list is empty")
+            }
         }
     }
 
     private fun drawPolyLine(locationList: List<LocationService.LatLng>){
-        Log.d("drawPolyLine()", "invoked()")
-        // 좌표가 2개 이상인 경우에만 Polyline을 그립니다.
+        Log.d("drawPolyLine", "Invoked with ${locationList.size} locations")
         if (locationList.size >= 2) {
-            // Main 코루틴 컨텍스트를 사용하여 UI 업데이트를 수행합니다.
             lifecycleScope.launch(Dispatchers.Main) {
                 polyline.apply {
-                    // UI 업데이트는 여기서 수행됩니다.
                     width = 10
-                    color = resources.getColor(R.color.red)
+                    color = resources.getColor(R.color.red, null)
                     coords = locationList.map {
                         LatLng(it.latitude, it.longitude)
-                    } //TODO: 네이버가 만든 latlng, map을 썻다.
-                    //TODO: 가져올때 바로 변환해놓고 drawPolyLine
+                    }
                     map = naverMap
-                    Log.d("drawPolyLine()", "size efficient")
+                    Log.d("drawPolyLine", "Polyline drawn with ${coords.size} points")
                 }
             }
+        } else {
+            Log.d("drawPolyLine", "Not enough points to draw polyline")
         }
     }
     private fun setCameraOnPolyLine(locationList: List<LocationService.LatLng>) {
@@ -159,31 +163,29 @@ class FinishActivity : FragmentActivity() {
         TODO: 위도 경도의 최대값과 최소값을 통해 중심점을 찾아 카메라포지션을 잡을 수 있을까?
         TODO: '위치 정보를 불러왔을때' 조건을 추가해주면 되겠다.
         */
-        var latMin = locationList[0].latitude
-        var latMax = locationList[0].latitude
-        var lngMin = locationList[0].longitude
-        var lngMax = locationList[0].longitude
+        if (locationList.isNotEmpty()) {
+            var latMin = locationList[0].latitude
+            var latMax = locationList[0].latitude
+            var lngMin = locationList[0].longitude
+            var lngMax = locationList[0].longitude
 
-        // 모든 위치를 순회하며 최대/최소값 업데이트
-        for (latLng in locationList) {
-            if (latLng.latitude < latMin) latMin = latLng.latitude
-            if (latLng.latitude > latMax) latMax = latLng.latitude
-            if (latLng.longitude < lngMin) lngMin = latLng.longitude
-            if (latLng.longitude > lngMax) lngMax = latLng.longitude
+            for (latLng in locationList) {
+                if (latLng.latitude < latMin) latMin = latLng.latitude
+                if (latLng.latitude > latMax) latMax = latLng.latitude
+                if (latLng.longitude < lngMin) lngMin = latLng.longitude
+                if (latLng.longitude > lngMax) lngMax = latLng.longitude
+            }
+
+            val centerLat = (latMin + latMax) / 2
+            val centerLng = (lngMin + lngMax) / 2
+            val center = LatLng(centerLat, centerLng)
+
+            cameraPosition = CameraPosition(center, 15.0)
+            cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
+            naverMap.moveCamera(cameraUpdate)
+            Log.d("setCameraOnPolyLine", "Camera moved to $center")
+        } else {
+            Log.d("setCameraOnPolyLine", "Location list is empty, cannot set camera")
         }
-
-        // 최대값과 최소값의 평균을 계산하여 중심점 찾기
-        val centerLat = (latMin + latMax) / 2
-        val centerLng = (lngMin + lngMax) / 2
-        val center = LatLng(centerLat, centerLng)
-
-        // 중심점을 사용하여 카메라 포지션 설정 (줌 레벨은 15로 설정)
-        cameraPosition = CameraPosition(center, 15.0)
-
-        // 카메라 업데이트 생성
-        cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
-
-        // NaverMap에 카메라 업데이트 적용
-        naverMap.moveCamera(cameraUpdate)
     }
 }

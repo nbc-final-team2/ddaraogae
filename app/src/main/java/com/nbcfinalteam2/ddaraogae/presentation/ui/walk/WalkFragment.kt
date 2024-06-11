@@ -1,10 +1,14 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +28,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
+import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -40,6 +45,25 @@ class WalkFragment : Fragment() {
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
     private lateinit var cameraPosition: CameraPosition
     private lateinit var cameraUpdate: CameraUpdate /*TODO: 나중에 animate을 위해 남김*/
+
+    private var locationService: LocationService? = null
+    private var bound = false
+    private var isServiceRunning = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as LocationService.LocalBinder
+            locationService = binder.getService()
+            bound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            locationService = null
+            bound = false
+        }
+    }
+    //TODO: 버튼애 리스너를 달아놓고 bind됫는지 확인하고 값을 가져온다, 서비스
+    //값 가져오고, map이나 다른 함수로 변환해도된다.
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,6 +106,27 @@ class WalkFragment : Fragment() {
             val intent = Intent(activity, FinishActivity::class.java)
             startActivity(intent)
         }
+
+        binding.btnWalkStart.setOnClickListener {
+            toggleLocationService()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!bound) {
+            Intent(requireContext(), LocationService::class.java).also { intent ->
+                requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (bound) {
+            requireContext().unbindService(serviceConnection)
+            bound = false
+        }
     }
 
     private fun initMapView() {
@@ -107,9 +152,10 @@ class WalkFragment : Fragment() {
             }
             // 위치 추적 시작 버튼 클릭 리스너 설정
             binding.btnWalkStart.setOnClickListener {
+                toggleLocationService()
                 /* TODO: viewMdoel 작업할 때 필요*/
                 naverMap.addOnLocationChangeListener {
-                    startTracking()
+
                 }
             }
         }
@@ -132,9 +178,27 @@ class WalkFragment : Fragment() {
         cameraPosition = CameraPosition(latLng, 15.0)
     }
 
-    private fun startTracking() {
-        /*TODO: 산책버튼을 눌렀을때 이벤트 처리 주기*/
-//        cameraUpdate.animate(CameraAnimation.Easing)
+//    private fun startTracking(locationList: List<LocationService.LatLng>) {
+//        /*TODO: 산책버튼을 눌렀을때 이벤트 처리 주기*/
+////        cameraUpdate.animate(CameraAnimation.Easing)
+//        binding.btnWalkStart.setOnClickListener {
+//
+//        }
+//
+//    }
+    private fun toggleLocationService() {
+        if (isServiceRunning) {
+            locationService?.stopService()
+            isServiceRunning = false
+            binding.btnWalkStart.text = "Start Walk"
+        } else {
+            Intent(requireContext(), LocationService::class.java).also { intent ->
+                requireActivity().startService(intent)
+                requireActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            }
+            isServiceRunning = true
+            binding.btnWalkStart.text = "Stop Walk"
+        }
     }
 
 //    private fun spotMarker() {
