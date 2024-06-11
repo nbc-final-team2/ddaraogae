@@ -6,4 +6,6 @@ data class StoreEntity (
     val categoryGroupName: String?,
     val address: String?,
     val phone: String?,
+    val lat: String?,
+    val lng: String?,
 )
