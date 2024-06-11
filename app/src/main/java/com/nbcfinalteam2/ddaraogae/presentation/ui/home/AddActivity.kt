@@ -9,18 +9,20 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
+@AndroidEntryPoint
 class AddActivity : AppCompatActivity(){
     private lateinit var binding:ActivityAddBinding
     private lateinit var imageFile:File
+    private val viewModel : AddPetViewModel by viewModels()
 
     private val galleryPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){
@@ -54,8 +56,10 @@ class AddActivity : AppCompatActivity(){
         val view = binding.root
         setContentView(view)
 
+        binding.btBack.setOnClickListener { finish() }
         addPetData()
     }
+
     private fun addPetData() = with(binding){
         var gender= 0
 
@@ -75,21 +79,23 @@ class AddActivity : AppCompatActivity(){
         btnEditCompleted.setOnClickListener{
             if(etName.text!!.isEmpty()) Toast.makeText(this@AddActivity, R.string.please_add_name, Toast.LENGTH_SHORT).show()
             else {
+                /** 유효성 검사 필요 **/
                 val name = etName.text.toString()
                 val age = etAge.text.toString().toInt()
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
-                //gender 추가 필요
-                val newDog = DogItemModel("", name, gender, age, breed, memo, imageFile.toString())
-                Log.d("testDog", "${newDog}")
-                addPet(newDog)
+                if(name.isBlank()) Toast.makeText(this@AddActivity, R.string.please_add_name, Toast.LENGTH_SHORT).show()
+                else{
+                    val newDog = DogItemModel("", name, gender, age, breed, memo, imageFile.toString())
+                    Log.d("testDog", "${newDog}")
+                    addPet(newDog)
+                    finish()
+                }
             }
         }
     }
     private fun addPet(newDog : DogItemModel) {
-        lifecycleScope.launch {
-
-        }
+        viewModel.insertDog(newDog)
     }
 
     private fun getRealPathFromURI(uri: Uri):String{
