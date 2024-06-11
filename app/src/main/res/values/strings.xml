@@ -92,6 +92,7 @@
     <string name="mypage_edit_pet_dog_memo_title">메모</string>
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
+    <string name="mypage_delete_dog">삭제 하기</string>
 
     <!-- item - home - history -->
     <string name="item_home_history_date">2024.05.28 17:38</string>

@@ -35,9 +35,6 @@
         <activity
             android:name=".presentation.ui.home.DetailActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".presentation.ui.main.MainActivity"-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".presentation.ui.mypage.EditPetActivity"
             android:exported="false" />

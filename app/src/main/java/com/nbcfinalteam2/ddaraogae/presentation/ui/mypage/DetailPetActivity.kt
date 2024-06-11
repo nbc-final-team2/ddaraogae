@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +22,16 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DetailPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailPetBinding
-    private lateinit var adapter: DetailPetAdapter
+    private val adapter: DetailPetAdapter by lazy {
+        DetailPetAdapter{ item ->
+            onItemClick(item)
+        }
+    }
+
+    private fun onItemClick(dogData: DogItemModel) {
+        initView(dogData)
+    }
+
     private var dogData = DogItemModel("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
     private var dogDataList = listOf<DogItemModel>()
@@ -30,42 +40,36 @@ class DetailPetActivity : AppCompatActivity() {
         binding = ActivityDetailPetBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        binding.btBack.setOnClickListener { finish() }
         initData()
+
     }
 
     private fun initData() = with(binding) {
-        adapter = DetailPetAdapter(this@DetailPetActivity)
         rvDogArea.adapter = adapter
-        rvDogArea.layoutManager =
-            LinearLayoutManager(this@DetailPetActivity, LinearLayoutManager.HORIZONTAL, false)
+        rvDogArea.layoutManager = LinearLayoutManager(this@DetailPetActivity, LinearLayoutManager.HORIZONTAL, false)
 
         lifecycleScope.launch {
             viewModel.uiState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
-                    adapter.items = state.listPet
+                    adapter.submitList(state.listPet)
                     dogDataList = state.listPet
-                    initView(0)
+                    initView(state.pet)
                 }
         }
-       // viewModel.loadPetList()
-
-        adapter.setItemClickListener(object : DetailPetAdapter.OnItemClickListener {
-            override fun onClick(v: View, position: Int) {
-                initView(position)
-            }
-        })
     }
 
-    private fun initView(position: Int) = with(binding) {
-        dogData = dogDataList[position]
+    private fun initView(getDogData:DogItemModel) = with(binding) {
+        dogData = getDogData
         Glide.with(this@DetailPetActivity)
-            .load(dogDataList[position].thumbnailUrl)
+            .load(dogData.thumbnailUrl)
             .into(ivDogThumbnail)
-        tvPetName.text = dogDataList[position].name
-        tvPetAge.text = dogDataList[position].age.toString()
-        tvPetBreed.text = dogDataList[position].lineage
-        tvPetMemo.text = dogDataList[position].memo
-        if (dogDataList[position].gender == 1) {
+        tvPetName.text = dogData.name
+        tvPetAge.text = dogData.age.toString()
+        tvPetBreed.text = dogData.lineage
+        tvPetMemo.text = dogData.memo
+        if (dogData.gender == 1) {
             tvFemale.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
                     this.root.context,
@@ -94,6 +98,11 @@ class DetailPetActivity : AppCompatActivity() {
             intent.putExtra("dogData", dogData)
             startActivity(intent)
         }
+
+        btDelete.setOnClickListener { deleteDogData(dogData.id) }
+    }
+    private fun deleteDogData(dogId:String){
+        viewModel.deleteDogData(dogId)
     }
 
 }

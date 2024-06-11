@@ -11,7 +11,9 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.databinding.ItemEditPetDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 
-class DetailPetAdapter(val context: Context) : ListAdapter<DogItemModel,DetailPetAdapter.ItemViewHolder>(
+class DetailPetAdapter(
+    private val onItemClick:(DogItemModel) -> Unit
+) : ListAdapter<DogItemModel,DetailPetAdapter.ViewHolder>(
     object :DiffUtil.ItemCallback<DogItemModel>(){
         override fun areItemsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
             return oldItem == newItem
@@ -22,37 +24,37 @@ class DetailPetAdapter(val context: Context) : ListAdapter<DogItemModel,DetailPe
         }
     }
 ) {
-    var items = listOf<DogItemModel>()
-    private lateinit var itemClickListener: OnItemClickListener
-    interface OnItemClickListener{
-        fun onClick(v: View, position: Int)
+    abstract class ViewHolder(view: View):RecyclerView.ViewHolder(view){
+        abstract fun bind(item:DogItemModel)
     }
-    fun setItemClickListener(onItemClickListener:OnItemClickListener){
-        this.itemClickListener = onItemClickListener
-    }
-    inner class ItemViewHolder(private val binding:ItemEditPetDogSelectionBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(dogData: DogItemModel) = with(binding){
+
+    class ItemViewHolder(
+        private val binding:ItemEditPetDogSelectionBinding,
+        private val context: Context,
+        private val onItemClick: (DogItemModel) -> Unit
+    ):ViewHolder(binding.root){
+        override fun bind(dogData: DogItemModel) = with(binding){
             Glide.with(context)
                 .load(dogData.thumbnailUrl)
                 .into(ivDogImage)
             dogName.text = dogData.name
+            ivDogImage.setOnClickListener {
+                onItemClick(dogData)
+            }
         }
     }
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): DetailPetAdapter.ItemViewHolder {
-        val binding = ItemEditPetDogSelectionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ItemViewHolder(binding)
+        return ItemViewHolder(
+            ItemEditPetDogSelectionBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            ), parent.context, onItemClick
+        )
     }
 
-    override fun onBindViewHolder(holder: DetailPetAdapter.ItemViewHolder, position: Int) {
-        holder.bind(items[position])
-        holder.itemView.setOnClickListener {
-            itemClickListener.onClick(it, position)
-        }
+    override fun onBindViewHolder(holder: DetailPetAdapter.ViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount(): Int = items.size
-
 }

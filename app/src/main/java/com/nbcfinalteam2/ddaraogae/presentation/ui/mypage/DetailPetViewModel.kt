@@ -20,80 +20,37 @@ import javax.inject.Inject
 class DetailPetViewModel @Inject constructor(
     private val deleteDogUseCase: DeleteDogUseCase,
     private val getDogListUseCase: GetDogListUseCase,
-    private val getDogByIdUseCase: GetDogByIdUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailDogUiState.init())
     val uiState: StateFlow<DetailDogUiState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            val dummyData = listOf(
-                DogEntity(
-                    "",
-                    "쿠키",
-                    0,
-                    4,
-                    "푸들",
-                    "건들면 물어요",
-                    "/storage/emulated/0/Pictures/lactofit.jpg"
-                ),
-                DogEntity(
-                    "",
-                    "초코",
-                    1,
-                    1,
-                    "말티즈",
-                    "옷 입는거 좋아함",
-                    "/storage/emulated/0/Pictures/lactofit.jpg"
-                ),
-                DogEntity(
-                    "",
-                    "캔디",
-                    1,
-                    6,
-                    "치와와",
-                    "고양이 무서워함, 산책 갈 때 주의 필요",
-                    "/storage/emulated/0/Pictures/lactofit.jpg"
-                )
-            )
-            //val loadPetList = getDogListUseCase()
-             val petList = dummyData.map {
-                DogItemModel(
-                    it.id,
-                    it.name,
-                    it.gender,
-                    it.age,
-                    it.lineage,
-                    it.memo,
-                    it.thumbnailUrl
-                )
-            }
-            petList.let { list ->
-                _uiState.update { prev ->
-                    prev.copy(
-                        listPet = list
-                    )
-                }
-            }
-        }
-        //firebase에서 리스트 불러오기
-
-        //petList = dummyData
-
+        getDogList()
     }
-
-    fun loadDetailPet(dogData: DogItemModel) = viewModelScope.launch {
-        var pet = dogData
-        Log.d("testmodelDog", "${pet}")
-        //firebase에서 받아오기
-        pet?.let { petData ->
+    private fun getDogList() = viewModelScope.launch{
+        val loadPetList = getDogListUseCase()
+        val petList = loadPetList.map {
+            DogItemModel(
+                it.id,
+                it.name,
+                it.gender,
+                it.age,
+                it.lineage,
+                it.memo,
+                it.thumbnailUrl
+            )
+        }
+        petList.let { list ->
             _uiState.update { prev ->
                 prev.copy(
-                    pet = petData
+                    listPet = list,
+                    pet = list[0]
                 )
             }
         }
-
     }
-
+    fun deleteDogData(dogId:String) = viewModelScope.launch{
+        deleteDogUseCase(dogId)
+        getDogList()
+    }
 }
