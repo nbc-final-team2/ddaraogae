@@ -56,7 +56,7 @@ class HomeFragment : Fragment() {
     private fun setupAdapter() {
         dogProfileAdapter = DogProfileAdapter(
             onDogClick = { dogData -> homeViewModel.selectDog(dogData) },
-            onAddClick = { moveToAdd() }
+            onAddClick = { moveToAdd() },
         )
         binding.rvDogArea.adapter = dogProfileAdapter
     }
@@ -66,10 +66,10 @@ class HomeFragment : Fragment() {
             dogProfileAdapter.submitList(dogs)
         }
 
-        homeViewModel.dogName.observe(viewLifecycleOwner) {dogName ->
+        homeViewModel.dogName.observe(viewLifecycleOwner) { dogName ->
             binding.tvDogGraph.text = "${dogName}의 산책 그래프"
         }
-        /** 옵저빙 확인할것 */
+
         homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
             if (walkData.isEmpty()) {
                 setupWalkGraphForEmptyData()
@@ -99,7 +99,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    /** 경로값 EmptyList로 주고 경로값 아무거나 */
     private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>) {
         val lineChart = binding.lcArea
         walkGraphSettingsForHaveData(lineChart)
@@ -107,7 +106,7 @@ class HomeFragment : Fragment() {
 
         val entries = ArrayList<Entry>()
         val dateDistanceMap = walkData.groupBy { DateFormatter.formatDate(it.startDateTime) }
-            .mapValues { entry -> entry.value.sumOf { it.distance ?: 0.0 }}
+            .mapValues { entry -> entry.value.sumOf { it.distance ?: 0.0 } }
 
         DateFormatter.getLast7Days().forEachIndexed { index, date ->
             val distance = dateDistanceMap[date] ?: 0.0
@@ -258,8 +257,10 @@ class HomeFragment : Fragment() {
             val ultraFineDust = tvUltraFineDust.text.toString()
             val locationTemperature = tvLocationTemperature.text.toString()
             val locationConditions = tvLocationConditions.text.toString()
-            val fineDustStatusIcon = ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
-            val ultraFineDustStatusIcon = ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
+            val fineDustStatusIcon =
+                ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
+            val ultraFineDustStatusIcon =
+                ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
         }
     }
 }

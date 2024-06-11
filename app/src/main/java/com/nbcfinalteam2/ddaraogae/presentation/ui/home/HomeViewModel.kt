@@ -39,8 +39,6 @@ class HomeViewModel @Inject constructor(
     private val _isWalkData = MutableLiveData<Boolean>()
     val isWalkData: LiveData<Boolean> get() = _isWalkData
 
-    /** 유저데이터 함수로 뺴서 한번에 검사 */
-
     fun loadDogs() {
         viewModelScope.launch {
             val user = getCurrentUserUseCase()
@@ -61,7 +59,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-    /** dogid 추가한것 확인할것 */
+
     private fun selectedWalkGraphDogName(dogName: String, dogId: String) {
         viewModelScope.launch {
             _dogName.value = dogName
@@ -79,7 +77,7 @@ class HomeViewModel @Inject constructor(
             val startDate = DateFormatter.getStartDateForWeek()
             val endDate = DateFormatter.getEndDateForWeek()
             val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-            val walkInfo = walkEntities.map {entity ->
+            val walkInfo = walkEntities.map { entity ->
                 WalkingInfo(
                     id = entity.id,
                     dogId = entity.dogId,
@@ -96,18 +94,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun setDummyWalkData() = viewModelScope.launch {
-        // 최근 7일간의 날짜를 가져옴
+    private fun setDummyWalkData() = viewModelScope.launch {
         val dates = DateFormatter.getLast7Days()
 
-        // 각 날짜에 산책 거리를 할당
         val list = dates.mapIndexed { index, date ->
             val distance = when (index) {
-                0 -> 1.2
+                0 -> 6.5
                 1 -> 0.5
-                2 -> 0.1
-                3 -> 3.2
-                4 -> 1.0
+                2 -> 7.2
+                3 -> 30.2
+                4 -> 3.5
                 5 -> 2.3
                 6 -> 1.5
                 else -> 0.0
@@ -127,4 +123,3 @@ class HomeViewModel @Inject constructor(
         _walkData.value = list
     }
 }
-

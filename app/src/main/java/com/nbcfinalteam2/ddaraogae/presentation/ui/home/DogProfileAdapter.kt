@@ -2,6 +2,8 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,10 +12,11 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogAddBinding
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import kotlinx.coroutines.withContext
 
 class DogProfileAdapter(
     private val onDogClick: (DogInfo) -> Unit,
-    private val onAddClick: () -> Unit
+    private val onAddClick: () -> Unit,
 ) : ListAdapter<DogInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -75,16 +78,18 @@ class DogProfileAdapter(
         return currentList.size + 1
     }
 
-    class SelectionViewHolder(
+    inner class SelectionViewHolder(
         private val binding: ItemHomeDogSelectionBinding,
-        private val onDogClick: (DogInfo) -> Unit) :
-        RecyclerView.ViewHolder(binding.root) {
+        private val onDogClick: (DogInfo) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: DogInfo) {
             binding.apply {
                 Glide.with(ivDogImage.context)
                     .load(item.thumbnailUrl)
                     .into(ivDogImage)
                 tvDogName.text = item.name
+
                 ivDogImage.setOnClickListener {
                     onDogClick(item)
                 }
@@ -94,17 +99,18 @@ class DogProfileAdapter(
 
     class AddViewHolder(
         private val binding: ItemHomeDogAddBinding,
-        private val onAddClick: () -> Unit) :
-        RecyclerView.ViewHolder(binding.root) {
+        private val onAddClick: () -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             binding.apply {
                 Glide.with(ivDogAdd.context)
                     .load(R.drawable.ic_dog_add)
                     .into(ivDogAdd)
                 ivDogAdd.setOnClickListener {
-                    onAddClick
+                    onAddClick()
                 }
             }
         }
     }
 }
+
