@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
-import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +19,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getDogListUseCase: GetDogListUseCase,
-    private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase
+    private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
+    private val getWeatherDataUseCase: GetWeatherDataUseCase
 ) : ViewModel() {
 
     private val _dogList = MutableLiveData<List<DogInfo>>()
@@ -29,11 +29,11 @@ class HomeViewModel @Inject constructor(
     private val _dogName = MutableLiveData<String>()
     val dogName: LiveData<String> get() = _dogName
 
-    private val _walkData = MutableLiveData<List<WalkingEntity>>()
-    val walkData: LiveData<List<WalkingEntity>> get() = _walkData
+    private val _walkData = MutableLiveData<List<WalkingInfo>>()
+    val walkData: LiveData<List<WalkingInfo>> get() = _walkData
 
-    private val _hasWalkData = MutableLiveData<Boolean>()
-    val hasWalkData: LiveData<Boolean> get() = _hasWalkData
+    private val _isWalkData = MutableLiveData<Boolean>()
+    val isWalkData: LiveData<Boolean> get() = _isWalkData
 
     /** 유저데이터 함수로 뺴서 한번에 검사 */
 
@@ -70,13 +70,26 @@ class HomeViewModel @Inject constructor(
             val startDate = DateFormatter.getStartDate()
             val endDate = DateFormatter.getEndDate()
             val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-            _walkData.value = walkEntities
-            _hasWalkData.value = walkEntities.isNotEmpty()
+            val walkInfo = walkEntities.map {entity ->
+                WalkingInfo(
+                    id = entity.id,
+                    dogId = entity.dogId,
+                    timeTaken = entity.timeTaken,
+                    distance = entity.distance,
+                    startDateTime = entity.startDateTime,
+                    endDateTime = entity.endDateTime,
+                    path = entity.path
+                )
+            }
+            _walkData.value = walkInfo
+            _isWalkData.value = walkInfo.isEmpty()
         }
     }
 
-    fun loadTodayWeather() {
-
-    }
+//    fun loadTodayWeather(lat: ) {
+//        viewModelScope.launch {
+//            getWeatherDataUseCase()
+//        }
+//    }
 }
 

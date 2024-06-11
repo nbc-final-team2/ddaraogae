@@ -19,6 +19,7 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -125,7 +126,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
         }
     }
     // 경로값 EmptyList로 주고 경로값 아무거나
-    private fun setupWalkGraphForHaveData(walkData: List<WalkingEntity>) {
+    private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>) {
         val lineChart = binding.lcArea
         walkGraphSettingsForHaveData(lineChart)
         walkGraphXAxisForHaveData(lineChart.xAxis)
