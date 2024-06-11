@@ -48,7 +48,8 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun isCurrentUserEmailVerified(): Boolean {
+    override suspend fun isCurrentUserEmailVerified(): Boolean {
+        firebaseAuth.currentUser?.reload()?.await()
         return firebaseAuth.currentUser?.isEmailVerified ?: false
     }
 }

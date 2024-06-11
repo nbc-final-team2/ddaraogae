@@ -11,5 +11,5 @@ interface AuthRepository {
     suspend fun sendVerificationEmail()
     fun signOut()
     fun getCurrentUser(): UserEntity?
-    fun isCurrentUserEmailVerified(): Boolean
+    suspend fun isCurrentUserEmailVerified(): Boolean
 }
