@@ -32,6 +32,10 @@ class AuthRepositoryImpl @Inject constructor(
         firebaseAuth.currentUser?.delete()?.await()
     }
 
+    override suspend fun sendVerificationEmail() {
+        firebaseAuth.currentUser?.sendEmailVerification()?.await()
+    }
+
     override fun signOut() {
         firebaseAuth.signOut()
     }
@@ -42,5 +46,9 @@ class AuthRepositoryImpl @Inject constructor(
                 uid = it.uid
             )
         }
+    }
+
+    override fun isCurrentUserEmailVerified(): Boolean {
+        return firebaseAuth.currentUser?.isEmailVerified ?: false
     }
 }

@@ -8,6 +8,8 @@ interface AuthRepository {
     suspend fun signUpWithEmail(emailAuthEntity: EmailAuthEntity): Boolean
     suspend fun signInWithGoogle(idToken: String): Boolean
     suspend fun deleteAccount()
+    suspend fun sendVerificationEmail()
     fun signOut()
     fun getCurrentUser(): UserEntity?
+    fun isCurrentUserEmailVerified(): Boolean
 }
