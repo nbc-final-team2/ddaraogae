@@ -1,8 +1,10 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
@@ -39,10 +41,17 @@ class LoginViewModel @Inject constructor(
         }
     }
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
-        val successSignInEmail = signInWithEmailUseCase(EmailAuthEntity(email, password))
+        var successSignInEmail = false
+        try{
+            successSignInEmail = signInWithEmailUseCase(EmailAuthEntity(email, password))
+        } catch (e : FirebaseAuthInvalidCredentialsException) {
+            successSignInEmail = false
+        }
         _uiState.update { prev ->
             prev.copy(
-                successLogin = successSignInEmail
+                successLogin = successSignInEmail,
+                // 유효하지 않은 계정일 시 관련 메세지를 띄워주기 위함.
+                correctEmailAccount = successSignInEmail
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -34,6 +35,7 @@ class SignUpActivity:AppCompatActivity() {
 
         checkAuthentication()
         clickSignupButton()
+        binding.ibtBack.setOnClickListener { finish() }
     }
     private fun checkAuthentication() = with(binding){
         etSignupEmail.addTextChangedListener(object : TextWatcher{
@@ -80,6 +82,7 @@ class SignUpActivity:AppCompatActivity() {
                     if (signUpState) {
                         Toast.makeText(this@SignUpActivity, R.string.signup_success, Toast.LENGTH_SHORT)
                             .show()
+                        startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
                         finish()
                     }
                     else {

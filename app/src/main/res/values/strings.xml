@@ -113,6 +113,8 @@
     <string name="login_signup">회원가입</string>
     <string name="login_sns">SNS 로그인</string>
     <string name="login_google">Google 로그인</string>
+    <string name="login_error">유효하지 않은 계정입니다.</string>
+    <string name="login_success">로그인에 성공하셨습니다.</string>
 
     <!-- signup -->
     <string name="signup_title">환영합니다!\n이메일과 비밀번호를\n입력해주세요.</string>

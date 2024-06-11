@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -13,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
@@ -59,24 +61,35 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    private fun clickLoginButton() {
+    private fun clickLoginButton() = with(binding){
         //click LoginButton
-        binding.btLogin.setOnClickListener {
-            val email = binding.etLoginEmail.text.toString().trim()
-            val password = binding.etLoginPassword.text.toString().trim()
+        btLogin.setOnClickListener {
+            val email = etLoginEmail.text.toString().trim()
+            val password = etLoginPassword.text.toString().trim()
+
             viewModel.signInEmail(email, password)
+
+            lifecycleScope.launch {
+                viewModel.uiState.flowWithLifecycle(lifecycle)
+                    .collectLatest { state ->
+                        if (!state.correctEmailAccount) Toast.makeText(this@LoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
+                    }
+            }
 
         }
 
         //click google Login Button
-        binding.ibtLoginGoogle.setOnClickListener {
+        ibtLoginGoogle.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             activityResultLauncher.launch(signInIntent)
         }
 
         //click SignUp Button
-        binding.tvLoginSignup.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
+        tvLoginSignup.setOnClickListener {
+            etLoginEmail.setText(null)
+            etLoginPassword.setText(null)
+            startActivity(Intent(this@LoginActivity, SignUpActivity::class.java))
+            finish()
         }
     }
 
@@ -99,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
     //로그인 상태가 true면 홈으로 이동
     private fun updateUI(user: Boolean) {
         if (user) {
+            Toast.makeText(this@LoginActivity, R.string.login_success, Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
