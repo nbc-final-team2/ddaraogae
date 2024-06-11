@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityMainBinding
+import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -28,6 +30,9 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
         testApiCall() //test fun
+
+        val intent = Intent(this, LocationService::class.java)
+        startService(intent)
     }
 
     private fun initBottomNavigation() {
