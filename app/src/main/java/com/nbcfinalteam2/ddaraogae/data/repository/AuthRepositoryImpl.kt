@@ -13,12 +13,12 @@ class AuthRepositoryImpl @Inject constructor(
 ): AuthRepository {
 
     override suspend fun signInWithEmail(emailAuthEntity: EmailAuthEntity): Boolean {
-        val result = firebaseAuth.signInWithEmailAndPassword(emailAuthEntity.email!!, emailAuthEntity.password!!).await()
+        val result = firebaseAuth.signInWithEmailAndPassword(emailAuthEntity.email, emailAuthEntity.password).await()
         return result.user != null
     }
 
     override suspend fun signUpWithEmail(emailAuthEntity: EmailAuthEntity): Boolean {
-        val result = firebaseAuth.createUserWithEmailAndPassword(emailAuthEntity.email!!, emailAuthEntity.password!!).await()
+        val result = firebaseAuth.createUserWithEmailAndPassword(emailAuthEntity.email, emailAuthEntity.password).await()
         return result.user != null
     }
 
