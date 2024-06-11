@@ -27,6 +27,7 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
+import com.nbcfinalteam2.ddaraogae.app.DdaraogaeApplication
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
@@ -100,7 +101,7 @@ class WalkFragment : Fragment() {
             return
         }
         // Dependency injection initialization
-        (requireActivity().application as MyApplication).appComponent.inject(this)
+        (requireActivity().application as DdaraogaeApplication).appComponent.inject(this)
 
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(
@@ -217,6 +218,7 @@ class WalkFragment : Fragment() {
         *   1. 처음 맵이 생성될때 위치정보에 따른 Marker 띄워주기
         *   2. 위치 거리가 '몇미터' 이상 변경됬을때 Marker 재생성하기
         *   3. 마커 세팅*/
+        // 내 위치, addon, 받아온 데이터 기반으로 marker띄우기
         lifecycleScope.launch {
             try {
                 // Assuming you want to use the current location to get nearby stores
@@ -230,17 +232,17 @@ class WalkFragment : Fragment() {
                 // Show markers on the map
                 withContext(Dispatchers.Main) {
                     storeData?.forEach { store ->
-                        val latLng = LatLng(store.lat, store.lng)
+                        val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
                         val marker = Marker()
                         marker.position = latLng
                         marker.map = naverMap
 
-                        val contentString = store.name // Assuming `store` has a `name` property
+                        val contentString = store.placeName // Assuming `store` has a `name` property
 
                         val infoWindow = InfoWindow().apply {
                             adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                                 override fun getText(infoWindow: InfoWindow): CharSequence {
-                                    return contentString
+                                    return contentString.toString()
                                 }
                             }
                         }
