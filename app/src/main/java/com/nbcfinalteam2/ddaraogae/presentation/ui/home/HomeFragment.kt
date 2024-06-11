@@ -73,7 +73,7 @@ class HomeFragment : Fragment(), HomeOnClickListener {
     }
 
     private fun setupAdapter() {
-        dogProfileAdapter = DogProfileAdapter(this,this)
+        dogProfileAdapter = DogProfileAdapter(this)
         binding.rvDogArea.adapter = dogProfileAdapter
     }
 

@@ -12,7 +12,6 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 class DogProfileAdapter(
-    private val onAddClickListener: HomeOnClickListener,
     private val onDogClickListener: HomeOnClickListener
 ) : ListAdapter<DogInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
@@ -66,7 +65,7 @@ class DogProfileAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position == currentList.size) {
             if (holder is AddViewHolder) {
-                holder.bind(onAddClickListener)
+                holder.bind(onDogClickListener)
             }
         } else {
             if (holder is SelectionViewHolder) {

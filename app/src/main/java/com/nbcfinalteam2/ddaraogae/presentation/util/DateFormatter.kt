@@ -36,7 +36,7 @@ object DateFormatter : ValueFormatter() {
         return if (index >= 0 && index < dates.size) dates[index] else ""
     }
 
-    fun getStartDate(): Date {
+    fun getStartDateForWeek(): Date {
         val calendar = Calendar.getInstance()
         calendar.timeZone = timeZone
         calendar.add(Calendar.DAY_OF_YEAR, -6)
@@ -47,9 +47,26 @@ object DateFormatter : ValueFormatter() {
         return calendar.time
     }
 
-    fun getEndDate(): Date {
+    fun getEndDateForWeek(): Date {
         val calendar = Calendar.getInstance()
         calendar.timeZone = timeZone
+        return calendar.time
+    }
+
+    fun getStartDateForAllDay(year: Int, month: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.timeZone = timeZone
+        calendar.set(year, month - 1, 1, 0, 0, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.time
+    }
+
+    fun getEndDateForAllDay(year: Int, month: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.timeZone = timeZone
+        calendar.set(year, month - 1, 1, 0, 0, 0)
+        calendar.add(Calendar.MONTH, 1)
+        calendar.add(Calendar.MILLISECOND, -1)
         return calendar.time
     }
 

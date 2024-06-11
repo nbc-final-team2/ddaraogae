@@ -67,8 +67,8 @@ class HomeViewModel @Inject constructor(
 
     private fun loadWalkData(dogId: String) {
         viewModelScope.launch {
-            val startDate = DateFormatter.getStartDate()
-            val endDate = DateFormatter.getEndDate()
+            val startDate = DateFormatter.getStartDateForWeek()
+            val endDate = DateFormatter.getEndDateForWeek()
             val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
             val walkInfo = walkEntities.map {entity ->
                 WalkingInfo(
@@ -82,7 +82,7 @@ class HomeViewModel @Inject constructor(
                 )
             }
             _walkData.value = walkInfo
-            _isWalkData.value = walkInfo.isEmpty()
+            _isWalkData.value = walkInfo.isNotEmpty()
         }
     }
 }
