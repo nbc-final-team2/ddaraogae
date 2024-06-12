@@ -5,9 +5,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class DogItemModel(
-    val id: String,
-    val name: String,
-    val gender:Int,
+    val id: String?,
+    val name: String?,
+    val gender:Int?,
     val age: Int? = null,
     val lineage: String? = null,
     val memo: String? = null,
