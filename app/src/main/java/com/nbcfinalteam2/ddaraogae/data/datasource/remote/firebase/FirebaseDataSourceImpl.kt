@@ -7,9 +7,6 @@ import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import kotlinx.coroutines.tasks.await
-import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -189,6 +186,10 @@ class FirebaseDataSourceImpl @Inject constructor(
                     StampInfo.STAMP_8.toStampDto(date)
                 )
             }
+        }
+
+        for(stamp in getStampList) {
+            insertStamp(stamp)
         }
 
         return getStampList
