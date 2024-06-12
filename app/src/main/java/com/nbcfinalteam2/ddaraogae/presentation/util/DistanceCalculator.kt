@@ -12,6 +12,6 @@ object DistanceCalculator {
         targetTo.latitude = lat2
         targetTo.longitude = lng2
 
-        return targetFrom.distanceTo(targetTo)
+        return targetFrom.distanceTo(targetTo)/1000
     }
 }
