@@ -1,13 +1,18 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.LineChart
@@ -17,6 +22,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
@@ -30,7 +37,26 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var dogProfileAdapter: DogProfileAdapter
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
+    val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                // GPS 위치정보 가능할 때
+                    getLastLocation()
+            }
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                // 네트워크 위치정보 가능할 때
+                    getLastLocation()
+            }
+            else -> {
+                // 둘 다 권한 설정 안 했을 때
+                Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +73,7 @@ class HomeFragment : Fragment() {
         moveToHistory()
         setupAdapter()
         observeViewModel()
-        getLocationAndLoadWeather()
+        checkLocationPermissions()
     }
 
     override fun onResume() {
@@ -87,6 +113,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+
     private fun updateWeatherUI(weatherInfo: WeatherInfo) {
         with(binding) {
             val weatherCondition = weatherInfo.condition
@@ -114,11 +141,27 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun getLocationAndLoadWeather() {
-        // 위치 정보
-        val lat = "37.5665" // 위도 (서울)
-        val lon = "126.9780" // 경도 (서울)
-        homeViewModel.loadWeather(lat, lon)
+    private fun checkLocationPermissions() {
+        locationPermissionRequest.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
+    }
+
+    private fun getLastLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        val lat = it.latitude.toString()
+                        val lon = it.longitude.toString()
+                        homeViewModel.loadWeather(lat, lon)
+                   }
+                }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
     }
 
     private fun moveToAdd() {

@@ -17,6 +17,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log10
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -101,16 +102,18 @@ class HomeViewModel @Inject constructor(
 
     fun loadWeather(lat: String, lon: String) {
         viewModelScope.launch {
-            val weatherEntity = getWeatherDataUseCase(lat, lon)
-            val weatherInfo = WeatherInfo(
-                id = weatherEntity.id.toString(),
-                temperature = "${weatherEntity.temperature}°",
-                city = weatherEntity.city ?: "Unknown",
-                condition = getConditionDescription(weatherEntity.id),
-                fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
-                ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
-            )
-            _weatherInfo.value = weatherInfo
+            Log.d("lat", lat)
+            Log.d("l", lat)
+//            val weatherEntity = getWeatherDataUseCase(lat, lon)
+//            val weatherInfo = WeatherInfo(
+//                id = weatherEntity.id.toString(),
+//                temperature = "${weatherEntity.temperature}°",
+//                city = weatherEntity.city ?: "Unknown",
+//                condition = getConditionDescription(weatherEntity.id),
+//                fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
+//                ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
+//            )
+//            _weatherInfo.value = weatherInfo
         }
     }
 
