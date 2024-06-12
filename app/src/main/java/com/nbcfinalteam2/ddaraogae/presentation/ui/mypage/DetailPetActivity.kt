@@ -124,7 +124,7 @@ class DetailPetActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btDelete.setOnClickListener { deleteDogData(dogData.id) }
+        btDelete.setOnClickListener { dogData.id?.let { id -> deleteDogData(id) } }
     }
 
     //강아지 정보 삭제 함수

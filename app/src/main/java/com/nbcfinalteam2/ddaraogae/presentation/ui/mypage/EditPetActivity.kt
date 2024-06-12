@@ -76,7 +76,7 @@ class EditPetActivity : AppCompatActivity() {
         etBreed.setText(dogData.lineage)
         etMemo.setText(dogData.memo)
         imageFile = File(dogData.thumbnailUrl)
-        dogId = dogData.id
+        dogId = dogData.id ?: ""
     }
 
     //강아지 정보 수정
@@ -103,7 +103,7 @@ class EditPetActivity : AppCompatActivity() {
                 val age = etAge.text.toString().toInt()
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
-                val image = if(imageFile.toString().isEmpty()) null else imageFile.toString()
+                val image = imageFile.toString().ifEmpty { null }
                 val changeDog = DogItemModel(dogId, name,gender, age, breed, memo, image)
                 changePet(changeDog)
                 finish()
@@ -112,7 +112,7 @@ class EditPetActivity : AppCompatActivity() {
     }
 
     //uri -> file 형태로 변환
-    fun getRealPathFromURI(uri: Uri): String {
+    private fun getRealPathFromURI(uri: Uri): String {
         val buildName = Build.MANUFACTURER
         if (buildName.equals("Xiaomi")) {
             return uri.path!!
