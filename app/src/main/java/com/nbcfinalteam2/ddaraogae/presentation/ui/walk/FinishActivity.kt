@@ -113,9 +113,7 @@ class FinishActivity : FragmentActivity() {
                     polyline.apply {
                         width = 10
                         color = resources.getColor(R.color.red, null)
-                        coords = locationList.map {
-                            LatLng(it.latitude, it.longitude)
-                        }
+                        coords = locationList
                         map = naverMap
                         Log.d("drawPolyLine", "Polyline drawn with ${coords.size} points")
                     }
