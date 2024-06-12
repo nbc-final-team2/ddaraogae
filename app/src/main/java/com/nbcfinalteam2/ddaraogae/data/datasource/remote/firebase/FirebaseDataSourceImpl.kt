@@ -148,7 +148,7 @@ class FirebaseDataSourceImpl @Inject constructor(
         } ?: walkingDto
 
         db.set(updateWalkingDto).addOnSuccessListener {
-            deleteCachedImage(context)
+            deleteCachedImage(context, mapImage)
         }
     }
 
@@ -166,13 +166,9 @@ class FirebaseDataSourceImpl @Inject constructor(
         return uploadRef.downloadUrl.await()
     }
 
-    private fun deleteCachedImage(context: Context) {
-        val cacheDir = context.cacheDir
-        cacheDir?.let { directory ->
-            directory.listFiles()?.forEach { file ->
-                file.delete()
-            }
-        }
+    private fun deleteCachedImage(context: Context, mapImage: Uri?) {
+        val file = File(context.cacheDir, mapImage.toString())
+        if (file.exists()) file.delete()
     }
 
     companion object {
