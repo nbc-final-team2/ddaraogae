@@ -66,9 +66,9 @@ fun Date.getDayStartAndEnd(): Pair<Date, Date> {
     return startDate to endDate
 }
 
-fun Date.getWeekStartAndEnd(date: Date): Pair<Date, Date> {
+fun Date.getWeekStartAndEnd(): Pair<Date, Date> {
     val cal = Calendar.getInstance()
-    cal.time = date
+    cal.time = this
 
     val mondayStart = cal.apply {
         set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)

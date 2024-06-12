@@ -91,7 +91,7 @@ class FirebaseDataSourceImpl @Inject constructor(
     override suspend fun checkStampCondition(dogId: String, date: Date): List<StampDto> {
         val uid = getUserUid()
 
-        val (mondayStart, sundayEnd) = date.getWeekStartAndEnd(date)
+        val (mondayStart, sundayEnd) = date.getWeekStartAndEnd()
 
         val queriedWalkingList = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING)
