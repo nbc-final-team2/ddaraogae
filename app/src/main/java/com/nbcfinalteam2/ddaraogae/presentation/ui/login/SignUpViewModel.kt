@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.UserEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
@@ -26,7 +27,8 @@ class SignUpViewModel @Inject constructor(
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val isCurrentUserEmailVerifiedUseCase: IsCurrentUserEmailVerifiedUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val deleteAccountUseCase: DeleteAccountUseCase
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
 ):ViewModel(){
     //회원가입 여부 판단
     private val _userState = MutableSharedFlow<Boolean>(
@@ -42,6 +44,16 @@ class SignUpViewModel @Inject constructor(
     private val _verificationState = MutableSharedFlow<Boolean>()
     val verificationState = _verificationState.asSharedFlow()
 
+    private val _currentUserState = MutableSharedFlow<Boolean>()
+    val currentUserState = _currentUserState.asSharedFlow()
+
+    private fun getCurrentUser() = viewModelScope.launch {
+        val getCurrentUser = getCurrentUserUseCase()
+        var currentUser = getCurrentUser != null
+
+        Log.d("ginger_회원가입페이지", "${currentUser}, ${getCurrentUser}")
+        _currentUserState.emit(currentUser)
+    }
     fun signUp(email:String, password:String) = viewModelScope.launch{
         try {
             signUpWithEmailUseCase(EmailAuthEntity(email, password))
@@ -53,11 +65,12 @@ class SignUpViewModel @Inject constructor(
     }
     private fun signIn(email:String, password:String) = viewModelScope.launch {
         signInWithEmailUseCase(EmailAuthEntity(email, password))
+        Log.d("ginger_로그인", "로그인!")
         sendVerification()
-        signOut()
     }
     private fun sendVerification() = viewModelScope.launch{
         sendVerificationEmailUseCase()
+        getCurrentUser()
     }
 
     fun isCurrentUserEmailVerified() = viewModelScope.launch{
@@ -70,5 +83,6 @@ class SignUpViewModel @Inject constructor(
     }
     fun signOut() = viewModelScope.launch{
         signOutUseCase()
+        Log.d("ginger_로그아웃", "로그아웃!")
     }
 }

@@ -126,6 +126,12 @@ class SignUpActivity:AppCompatActivity() {
 
                 binding.btAuthentication.visibility = AppCompatButton.INVISIBLE
                 binding.btAuthenticationCheck.visibility = AppCompatButton.VISIBLE
+                lifecycleScope.launch {
+                    viewModel.currentUserState.flowWithLifecycle(lifecycle)
+                        .collectLatest { state ->
+                            if(state) viewModel.signOut()
+                        }
+                }
             }
         }
         //인증이 확인됐으면 로그아웃 , 인증되지 않았으면 계정 삭제

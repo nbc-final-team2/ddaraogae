@@ -47,10 +47,17 @@ class LoginActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        Log.d("ginger", "여기부턴 로그인 페이지 입니다.")
         initGoogle()
         clickLoginButton()
         getStateLogin()
     }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.getCurrentUser()
+    }
+
 
     private fun initGoogle() {
         //Google 로그인을 앱에 통합

@@ -32,15 +32,18 @@ class LoginViewModel @Inject constructor(
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            //checkEmailVerified()
-            val getCurrentUser = getCurrentUserUseCase()
-            var currentUser = getCurrentUser != null
-            _uiState.update { prev ->
-                prev.copy(
-                    isCurrentUser = currentUser
-                )
-            }
+        getCurrentUser()
+    }
+    fun getCurrentUser() = viewModelScope.launch {
+        val getCurrentUser = getCurrentUserUseCase()
+        var currentUser = getCurrentUser != null
+
+        Log.d("ginger_currentUser", "${currentUser}, ${getCurrentUser}")
+
+        _uiState.update { prev ->
+            prev.copy(
+                isCurrentUser = currentUser
+            )
         }
     }
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
@@ -67,14 +70,6 @@ class LoginViewModel @Inject constructor(
             }
 
     }
-//    private fun checkEmailVerified() = viewModelScope.launch{
-//        val isUserVerified = isCurrentUserEmailVerifiedUseCase()
-//        _uiState.update { prev ->
-//            prev.copy(
-//                verificationState = isUserVerified
-//            )
-//        }
-//    }
 
     fun signInGoogle(idToken: String) = viewModelScope.launch {
         val successSignInGoogle = signInWithGoogleUseCase(idToken)
