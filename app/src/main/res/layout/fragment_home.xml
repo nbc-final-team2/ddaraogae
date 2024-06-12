@@ -180,22 +180,22 @@
                         android:id="@+id/tv_fineDust"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_medium"
                         android:text="@string/home_weather_fine_dust"
                         android:textSize="@dimen/text_caption"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/tv_location"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_ultraFineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_ultraFineDust"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_medium"
                         android:text="@string/home_weather_ultra_fine_dust"
                         android:textSize="@dimen/text_caption"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/tv_fineDust"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
 
                     <androidx.appcompat.widget.AppCompatTextView
