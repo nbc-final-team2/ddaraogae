@@ -88,7 +88,7 @@ class FirebaseDataSourceImpl @Inject constructor(
      * #5 : 7 walking in a week
      * #6~8 : total distance 10km+/15km+/20km+
      */
-    override suspend fun checkStampCondition(dogId: String, date: Date): List<StampDto> {
+    override suspend fun checkStampCondition(dogId: String, date: Date): List<Pair<String, StampDto>> {
         val uid = getUserUid()
 
         val (mondayStart, sundayEnd) = date.getWeekStartAndEnd()
@@ -117,6 +117,7 @@ class FirebaseDataSourceImpl @Inject constructor(
                 queriedStampList[stamp.stampNum?:0].add(stamp)
             }
         val getStampList = mutableListOf<StampDto>()
+        val resultList = mutableListOf<Pair<String, StampDto>>()
 
         //#1
         if(queriedStampList[1].none { it.getDateTime?.toLocalDate()?.isEqual(date.toLocalDate()) == true }) {
@@ -189,10 +190,14 @@ class FirebaseDataSourceImpl @Inject constructor(
         }
 
         for(stamp in getStampList) {
-            insertStamp(stamp)
+            val docRef = firebaseFs.collection(PATH_USERDATA).document(uid)
+                .collection(PATH_STAMPS)
+                .add(stamp).await()
+
+            resultList.add(docRef.id to stamp)
         }
 
-        return getStampList
+        return resultList
     }
 
     override suspend fun getWalkingListByDogIdAndPeriod(

@@ -1,5 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.app.di
 
+import com.nbcfinalteam2.ddaraogae.domain.usecase.CheckStampConditionUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.CheckStampConditionUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
@@ -148,4 +150,9 @@ abstract class UseCaseModule {
     abstract fun bindSendVerificationEmailUseCase(
         sendVerificationEmailUseCaseImpl: SendVerificationEmailUseCaseImpl
     ): SendVerificationEmailUseCase
+
+    @Binds
+    abstract fun bindCheckStampConditionUseCase(
+        checkStampConditionUseCaseImpl: CheckStampConditionUseCaseImpl
+    ): CheckStampConditionUseCase
 }
