@@ -62,11 +62,12 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         return true
     }
 
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-        // 현재 위치
-        naverMap.locationSource = locationSource
-        // 줌 버튼 삭제해버리기
-        naverMap.uiSettings.isZoomControlEnabled = false
+    override fun onMapReady(map: NaverMap) {
+        binding.btnFinishDone.setOnClickListener {
+            map.takeSnapshot {
+                val mapImage = it
+                //viewmodel에 이미지 저장 요청
+            }
+        }
     }
 }
