@@ -132,10 +132,10 @@ class FirebaseDataSourceImpl @Inject constructor(
         val walkingId = newWalkingDoc.id
 
         newWalkingDoc.set(walkingDto).await()
-        updateWalking(walkingId, walkingDto, mapImage)
+        updateWalkingData(walkingId, walkingDto, mapImage)
     }
 
-    override suspend fun updateWalking(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?) {
+    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?) {
         val uid = getUserUid()
         val db = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING).document(walkingId)

@@ -23,5 +23,5 @@ interface FirebaseDataSource {
     suspend fun getWalkingListByDogIdAndPeriod(dogId: String, start: Date, end: Date): List<Pair<String, WalkingDto>>
     suspend fun getWalkingById(walkingId: String): WalkingDto?
     suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: Uri?)
-    suspend fun updateWalking(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?)
+    suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?)
 }
