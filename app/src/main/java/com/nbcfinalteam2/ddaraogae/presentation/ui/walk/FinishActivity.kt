@@ -1,18 +1,25 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
-import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class FinishActivity : FragmentActivity(), OnMapReadyCallback {
 
@@ -65,9 +72,20 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
     override fun onMapReady(map: NaverMap) {
         binding.btnFinishDone.setOnClickListener {
             map.takeSnapshot {
-                val mapImage = it
+                val mapImage = bitmapToUri(it)
+                Log.d("tttttttt", mapImage.toString())
                 //viewmodel에 이미지 저장 요청
             }
+        }
+    }
+
+    private fun bitmapToUri(bitmap: Bitmap?) : Uri? {
+        return bitmap?.let {
+            val file = File(this.cacheDir, "map_image_${System.currentTimeMillis()}.jpg")
+            FileOutputStream(file).use { outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            }
+            file.toUri()
         }
     }
 }
