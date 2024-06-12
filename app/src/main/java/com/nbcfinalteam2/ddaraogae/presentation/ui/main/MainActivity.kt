@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
         initBottomNavigation()
         testApiCall() //test fun
 
-        val intent = Intent(this, LocationService::class.java)
-        startService(intent)
     }
 
     private fun initBottomNavigation() {
