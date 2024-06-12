@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.home.AddActivity
 
 class MypageFragment : Fragment() {
     private lateinit var binding:FragmentMypageBinding
@@ -24,6 +25,9 @@ class MypageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.tvMyDogEdit.setOnClickListener {
             startActivity(Intent(requireActivity(), DetailPetActivity::class.java))
+        }
+        binding.tvMyDogAdd.setOnClickListener {
+            startActivity(Intent(requireActivity(), AddActivity::class.java))
         }
     }
 }

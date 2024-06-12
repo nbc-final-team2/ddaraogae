@@ -56,8 +56,7 @@ class AddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
         binding.btBack.setOnClickListener { finish() }
         addPetData()
     }
@@ -91,7 +90,6 @@ class AddActivity : AppCompatActivity() {
                 val image = imageFile.toString().ifEmpty { null }
 
                 val newDog = DogItemModel("", name, gender, age, breed, memo, image)
-                Log.d("testDog", "$newDog")
                 addPet(newDog)
                 finish()
 

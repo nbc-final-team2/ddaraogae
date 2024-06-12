@@ -46,7 +46,6 @@ class DetailPetActivity : AppCompatActivity() {
         checkPetListEmpty()
 
         binding.btBack.setOnClickListener { finish() }
-        binding.btEmptyBack.setOnClickListener { finish() }
 
     }
 
@@ -56,12 +55,10 @@ class DetailPetActivity : AppCompatActivity() {
             viewModel.uiState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
                     if(state.listPetEmpty){
-                        Log.d("testDogDetail", "${state.listPet}")
                         binding.clPetListEmpty.visibility = ConstraintLayout.VISIBLE
                         binding.scDetailPet.visibility = ScrollView.INVISIBLE
 
                     } else {
-                        Log.d("testDogDetailElse", "${state.listPet}")
                         binding.clPetListEmpty.visibility = ConstraintLayout.INVISIBLE
                         binding.scDetailPet.visibility = ScrollView.VISIBLE
                     }

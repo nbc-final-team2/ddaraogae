@@ -8,12 +8,15 @@
     android:background="@color/white"
     tools:context=".presentation.ui.mypage.DetailPetActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="invisible"
-        android:id="@+id/cl_pet_list_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/cl_appbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/bt_empty_back"
+            android:id="@+id/bt_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
@@ -21,8 +24,9 @@
             android:background="@null"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"/>
+
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_empty_appBar"
+            android:id="@+id/tv_appBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
@@ -33,15 +37,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            android:text="@string/mypage_edit_pet_edit_button"
+            android:textSize="@dimen/text_text"
+            app:layout_constraintBottom_toTopOf="@+id/topBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <View
-            android:id="@+id/empty_topBar"
+            android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_empty_appBar" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_appBar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="invisible"
+        android:id="@+id/cl_pet_list_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,60 +75,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ScrollView
         android:visibility="visible"
         android:id="@+id/sc_detail_pet"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cl_appbar">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/bt_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:src="@drawable/ic_back"
-                android:background="@null"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_appBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:gravity="center"
-                android:text="@string/mypage_edit_pet_title"
-                android:textSize="@dimen/text_body"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:text="@string/mypage_edit_pet_edit_button"
-                android:textSize="@dimen/text_text"
-                app:layout_constraintBottom_toTopOf="@+id/topBar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/topBar"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:background="@color/grey"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_appBar" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_dogArea"
@@ -117,7 +96,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/iv_dogThumbnail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/topBar"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/item_edit_pet_dog_selection" />
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_dogThumbnail"
