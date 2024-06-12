@@ -106,8 +106,9 @@ class WalkFragment : Fragment() {
         }
 
         binding.btnWalkStart.setOnClickListener {
-            toggleLocationService()
+            toggleLocationService() // 버튼 토글 여부로 트래킹 활성/비활성화
         }
+        observeStoreData() // 마커를 새로 그리기(맵뷰애 있으면 안됨)
     }
 
     override fun onStart() {
@@ -147,16 +148,7 @@ class WalkFragment : Fragment() {
             // 카메라 설정
             naverMap.addOnLocationChangeListener {
                 setCamera(it)
-                lat = it.latitude
-                lng = it.longitude // TODO: 거리비교
-                ////////// 위치 정보 불러오는 곳
-                viewModel.fetchStoreData(lat.toString(), lng.toString()) // 꼭 있어야함
-                observeStoreData()
-
-//                // 위치 추적 시작 버튼 클릭 리스너 설정
-//                binding.btnWalkStart.setOnClickListener {
-//                    toggleLocationService()
-//                }
+                viewModel.fetchStoreData(it.latitude, it.longitude) // 위치 데이터 가져오기(꼭 있어야함)
             }
         }
     }
@@ -234,16 +226,7 @@ class WalkFragment : Fragment() {
 
     private fun addMarkers(stores: List<StoreEntity?>) {
         /* TODO:
-        *   1. 처음 맵이 생성될때 위치정보에 따른 Marker 띄워주기(완료)
-        *   2. 위치 거리가 '몇미터' 이상 변경됬을때 Marker 재생성하기, 4. 기존 데이터랑 멀어졌을떄 갱신(지금은 계속 동작하고 있음), 위치정보를 불러올떄마 조건 검사viewModel.fetchStoreData(lat.toString(), lng.toString())
-        *   3. 마커 세팅(완료)
-        *   4. 갱신하는 애를 따로 빼고(완료, 아마 addOn쪽을 말하는듯)
-        *   5. observe도 딴대로 빼라(완료,observeStoreData 메서드)
-        *   클릭시 정보창 띄우기로 변경
-        *   사이즈 줄이기, 영어로 표시
-        *   bound는 어떻게
-        *   */
-
+        *   클릭시 정보창 띄우기로 변경, 마커 사이즈 줄이기, bound는 어떻게 */
         stores.forEach { store ->
             store?.let { storeEntity ->
                 val latLng = LatLng(storeEntity.lat!!.toDouble(), storeEntity.lng!!.toDouble())
@@ -271,135 +254,11 @@ class WalkFragment : Fragment() {
                     }
                     true
                 }
-
                 infoWindow.open(marker)
             }
         }
     }
 }
 
-
-private fun spotMarker() {
-
-//        viewModel.fetchStoreData(lat.toString(), lng.toString()) // 여기에다, 위치정보를 불러올떄마 조건 검사
-//        viewModel.storeData.observe(viewLifecycleOwner) { storeDataList -> // observe도 딴대로 빼라
-//            Log.d("walk frag", storeDataList.toString())
-//            storeDataList?.forEach { store ->
-//                store?.let { storeEntity ->
-//                    val latLng = LatLng(storeEntity.lat!!.toDouble(), storeEntity.lng!!.toDouble())
-//                    val marker = Marker()
-//                    marker.position = latLng
-//                    marker.map = naverMap
-
-//                    val contentString = storeEntity.placeName // Assuming `store` has a `name` property
-//
-//                    val infoWindow = InfoWindow().apply {
-//                        adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-//                            override fun getText(infoWindow: InfoWindow): CharSequence {
-//                                return contentString.toString()
-//                            }
-//                        }
-//                    }
-//
-//                    marker.setOnClickListener {
-//                        if (infoWindow.isAdded) {
-//                            infoWindow.close()
-//                        } else {
-//                            infoWindow.open(marker)
-//                        }
-//                        true
-//                    }
-//
-//                    infoWindow.open(marker)
-//                }
-//            }
-//        }
-//    }
-//        val currentLocation = locationSource.lastLocation ?: return@launch
-//        val lat = currentLocation.latitude.toString()
-//        val lng = currentLocation.longitude.toString()
-//        viewModel.fetchStoreData(lat, lng)
-//        viewModel.fetchStoreData(lat.toString(), lng.toString())
-//        viewModel.storeData.observe(requireActivity()) {
-//            Log.d("walk frag", it.toString())
-//        }
-//        lifecycleScope.launch(Dispatchers.Main) {
-//            viewModel.storeData { store ->
-//                val latLng = LatLng(store.lat, store.lng)
-//                val marker = Marker()
-//                marker.position = latLng
-//                marker.map = naverMap
-//
-//                val contentString = store.name // Assuming `store` has a `name` property
-//
-//                val infoWindow = InfoWindow().apply {
-//                    adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-//                        override fun getText(infoWindow: InfoWindow): CharSequence {
-//                            return contentString
-//                        }
-//                    }
-//                }
-//
-//                marker.setOnClickListener {
-//                    if (infoWindow.isAdded) {
-//                        infoWindow.close()
-//                    } else {
-//                        infoWindow.open(marker)
-//                    }
-//                    true
-//                }
-//
-//                infoWindow.open(marker)
-//            }
-//        }
-//    }
-//        withContext(Dispatchers.Main) {
-//                storeData?.forEach { store ->
-//                    val latLng = LatLng(store.lat, store.lng)
-//                    val marker = Marker()
-//                    marker.position = latLng
-//                    marker.map = naverMap
-//
-//                    val contentString = store.name // Assuming `store` has a `name` property
-//
-//                    val infoWindow = InfoWindow().apply {
-//                        adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-//                            override fun getText(infoWindow: InfoWindow): CharSequence {
-//                                return contentString
-//                            }
-//                        }
-//                    }
-//
-//                    marker.setOnClickListener {
-//                        if (infoWindow.isAdded) {
-//                            infoWindow.close()
-//                        } else {
-//                            infoWindow.open(marker)
-//                        }
-//                        true
-//                    }
-//
-//                    infoWindow.open(marker)
-//                }
-//            }
-}
-
-//    lifecycleScope.launch {
-//        try {
-//            // Assuming you want to use the current location to get nearby stores
-//            val currentLocation = locationSource.lastLocation ?: return@launch
-//            val lat = currentLocation.latitude.toString()
-//            val lng = currentLocation.longitude.toString()
-//
-//            // Get stored data using the use case
-//            val storeData = getStoreDataUseCase(lat, lng)
-//
-//            // Show markers on the map
-//
-//        } catch (e: Exception) {
-//            Log.e("spotMarker", "Failed to get store data", e)
-//        }
-//    }
-//}
 
 
