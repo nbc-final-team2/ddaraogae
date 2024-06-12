@@ -128,4 +128,6 @@
     <string name="signup_complete">완료</string>
     <string name="signup_check_email">인증하기</string>
 
+    <!-- location service -->
+    <string name="is_walking">산책 중..</string>
 </resources>

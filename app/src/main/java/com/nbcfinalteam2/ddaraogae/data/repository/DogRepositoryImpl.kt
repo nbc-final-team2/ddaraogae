@@ -25,7 +25,7 @@ class DogRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateDog(dogEntity: DogEntity) {
-        firebaseDateSource.updateDog(dogEntity.id, dogEntity.toDto())
+        firebaseDateSource.updateDog(dogEntity.id.toString(), dogEntity.toDto())
     }
 
     override suspend fun deleteDog(dogId: String) {

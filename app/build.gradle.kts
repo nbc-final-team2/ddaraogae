@@ -80,7 +80,7 @@ dependencies {
     implementation("com.naver.maps:map-sdk:3.18.0")
 
     // FusedLocationSource
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation(libs.play.services.location)
 
     //Hilt
     implementation(libs.hilt.android)
