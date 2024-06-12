@@ -123,11 +123,29 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(WalkingDto::class.java)
     }
 
-    override suspend fun insertWalkingData(walkingDto: WalkingDto) {
+    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: Uri?) {
         val uid = getUserUid()
 
-        firebaseFs.collection(PATH_USERDATA).document(uid)
-            .collection(PATH_WALKING).add(walkingDto)
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING)
+        val newWalkingDoc = db.document()
+        val walkingId = newWalkingDoc.id
+
+        newWalkingDoc.set(walkingDto).await()
+        updateWalking(walkingId, walkingDto, mapImage)
+    }
+
+    override suspend fun updateWalking(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?) {
+        val uid = getUserUid()
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING).document(walkingId)
+
+        val updateWalkingDto = mapImage?.let { bitmap ->
+            val convertedUrl = convertWalkingImageUrl(bitmap, walkingId)
+            walkingDto.copy(walkingImage = convertedUrl.toString())
+        } ?: walkingDto
+
+        db.set(updateWalkingDto).await()
     }
 
     private fun getUserUid(): String {
@@ -143,6 +161,17 @@ class FirebaseDataSourceImpl @Inject constructor(
 
         return uploadRef.downloadUrl.await()
     }
+
+    private suspend fun convertWalkingImageUrl(imageUri: Uri, walkingId: String) : Uri {
+        val storageRef = fbStorage.reference
+        val uid = getUserUid()
+        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_WALKING/$walkingId.$STORAGE_FILE_EXTENSION")
+
+        uploadRef.putFile(imageUri).await()
+
+        return uploadRef.downloadUrl.await()
+    }
+
 
     companion object {
         private const val PATH_USERDATA = "userData"
