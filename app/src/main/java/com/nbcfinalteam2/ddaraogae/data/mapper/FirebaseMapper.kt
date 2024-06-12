@@ -8,7 +8,6 @@ import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
-import java.util.Date
 
 object FirebaseMapper {
     fun DogDto.toEntity(id: String) = DogEntity(
@@ -34,13 +33,13 @@ object FirebaseMapper {
         id = id,
         stampNum = stampNum,
         getDateTime = getDateTime,
-        name = name
+        name = name,
     )
 
     fun StampEntity.toDto() = StampDto(
         stampNum = stampNum,
         getDateTime = getDateTime,
-        name = name
+        name = name,
     )
 
     fun WalkingDto.toEntity(id: String) = WalkingEntity(

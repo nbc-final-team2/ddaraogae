@@ -34,7 +34,7 @@ object DataUtil {
                 curMaxNum = 1
             }
         }
-
+        totalMaxNum = max(curMaxNum, totalMaxNum)
         return totalMaxNum
     }
 }
@@ -69,6 +69,7 @@ fun Date.getDayStartAndEnd(): Pair<Date, Date> {
 fun Date.getWeekStartAndEnd(): Pair<Date, Date> {
     val cal = Calendar.getInstance()
     cal.time = this
+    cal.firstDayOfWeek = Calendar.MONDAY
 
     val mondayStart = cal.apply {
         set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)

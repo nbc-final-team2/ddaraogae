@@ -108,14 +108,14 @@ class FirebaseDataSourceImpl @Inject constructor(
 
         firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_STAMPS)
-            .whereEqualTo(FIELD_DOG_ID, dogId)
-            .whereEqualTo(FIELD_GET_DATETIME, mondayStart)
-            .whereEqualTo(FIELD_GET_DATETIME, sundayEnd)
+            .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, mondayStart)
+            .whereLessThanOrEqualTo(FIELD_GET_DATETIME, sundayEnd)
             .get().await()
             .forEach {
                 val stamp = it.toObject(StampDto::class.java)
                 queriedStampList[stamp.stampNum?:0].add(stamp)
             }
+
         val getStampList = mutableListOf<StampDto>()
         val resultList = mutableListOf<Pair<String, StampDto>>()
 
