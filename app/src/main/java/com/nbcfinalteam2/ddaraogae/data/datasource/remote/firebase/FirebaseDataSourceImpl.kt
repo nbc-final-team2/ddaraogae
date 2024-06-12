@@ -56,7 +56,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .collection(PATH_DOGS).document(dogId)
 
         val updateDogDto = imageUri?.let { uri ->
-            val convertedUrl = convertImageUrl(uri, dogId)
+            val convertedUrl = convertImageUrl(uri, dogId, PATH_DOGS)
             dogDto.copy(thumbnailUrl = convertedUrl.toString())
         } ?: dogDto
 
@@ -143,7 +143,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .collection(PATH_WALKING).document(walkingId)
 
         val updateWalkingDto = mapImage?.let { bitmap ->
-            val convertedUrl = convertWalkingImageUrl(bitmap, walkingId)
+            val convertedUrl = convertImageUrl(bitmap, walkingId, PATH_WALKING)
             walkingDto.copy(walkingImage = convertedUrl.toString())
         } ?: walkingDto
 
@@ -156,20 +156,10 @@ class FirebaseDataSourceImpl @Inject constructor(
         return fbAuth.currentUser?.uid?:throw Exception("UNKNOWN USER")
     }
 
-    private suspend fun convertImageUrl(imageUri: Uri, dogId: String): Uri {
+    private suspend fun convertImageUrl(imageUri: Uri, itemId: String, path: String): Uri {
         val storageRef = fbStorage.reference
         val uid = getUserUid()
-        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
-
-        uploadRef.putFile(imageUri).await()
-
-        return uploadRef.downloadUrl.await()
-    }
-
-    private suspend fun convertWalkingImageUrl(imageUri: Uri, walkingId: String) : Uri {
-        val storageRef = fbStorage.reference
-        val uid = getUserUid()
-        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_WALKING/$walkingId.$STORAGE_FILE_EXTENSION")
+        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$path/$itemId.$STORAGE_FILE_EXTENSION")
 
         uploadRef.putFile(imageUri).await()
 
