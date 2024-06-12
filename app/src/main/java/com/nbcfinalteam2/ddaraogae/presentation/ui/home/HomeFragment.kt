@@ -40,11 +40,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupWalkGraph()
         setupListener()
-
-        binding.tvTodayWeather.setOnClickListener {
-            viewModel.signOut()
-            Log.d("Logout", "호출")
-        }
     }
 
     private fun setupListener() {

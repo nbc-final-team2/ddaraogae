@@ -19,11 +19,13 @@ import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private lateinit var googleSignInClient: GoogleSignInClient
+    private var accountCheck = false
     private val viewModel: LoginViewModel by viewModels()
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -66,14 +68,7 @@ class LoginActivity : AppCompatActivity() {
             val password = etLoginPassword.text.toString().trim()
 
             viewModel.signInEmail(email, password)
-
-            lifecycleScope.launch {
-                viewModel.uiState.flowWithLifecycle(lifecycle)
-                    .collectLatest { state ->
-                        if (!state.correctEmailAccount) Toast.makeText(this@LoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
-                    }
-            }
-
+            if (!accountCheck) Toast.makeText(this@LoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
         }
 
         //click google Login Button
@@ -96,7 +91,10 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.uiState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
-                    updateUI(state.successLogin)
+                    currentUserUI(state.isCurrentUser)
+                    checkVerifiedUpdateUI(state.successLogin, state.verificationState)
+                    Log.d("ginger_액티비티 수신여부", "${state.successLogin} , ${state.verificationState}")
+                    accountCheck = state.correctEmailAccount
                 }
         }
     }
@@ -108,13 +106,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
     //로그인 상태가 true면 홈으로 이동
-    private fun updateUI(user: Boolean) {
-        if (user) {
+    private fun checkVerifiedUpdateUI(user: Boolean, emailVerified : Boolean) {
+        if (user && emailVerified) {
             Toast.makeText(this@LoginActivity, R.string.login_success, Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        } else if(user && !emailVerified) {
+            viewModel.deleteAccount()
+        }
+    }
+    private fun currentUserUI(user:Boolean){
+        if(user) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
     }
+
 
     companion object {
         private const val TAG = "GoogleActivity"

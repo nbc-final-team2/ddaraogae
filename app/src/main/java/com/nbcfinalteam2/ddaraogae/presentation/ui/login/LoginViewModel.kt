@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
+import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,46 +24,68 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val signInWithEmailUseCase: SignInWithEmailUseCase
+    private val signInWithEmailUseCase: SignInWithEmailUseCase,
+    private val isCurrentUserEmailVerifiedUseCase: IsCurrentUserEmailVerifiedUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState.init())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
+            //checkEmailVerified()
             val getCurrentUser = getCurrentUserUseCase()
             var currentUser = getCurrentUser != null
-            Log.d("loginTest", "$getCurrentUser")
             _uiState.update { prev ->
                 prev.copy(
-                    successLogin = currentUser
+                    isCurrentUser = currentUser
                 )
             }
-
         }
     }
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
-        var successSignInEmail = false
+        var successSignInEmail: Boolean
+        var successSignInEmailTemp : Boolean
+        var checkEmailVerified : Boolean
         try{
-            successSignInEmail = signInWithEmailUseCase(EmailAuthEntity(email, password))
-        } catch (e : FirebaseAuthInvalidCredentialsException) {
+            successSignInEmailTemp = signInWithEmailUseCase(EmailAuthEntity(email, password))
+            checkEmailVerified = isCurrentUserEmailVerifiedUseCase()
+            successSignInEmail = successSignInEmailTemp
+            Log.d("ginger_로그인 가능 여부", "$successSignInEmail")
+        }
+        catch (e : Exception){ //IllegalArgumentException,FirebaseAuthInvalidCredentialsException
             successSignInEmail = false
+            checkEmailVerified = false
         }
-        _uiState.update { prev ->
-            prev.copy(
-                successLogin = successSignInEmail,
-                // 유효하지 않은 계정일 시 관련 메세지를 띄워주기 위함.
-                correctEmailAccount = successSignInEmail
-            )
-        }
+            _uiState.update { prev ->
+                prev.copy(
+                    // 유효하지 않은 계정일 시 관련 메세지를 띄워주기 위함.
+                    correctEmailAccount = successSignInEmail,
+                    successLogin = successSignInEmail,
+                    verificationState = checkEmailVerified
+                )
+            }
+
     }
+//    private fun checkEmailVerified() = viewModelScope.launch{
+//        val isUserVerified = isCurrentUserEmailVerifiedUseCase()
+//        _uiState.update { prev ->
+//            prev.copy(
+//                verificationState = isUserVerified
+//            )
+//        }
+//    }
 
     fun signInGoogle(idToken: String) = viewModelScope.launch {
         val successSignInGoogle = signInWithGoogleUseCase(idToken)
+        Log.d("ginger_이메일 인증", "$successSignInGoogle")
         _uiState.update { prev ->
             prev.copy(
                 successLogin = successSignInGoogle
             )
         }
+    }
+    fun deleteAccount() = viewModelScope.launch {
+        deleteAccountUseCase()
     }
 }

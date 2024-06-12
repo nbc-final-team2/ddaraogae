@@ -28,14 +28,17 @@ class SignUpViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase
 ):ViewModel(){
+    //회원가입 여부 판단
     private val _userState = MutableSharedFlow<Boolean>(
         replay = 0, extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val userState = _userState.asSharedFlow()
 
+    //이메일 중복 여부 판단
     private val _emailState = MutableSharedFlow<Boolean>()
     val emailState = _emailState.asSharedFlow()
 
+    //인증여부 판단
     private val _verificationState = MutableSharedFlow<Boolean>()
     val verificationState = _verificationState.asSharedFlow()
 
@@ -51,6 +54,7 @@ class SignUpViewModel @Inject constructor(
     private fun signIn(email:String, password:String) = viewModelScope.launch {
         signInWithEmailUseCase(EmailAuthEntity(email, password))
         sendVerification()
+        signOut()
     }
     private fun sendVerification() = viewModelScope.launch{
         sendVerificationEmailUseCase()

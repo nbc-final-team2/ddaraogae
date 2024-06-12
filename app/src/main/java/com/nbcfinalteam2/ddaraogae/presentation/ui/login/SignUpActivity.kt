@@ -39,23 +39,20 @@ class SignUpActivity:AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        checkSignUpState()
         checkAuthentication()
         clickEmailAuthentication()
         clickSignupButton()
-        checkEmailDuplicateState()
+
         binding.ibtBack.setOnClickListener {
             startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
             finish()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if(!verificationState){}
-    }
 
     //email 중복 상태 체크
-    private fun checkEmailDuplicateState(){
+    private fun checkSignUpState(){
         lifecycleScope.launch {
             viewModel.emailState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
@@ -72,7 +69,12 @@ class SignUpActivity:AppCompatActivity() {
                     binding.btAuthenticationCheck.visibility = AppCompatButton.INVISIBLE
                 }
         }
-
+        lifecycleScope.launch {
+            viewModel.userState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    signUpState = state
+                }
+        }
 
     }
 
@@ -139,7 +141,6 @@ class SignUpActivity:AppCompatActivity() {
                                 R.string.signup_email_authentication_success,
                                 Toast.LENGTH_SHORT
                             ).show()
-                            viewModel.signOut()
                             binding.btAuthenticationCheck.visibility = AppCompatButton.INVISIBLE
                             binding.btSignup.isEnabled = true
                             binding.btSignup.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this@SignUpActivity, R.color.brown))
@@ -165,15 +166,6 @@ class SignUpActivity:AppCompatActivity() {
     }
     //회원가입 버튼 클릭 시 동작
     private fun clickSignupButton(){
-        Log.d("clickclick", "호출!")
-        lifecycleScope.launch {
-            viewModel.userState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    Log.d("clickclick", "호출")
-                    signUpState = state
-                    Log.d("clickclick", "signUpState")
-                }
-        }
         binding.btSignup.setOnClickListener {
             if (signUpState) {
                 Toast.makeText(this@SignUpActivity, R.string.signup_success, Toast.LENGTH_SHORT)
