@@ -130,4 +130,6 @@
     <string name="signup_fail">회원가입에 실패하셨습니다.</string>
     <string name="signup_email_check">"존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요."</string>
 
+    <!-- location service -->
+    <string name="is_walking">산책 중..</string>
 </resources>

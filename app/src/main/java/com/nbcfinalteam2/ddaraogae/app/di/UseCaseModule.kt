@@ -1,5 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.app.di
 
+import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
@@ -10,6 +12,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByDogIdAndPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByDogIdAndPeriodUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingByIdUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
@@ -22,6 +26,10 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertStampUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertStampUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertWalkingDataUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertWalkingDataUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
@@ -121,4 +129,23 @@ abstract class UseCaseModule {
         updateDogUseCaseImpl: UpdateDogUseCaseImpl
     ): UpdateDogUseCase
 
+    @Binds
+    abstract fun bindGetStoreDataUseCase(
+        getStoreDataUseCaseImpl: GetStoreDataUseCaseImpl
+    ): GetStoreDataUseCase
+
+    @Binds
+    abstract fun bindIsCurrentUserEmailVerifiedUseCase(
+        isCurrentUserEmailVerifiedUseCaseImpl: IsCurrentUserEmailVerifiedUseCaseImpl
+    ): IsCurrentUserEmailVerifiedUseCase
+
+    @Binds
+    abstract fun bindDeleteAccountUseCase(
+        deleteAccountUseCaseImpl: DeleteAccountUseCaseImpl
+    ): DeleteAccountUseCase
+
+    @Binds
+    abstract fun bindSendVerificationEmailUseCase(
+        sendVerificationEmailUseCaseImpl: SendVerificationEmailUseCaseImpl
+    ): SendVerificationEmailUseCase
 }
