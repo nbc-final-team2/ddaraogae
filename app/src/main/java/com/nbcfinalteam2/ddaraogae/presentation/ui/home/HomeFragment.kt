@@ -20,6 +20,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,6 +47,7 @@ class HomeFragment : Fragment() {
         moveToHistory()
         setupAdapter()
         observeViewModel()
+        getLocationAndLoadWeather()
     }
 
     override fun onResume() {
@@ -79,6 +81,44 @@ class HomeFragment : Fragment() {
                 binding.tvWalkData.visibility = View.GONE
             }
         }
+
+        homeViewModel.weatherInfo.observe(viewLifecycleOwner) { weatherInfo ->
+            updateWeatherUI(weatherInfo)
+        }
+    }
+
+    private fun updateWeatherUI(weatherInfo: WeatherInfo) {
+        with(binding) {
+            val weatherCondition = weatherInfo.condition
+            ivWeatherIcon.setImageResource(getWeatherIconResource(weatherCondition)) // 실제 날씨 아이콘으로 변경 필요
+            tvLocation.text = weatherInfo.city
+            tvLocationTemperature.text = weatherInfo.temperature
+            tvLocationConditions.text = weatherInfo.condition
+            ivFineDustIcon.setImageResource(weatherInfo.fineDustStatusIcon)
+            ivUltraFineDustIcon.setImageResource(weatherInfo.ultraFineDustStatusIcon)
+        }
+    }
+
+    private fun getWeatherIconResource(condition: String): Int {
+        return when (condition) {
+            "천둥번개" -> R.drawable.ic_weather_thunder
+            "비" -> R.drawable.ic_weather_rain
+            "약간 비" -> R.drawable.ic_weather_slight_rain
+            "눈" -> R.drawable.ic_weather_snow
+            "안개", "황사", "태풍" -> R.drawable.ic_weather_typoon_dust_fog
+            "맑음" -> R.drawable.ic_weather_sunny
+            "약간 흐림" -> R.drawable.ic_weather_slightly_cloudy
+            "흐림" -> R.drawable.ic_weather_cloudy
+            "많이 흐림" -> R.drawable.ic_weather_very_cloudy
+            else -> R.drawable.ic_x
+        }
+    }
+
+    private fun getLocationAndLoadWeather() {
+        // 위치 정보
+        val lat = "37.5665" // 위도 (서울)
+        val lon = "126.9780" // 경도 (서울)
+        homeViewModel.loadWeather(lat, lon)
     }
 
     private fun moveToAdd() {
@@ -247,20 +287,5 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun todayWeather() {
-        with(binding) {
-            val weatherIcon = ivWeatherIcon.setImageResource(R.drawable.ic_launcher_background)
-            val location = tvLocation.text.toString()
-            val fineDust = tvFineDust.text.toString()
-            val ultraFineDust = tvUltraFineDust.text.toString()
-            val locationTemperature = tvLocationTemperature.text.toString()
-            val locationConditions = tvLocationConditions.text.toString()
-            val fineDustStatusIcon =
-                ivFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
-            val ultraFineDustStatusIcon =
-                ivUltraFineDustIcon.setImageResource(R.drawable.ic_launcher_background)
-        }
     }
 }

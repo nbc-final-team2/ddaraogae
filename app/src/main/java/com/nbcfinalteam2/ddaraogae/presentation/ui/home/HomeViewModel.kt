@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -38,6 +40,9 @@ class HomeViewModel @Inject constructor(
 
     private val _isWalkData = MutableLiveData<Boolean>()
     val isWalkData: LiveData<Boolean> get() = _isWalkData
+
+    private val _weatherInfo = MutableLiveData<WeatherInfo>()
+    val weatherInfo: LiveData<WeatherInfo> get() = _weatherInfo
 
     fun loadDogs() {
         viewModelScope.launch {
@@ -91,6 +96,58 @@ class HomeViewModel @Inject constructor(
             _walkData.value = walkInfo
             _isWalkData.value = walkInfo.isNotEmpty()
             setDummyWalkData()
+        }
+    }
+
+    fun loadWeather(lat: String, lon: String) {
+        viewModelScope.launch {
+            val weatherEntity = getWeatherDataUseCase(lat, lon)
+            val weatherInfo = WeatherInfo(
+                id = weatherEntity.id.toString(),
+                temperature = "${weatherEntity.temperature}°",
+                city = weatherEntity.city ?: "Unknown",
+                condition = getConditionDescription(weatherEntity.id),
+                fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
+                ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
+            )
+            _weatherInfo.value = weatherInfo
+        }
+    }
+
+    private fun getConditionDescription(weatherId: Long?): String {
+        return when (weatherId?.toInt()) {
+            in 200..232 -> "천둥번개"
+            in 300..321, in 520..531 -> "비"
+            in 500..504 -> "약간 비"
+            511, in 600..622 -> "눈"
+            701, 711, 721, 741 -> "안개"
+            731, 751, 761, 762 -> "황사"
+            in 771..781 -> "태풍"
+            800 -> "맑음"
+            801 -> "약간 흐림"
+            802 -> "흐림"
+            in 803..804 -> "많이 흐림"
+            else -> "날씨 정보 없음"
+        }
+    }
+
+    private fun getFineDustIcon(pm10: Double?): Int {
+        return when {
+            pm10 == null -> R.drawable.ic_weather_condition_good
+            pm10 <= 30 -> R.drawable.ic_weather_condition_good
+            pm10 <= 80 -> R.drawable.ic_weather_condition_normal
+            pm10 <= 150 -> R.drawable.ic_weather_condition_bad
+            else -> R.drawable.ic_weather_condition_very_bad
+        }
+    }
+
+    private fun getUltraFineDustIcon(pm25: Double?): Int {
+        return when {
+            pm25 == null -> R.drawable.ic_weather_condition_good
+            pm25 <= 30 -> R.drawable.ic_weather_condition_good
+            pm25 <= 80 -> R.drawable.ic_weather_condition_normal
+            pm25 <= 150 -> R.drawable.ic_weather_condition_bad
+            else -> R.drawable.ic_weather_condition_very_bad
         }
     }
 
