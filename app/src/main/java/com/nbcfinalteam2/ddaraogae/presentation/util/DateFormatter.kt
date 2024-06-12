@@ -80,11 +80,28 @@ object DateFormatter : ValueFormatter() {
 
     fun getDaysInMonth(year: Int, month: Int): Int {
         val calendar = Calendar.getInstance()
-        calendar.set(year, month - 1, 1) // 0: 1월, 1: 2월, 월은 0부터 시작해서 -1, 1은 그 달의 첫 번쨰 날
-        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH) // 현재 설정된 연도와 월에 대한 일수 반환 ( 윤년 = 29일 반환, 4월 = 30일 반환 )
+        calendar.set(year, month - 1, 1)
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
     }
 
     fun testDate(dateStr: String): Date {
         return dateFormat.parse(dateStr)
+    }
+
+    fun generateDatesForMonth(year: Int, month: Int) {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month - 1)
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+
+        val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        dates = (1..daysInMonth).map { day ->
+            calendar.set(Calendar.DAY_OF_MONTH, day)
+            dateFormat.format(calendar.time)
+        }
+    }
+
+    fun getDatesForMonth(): List<String> {
+        return dates
     }
 }
