@@ -2,10 +2,8 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,11 +22,6 @@ import kotlinx.coroutines.launch
 
 class FinishActivity : FragmentActivity() {
 
-    //TODO: 바인딩처리만 될거고 서비스가 안죽어서 이렇게 하면 안된다.
-    //TODO: intent로 넘겨줘...
-    // 버튼으로 종료할때 데이터 저장해서 intent 넘기기
-
-
     private val binding by lazy { ActivityFinishBinding.inflate(layoutInflater) }
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
@@ -42,29 +35,22 @@ class FinishActivity : FragmentActivity() {
     private lateinit var cameraPosition: CameraPosition
     private lateinit var cameraUpdate: CameraUpdate
 
-    private lateinit var locationList: MutableList<Location>
-
-
-    //TODO: 버튼애 리스너를 달아놓고 bind됫는지 확인하고 값을 가져온다, 서비스
-    //값 가져오고, map이나 다른 함수로 변환해도된다.
-
+    private lateinit var locationList: List<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayExtra("locationList", LatLng::class.java)?.toList().orEmpty()
+        } else {
+            (intent.getParcelableArrayExtra("locationList") as? Array<LatLng>)?.toList().orEmpty()
+        }
+
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
             initMapView()
-        }
-
-        // Retrieve the location list from the intent
-        locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableArrayListExtra<Location>("locationList")?.toMutableList() ?: mutableListOf()
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableArrayListExtra<Location>("locationList")?.toMutableList() ?: mutableListOf()
         }
     }
 
@@ -82,15 +68,9 @@ class FinishActivity : FragmentActivity() {
             naverMap.uiSettings.isZoomControlEnabled = false
             // 더블 터치시 줌되는 제스처 막기
             naverMap.uiSettings.isZoomGesturesEnabled = false
-            //
-            naverMap.addOnLocationChangeListener {
-                /* TODO: 위치 정보 불러오는 서비스가 필요하다.*/
-                drawPolyLine()
-                Log.d("drawPolyLine", drawPolyLine().toString())
-                setCameraOnPolyLine()
-                Log.d("setCameraOn", setCameraOnPolyLine().toString())
-//                updatePolylineFromService()
-            }
+
+            drawPolyLine()
+            setCameraOnPolyLine()
         }
     }
 
@@ -127,10 +107,9 @@ class FinishActivity : FragmentActivity() {
     }
 
     private fun setCameraOnPolyLine() {
-        /*
-        TODO: 위도 경도의 최대값과 최소값을 통해 중심점을 찾아 카메라포지션을 잡을 수 있을까?
-        TODO: '위치 정보를 불러왔을때' 조건을 추가해주면 되겠다.
-        */
+        /** 위도 경도의 최대값과 최소값을 통해 중심점을 찾아 카메라포지션을 잡기
+         * '위치 정보를 불러왔을때' 조건을 추가해주면 되겠다. */
+
         if (locationList.isNotEmpty()) {
             var latMin = locationList[0].latitude
             var latMax = locationList[0].latitude
