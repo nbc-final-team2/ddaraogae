@@ -84,7 +84,6 @@ class SignUpActivity:AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 correctEmail = checkEmail()
-                Log.d("signup_email", "${correctEmail}")
             }
         })
         etSignupPassword.addTextChangedListener(object : TextWatcher{
@@ -92,7 +91,6 @@ class SignUpActivity:AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 correctPassword = checkPassword()
-                Log.d("signup_pass", "${correctPassword}")
             }
         })
         etSignupPasswordCheck.addTextChangedListener(object : TextWatcher{
@@ -100,7 +98,6 @@ class SignUpActivity:AppCompatActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 correctPasswordCheck = checkPasswordAgain()
-                Log.d("signup_pass_check", "${correctPasswordCheck}")
             }
         })
     }

@@ -47,7 +47,6 @@ class LoginActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        Log.d("ginger", "여기부턴 로그인 페이지 입니다.")
         initGoogle()
         clickLoginButton()
         getStateLogin()
@@ -100,7 +99,6 @@ class LoginActivity : AppCompatActivity() {
                 .collectLatest { state ->
                     currentUserUI(state.isCurrentUser)
                     checkVerifiedUpdateUI(state.successLogin, state.verificationState)
-                    Log.d("ginger_액티비티 수신여부", "${state.successLogin} , ${state.verificationState}")
                     accountCheck = state.correctEmailAccount
                 }
         }

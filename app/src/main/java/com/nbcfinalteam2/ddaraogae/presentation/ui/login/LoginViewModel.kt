@@ -37,8 +37,7 @@ class LoginViewModel @Inject constructor(
     fun getCurrentUser() = viewModelScope.launch {
         val getCurrentUser = getCurrentUserUseCase()
         var currentUser = getCurrentUser != null
-
-        Log.d("ginger_currentUser", "${currentUser}, ${getCurrentUser}")
+        Log.d("currentUser", "${currentUser}, ${getCurrentUser}")
 
         _uiState.update { prev ->
             prev.copy(
@@ -54,7 +53,6 @@ class LoginViewModel @Inject constructor(
             successSignInEmailTemp = signInWithEmailUseCase(EmailAuthEntity(email, password))
             checkEmailVerified = isCurrentUserEmailVerifiedUseCase()
             successSignInEmail = successSignInEmailTemp
-            Log.d("ginger_로그인 가능 여부", "$successSignInEmail")
         }
         catch (e : Exception){ //IllegalArgumentException,FirebaseAuthInvalidCredentialsException
             successSignInEmail = false
@@ -73,7 +71,6 @@ class LoginViewModel @Inject constructor(
 
     fun signInGoogle(idToken: String) = viewModelScope.launch {
         val successSignInGoogle = signInWithGoogleUseCase(idToken)
-        Log.d("ginger_이메일 인증", "$successSignInGoogle")
         _uiState.update { prev ->
             prev.copy(
                 successLogin = successSignInGoogle

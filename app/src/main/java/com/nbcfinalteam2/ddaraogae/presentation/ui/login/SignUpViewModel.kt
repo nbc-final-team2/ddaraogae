@@ -51,7 +51,6 @@ class SignUpViewModel @Inject constructor(
         val getCurrentUser = getCurrentUserUseCase()
         var currentUser = getCurrentUser != null
 
-        Log.d("ginger_회원가입페이지", "${currentUser}, ${getCurrentUser}")
         _currentUserState.emit(currentUser)
     }
     fun signUp(email:String, password:String) = viewModelScope.launch{
@@ -65,7 +64,6 @@ class SignUpViewModel @Inject constructor(
     }
     private fun signIn(email:String, password:String) = viewModelScope.launch {
         signInWithEmailUseCase(EmailAuthEntity(email, password))
-        Log.d("ginger_로그인", "로그인!")
         sendVerification()
     }
     private fun sendVerification() = viewModelScope.launch{
@@ -83,6 +81,5 @@ class SignUpViewModel @Inject constructor(
     }
     fun signOut() = viewModelScope.launch{
         signOutUseCase()
-        Log.d("ginger_로그아웃", "로그아웃!")
     }
 }
