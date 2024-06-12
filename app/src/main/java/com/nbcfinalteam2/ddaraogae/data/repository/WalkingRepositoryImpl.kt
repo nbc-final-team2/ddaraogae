@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.data.repository
 
+import android.content.Context
 import android.net.Uri
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.FirebaseDataSource
 import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toDto
@@ -26,7 +27,7 @@ class WalkingRepositoryImpl @Inject constructor(
         return firebaseDateSource.getWalkingById(walkingId)?.toEntity(walkingId)
     }
 
-    override suspend fun insertWalkingData(walkingEntity: WalkingEntity, mapImage: Uri?) {
-        firebaseDateSource.insertWalkingData(walkingEntity.toDto(), mapImage)
+    override suspend fun insertWalkingData(walkingEntity: WalkingEntity, mapImage: Uri?, context: Context) {
+        firebaseDateSource.insertWalkingData(walkingEntity.toDto(), mapImage, context)
     }
 }

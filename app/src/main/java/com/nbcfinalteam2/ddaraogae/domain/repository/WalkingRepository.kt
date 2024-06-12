@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.domain.repository
 
+import android.content.Context
 import android.net.Uri
 import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import java.util.Date
@@ -7,5 +8,5 @@ import java.util.Date
 interface WalkingRepository {
     suspend fun getWalkingListByDogIdAndPeriod(dogId: String, start: Date, end: Date): List<WalkingEntity>
     suspend fun getWalkingById(walkingId: String): WalkingEntity?
-    suspend fun insertWalkingData(walkingEntity: WalkingEntity, mapImage: Uri?)
+    suspend fun insertWalkingData(walkingEntity: WalkingEntity, mapImage: Uri?, context: Context)
 }

@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
+import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -8,6 +9,7 @@ import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.util.Date
 import javax.inject.Inject
 
@@ -123,7 +125,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(WalkingDto::class.java)
     }
 
-    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: Uri?) {
+    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: Uri?, context: Context) {
         val uid = getUserUid()
 
         val db = firebaseFs.collection(PATH_USERDATA).document(uid)
@@ -132,10 +134,10 @@ class FirebaseDataSourceImpl @Inject constructor(
         val walkingId = newWalkingDoc.id
 
         newWalkingDoc.set(walkingDto).await()
-        updateWalkingData(walkingId, walkingDto, mapImage)
+        updateWalkingData(walkingId, walkingDto, mapImage, context)
     }
 
-    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?) {
+    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?, context: Context) {
         val uid = getUserUid()
         val db = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING).document(walkingId)
@@ -145,7 +147,9 @@ class FirebaseDataSourceImpl @Inject constructor(
             walkingDto.copy(walkingImage = convertedUrl.toString())
         } ?: walkingDto
 
-        db.set(updateWalkingDto).await()
+        db.set(updateWalkingDto).addOnSuccessListener {
+            deleteCachedImage(context)
+        }
     }
 
     private fun getUserUid(): String {
@@ -172,6 +176,14 @@ class FirebaseDataSourceImpl @Inject constructor(
         return uploadRef.downloadUrl.await()
     }
 
+    private fun deleteCachedImage(context: Context) {
+        val cacheDir = context.cacheDir
+        cacheDir?.let { directory ->
+            directory.listFiles()?.forEach { file ->
+                file.delete()
+            }
+        }
+    }
 
     companion object {
         private const val PATH_USERDATA = "userData"
