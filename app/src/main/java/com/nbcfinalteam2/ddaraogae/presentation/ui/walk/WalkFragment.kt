@@ -35,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class WalkFragment : Fragment() {
 
+    /** SearchApi 데이터를 사용하기 위해 임의로 TestViewModel을 참고하여, WalkTestViewModel을 만들었습니다.*/
     private val viewModel: WalkTestViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
     private val binding get() = _binding!!
@@ -50,12 +51,8 @@ class WalkFragment : Fragment() {
     private lateinit var cameraUpdate: CameraUpdate /*TODO: 나중에 animate을 위해 남김*/
 
     private var locationService: LocationService? = null
-    private lateinit var locationList: MutableList<Location>
     private var bound = false
-    private var isServiceRunning = false
-
-    private var lat: Double = 0.0
-    private var lng: Double = 0.0
+    private var isServiceRunning = false // 버튼을 토글하여 서비스가 run 중인지 판별하기 위함.
 
     private var markerList = mutableListOf<Marker>()
 
@@ -117,6 +114,7 @@ class WalkFragment : Fragment() {
             Intent(requireContext(), LocationService::class.java).also { intent ->
                 requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
             }
+            bound = true
         }
     }
 
@@ -139,7 +137,7 @@ class WalkFragment : Fragment() {
         // fragment의 getMapAsync() 메서드로 OnMapReadyCallback 콜백을 등록하면 비동기로 NaverMap 객체를 얻을 수 있다.
         mapFragment.getMapAsync { map ->
             naverMap = map
-            // 현재 위치
+            // 현재 위치 활성화
             naverMap.locationSource = locationSource
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
@@ -170,48 +168,57 @@ class WalkFragment : Fragment() {
         cameraPosition = CameraPosition(latLng, 15.0)
     }
 
-    //    private fun startTracking(locationList: List<LocationService.LatLng>) {
-//        /*TODO: 산책버튼을 눌렀을때 이벤트 처리 주기*/
-////        cameraUpdate.animate(CameraAnimation.Easing)
-//        binding.btnWalkStart.setOnClickListener {
-//
-//        }
-//
-//    }
     private fun toggleLocationService() {
         if (isServiceRunning) {
+            // 서비스에서 리스트 받아오기
+            val locationList = locationService?.locationList?.map {
+                LatLng(it.latitude, it.longitude)
+            }.orEmpty().toTypedArray() // Null되면 빈 리스트가 들어감
+            // 종료 할 때
             locationService?.stopService()
+            requireActivity().unbindService(serviceConnection)
+            bound = false
+            sendLocationListToFinishActivity(locationList) // FinishActivirty로 list 보내기
             isServiceRunning = false
             binding.btnWalkStart.text = "다시 시작하기"
-            sendLocationListToFinishActivity()
-
         } else {
-            Intent(requireContext(), LocationService::class.java).also { intent ->
-                requireActivity().startService(intent)
-                requireActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            val intent = Intent(requireContext(), LocationService::class.java)
+            requireActivity().startForegroundService(intent)
+            if (!bound) {
+                Intent(requireContext(), LocationService::class.java).also { intent ->
+                    requireContext().bindService(
+                        intent,
+                        serviceConnection,
+                        Context.BIND_AUTO_CREATE
+                    )
+                }
+                bound = true
             }
             isServiceRunning = true
             binding.btnWalkStart.text = "종료"
         }
     }
 
-    private fun sendLocationListToFinishActivity() {
+    /** 좋은 방법인지는 모르겠으나 서비스 도입하면서 이렇게 Intent를 보내게 되었음. */
+    private fun sendLocationListToFinishActivity(locationList: Array<LatLng>) {
         val intent = Intent(requireContext(), FinishActivity::class.java).apply {
-            putParcelableArrayListExtra("locationList", ArrayList(locationList))
+            putExtra("locationList", locationList)
         }
         startActivity(intent)
-        // 2번째 방법
-//        locationService?.let { service ->
-//            locationList = service.locationList.toMutableList()
-//            val intent = Intent(activity, FinishActivity::class.java).apply {
-//                putParcelableArrayListExtra("locationList", ArrayList(locationList))
-//            }
-//            startActivity(intent)
-//        }
+    }
+
+    // LocationService의 LatLng를 Location으로 변환하는 확장 함수
+    //TODO: 의미가 있는 코드인지 확인해보기
+    private fun LocationService.LatLng.toLocation(): Location {
+        return Location("").apply {
+            latitude = this@toLocation.latitude
+            longitude = this@toLocation.longitude
+        }
     }
 
     private fun observeStoreData() {
         viewModel.storeData.observe(viewLifecycleOwner) { storeDataList ->
+            Log.d("walk frag", storeDataList.toString())
             storeDataList?.let { stores ->
                 clearMarkers()
                 addMarkers(stores)
