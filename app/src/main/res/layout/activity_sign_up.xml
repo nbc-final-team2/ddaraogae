@@ -104,6 +104,19 @@
         app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
         app:layout_constraintBottom_toTopOf="@+id/bt_signup"/>
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_authentication_check"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:background="@drawable/rec_finish_done"
+        android:text="@string/signup_email_authentication_check"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_body"
+        app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
+        app:layout_constraintBottom_toTopOf="@+id/bt_signup"/>
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -111,6 +124,7 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:background="@drawable/rec_finish_done"
         android:backgroundTint="@color/grey"
+        android:enabled="false"
         android:text="@string/signup_complete"
         android:textColor="@color/white"
         android:textSize="@dimen/text_body"

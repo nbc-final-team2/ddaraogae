@@ -30,8 +30,8 @@ class LoginViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val getCurrentUser = getCurrentUserUseCase()
-            var currentUser = if (getCurrentUser != null) true
-            else false
+            var currentUser = getCurrentUser != null
+            Log.d("loginTest", "$getCurrentUser")
             _uiState.update { prev ->
                 prev.copy(
                     successLogin = currentUser

@@ -126,9 +126,14 @@
     <string name="signup_password_check_warning">비밀번호와 일치하지 않습니다.</string>
     <string name="signup_complete">완료</string>
     <string name="signup_email_authentication">이메일 인증</string>
+    <string name="signup_email_authentication_check">인증 확인</string>
     <string name="signup_success">회원가입에 성공하셨습니다.</string>
     <string name="signup_fail">회원가입에 실패하셨습니다.</string>
     <string name="signup_email_check">"존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요."</string>
+    <string name="signup_email_authentication_success">인증 성공! 완료 버튼을 눌러주세요.</string>
+    <string name="signup_email_authentication_fail">인증 실패. 인증을 다시 진행해 주세요.</string>
+    <string name="signup_send_email">이메일이 발송되었습니다.</string>
+
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>

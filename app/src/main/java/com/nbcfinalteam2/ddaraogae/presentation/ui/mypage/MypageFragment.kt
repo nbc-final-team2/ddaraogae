@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.nbcfinalteam2.ddaraogae.R
+import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
 
 class MypageFragment : Fragment() {
     override fun onCreateView(

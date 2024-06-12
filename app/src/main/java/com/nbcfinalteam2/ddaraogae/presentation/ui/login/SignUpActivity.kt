@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,8 +9,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
@@ -29,6 +32,7 @@ class SignUpActivity:AppCompatActivity() {
     private var correctEmail = false
     private var correctPassword = false
     private var correctPasswordCheck = false
+    private var verificationState = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -39,7 +43,15 @@ class SignUpActivity:AppCompatActivity() {
         clickEmailAuthentication()
         clickSignupButton()
         checkEmailDuplicateState()
-        binding.ibtBack.setOnClickListener { finish() }
+        binding.ibtBack.setOnClickListener {
+            startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
+            finish()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(!verificationState){}
     }
 
     //email 중복 상태 체크
@@ -52,8 +64,16 @@ class SignUpActivity:AppCompatActivity() {
                         R.string.signup_email_check,
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.etSignupEmail.isEnabled = true
+                    binding.etSignupPassword.isEnabled = true
+                    binding.etSignupPasswordCheck.isEnabled = true
+
+                    binding.btAuthentication.visibility = AppCompatButton.VISIBLE
+                    binding.btAuthenticationCheck.visibility = AppCompatButton.INVISIBLE
                 }
         }
+
+
     }
 
     private fun checkAuthentication() = with(binding){
@@ -85,6 +105,7 @@ class SignUpActivity:AppCompatActivity() {
 
     //이메일 인증 버튼 클릭
     private fun clickEmailAuthentication(){
+        //이메일 인증 메일 보내기
         binding.btAuthentication.setOnClickListener {
             email = binding.etSignupEmail.text.toString().trim()
             password = binding.etSignupPassword.text.toString().trim()
@@ -94,40 +115,76 @@ class SignUpActivity:AppCompatActivity() {
             else if (!correctPasswordCheck) Toast.makeText(this, R.string.signup_password_check_warning, Toast.LENGTH_SHORT).show()
             else {
                 //아이디, 비밀번호 값 수정 금지
-                binding.etSignupEmail.isEnabled = true
-                binding.etSignupPassword.isEnabled = true
+                binding.etSignupEmail.isEnabled = false
+                binding.etSignupPassword.isEnabled = false
+                binding.etSignupPasswordCheck.isEnabled = false
 
-                /**이메일 인증 로직 추가**/
+                viewModel.signUp(email, password)
+                Toast.makeText(this, R.string.signup_send_email, Toast.LENGTH_SHORT).show()
 
+                binding.btAuthentication.visibility = AppCompatButton.INVISIBLE
+                binding.btAuthenticationCheck.visibility = AppCompatButton.VISIBLE
+            }
+        }
+        //인증이 확인됐으면 로그아웃 , 인증되지 않았으면 계정 삭제
+        binding.btAuthenticationCheck.setOnClickListener {
+            viewModel.isCurrentUserEmailVerified()
+            lifecycleScope.launch {
+                viewModel.verificationState.flowWithLifecycle(lifecycle)
+                    .collectLatest { state ->
+                        verificationState =  state
+                        if (state) {
+                            Toast.makeText(
+                                this@SignUpActivity,
+                                R.string.signup_email_authentication_success,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.signOut()
+                            binding.btAuthenticationCheck.visibility = AppCompatButton.INVISIBLE
+                            binding.btSignup.isEnabled = true
+                            binding.btSignup.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this@SignUpActivity, R.color.brown))
+                        }
+                        else {
+                            Toast.makeText(
+                                this@SignUpActivity,
+                                R.string.signup_email_authentication_fail,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            binding.etSignupEmail.isEnabled = true
+                            binding.etSignupPassword.isEnabled = true
+                            binding.etSignupPasswordCheck.isEnabled = true
+
+                            viewModel.deleteAccount()
+
+                            binding.btAuthentication.visibility = AppCompatButton.VISIBLE
+                            binding.btAuthenticationCheck.visibility = AppCompatButton.INVISIBLE
+                        }
+                    }
             }
         }
     }
     //회원가입 버튼 클릭 시 동작
     private fun clickSignupButton(){
-        binding.btSignup.setOnClickListener {
-            signUp(email, password)
-        }
-    }
-
-    //회원가입 로직
-    private fun signUp(email : String, password:String){
-        viewModel.signUp(email, password)
+        Log.d("clickclick", "호출!")
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
+                    Log.d("clickclick", "호출")
                     signUpState = state
-                    if (signUpState) {
-                        Toast.makeText(this@SignUpActivity, R.string.signup_success, Toast.LENGTH_SHORT)
-                            .show()
-                        startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
-                        finish()
-                    }
-                    else {
-                        Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
-                    }
+                    Log.d("clickclick", "signUpState")
                 }
         }
-
+        binding.btSignup.setOnClickListener {
+            if (signUpState) {
+                Toast.makeText(this@SignUpActivity, R.string.signup_success, Toast.LENGTH_SHORT)
+                    .show()
+            }
+            else {
+                Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
+            }
+            startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
+            finish()
+        }
     }
 
     //email, password 유효성 검사
