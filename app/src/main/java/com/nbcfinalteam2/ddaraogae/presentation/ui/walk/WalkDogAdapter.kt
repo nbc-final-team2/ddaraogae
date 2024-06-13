@@ -12,7 +12,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemWalkDogsBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 class WalkDogAdapter(
-    private val onClick: (dogInfo: DogInfo) -> Unit
+    private val onClick: (String) -> Unit
 ) : ListAdapter<DogInfo, WalkDogAdapter.WalkDogViewHolder>(DIFF_UTIL) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalkDogViewHolder {
@@ -45,7 +45,7 @@ class WalkDogAdapter(
                 )
             }
             binding.root.setOnClickListener {
-                onClick(item)
+                onClick(item.id)
             }
         }
     }

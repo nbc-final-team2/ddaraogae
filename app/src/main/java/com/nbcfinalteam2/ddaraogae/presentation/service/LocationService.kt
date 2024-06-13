@@ -19,6 +19,10 @@ import com.google.android.gms.location.Priority
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class LocationService: Service() {
 
@@ -33,12 +37,14 @@ class LocationService: Service() {
         override fun onLocationResult(locationResult: LocationResult) {
             for(location in locationResult.locations) {
                 if(locationList.isNotEmpty()) {
-                    distanceSum += DistanceCalculator.getDistance(
-                        locationList.last().latitude,
-                        locationList.last().longitude,
-                        location.latitude,
-                        location.longitude
-                    )
+                    _distanceSumState.update { prev ->
+                        prev + DistanceCalculator.getDistance(
+                            locationList.last().latitude,
+                            locationList.last().longitude,
+                            location.latitude,
+                            location.longitude
+                        )
+                    }
                 }
                 locationList.add(location.toLatLng())
             }
@@ -48,7 +54,8 @@ class LocationService: Service() {
     private val binder = LocalBinder()
 
     val locationList = mutableListOf<LatLng>()
-    var distanceSum = 0.0
+    private val _distanceSumState = MutableStateFlow(0.0)
+    private val distanceSumState = _distanceSumState.asStateFlow()
 
     override fun onCreate() {
         super.onCreate()
@@ -82,7 +89,9 @@ class LocationService: Service() {
     fun stopService() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         locationList.clear()
-        distanceSum = 0.0
+        _distanceSumState.update { _ ->
+            0.0
+        }
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -111,6 +120,8 @@ class LocationService: Service() {
         }
 
     }
+
+    fun getDistanceFlow(): StateFlow<Double> = distanceSumState
 
     data class LatLng(
         val latitude: Double,
