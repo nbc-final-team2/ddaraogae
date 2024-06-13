@@ -15,7 +15,7 @@ object DateFormatter : ValueFormatter() {
         timeZone = this@DateFormatter.timeZone
     }
 
-    fun generateLast7Days() {
+    private fun generateLast7Days() {
         val calendar = Calendar.getInstance()
         dates = (0 until 7).map {
             dateFormat.format(calendar.time).also {
@@ -33,11 +33,6 @@ object DateFormatter : ValueFormatter() {
 
     fun getLast7Days(): List<String> {
         return getDates()
-    }
-
-    override fun getFormattedValue(value: Float): String {
-        val index = value.toInt()
-        return if (index >= 0 && index < dates.size) dates[index] else ""
     }
 
     fun formatDate(date: Date?): String {

@@ -235,7 +235,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun walkGraphXAxisForHaveData(xAxis: XAxis) {
-        DateFormatter.generateLast7Days() // 날짜 생성
+        val dates = DateFormatter.getLast7Days()
+        val formatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        }
 
         /* 차트의 X축 설정 */
         xAxis.apply {
@@ -243,7 +249,7 @@ class HomeFragment : Fragment() {
             setLabelCount(7, true) // X축에 표시될 레이블의 개수 설정, force = 어떠한 변화가 있어도 강제로 7개만 보이도록
             axisMinimum = 0f // X축의 최솟값 설정
             axisMaximum = 6f // X축의 최댓값 설정
-            valueFormatter = DateFormatter // X축 실시간 날짜 설정
+            valueFormatter = formatter // X축 실시간 날짜 설정
         }
     }
 
@@ -293,15 +299,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun walkGraphXAxisForEmptyData(xAxis: XAxis) {
-        DateFormatter.generateLast7Days() // 날짜 생성
+        val dates = DateFormatter.getLast7Days()
+        val formatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        }
 
-        /* 차트의 x축 설정 */
+        /* 차트의 X축 설정 */
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM // X축의 위치 설정
-            setLabelCount(7, true) // x축에 표시될 레이블의 갯수 설정, force = 어떠한 변화가 있어도 강제로 7개만 보이도록
-            axisMinimum = 0f // x축의 최솟값 설정
-            axisMaximum = 6f // x축의 최댓값 설정
-            valueFormatter = DateFormatter // x축 실시간 날짜 설정
+            setLabelCount(7, true) // X축에 표시될 레이블의 개수 설정, force = 어떠한 변화가 있어도 강제로 7개만 보이도록
+            axisMinimum = 0f // X축의 최솟값 설정
+            axisMaximum = 6f // X축의 최댓값 설정
+            valueFormatter = formatter // X축 실시간 날짜 설정
         }
     }
 
