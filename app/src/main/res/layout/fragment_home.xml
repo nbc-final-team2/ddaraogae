@@ -34,7 +34,7 @@
                 android:id="@+id/rv_dogArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_margin="@dimen/margin_medium"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -42,45 +42,44 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_main"
                 tools:listitem="@layout/item_home_dog_selection" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_dogGraph"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_medium"
+                android:text="@string/home_walk_graph_title"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_dogArea" />
+
             <!-- 반려견 그래프 -->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_graph"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_margin="@dimen/margin_medium"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:cardElevation="@dimen/margin_extra_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_dogArea">
+                app:layout_constraintTop_toBottomOf="@+id/tv_dogGraph">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/margin_medium">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_dogGraph"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_walk_graph_title"
-                        android:textSize="@dimen/text_text"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_margin="@dimen/margin_extra_small">
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/lc_area"
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
-                        android:layout_marginTop="@dimen/margin_extra_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_dogGraph" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_walkData"

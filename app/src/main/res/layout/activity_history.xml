@@ -94,7 +94,7 @@
                 android:id="@+id/tv_walkData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_walk_graph_no_data"
+                android:background="@drawable/bg_empty_data"
                 android:elevation="20dp"
                 android:padding="@dimen/padding_small"
                 android:text="@string/home_history_walk_graph_no_data"
