@@ -42,7 +42,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_main"
                 tools:listitem="@layout/item_home_dog_selection" />
 
-            <!-- Dog Graph Field -->
+            <!-- 반려견 그래프 -->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_graph"
@@ -99,7 +99,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Today Weather Field -->
+            <!-- 오늘의 날씨 -->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_weather"
@@ -118,6 +118,21 @@
                     android:layout_height="match_parent">
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_weatherData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_walk_graph_no_data"
+                        android:elevation="20dp"
+                        android:padding="@dimen/padding_small"
+                        android:text="위치 권한 필요합니다."
+                        android:textSize="@dimen/text_mini"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_todayWeather"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -134,8 +149,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:text="@string/home_weather_real_time_data"
                         android:layout_marginEnd="@dimen/margin_small"
+                        android:text="@string/home_weather_real_time_data"
                         android:textColor="@color/grey"
                         android:textSize="@dimen/text_mini"
                         app:layout_constraintEnd_toStartOf="@+id/iv_weatherRenewal"
