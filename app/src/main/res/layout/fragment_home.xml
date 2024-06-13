@@ -42,6 +42,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_main"
                 tools:listitem="@layout/item_home_dog_selection" />
 
+            <!-- 반려견 그래프 -->
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_dogGraph"
                 android:layout_width="match_parent"
@@ -54,13 +56,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rv_dogArea" />
 
-            <!-- 반려견 그래프 -->
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_graph"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_extra_small"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:cardElevation="@dimen/margin_extra_small"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -100,17 +102,29 @@
 
             <!-- 오늘의 날씨 -->
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_todayWeather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_weather_title"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                android:layout_margin="@dimen/margin_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cv_graph" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_weather"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_extra_small"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:cardElevation="@dimen/margin_extra_small"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_graph">
+                app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -132,23 +146,11 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_todayWeather"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_medium"
-                        android:layout_marginTop="18dp"
-                        android:text="@string/home_weather_title"
-                        android:textSize="@dimen/text_text"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/appCompatTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginEnd="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_extra_small"
+                        android:layout_marginEnd="@dimen/margin_extra_small"
                         android:text="@string/home_weather_real_time_data"
                         android:textColor="@color/grey"
                         android:textSize="@dimen/text_mini"
@@ -159,7 +161,7 @@
                         android:id="@+id/iv_weatherRenewal"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:layout_marginTop="18dp"
+                        android:layout_marginTop="@dimen/margin_extra_small"
                         android:layout_marginEnd="@dimen/margin_medium"
                         android:src="@drawable/ic_renewal"
                         app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
@@ -170,13 +172,11 @@
                         android:id="@+id/iv_weatherIcon"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_marginStart="@dimen/margin_medium"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginBottom="18dp"
+                        android:layout_margin="@dimen/margin_medium"
                         android:scaleType="centerCrop"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather"
+                        app:layout_constraintTop_toTopOf="parent"
                         tools:src="@drawable/ic_launcher_background" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -188,18 +188,19 @@
                         android:textSize="@dimen/text_caption"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toEndOf="@+id/iv_weatherIcon"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_fineDust"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_medium"
+
                         android:text="@string/home_weather_fine_dust"
                         android:textSize="@dimen/text_caption"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintEnd_toStartOf="@+id/tv_ultraFineDust"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_ultraFineDust"
@@ -210,7 +211,7 @@
                         android:textSize="@dimen/text_caption"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_locationTemperature"
