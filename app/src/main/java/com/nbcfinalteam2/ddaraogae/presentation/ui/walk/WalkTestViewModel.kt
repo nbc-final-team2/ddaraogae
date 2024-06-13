@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,8 +21,21 @@ class WalkTestViewModel @Inject constructor(
 ) : ViewModel() {
     private val _storeData = MutableLiveData<List<StoreEntity?>?>()
     val storeData: LiveData<List<StoreEntity?>?> = _storeData
+
+    //거리 체크
+    private val _distanceData = MutableLiveData<Double>()
+    val distanceData: LiveData<Double> = _distanceData
+
+    //현재 위치
     private var latitude: Double = 0.0
     private var lngtitude: Double = 0.0
+
+    //시작 위치
+    private var initLatitude: Double = 0.0
+    private var initLngtitude: Double = 0.0
+
+    //이동 거리
+    private var walkDistance : Double = 0.0
 
     fun fetchStoreData(lat: Double, lng: Double) {
         /** 여기서 이동거리에 따른 마커 재생성 여부를 판단하는 로직을 넣습니다.*/
@@ -29,6 +43,11 @@ class WalkTestViewModel @Inject constructor(
         if (latitude == 0.0 && lngtitude == 0.0) {
             getStoreData(lat, lng) /** lat, lng는 지도에서 받아온 값이며 여기로 가지고 옵니다. */
             /** 1. latitude, lngtitude는 0.0은 초기값이며 현재 위치에 대한 비교 대상 */
+
+            //시작 위치 저장
+            initLatitude = lat
+            initLngtitude = lng
+
         } else {
             /** 현재위치와 나도 모르는 위치에 대한 1km의 거리 계산 */
             /** 2. 팀원분이 만들어주신 DistanceCalculator로 지도에서 쓰이는 lat, lng
@@ -40,6 +59,14 @@ class WalkTestViewModel @Inject constructor(
                  * 이 뷰모델 로직은 조금 더 이해가 필요함.*/
                 getStoreData(lat, lng)
             }
+
+            //값이 들어올 때마다 움직인 거리를 계산해서 계속 더함
+            val checkWalkDistance = DistanceCalculator.getDistance(lat, lng, initLatitude, initLngtitude)
+            walkDistance += checkWalkDistance
+
+            //총 이동 거리
+            _distanceData.value = walkDistance * 0.001
+            Log.d("ginger", "${_distanceData.value}")
         }
     }
 

@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
+import java.io.ByteArrayOutputStream
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,6 +55,17 @@ class FinishActivity : FragmentActivity() {
         } else {
             initMapView()
         }
+
+        buttonListener()
+        initView()
+    }
+    //intent로 받은 값 넣기
+    private fun initView(){
+        val distance = intent.getStringExtra("distance")
+        val walkTime = intent.getStringExtra("time")
+
+        binding.tvFinishWalkingTime.text = walkTime
+        binding.tvFinishWalkingDistance.text = distance+"km"
     }
 
     private fun initMapView() {
@@ -146,6 +159,43 @@ class FinishActivity : FragmentActivity() {
             Log.d("setCameraOnPolyLine", "Camera moved to $center")
         } else {
             Log.d("setCameraOnPolyLine", "Location list is empty, cannot set camera")
+        }
+    }
+
+    private fun buttonListener() {
+        binding.btnFinishDone.setOnClickListener {
+            if (::naverMap.isInitialized) {
+                naverMap.takeSnapshot {
+                    /**
+                     * 아래는 예시 코드입니다.
+                     * : 산책 끝 버튼을 클릭할 때 산책 entity에 값을 담아 insert를 요청합니다.
+                     *
+                     * 지도 이미지를 캡쳐하는 기능의 takeSnapshot은 버튼 클릭 시 처리되도록 하는 것이 좋습니다.
+                     * 별도의 트리거 없이 작동시키려고 하니 이미지가 정상적으로 저장되지 않는 문제가 있었습니다.
+                     */
+                    val mapImage = bitmapToByteArray(it)
+//                    val start = Date()
+//
+//                    val entity = WalkingEntity(
+//                        id = "",
+//                        dogId = "temp",
+//                        timeTaken = 100,
+//                        distance = 200.0,
+//                        startDateTime = start,
+//                        endDateTime = start,
+//                        walkingImage = ""
+//                    )
+//                    viewModel.insertWalkingData(entity, mapImage!!)
+                }
+            }
+        }
+    }
+
+    private fun bitmapToByteArray(bitmap: Bitmap?): ByteArray? {
+        return bitmap?.let {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            byteArrayOutputStream.toByteArray()
         }
     }
 }

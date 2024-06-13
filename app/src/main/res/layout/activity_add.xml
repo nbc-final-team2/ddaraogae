@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@id/bt_back"
+                android:id="@+id/iv_back"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_margin="@dimen/margin_medium"
@@ -60,8 +60,7 @@
                 app:civ_border_width="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/topBar"
-                tools:src="@drawable/ic_launcher_background" />
+                app:layout_constraintTop_toBottomOf="@+id/topBar" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_name"

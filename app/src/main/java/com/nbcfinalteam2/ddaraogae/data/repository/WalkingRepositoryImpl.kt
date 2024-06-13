@@ -25,9 +25,7 @@ class WalkingRepositoryImpl @Inject constructor(
         return firebaseDateSource.getWalkingById(walkingId)?.toEntity(walkingId)
     }
 
-    override suspend fun insertWalkingData(walkingEntity: WalkingEntity) {
-        firebaseDateSource.insertWalkingData(
-            walkingEntity.toDto()
-        )
+    override suspend fun insertWalkingData(walkingEntity: WalkingEntity, mapImage: ByteArray?) {
+        firebaseDateSource.insertWalkingData(walkingEntity.toDto(), mapImage)
     }
 }

@@ -27,8 +27,11 @@
             android:value="@string/ddaraogae_client_id" />
 
         <activity
+            android:name=".presentation.ui.home.AddActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.home.HistoryActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".presentation.ui.walk.FinishActivity"
             android:exported="false" />
@@ -56,6 +59,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service
+            android:name=".presentation.service.LocationService"
+            android:foregroundServiceType="location"
+            android:exported="false" />
+
+    </application>
 </manifest>
