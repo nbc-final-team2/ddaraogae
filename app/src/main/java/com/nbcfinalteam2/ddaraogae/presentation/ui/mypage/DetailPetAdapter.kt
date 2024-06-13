@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.signature.ObjectKey
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemEditPetDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
@@ -34,6 +36,8 @@ class DetailPetAdapter(
         fun bind(dogData: DogItemModel, position: Int) = with(binding){
             Glide.with(context)
                 .load(dogData.thumbnailUrl)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(ivDogImage)
             dogName.text = dogData.name
             if (selectPos == position) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)
@@ -64,5 +68,9 @@ class DetailPetAdapter(
 
     override fun onBindViewHolder(holder: DetailPetAdapter.ItemViewHolder, position: Int) {
         holder.bind(getItem(position), position)
+    }
+
+    override fun submitList(list: List<DogItemModel>?) {
+        super.submitList(list?.let { ArrayList(it) })
     }
 }

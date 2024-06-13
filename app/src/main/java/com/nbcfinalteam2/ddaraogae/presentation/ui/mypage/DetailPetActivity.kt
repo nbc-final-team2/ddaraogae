@@ -13,12 +13,15 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class DetailPetActivity : AppCompatActivity() {
@@ -47,6 +50,30 @@ class DetailPetActivity : AppCompatActivity() {
         binding.btBack.setOnClickListener { finish() }
 
     }
+
+    //edit->detail로 돌아왔을 때 데이터를 반영하기 위함
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launch {
+            viewModel.uiState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    withContext(Dispatchers.Main) {
+                        adapter.submitList(state.listPet)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode:  Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult( requestCode,  resultCode, data)
+        if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            viewModel.getDogList( )
+        }
+    }
+
 
     //user의 반려견 정보가 없으면 빈 창을 보여줌
     private fun checkPetListEmpty(){
@@ -85,6 +112,8 @@ class DetailPetActivity : AppCompatActivity() {
         dogData = getDogData
         Glide.with(this@DetailPetActivity)
             .load(dogData.thumbnailUrl?.toUri())
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
             .into(ivDogThumbnail)
         tvPetName.text = dogData.name
         tvPetAge.text = dogData.age.toString()
@@ -129,10 +158,7 @@ class DetailPetActivity : AppCompatActivity() {
         viewModel.getDogList()
     }
 
-    //edit->detail로 돌아왔을 때 데이터를 반영하기 위함
-    override fun onStart() {
-        super.onStart()
-        viewModel.getDogList()
+    companion object {
+        private const val EDIT_REQUEST_CODE = 100
     }
-
 }

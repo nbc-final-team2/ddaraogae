@@ -64,7 +64,7 @@ class EditPetActivity : AppCompatActivity() {
     private fun initView() = with(binding) {
         val intent = intent
         dogData = intent.getParcelableExtra("dogData")!!
-        if(dogData.gender == 1) rbFemale.isChecked = true
+        if (dogData.gender == 1) rbFemale.isChecked = true
         else rbMale.isChecked = true
         Glide.with(this@EditPetActivity)
             .load(dogData.thumbnailUrl)
@@ -87,9 +87,8 @@ class EditPetActivity : AppCompatActivity() {
             else
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        rgGenderGroup.setOnCheckedChangeListener { radioGroup, id ->
-            if (id == rbFemale.id) gender = 1
-            else gender = 0
+        rgGenderGroup.setOnCheckedChangeListener { _, id ->
+            gender = if (id == rbFemale.id) 1 else 0
         }
         btnEditCompleted.setOnClickListener {
             if (etName.text!!.isEmpty()) Toast.makeText(
@@ -109,6 +108,7 @@ class EditPetActivity : AppCompatActivity() {
                 val byteImage = uriToByteArray(imageUri, this@EditPetActivity)
 
                 changePet(changeDog, byteImage)
+                setResult(RESULT_OK)
                 finish()
             }
         }
