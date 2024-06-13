@@ -56,7 +56,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .collection(PATH_DOGS).document(dogId)
 
         val updateDogDto = imageUri?.let { uri ->
-            val convertedUrl = convertImageUrl(uri, dogId)
+            val convertedUrl = convertUriUrl(uri, dogId, PATH_DOGS)
             dogDto.copy(thumbnailUrl = convertedUrl.toString())
         } ?: dogDto
 
@@ -245,23 +245,51 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(WalkingDto::class.java)
     }
 
-    override suspend fun insertWalkingData(walkingDto: WalkingDto) {
+    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: ByteArray?) {
         val uid = getUserUid()
 
-        firebaseFs.collection(PATH_USERDATA).document(uid)
-            .collection(PATH_WALKING).add(walkingDto)
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING)
+        val newWalkingDoc = db.document()
+        val walkingId = newWalkingDoc.id
+
+        newWalkingDoc.set(walkingDto).await()
+        updateWalkingData(walkingId, walkingDto, mapImage)
+    }
+
+    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: ByteArray?) {
+        val uid = getUserUid()
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING).document(walkingId)
+
+        val updateWalkingDto = mapImage?.let {
+            val convertedUrl = convertByteArrayUrl(it, walkingId, PATH_WALKING)
+            walkingDto.copy(walkingImage = convertedUrl.toString())
+        } ?: walkingDto
+
+        db.set(updateWalkingDto).await()
     }
 
     private fun getUserUid(): String {
         return fbAuth.currentUser?.uid?:throw Exception("UNKNOWN USER")
     }
 
-    private suspend fun convertImageUrl(imageUri: Uri, dogId: String): Uri {
+    private suspend fun convertUriUrl(imageUri: Uri, itemId: String, path: String): Uri? {
         val storageRef = fbStorage.reference
         val uid = getUserUid()
-        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
+        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$path/$itemId.$STORAGE_FILE_EXTENSION")
 
         uploadRef.putFile(imageUri).await()
+
+        return uploadRef.downloadUrl.await()
+    }
+
+    private suspend fun convertByteArrayUrl(imageByteArray: ByteArray, itemId: String, path: String): Uri? {
+        val storageRef = fbStorage.reference
+        val uid = getUserUid()
+        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$path/$itemId.$STORAGE_FILE_EXTENSION")
+
+        uploadRef.putBytes(imageByteArray).await()
 
         return uploadRef.downloadUrl.await()
     }

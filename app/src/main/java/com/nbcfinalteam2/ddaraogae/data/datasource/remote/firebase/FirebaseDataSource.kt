@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
+import android.content.Context
 import android.net.Uri
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
@@ -23,6 +24,6 @@ interface FirebaseDataSource {
     //walking
     suspend fun getWalkingListByDogIdAndPeriod(dogId: String, start: Date, end: Date): List<Pair<String, WalkingDto>>
     suspend fun getWalkingById(walkingId: String): WalkingDto?
-    suspend fun insertWalkingData(walkingDto: WalkingDto)
-
+    suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: ByteArray?)
+    suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: ByteArray?)
 }
