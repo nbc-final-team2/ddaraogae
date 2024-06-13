@@ -137,10 +137,10 @@ class FinishActivity : FragmentActivity() {
             // maxDiff를 기준으로 줌 레벨 조정
             Log.d("distanceDiff", "$distanceDiff")
             val zoomLevel = when {
-                distanceDiff > 2500.0 -> 5.0
-                distanceDiff > 1500.0 -> 10.0
-                distanceDiff > 500.0 -> 15.0
-                else -> 3.0 /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
+                distanceDiff > 2.5 -> 9.0
+                distanceDiff > 1.5 -> 12.0
+                distanceDiff > 0.5 -> 15.0
+                else -> 6.0 /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
                 다만 거리마다 적합한 줌 배율을 정해야 하는데 이건 테스트가 필요하다 */
             }
 
