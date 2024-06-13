@@ -65,7 +65,8 @@ class WalkTestViewModel @Inject constructor(
             walkDistance += checkWalkDistance
 
             //총 이동 거리
-            _distanceData.value = walkDistance
+            _distanceData.value = walkDistance * 0.001
+            Log.d("ginger", "${_distanceData.value}")
         }
     }
 
