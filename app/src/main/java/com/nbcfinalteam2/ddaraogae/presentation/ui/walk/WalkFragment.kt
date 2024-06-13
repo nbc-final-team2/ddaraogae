@@ -286,7 +286,7 @@ class WalkFragment : Fragment() {
                 val infoWindow = InfoWindow().apply {
                     adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                         override fun getText(infoWindow: InfoWindow): CharSequence {
-                            return contentString.toString()
+                            return contentString
                         }
                     }
                 }
