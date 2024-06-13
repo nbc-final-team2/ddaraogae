@@ -17,6 +17,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
+import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -123,11 +124,23 @@ class FinishActivity : FragmentActivity() {
                 if (latLng.longitude > lngMax) lngMax = latLng.longitude
             }
 
+            val distanceDiff = DistanceCalculator.getDistance(latMin, latMax, lngMin, lngMax)
+            // maxDiff를 기준으로 줌 레벨 조정
+            Log.d("distanceDiff", "$distanceDiff")
+            val zoomLevel = when {
+                distanceDiff > 2500.0 -> 5.0
+                distanceDiff > 1500.0 -> 10.0
+                distanceDiff > 500.0 -> 15.0
+                else -> 3.0 /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
+                다만 거리마다 적합한 줌 배율을 정해야 하는데 이건 테스트가 필요하다 */
+            }
+
             val centerLat = (latMin + latMax) / 2
             val centerLng = (lngMin + lngMax) / 2
             val center = LatLng(centerLat, centerLng)
 
-            cameraPosition = CameraPosition(center, 15.0)
+            cameraPosition = CameraPosition(center, zoomLevel)
+            Log.d("cameraPosition", "$zoomLevel")
             cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
             naverMap.moveCamera(cameraUpdate)
             Log.d("setCameraOnPolyLine", "Camera moved to $center")
