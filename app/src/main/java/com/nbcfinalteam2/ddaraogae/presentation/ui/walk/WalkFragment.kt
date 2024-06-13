@@ -36,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -72,13 +73,12 @@ class WalkFragment : Fragment() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as LocationService.LocalBinder
             locationService = binder.getService()
-            serviceDistanceStateFlow = locationService!!.getDistanceFlow()
             bound = true
+            Log.d("WalkFragment", "service connection onServiceConnected()")
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             locationService = null
-            serviceDistanceStateFlow = null
             bound = false
         }
     }
@@ -195,11 +195,13 @@ class WalkFragment : Fragment() {
                         binding.grWalkPrev.isVisible = false
                         binding.grWalkUi.isVisible = true
                         startLocationService()
+                        serviceDistanceStateFlow = LocationService.distanceSumState.asStateFlow()
                         bindToService()
                     } else {
                         binding.grWalkUi.isVisible = false
                         binding.grWalkPrev.isVisible = true
                         unbindFromService()
+                        serviceDistanceStateFlow = null
                         endLocationService()
                     }
                 }
@@ -285,17 +287,9 @@ class WalkFragment : Fragment() {
     }
 
     private fun startCollectingServiceFlow() {
-//        serviceDistanceStateFlow?.let { flow ->
-//            viewLifecycleOwner.lifecycleScope.launch {
-//                flow.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dist ->
-//                    updateDistanceText(dist)
-//                }
-//            }
-//        }
         lifecycleScope.launch {
             serviceDistanceStateFlow?.flowWithLifecycle(viewLifecycleOwner.lifecycle)?.collectLatest {
                 updateDistanceText(it)
-                Log.d("WalkFragment", it.toString())
             }
         }
     }

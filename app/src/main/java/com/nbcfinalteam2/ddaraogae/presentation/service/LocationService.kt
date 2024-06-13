@@ -20,7 +20,6 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -37,7 +36,7 @@ class LocationService: Service() {
         override fun onLocationResult(locationResult: LocationResult) {
             for(location in locationResult.locations) {
                 if(locationList.isNotEmpty()) {
-                    _distanceSumState.update { prev ->
+                    distanceSumState.update { prev ->
                         prev + DistanceCalculator.getDistance(
                             locationList.last().latitude,
                             locationList.last().longitude,
@@ -54,8 +53,6 @@ class LocationService: Service() {
     private val binder = LocalBinder()
 
     val locationList = mutableListOf<LatLng>()
-    private val _distanceSumState = MutableStateFlow(0.0)
-    private val distanceSumState = _distanceSumState.asStateFlow()
 
     override fun onCreate() {
         super.onCreate()
@@ -89,7 +86,7 @@ class LocationService: Service() {
     fun stopService() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         locationList.clear()
-        _distanceSumState.update { _ ->
+        distanceSumState.update { _ ->
             0.0
         }
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -121,8 +118,6 @@ class LocationService: Service() {
 
     }
 
-    fun getDistanceFlow(): StateFlow<Double> = distanceSumState
-
     data class LatLng(
         val latitude: Double,
         val longitude: Double
@@ -136,5 +131,7 @@ class LocationService: Service() {
     companion object {
         private const val CHANNEL_ID = "LocationServiceChannel"
         private const val NOTIFICATION_ID = 1
+
+        val distanceSumState = MutableStateFlow(0.0)
     }
 }
