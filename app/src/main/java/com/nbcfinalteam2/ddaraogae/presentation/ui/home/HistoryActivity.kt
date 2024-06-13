@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -95,8 +96,10 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
             if (walkData.isEmpty()) {
                 setupWalkGraphForEmptyData(year, month)
+                binding.tvWalkData.visibility = View.VISIBLE
             } else {
                 setupWalkGraphForHaveData(walkData, year, month)
+                binding.tvWalkData.visibility = View.GONE
             }
         }
     }
