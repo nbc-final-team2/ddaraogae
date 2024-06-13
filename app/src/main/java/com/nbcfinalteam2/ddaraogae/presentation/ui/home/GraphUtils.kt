@@ -28,13 +28,13 @@ object GraphUtils {
         lineChart.invalidate()
     }
 
-    fun setupWalkGraphXAxisForEmptyData(xAxis: XAxis, formatter: ValueFormatter) {
+    fun setupWalkGraphXAxisForEmptyData(xAxis: XAxis, valueFormatter: ValueFormatter) {
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(7, true)
             axisMinimum = 0f
             axisMaximum = 6f
-            valueFormatter = formatter
+            this.valueFormatter = valueFormatter
         }
     }
 

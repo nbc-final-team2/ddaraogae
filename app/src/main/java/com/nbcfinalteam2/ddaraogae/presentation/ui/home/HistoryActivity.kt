@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -34,7 +35,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     override fun onMonthClick(year: Int, monthNumber: Int) {
         Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
         historyViewModel.setSelectedDate(year, monthNumber)
-        DateFormatter.generateDatesForMonth(year, monthNumber)
         setupWalkGraphForEmptyData(year, monthNumber)
     }
 
@@ -87,16 +87,16 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     }
 
     private fun walkGraphXAxisForEmptyData(xAxis: XAxis, year: Int, month: Int) {
-        DateFormatter.generateDatesForMonth(year, month)
+        val dates = DateFormatter.generateDatesForMonth(year, month)
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(7, true) // x축 레이블 개수 7로 고정
-            axisMinimum = 1f // 해당 월의 첫날
-            axisMaximum = DateFormatter.getDaysInMonth(year, month).toFloat() // 해당 월의 말일
+            axisMinimum = 0f
+            axisMaximum = (dates.size - 1).toFloat()
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    val index = value.toInt() - 1
-                    return if (index >= 0 && index < DateFormatter.getDatesForMonth().size) DateFormatter.getDatesForMonth()[index] else ""
+                    val index = value.toInt()
+                    return if (index >= 0 && index < dates.size) dates[index] else ""
                 }
             }
         }
@@ -146,6 +146,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         historyViewModel.walkData.observe(this) { walkData ->
             val (year, month) = historyViewModel.getSelectedYearMonth()
+
             if (walkData.isEmpty()) {
                 setupWalkGraphForEmptyData(year, month)
             } else {
@@ -153,7 +154,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             }
         }
     }
-
 
     private fun getDogInfo() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -179,16 +179,21 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         val lineChart = binding.lcArea
         walkGraphSettingsForHaveData(lineChart)
         walkGraphXAxisForHaveData(lineChart.xAxis, year, month)
-        walkGraphYAxisForHaveData(lineChart.axisLeft)
 
         val entries = ArrayList<Entry>()
         val dateDistanceMap = walkData.groupBy { DateFormatter.formatDate(it.startDateTime) }
             .mapValues { entry -> entry.value.sumOf { it.distance ?: 0.0 } }
 
-        DateFormatter.getDatesForMonth().forEachIndexed { index, date ->
+        val dates = DateFormatter.generateDatesForMonth(year, month)
+
+        for (i in dates.indices) {
+            val date = dates[i]
             val distance = dateDistanceMap[date] ?: 0.0
-            entries.add(Entry((index + 1).toFloat(), distance.toFloat()))
+            Log.d("WalkGraph", "Date: $date, Distance: $distance")
+            entries.add(Entry(i.toFloat(), distance.toFloat()))
         }
+
+        val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
@@ -204,6 +209,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val lineData = LineData(dataSet)
         lineChart.data = lineData
+
+        walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
+
         lineChart.invalidate()
     }
 
@@ -224,26 +232,32 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     }
 
     private fun walkGraphXAxisForHaveData(xAxis: XAxis, year: Int, month: Int) {
-        val dates = DateFormatter.getDatesForMonth()
+        val dates = DateFormatter.generateDatesForMonth(year, month)
+        val formatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        }
+
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(dates.size, true)
-            axisMinimum = 1f
-            axisMaximum = dates.size.toFloat()
-            valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    val index = value.toInt() - 1
-                    return if (index >= 0 && index < dates.size) dates[index] else ""
-                }
-            }
+            axisMinimum = 0f
+            axisMaximum = (dates.size - 1).toFloat()
+            valueFormatter = formatter
         }
     }
 
-    private fun walkGraphYAxisForHaveData(yAxis: YAxis) {
+    private fun walkGraphYAxisForHaveData(yAxis: YAxis, maxDistance: Float) {
         yAxis.apply {
-            setLabelCount(5, true)
             axisMinimum = 0f
-            axisMaximum = 10f
+            axisMaximum = when {
+                maxDistance >= 3 -> (maxDistance / 1).toInt() * 1 + 1f
+                maxDistance >= 1 -> (maxDistance / 0.5).toInt() * 0.5f + 0.5f
+                else -> (maxDistance / 0.1).toInt() * 0.1f + 0.1f
+            }
+
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return "${value}km"

@@ -42,15 +42,12 @@ class HomeFragment : Fragment() {
     ) { permissions ->
         when {
             permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                // GPS 위치정보 가능할 때
                 getLastLocation()
             }
             permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                // 네트워크 위치정보 가능할 때
                 getLastLocation()
             }
             else -> {
-                // 둘 다 권한 설정 안 했을 때
                 Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
             }
         }
@@ -182,13 +179,14 @@ class HomeFragment : Fragment() {
     private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>) {
         val lineChart = binding.lcArea
         walkGraphSettingsForHaveData(lineChart)
-        walkGraphXAxisForHaveData(lineChart.xAxis)
+        walkGraphXAxisForHaveData(lineChart.xAxis, DateFormatter.generateLast7Days())
 
         val entries = ArrayList<Entry>()
         val dateDistanceMap = walkData.groupBy { DateFormatter.formatDate(it.startDateTime) }
             .mapValues { entry -> entry.value.sumOf { it.distance ?: 0.0 } }
 
-        DateFormatter.getLast7Days().forEachIndexed { index, date ->
+        val dates = DateFormatter.generateLast7Days()
+        dates.forEachIndexed { index, date ->
             val distance = dateDistanceMap[date] ?: 0.0
             Log.d("WalkGraph", "Date: $date, Distance: $distance")
             entries.add(Entry(index.toFloat(), distance.toFloat()))
@@ -230,8 +228,7 @@ class HomeFragment : Fragment() {
         lineChart.invalidate()
     }
 
-    private fun walkGraphXAxisForHaveData(xAxis: XAxis) {
-        val dates = DateFormatter.getLast7Days()
+    private fun walkGraphXAxisForHaveData(xAxis: XAxis, dates: List<String>) {
         val formatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val index = value.toInt()
@@ -268,13 +265,14 @@ class HomeFragment : Fragment() {
     private fun setupWalkGraphForEmptyData() {
         val lineChart = binding.lcArea
         GraphUtils.setupWalkGraphSettingsForEmptyData(lineChart, requireContext())
-        GraphUtils.setupWalkGraphXAxisForEmptyData(lineChart.xAxis, object : ValueFormatter() {
+        val formatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                val dates = DateFormatter.getLast7Days()
+                val dates = DateFormatter.generateLast7Days()
                 val index = value.toInt()
                 return if (index >= 0 && index < dates.size) dates[index] else ""
             }
-        })
+        }
+        GraphUtils.setupWalkGraphXAxisForEmptyData(lineChart.xAxis, formatter)
         GraphUtils.setupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
@@ -283,3 +281,4 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -104,24 +104,24 @@ class HomeViewModel @Inject constructor(
 
     fun loadWeather(lat: String, lon: String) {
         viewModelScope.launch {
-//            Log.d("latlatlat", lat)
-//            Log.d("lonlonlon", lon)
-//            try {
-//                val weatherEntity = getWeatherDataUseCase(lat, lon)
-//                val weatherInfo = WeatherInfo(
-//                    id = weatherEntity.id.toString(),
-//                    temperature = "${weatherEntity.temperature}°",
-//                    city = weatherEntity.city ?: "Unknown",
-//                    condition = getConditionDescription(weatherEntity.id),
-//                    fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
-//                    ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
-//                )
-//                _weatherInfo.value = weatherInfo
-//            } catch (
-//                e: NullPointerException
-//            ) {
-//                e.printStackTrace()
-//            }
+            Log.d("latlatlat", lat)
+            Log.d("lonlonlon", lon)
+            try {
+                val weatherEntity = getWeatherDataUseCase(lat, lon)
+                val weatherInfo = WeatherInfo(
+                    id = weatherEntity.id.toString(),
+                    temperature = "${weatherEntity.temperature}°",
+                    city = weatherEntity.city ?: "Unknown",
+                    condition = getConditionDescription(weatherEntity.id),
+                    fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
+                    ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
+                )
+                _weatherInfo.value = weatherInfo
+            } catch (
+                e: Exception
+            ) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -163,7 +163,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun setDummyWalkData() = viewModelScope.launch {
-        val dates = DateFormatter.getLast7Days()
+        val dates = DateFormatter.generateLast7Days()
 
         val list = dates.mapIndexed { index, date ->
             val distance = when (index) {

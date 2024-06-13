@@ -1,38 +1,25 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
-import com.github.mikephil.charting.formatter.ValueFormatter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-object DateFormatter : ValueFormatter() {
+object DateFormatter {
 
-    private lateinit var dates: List<String>
     private val timeZone = TimeZone.getTimeZone("Asia/Seoul")
     private val dateFormat = SimpleDateFormat("MM/dd", Locale.getDefault()).apply {
         timeZone = this@DateFormatter.timeZone
     }
 
-    private fun generateLast7Days() {
+    fun generateLast7Days(): List<String> {
         val calendar = Calendar.getInstance()
-        dates = (0 until 7).map {
+        return (0 until 7).map {
             dateFormat.format(calendar.time).also {
                 calendar.add(Calendar.DATE, -1)
             }
         }.reversed()
-    }
-
-    private fun getDates(): List<String> {
-        if (!this::dates.isInitialized) {
-            generateLast7Days()
-        }
-        return dates
-    }
-
-    fun getLast7Days(): List<String> {
-        return getDates()
     }
 
     fun formatDate(date: Date?): String {
@@ -83,20 +70,16 @@ object DateFormatter : ValueFormatter() {
         return dateFormat.parse(dateStr)
     }
 
-    fun generateDatesForMonth(year: Int, month: Int) {
+    fun generateDatesForMonth(year: Int, month: Int): List<String> {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month - 1)
         calendar.set(Calendar.DAY_OF_MONTH, 1)
 
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-        dates = (1..daysInMonth).map { day ->
+        return (1..daysInMonth).map { day ->
             calendar.set(Calendar.DAY_OF_MONTH, day)
             dateFormat.format(calendar.time)
         }
-    }
-
-    fun getDatesForMonth(): List<String> {
-        return dates
     }
 }
