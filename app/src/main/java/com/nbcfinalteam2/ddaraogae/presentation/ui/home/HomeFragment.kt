@@ -35,8 +35,8 @@ class HomeFragment : Fragment() {
     private lateinit var dogProfileAdapter: DogProfileAdapter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
-    /** 위치권한 */
-    val locationPermissionRequest = registerForActivityResult(
+
+    private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         when {
@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
                 getLastLocation()
             }
             else -> {
-                Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+
             }
         }
     }
@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
         moveToHistory()
         setupAdapter()
         observeViewModel()
-        checkLocationPermissions()
+        getLastLocation()
     }
 
     override fun onResume() {
@@ -107,6 +107,31 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun checkLocationPermissions() {
+        locationPermissionRequest.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
+    }
+
+    private fun getLastLocation() {
+        checkLocationPermissions()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        val lat = it.latitude.toString()
+                        val lon = it.longitude.toString()
+                        homeViewModel.loadWeather(lat, lon)
+                    }
+                }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            Toast.makeText(context, "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun updateWeatherUI(weatherInfo: WeatherInfo) {
         with(binding) {
             val weatherCondition = weatherInfo.condition
@@ -135,31 +160,6 @@ class HomeFragment : Fragment() {
             getString(R.string.weather_status_cloudy) -> R.drawable.ic_weather_cloudy
             getString(R.string.weather_status_very_cloudy) -> R.drawable.ic_weather_very_cloudy
             else -> R.drawable.ic_x
-        }
-    }
-
-    /** 위치권한 */
-    private fun checkLocationPermissions() {
-        locationPermissionRequest.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
-    }
-
-    /** 위치권한 */
-    private fun getLastLocation() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        try {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    location?.let {
-                        val lat = it.latitude.toString()
-                        val lon = it.longitude.toString()
-                        homeViewModel.loadWeather(lat, lon)
-                    }
-                }
-        } catch (e: SecurityException) {
-            e.printStackTrace()
         }
     }
 
