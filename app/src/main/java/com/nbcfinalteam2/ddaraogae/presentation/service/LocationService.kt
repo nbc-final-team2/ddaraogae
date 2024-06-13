@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
+import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 
 class LocationService: Service() {
 
@@ -31,6 +32,14 @@ class LocationService: Service() {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             for(location in locationResult.locations) {
+                if(locationList.isNotEmpty()) {
+                    distanceSum += DistanceCalculator.getDistance(
+                        locationList.last().latitude,
+                        locationList.last().longitude,
+                        location.latitude,
+                        location.longitude
+                    )
+                }
                 locationList.add(location.toLatLng())
             }
         }
@@ -39,6 +48,7 @@ class LocationService: Service() {
     private val binder = LocalBinder()
 
     val locationList = mutableListOf<LatLng>()
+    var distanceSum = 0.0
 
     override fun onCreate() {
         super.onCreate()
@@ -72,6 +82,7 @@ class LocationService: Service() {
     fun stopService() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         locationList.clear()
+        distanceSum = 0.0
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -96,14 +107,14 @@ class LocationService: Service() {
         try {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
         } catch (e: SecurityException) {
-            //todo
+            e.printStackTrace()
         }
 
     }
 
     data class LatLng(
-        private val latitude: Double,
-        private val longitude: Double
+        val latitude: Double,
+        val longitude: Double
     )
     private fun Location.toLatLng() = LatLng(latitude = latitude, longitude = longitude)
 

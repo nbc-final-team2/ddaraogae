@@ -7,6 +7,6 @@ import javax.inject.Inject
 class InsertWalkingDataUseCaseImpl @Inject constructor(
     private val walkingRepository: WalkingRepository
 ) : InsertWalkingDataUseCase {
-    override suspend fun invoke(walkingEntity: WalkingEntity) =
-        walkingRepository.insertWalkingData(walkingEntity)
+    override suspend fun invoke(walkingEntity: WalkingEntity, mapImage: ByteArray?) =
+        walkingRepository.insertWalkingData(walkingEntity, mapImage)
 }

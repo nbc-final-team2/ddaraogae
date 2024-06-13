@@ -12,6 +12,8 @@ object StoreMapper {
                 categoryGroupName = it.categoryGroupName,
                 address = it.roadAddressName,
                 phone = it.phone,
+                lat = it.y,
+                lng = it.x
             )
         }
         return resultForStore

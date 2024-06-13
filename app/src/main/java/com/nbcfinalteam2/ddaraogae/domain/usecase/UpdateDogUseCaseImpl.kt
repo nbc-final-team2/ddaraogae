@@ -7,5 +7,5 @@ import javax.inject.Inject
 class UpdateDogUseCaseImpl @Inject constructor(
     private val dogRepository: DogRepository
 ): UpdateDogUseCase {
-    override suspend fun invoke(dogEntity: DogEntity) = dogRepository.updateDog(dogEntity)
+    override suspend fun invoke(dogEntity: DogEntity, byteImage: ByteArray?) = dogRepository.updateDog(dogEntity, byteImage)
 }

@@ -45,6 +45,9 @@ android {
 
 dependencies {
 
+    // Glide
+    implementation (libs.glide)
+
     // MPAndroidChart
     implementation(libs.mpandroid.chart)
 
@@ -73,6 +76,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.auth)
 
@@ -95,7 +99,10 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
 

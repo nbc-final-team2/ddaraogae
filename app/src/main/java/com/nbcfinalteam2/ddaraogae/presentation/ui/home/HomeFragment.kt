@@ -1,22 +1,30 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
+import android.Manifest
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
-import com.nbcfinalteam2.ddaraogae.presentation.ui.login.SignUpViewModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,8 +32,24 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel: SignUpViewModel by viewModels()
+    private lateinit var dogProfileAdapter: DogProfileAdapter
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val homeViewModel: HomeViewModel by viewModels()
+    val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                getLastLocation()
+            }
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                getLastLocation()
+            }
+            else -> {
+                Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,81 +62,218 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupWalkGraph()
-        setupListener()
+        setupWalkGraphForEmptyData()
+        moveToHistory()
+        setupAdapter()
+        observeViewModel()
+        checkLocationPermissions()
     }
 
-    private fun setupListener() {
-        moveToHistory()
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.loadDogs()
+    }
+
+    private fun setupAdapter() {
+        dogProfileAdapter = DogProfileAdapter(
+            onDogClick = { dogData -> homeViewModel.selectDog(dogData) },
+            onAddClick = { moveToAdd() },
+        )
+        binding.rvDogArea.adapter = dogProfileAdapter
+    }
+
+    private fun observeViewModel() {
+        homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
+            dogProfileAdapter.submitList(dogs)
+        }
+
+        homeViewModel.dogName.observe(viewLifecycleOwner) { dogName ->
+            binding.tvDogGraph.text = "${dogName}의 산책 그래프"
+        }
+
+        homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
+            if (walkData.isEmpty()) {
+                setupWalkGraphForEmptyData()
+                binding.tvWalkData.visibility = View.VISIBLE
+            } else {
+                setupWalkGraphForHaveData(walkData)
+                binding.tvWalkData.visibility = View.GONE
+            }
+        }
+
+        homeViewModel.weatherInfo.observe(viewLifecycleOwner) { weatherInfo ->
+            updateWeatherUI(weatherInfo)
+        }
+    }
+
+    private fun updateWeatherUI(weatherInfo: WeatherInfo) {
+        with(binding) {
+            val weatherCondition = weatherInfo.condition
+            ivWeatherIcon.setImageResource(getWeatherIconResource(weatherCondition))
+            tvLocation.text = weatherInfo.city
+            tvLocationTemperature.text = weatherInfo.temperature
+            tvLocationConditions.text = weatherInfo.condition
+            ivFineDustIcon.setImageResource(weatherInfo.fineDustStatusIcon)
+            ivUltraFineDustIcon.setImageResource(weatherInfo.ultraFineDustStatusIcon)
+            tvFineDustConditions.text = weatherInfo.fineDustStatus
+            tvUltraFineDustConditions.text = weatherInfo.ultraFineDustStatus
+        }
+    }
+
+    private fun getWeatherIconResource(condition: String): Int {
+        return when (condition) {
+            getString(R.string.weather_status_thunder) -> R.drawable.ic_weather_thunder
+            getString(R.string.weather_status_rain) -> R.drawable.ic_weather_rain
+            getString(R.string.weather_status_slight_rain) -> R.drawable.ic_weather_slight_rain
+            getString(R.string.weather_status_snow) -> R.drawable.ic_weather_snow
+            getString(R.string.weather_status_typoon) -> R.drawable.ic_weather_typoon_dust_fog
+            getString(R.string.weather_status_dust) -> R.drawable.ic_weather_typoon_dust_fog
+            getString(R.string.weather_status_fog) -> R.drawable.ic_weather_typoon_dust_fog
+            getString(R.string.weather_status_sunny) -> R.drawable.ic_weather_sunny
+            getString(R.string.weather_status_slightly_cloudy) -> R.drawable.ic_weather_slightly_cloudy
+            getString(R.string.weather_status_cloudy) -> R.drawable.ic_weather_cloudy
+            getString(R.string.weather_status_very_cloudy) -> R.drawable.ic_weather_very_cloudy
+            else -> R.drawable.ic_x
+        }
+    }
+
+    private fun checkLocationPermissions() {
+        locationPermissionRequest.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
+    }
+
+    private fun getLastLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        val lat = it.latitude.toString()
+                        val lon = it.longitude.toString()
+                        homeViewModel.loadWeather(lat, lon)
+                    }
+                }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun moveToAdd() {
+        val intent = Intent(context, AddActivity::class.java)
+        startActivity(intent)
     }
 
     private fun moveToHistory() {
         binding.cvGraph.setOnClickListener {
-            val intent = Intent(context, HistoryActivity::class.java)
-            startActivity(intent)
+            val dogInfo = homeViewModel.selectedDogInfo.value
+            if (dogInfo != null) {
+                val intent = Intent(context, HistoryActivity::class.java)
+                intent.putExtra("DOG_INFO", dogInfo)
+                startActivity(intent)
+            } else {
+                Toast.makeText(context, "선택된 반려견이 없습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun setupWalkGraph() {
-        setupWalkGraphForEmptyData()
-    }
-
-    private fun setupWalkGraphForEmptyData() {
-        /* 산책 데이터가 없을시 초기 화면 */
+    private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>) {
         val lineChart = binding.lcArea
-        walkGraphSettingsForEmptyData(lineChart)
-        walkGraphXAxisForEmptyData(lineChart.xAxis)
-        walkGraphYAxisForEmptyData(lineChart.axisLeft)
+        walkGraphSettingsForHaveData(lineChart)
+        walkGraphXAxisForHaveData(lineChart.xAxis, DateFormatter.generateLast7Days())
+
+        val entries = ArrayList<Entry>()
+        val dateDistanceMap = walkData.groupBy { DateFormatter.formatDate(it.startDateTime) }
+            .mapValues { entry -> entry.value.sumOf { it.distance ?: 0.0 } }
+
+        val dates = DateFormatter.generateLast7Days()
+        dates.forEachIndexed { index, date ->
+            val distance = dateDistanceMap[date] ?: 0.0
+            entries.add(Entry(index.toFloat(), distance.toFloat()))
+        }
+
+        val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
+        walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
+
+        val dataSet = LineDataSet(entries, "").apply {
+            axisDependency = YAxis.AxisDependency.LEFT
+            color = R.color.light_blue
+            valueTextColor = resources.getColor(R.color.black, null)
+            lineWidth = 2f
+            setDrawCircles(true)
+            setCircleColor(R.color.light_blue)
+            setDrawCircleHole(true)
+            setDrawValues(true)
+            mode = LineDataSet.Mode.LINEAR
+        }
+        val lineData = LineData(dataSet)
+        lineChart.data = lineData
+
+        lineChart.invalidate()
     }
 
-    private fun walkGraphSettingsForEmptyData(lineChart: LineChart) {
-        /* 라인차트 생성및 화면설정*/
-        lineChart.data = LineData()
-
+    private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
-            axisRight.isEnabled = false // 차트의 오른쪽 Y축 표시 여부
-            legend.isEnabled = false // 범례 표시 여부
-            description.isEnabled = false // 범례 옆에 표시되는 차트 설명 사용 여부
-            setDrawGridBackground(true) // 차트의 안쪽 색깔 지정 여부
-            setGridBackgroundColor(resources.getColor(R.color.grey, null)) // 차트의 안쪽 색깔 지정
-            setTouchEnabled(false) // 차트 터치 여부
-            setPinchZoom(false) // 차트 확대,축소 여부 (손가락으로 확대 축소)
-            setScaleEnabled(false) // 차트 확대 여부
-            isDragXEnabled = false // 차트의 x축 드래그 여부
-            isDragYEnabled = false // 차트의 y축 드래그 여부
+            axisRight.isEnabled = false
+            legend.isEnabled = false
+            description.isEnabled = false
+            setDrawGridBackground(true)
+            setGridBackgroundColor(resources.getColor(R.color.grey, null))
+            setTouchEnabled(false)
+            setPinchZoom(false)
+            setScaleEnabled(false)
+            isDragXEnabled = false
+            isDragYEnabled = false
         }
+        lineChart.invalidate()
     }
 
-    private fun walkGraphXAxisForEmptyData(xAxis: XAxis) {
-        /* 차트의 x축 설정 */
+    private fun walkGraphXAxisForHaveData(xAxis: XAxis, dates: List<String>) {
+        val formatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        }
+
         xAxis.apply {
-            position = XAxis.XAxisPosition.BOTTOM // X축의 위치 설정
-            setLabelCount(7, true) // x축에 표시될 레이블의 갯수 설정, force = 어떠한 변화가 있어도 강제로 7개만 보이도록
-            axisMinimum = 1f // x축의 최솟값 설정
-            axisMaximum = 7f // x축의 최댓값 설정
+            position = XAxis.XAxisPosition.BOTTOM
+            setLabelCount(7, true)
+            axisMinimum = 0f
+            axisMaximum = 6f
+            valueFormatter = formatter
         }
     }
 
-    private fun walkGraphYAxisForEmptyData(yAxis: YAxis) {
-        /* 차트의 y축 설정 */
+    private fun walkGraphYAxisForHaveData(yAxis: YAxis, maxDistance: Float) {
         yAxis.apply {
-            setLabelCount(5, true) // y축에 표시될 레이블의 갯수 설정, force = 어떠한 변화가 있어도 강제로 5개만 보이도록
-            axisMinimum = 1f // y축의 최솟값
-            axisMaximum = 5f // y축의 최댓값
-            // (y축)에 km를 붙이기 위한 작업
+            axisMinimum = 0f
+            axisMaximum = when {
+                maxDistance >= 3 -> (maxDistance / 1).toInt() * 1 + 1f
+                maxDistance >= 1 -> (maxDistance / 0.5).toInt() * 0.5f + 0.5f
+                else -> (maxDistance / 0.1).toInt() * 0.1f + 0.1f
+            }
+
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return when (value) {
-                        1f -> "1km"
-                        2f -> "3km"
-                        3f -> "6km"
-                        4f -> "9km"
-                        5f -> "12km"
-                        else -> ""
-                    }
+                    return "${value}km"
                 }
             }
         }
+    }
+
+    private fun setupWalkGraphForEmptyData() {
+        val lineChart = binding.lcArea
+        GraphUtils.homeSetupWalkGraphSettingsForEmptyData(lineChart, requireContext())
+        GraphUtils.homeSetupWalkGraphXAxisForEmptyData(lineChart.xAxis, object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val dates = DateFormatter.generateLast7Days()
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        })
+        GraphUtils.homeSetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     override fun onDestroyView() {
