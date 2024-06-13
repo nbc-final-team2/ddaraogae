@@ -2,8 +2,6 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +10,6 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogAddBinding
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import kotlinx.coroutines.withContext
 
 class DogProfileAdapter(
     private val onDogClick: (DogInfo) -> Unit,

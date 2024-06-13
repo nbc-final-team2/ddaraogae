@@ -1,9 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -64,9 +62,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupWalkGraphForEmptyData(year: Int, month: Int) {
         val lineChart = binding.lcArea
-        GraphUtils.HistorySetupWalkGraphSettingsForEmptyData(lineChart, this)
-        GraphUtils.HistorySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
-        GraphUtils.HistorySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
+        GraphUtils.historySetupWalkGraphSettingsForEmptyData(lineChart, this)
+        GraphUtils.historySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
+        GraphUtils.historySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     private fun setupListener() {

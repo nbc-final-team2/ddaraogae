@@ -12,7 +12,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 object GraphUtils {
 
     // Home 관련 Empty 함수
-    fun HomeSetupWalkGraphSettingsForEmptyData(lineChart: LineChart, context: Context) {
+    fun homeSetupWalkGraphSettingsForEmptyData(lineChart: LineChart, context: Context) {
         lineChart.data = LineData()
 
         lineChart.apply {
@@ -30,7 +30,7 @@ object GraphUtils {
         lineChart.invalidate()
     }
 
-    fun HomeSetupWalkGraphXAxisForEmptyData(xAxis: XAxis, valueFormatter: ValueFormatter) {
+    fun homeSetupWalkGraphXAxisForEmptyData(xAxis: XAxis, valueFormatter: ValueFormatter) {
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(7, true)
@@ -40,7 +40,7 @@ object GraphUtils {
         }
     }
 
-    fun HomeSetupWalkGraphYAxisForEmptyData(yAxis: YAxis) {
+    fun homeSetupWalkGraphYAxisForEmptyData(yAxis: YAxis) {
         yAxis.apply {
             setLabelCount(5, true)
             axisMinimum = 1f
@@ -61,7 +61,7 @@ object GraphUtils {
     }
 
     // History 관련 Empty 함수
-    fun HistorySetupWalkGraphSettingsForEmptyData(lineChart: LineChart, context: Context) {
+    fun historySetupWalkGraphSettingsForEmptyData(lineChart: LineChart, context: Context) {
         lineChart.data = LineData()
 
         lineChart.apply {
@@ -79,7 +79,7 @@ object GraphUtils {
         lineChart.invalidate()
     }
 
-    fun HistorySetupWalkGraphXAxisForEmptyData(xAxis: XAxis, year: Int, month: Int) {
+    fun historySetupWalkGraphXAxisForEmptyData(xAxis: XAxis, year: Int, month: Int) {
         val dates = DateFormatter.generateDatesForMonth(year, month)
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
@@ -95,7 +95,7 @@ object GraphUtils {
         }
     }
 
-    fun HistorySetupWalkGraphYAxisForEmptyData(yAxis: YAxis) {
+    fun historySetupWalkGraphYAxisForEmptyData(yAxis: YAxis) {
         yAxis.apply {
             setLabelCount(5, true)
             axisMinimum = 1f

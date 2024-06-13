@@ -2,10 +2,8 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.Manifest
 import android.content.Intent
-import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -267,15 +265,15 @@ class HomeFragment : Fragment() {
 
     private fun setupWalkGraphForEmptyData() {
         val lineChart = binding.lcArea
-        GraphUtils.HomeSetupWalkGraphSettingsForEmptyData(lineChart, requireContext())
-        GraphUtils.HomeSetupWalkGraphXAxisForEmptyData(lineChart.xAxis, object : ValueFormatter() {
+        GraphUtils.homeSetupWalkGraphSettingsForEmptyData(lineChart, requireContext())
+        GraphUtils.homeSetupWalkGraphXAxisForEmptyData(lineChart.xAxis, object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val dates = DateFormatter.generateLast7Days()
                 val index = value.toInt()
                 return if (index >= 0 && index < dates.size) dates[index] else ""
             }
         })
-        GraphUtils.HomeSetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
+        GraphUtils.homeSetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     override fun onDestroyView() {
@@ -283,4 +281,3 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
-

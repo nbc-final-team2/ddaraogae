@@ -17,9 +17,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.lang.NullPointerException
 import javax.inject.Inject
-import kotlin.math.log10
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -98,17 +96,12 @@ class HomeViewModel @Inject constructor(
             }
             _walkData.value = walkInfo
             _isWalkData.value = walkInfo.isNotEmpty()
-            setDummyWalkData()
         }
     }
 
     fun loadWeather(lat: String, lon: String) {
         viewModelScope.launch {
-            Log.d("latlatlat", lat)
-            Log.d("lonlonlon", lon)
             try {
-                val lat = "37.413294"
-                val lon = "127.0016985"
                 val weatherEntity = getWeatherDataUseCase(lat, lon)
                 val weatherInfo = WeatherInfo(
                     id = weatherEntity.id.toString(),
@@ -166,7 +159,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
     private fun getFineDustStatus(pm10: Double?): String {
         return when {
             pm10 == null -> R.string.fine_dust_status_good.toString()
@@ -185,34 +177,5 @@ class HomeViewModel @Inject constructor(
             pm25 <= 150 -> R.string.fine_dust_status_bad.toString()
             else -> R.string.fine_dust_status_very_bad.toString()
         }
-    }
-
-    private fun setDummyWalkData() = viewModelScope.launch {
-        val dates = DateFormatter.generateLast7Days()
-
-        val list = dates.mapIndexed { index, date ->
-            val distance = when (index) {
-                0 -> 6.5
-                1 -> 0.5
-                2 -> 7.2
-                3 -> 30.2
-                4 -> 3.5
-                5 -> 2.3
-                6 -> 1.5
-                else -> 0.0
-            }
-            Log.d("DummyData", "Date: $date, Distance: $distance")
-            WalkingInfo(
-                id = null,
-                dogId = null,
-                timeTaken = null,
-                distance = distance,
-                startDateTime = DateFormatter.testDate(date),
-                endDateTime = DateFormatter.testDate(date),
-                path = emptyList()
-            )
-        }
-
-        _walkData.value = list
     }
 }
