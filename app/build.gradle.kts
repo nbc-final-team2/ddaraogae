@@ -46,7 +46,7 @@ android {
 dependencies {
 
     // Glide
-    implementation(libs.glide)
+    implementation (libs.glide)
 
     // MPAndroidChart
     implementation(libs.mpandroid.chart)
