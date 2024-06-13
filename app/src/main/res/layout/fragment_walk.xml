@@ -135,7 +135,7 @@
             android:textColor="@color/brown"
             android:textSize="@dimen/text_caption"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_walk_start"
+            app:layout_constraintEnd_toStartOf="@+id/ib_walk_stop"
             app:layout_constraintTop_toBottomOf="@+id/tv_walk_distance" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -162,7 +162,7 @@
             android:textColor="@color/brown"
             android:textSize="@dimen/text_caption"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_walk_start"
+            app:layout_constraintStart_toEndOf="@+id/ib_walk_stop"
             app:layout_constraintTop_toBottomOf="@+id/tv_walk_distance" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
