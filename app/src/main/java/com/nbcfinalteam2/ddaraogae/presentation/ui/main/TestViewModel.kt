@@ -20,8 +20,8 @@ class TestViewModel @Inject constructor(
     private val getStoreDataUseCase: GetStoreDataUseCase,
     private val getWeatherUseCase: GetWeatherDataUseCase
 ) : ViewModel() {
-    private val _storeData = MutableLiveData<List<StoreEntity>>()
-    val storeData: LiveData<List<StoreEntity>> = _storeData
+    private val _storeData = MutableLiveData<List<StoreEntity?>?>()
+    val storeData: LiveData<List<StoreEntity?>?> = _storeData
 
     fun fetchStoreData(lat: String, lng: String) {
         viewModelScope.launch {

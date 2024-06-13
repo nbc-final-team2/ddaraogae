@@ -102,8 +102,8 @@ class LocationService: Service() {
     }
 
     data class LatLng(
-        private val latitude: Double,
-        private val longitude: Double
+        val latitude: Double,
+        val longitude: Double
     )
     private fun Location.toLatLng() = LatLng(latitude = latitude, longitude = longitude)
 
