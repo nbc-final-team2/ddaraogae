@@ -33,9 +33,6 @@
             android:name=".presentation.ui.walk.FinishActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.walk.WalkActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.ui.home.DetailActivity"
             android:exported="false" />
         <activity
