@@ -1,8 +1,11 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
@@ -12,7 +15,8 @@ import javax.inject.Inject
 
 class FirebaseDataSourceImpl @Inject constructor(
     private val firebaseFs: FirebaseFirestore,
-    private val fbAuth: FirebaseAuth
+    private val fbAuth: FirebaseAuth,
+    private val fbStorage: FirebaseStorage
 ): FirebaseDataSource {
 
     override suspend fun getDogList(): List<Pair<String, DogDto>> {
@@ -35,28 +39,40 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(DogDto::class.java)
     }
 
-    override suspend fun insertDog(dogDto: DogDto) {
+    override suspend fun insertDog(dogDto: DogDto, imageUri: Uri?) {
         val uid = getUserUid()
-
-        firebaseFs.collection(PATH_USERDATA).document(uid)
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS)
-            .add(dogDto).await()
+        val newDogDoc = db.document()
+        val dogId = newDogDoc.id
+
+        newDogDoc.set(dogDto).await()
+        updateDog(dogId, dogDto, imageUri)
     }
 
-    override suspend fun updateDog(dogId: String, dogDto: DogDto) {
+    override suspend fun updateDog(dogId: String, dogDto: DogDto, imageUri: Uri?) {
         val uid = getUserUid()
-
-        firebaseFs.collection(PATH_USERDATA).document(uid)
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS).document(dogId)
-            .set(dogDto).await()
+
+        val updateDogDto = imageUri?.let { uri ->
+            val convertedUrl = convertImageUrl(uri, dogId)
+            dogDto.copy(thumbnailUrl = convertedUrl.toString())
+        } ?: dogDto
+
+        db.set(updateDogDto).await()
     }
 
     override suspend fun deleteDog(dogId: String) {
+        val storageRef = fbStorage.reference
         val uid = getUserUid()
+        val deleteRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
 
         firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS).document(dogId)
             .delete().await()
+
+        deleteRef.delete()
     }
 
     override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Date, end: Date): Int {
@@ -240,6 +256,16 @@ class FirebaseDataSourceImpl @Inject constructor(
         return fbAuth.currentUser?.uid?:throw Exception("UNKNOWN USER")
     }
 
+    private suspend fun convertImageUrl(imageUri: Uri, dogId: String): Uri {
+        val storageRef = fbStorage.reference
+        val uid = getUserUid()
+        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
+
+        uploadRef.putFile(imageUri).await()
+
+        return uploadRef.downloadUrl.await()
+    }
+
     companion object {
         private const val PATH_USERDATA = "userData"
         private const val PATH_DOGS = "dogs"
@@ -249,5 +275,7 @@ class FirebaseDataSourceImpl @Inject constructor(
         private const val FIELD_DOG_ID = "dogId"
         private const val FIELD_GET_DATETIME = "getDateTime"
         private const val FIELD_START_DATETIME = "startDateTime"
+
+        private const val STORAGE_FILE_EXTENSION = "jpg"
     }
 }
