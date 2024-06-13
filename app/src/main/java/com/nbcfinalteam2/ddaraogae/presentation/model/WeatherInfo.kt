@@ -6,5 +6,7 @@ data class WeatherInfo(
     val city: String,
     val condition: String,
     val fineDustStatusIcon: Int,
-    val ultraFineDustStatusIcon: Int
+    val fineDustStatus: String,
+    val ultraFineDustStatusIcon: Int,
+    val ultraFineDustStatus: String
 )

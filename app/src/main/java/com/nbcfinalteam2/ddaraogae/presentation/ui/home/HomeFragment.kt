@@ -117,6 +117,8 @@ class HomeFragment : Fragment() {
             tvLocationConditions.text = weatherInfo.condition
             ivFineDustIcon.setImageResource(weatherInfo.fineDustStatusIcon)
             ivUltraFineDustIcon.setImageResource(weatherInfo.ultraFineDustStatusIcon)
+            tvFineDustConditions.text = weatherInfo.fineDustStatus
+            tvUltraFineDustConditions.text = weatherInfo.ultraFineDustStatus
         }
     }
 

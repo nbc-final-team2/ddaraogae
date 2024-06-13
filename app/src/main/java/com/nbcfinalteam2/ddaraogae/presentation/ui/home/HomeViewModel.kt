@@ -107,6 +107,8 @@ class HomeViewModel @Inject constructor(
             Log.d("latlatlat", lat)
             Log.d("lonlonlon", lon)
             try {
+                val lat = "37.413294"
+                val lon = "127.0016985"
                 val weatherEntity = getWeatherDataUseCase(lat, lon)
                 val weatherInfo = WeatherInfo(
                     id = weatherEntity.id.toString(),
@@ -114,7 +116,9 @@ class HomeViewModel @Inject constructor(
                     city = weatherEntity.city ?: "Unknown",
                     condition = getConditionDescription(weatherEntity.id),
                     fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
-                    ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
+                    fineDustStatus = getFineDustStatus(weatherEntity.pm10),
+                    ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25),
+                    ultraFineDustStatus = getUltraFineDustStatus(weatherEntity.pm25)
                 )
                 _weatherInfo.value = weatherInfo
             } catch (
@@ -159,6 +163,27 @@ class HomeViewModel @Inject constructor(
             pm25 <= 80 -> R.drawable.ic_weather_condition_normal
             pm25 <= 150 -> R.drawable.ic_weather_condition_bad
             else -> R.drawable.ic_weather_condition_very_bad
+        }
+    }
+
+
+    private fun getFineDustStatus(pm10: Double?): String {
+        return when {
+            pm10 == null -> "좋음"
+            pm10 <= 30 -> "좋음"
+            pm10 <= 80 -> "보통"
+            pm10 <= 150 -> "나쁨"
+            else -> "매우나쁨"
+        }
+    }
+
+    private fun getUltraFineDustStatus(pm25: Double?): String {
+        return when {
+            pm25 == null -> "좋음"
+            pm25 <= 30 -> "좋음"
+            pm25 <= 80 -> "보통"
+            pm25 <= 150 -> "나쁨"
+            else -> "매우나쁨"
         }
     }
 
