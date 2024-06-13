@@ -31,13 +31,13 @@ object FirebaseMapper {
         id = id,
         stampNum = stampNum,
         getDateTime = getDateTime,
-        name = name
+        name = name,
     )
 
     fun StampEntity.toDto() = StampDto(
         stampNum = stampNum,
         getDateTime = getDateTime,
-        name = name
+        name = name,
     )
 
     fun WalkingDto.toEntity(id: String) = WalkingEntity(
