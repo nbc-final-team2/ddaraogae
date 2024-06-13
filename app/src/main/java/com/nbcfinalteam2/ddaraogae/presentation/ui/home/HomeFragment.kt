@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
     private lateinit var dogProfileAdapter: DogProfileAdapter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
+    /** 위치권한 */
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -137,6 +138,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /** 위치권한 */
     private fun checkLocationPermissions() {
         locationPermissionRequest.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -144,6 +146,7 @@ class HomeFragment : Fragment() {
         ))
     }
 
+    /** 위치권한 */
     private fun getLastLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         try {
