@@ -48,6 +48,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service
+            android:name=".presentation.service.LocationService"
+            android:foregroundServiceType="location"
+            android:exported="false" />
+    </application>
 </manifest>
