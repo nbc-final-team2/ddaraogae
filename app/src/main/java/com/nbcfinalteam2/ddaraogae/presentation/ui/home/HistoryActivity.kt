@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -11,11 +12,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityHistoryBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
@@ -84,19 +88,17 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun walkGraphXAxisForEmptyData(xAxis: XAxis, year: Int, month: Int) {
         DateFormatter.generateDatesForMonth(year, month)
-        val dates = DateFormatter.getDatesForMonth()
-        val formatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                val index = value.toInt()
-                return if (index >= 0 && index < dates.size) dates[index] else ""
-            }
-        }
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(7, true) // x축 레이블 개수 7로 고정
-            axisMinimum = 0f // 해당 월의 첫날
-            axisMaximum = 6f // 해당 월의 7번째 날
-            valueFormatter = formatter
+            axisMinimum = 1f // 해당 월의 첫날
+            axisMaximum = DateFormatter.getDaysInMonth(year, month).toFloat() // 해당 월의 말일
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    val index = value.toInt() - 1
+                    return if (index >= 0 && index < DateFormatter.getDatesForMonth().size) DateFormatter.getDatesForMonth()[index] else ""
+                }
+            }
         }
     }
 
@@ -141,7 +143,17 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         historyViewModel.dogInfo.observe(this) { dog ->
             binding.tvWalkGraphDogName.text = "${dog.name}의 산책 그래프"
         }
+
+        historyViewModel.walkData.observe(this) { walkData ->
+            val (year, month) = historyViewModel.getSelectedYearMonth()
+            if (walkData.isEmpty()) {
+                setupWalkGraphForEmptyData(year, month)
+            } else {
+                setupWalkGraphForHaveData(walkData, year, month)
+            }
+        }
     }
+
 
     private fun getDogInfo() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -160,6 +172,83 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     private fun moveToBack() {
         binding.ivBack.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>, year: Int, month: Int) {
+        val lineChart = binding.lcArea
+        walkGraphSettingsForHaveData(lineChart)
+        walkGraphXAxisForHaveData(lineChart.xAxis, year, month)
+        walkGraphYAxisForHaveData(lineChart.axisLeft)
+
+        val entries = ArrayList<Entry>()
+        val dateDistanceMap = walkData.groupBy { DateFormatter.formatDate(it.startDateTime) }
+            .mapValues { entry -> entry.value.sumOf { it.distance ?: 0.0 } }
+
+        DateFormatter.getDatesForMonth().forEachIndexed { index, date ->
+            val distance = dateDistanceMap[date] ?: 0.0
+            entries.add(Entry((index + 1).toFloat(), distance.toFloat()))
+        }
+
+        val dataSet = LineDataSet(entries, "").apply {
+            axisDependency = YAxis.AxisDependency.LEFT
+            color = Color.parseColor("#7598c9")
+            valueTextColor = resources.getColor(R.color.black, null)
+            lineWidth = 2f
+            setDrawCircles(true)
+            setCircleColor(Color.parseColor("#7598c9"))
+            setDrawCircleHole(true)
+            setDrawValues(true)
+            mode = LineDataSet.Mode.LINEAR
+        }
+
+        val lineData = LineData(dataSet)
+        lineChart.data = lineData
+        lineChart.invalidate()
+    }
+
+    private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
+        lineChart.apply {
+            axisRight.isEnabled = false
+            legend.isEnabled = false
+            description.isEnabled = false
+            setDrawGridBackground(true)
+            setGridBackgroundColor(resources.getColor(R.color.grey, null))
+            setTouchEnabled(true)
+            setPinchZoom(true)
+            setScaleEnabled(true)
+            isDragXEnabled = true
+            isDragYEnabled = true
+        }
+        lineChart.invalidate()
+    }
+
+    private fun walkGraphXAxisForHaveData(xAxis: XAxis, year: Int, month: Int) {
+        val dates = DateFormatter.getDatesForMonth()
+        xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM
+            setLabelCount(dates.size, true)
+            axisMinimum = 1f
+            axisMaximum = dates.size.toFloat()
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    val index = value.toInt() - 1
+                    return if (index >= 0 && index < dates.size) dates[index] else ""
+                }
+            }
+        }
+    }
+
+    private fun walkGraphYAxisForHaveData(yAxis: YAxis) {
+        yAxis.apply {
+            setLabelCount(5, true)
+            axisMinimum = 0f
+            axisMaximum = 10f
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return "${value}km"
+                }
+            }
         }
     }
 }

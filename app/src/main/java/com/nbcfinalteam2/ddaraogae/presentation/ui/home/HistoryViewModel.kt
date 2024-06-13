@@ -26,11 +26,14 @@ class HistoryViewModel @Inject constructor(
     private val _walkData = MutableLiveData<List<WalkingInfo>>()
     val walkData: LiveData<List<WalkingInfo>> get() = _walkData
 
+    private var selectedYear: Int = 0
+    private var selectedMonth: Int = 0
+
     fun setSelectedDate(year: Int, month: Int) {
-        viewModelScope.launch {
-            _selectedDate.value = "${year}년 ${month}월"
-            loadWalkData(year, month)
-        }
+        selectedYear = year
+        selectedMonth = month
+        _selectedDate.value = "${year}년 ${month}월"
+        loadWalkData(year, month)
     }
 
     fun setDogInfo(dog: DogInfo) {
@@ -57,5 +60,9 @@ class HistoryViewModel @Inject constructor(
             }
             _walkData.value = walkInfo
         }
+    }
+
+    fun getSelectedYearMonth(): Pair<Int, Int> {
+        return Pair(selectedYear, selectedMonth)
     }
 }
