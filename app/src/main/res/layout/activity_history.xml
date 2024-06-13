@@ -119,13 +119,12 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:background="@color/light_grey"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:elevation="@dimen/margin_extra_small"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/middleBar">
@@ -145,7 +144,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_walkHistoryArea"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
