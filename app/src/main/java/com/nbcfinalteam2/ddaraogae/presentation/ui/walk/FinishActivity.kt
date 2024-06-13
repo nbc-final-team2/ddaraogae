@@ -53,6 +53,15 @@ class FinishActivity : FragmentActivity() {
         } else {
             initMapView()
         }
+        initView()
+    }
+    //intent로 받은 값 넣기
+    private fun initView(){
+        val distance = intent.getStringExtra("distance")
+        val walkTime = intent.getStringExtra("time")
+
+        binding.tvFinishWalkingTime.text = walkTime
+        binding.tvFinishWalkingDistance.text = distance+"km"
     }
 
     private fun initMapView() {
