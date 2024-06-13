@@ -33,17 +33,18 @@ class WalkViewModel @Inject constructor(
     private val _dogSelectionState = MutableStateFlow(DogSelectionState.init())
     val dogSelectionState = _dogSelectionState.asStateFlow()
 
-    private val _walkInfoState = MutableStateFlow(WalkingInfoState.init())
-    val walkInfoState = _walkInfoState.asStateFlow()
-
     private val _storeListState = MutableStateFlow(StoreListState.init())
     val storeListState = _storeListState.asStateFlow()
-
-    private var timerJob: Job? = null
 
     //저장된 최근 위치
     private var latitude: Double = 0.0
     private var lngtitude: Double = 0.0
+
+    fun setWalking() {
+        _walkUiState.update {
+            WalkUiState(true)
+        }
+    }
 
     fun fetchStoreData(lat: Double, lng: Double) {
         /** 여기서 이동거리에 따른 마커 재생성 여부를 판단하는 로직을 넣습니다.*/
@@ -84,37 +85,8 @@ class WalkViewModel @Inject constructor(
     }
 
     fun walkToggle() {
-        if(_walkUiState.value.isWalking) {
-            stopTimer()
-        }else {
-            startTimer()
-        }
-
         _walkUiState.update { prev ->
             prev.copy(isWalking = !prev.isWalking)
-        }
-    }
-
-    private fun startTimer() {
-        timerJob = viewModelScope.launch {
-            while(true) {
-                delay(1000)
-                _walkInfoState.update { prev ->
-                    prev.copy(
-                        walkingTime = prev.walkingTime+1
-                    )
-                }
-            }
-        }
-    }
-
-    private fun stopTimer() {
-        timerJob?.cancel()
-        timerJob = null
-        _walkInfoState.update { prev ->
-            prev.copy(
-                walkingTime = 0
-            )
         }
     }
 

@@ -23,16 +23,6 @@ data class DogSelectionState(
     }
 }
 
-data class WalkingInfoState(
-    val walkingTime: Int
-) {
-    companion object {
-        fun init() = WalkingInfoState(
-            walkingTime = 0
-        )
-    }
-}
-
 data class StoreListState(
     val storeList: List<StoreUiModel>
 ) {

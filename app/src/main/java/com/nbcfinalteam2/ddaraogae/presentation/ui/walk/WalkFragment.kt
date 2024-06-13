@@ -32,8 +32,8 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
+import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -64,8 +64,7 @@ class WalkFragment : Fragment() {
 
     private var locationService: LocationService? = null
     private var bound = false
-    private var isServiceRunning = false
-    private var serviceDistanceStateFlow: StateFlow<Double>? = null
+    private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
 
@@ -74,12 +73,12 @@ class WalkFragment : Fragment() {
             val binder = service as LocationService.LocalBinder
             locationService = binder.getService()
             bound = true
-            Log.d("WalkFragment", "service connection onServiceConnected()")
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            locationService = null
+            serviceInfoStateFlow = null
             bound = false
+            locationService = null
         }
     }
     //TODO: 버튼애 리스너를 달아놓고 bind됫는지 확인하고 값을 가져온다, 서비스
@@ -155,6 +154,13 @@ class WalkFragment : Fragment() {
             naverMap.locationOverlay.iconHeight = 60
             naverMap.locationOverlay
             // 카메라 설정
+            lifecycleScope.launch {
+                walkViewModel.storeListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                    .collectLatest {
+                        clearMarkers()
+                        addMarkers(it)
+                    }
+            }
             naverMap.addOnLocationChangeListener {
                 setCamera(it)
                 walkViewModel.fetchStoreData(it.latitude, it.longitude) // 위치 데이터 가져오기(꼭 있어야함)
@@ -180,37 +186,26 @@ class WalkFragment : Fragment() {
 
     private fun initViewModel() {
 
-        lifecycleScope.launch {
-            walkViewModel.storeListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest {
-                    clearMarkers()
-                    addMarkers(it)
-                }
+        if(LocationService.isRunning) {
+            walkViewModel.setWalking()
         }
 
         lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     if (it.isWalking) {
+                        startLocationService()
                         binding.grWalkPrev.isVisible = false
                         binding.grWalkUi.isVisible = true
-                        startLocationService()
-                        serviceDistanceStateFlow = LocationService.distanceSumState.asStateFlow()
+                        serviceInfoStateFlow = LocationService.serviceInfoState.asStateFlow()
                         bindToService()
                     } else {
                         binding.grWalkUi.isVisible = false
                         binding.grWalkPrev.isVisible = true
                         unbindFromService()
-                        serviceDistanceStateFlow = null
+                        serviceInfoStateFlow = null
                         endLocationService()
                     }
-                }
-        }
-
-        lifecycleScope.launch {
-            walkViewModel.walkInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest {
-                    updateTimerText(it.walkingTime)
                 }
         }
 
@@ -264,46 +259,45 @@ class WalkFragment : Fragment() {
     }
 
     private fun startLocationService() {
-        val intent = Intent(requireContext(), LocationService::class.java)
-        requireActivity().startForegroundService(intent)
-        isServiceRunning = true
+        if(!LocationService.isRunning) {
+            val intent = Intent(requireContext(), LocationService::class.java)
+            requireActivity().startForegroundService(intent)
+        }
         if (!bound) {
             bindToService()
         }
     }
 
     private fun bindToService() {
-        if(isServiceRunning) {
-            Intent(requireContext(), LocationService::class.java).also { intent ->
-                requireContext().bindService(
-                    intent,
-                    serviceConnection,
-                    Context.BIND_AUTO_CREATE
-                )
-            }
-            startCollectingServiceFlow()
-            bound = true
+        Intent(requireContext(), LocationService::class.java).also { intent ->
+            requireContext().bindService(
+                intent,
+                serviceConnection,
+                Context.BIND_AUTO_CREATE
+            )
         }
+        startCollectingServiceFlow()
+        bound = true
+
     }
 
     private fun startCollectingServiceFlow() {
         lifecycleScope.launch {
-            serviceDistanceStateFlow?.flowWithLifecycle(viewLifecycleOwner.lifecycle)?.collectLatest {
-                updateDistanceText(it)
+            serviceInfoStateFlow?.flowWithLifecycle(viewLifecycleOwner.lifecycle)?.collectLatest {
+                updateDistanceText(it.distance)
+                updateTimerText(it.time)
             }
         }
     }
 
     private fun unbindFromService() {
-        if(isServiceRunning) {
-            stopCollectingServiceFlow()
-            requireContext().unbindService(serviceConnection)
-            bound = false
-        }
+        stopCollectingServiceFlow()
+        requireContext().unbindService(serviceConnection)
+        bound = false
     }
 
     private fun stopCollectingServiceFlow() {
-        serviceDistanceStateFlow?.let { _ ->
+        serviceInfoStateFlow?.let { _ ->
             viewLifecycleOwner.lifecycleScope.coroutineContext[Job]?.cancel()
         }
     }
@@ -314,11 +308,8 @@ class WalkFragment : Fragment() {
             LatLng(it.latitude, it.longitude)
         }.orEmpty().toTypedArray() // Null되면 빈 리스트가 들어감
         // 종료 할 때
-        if(isServiceRunning) {
-            locationService?.stopService()
-            bound = false
-            isServiceRunning = false
-        }
+        locationService?.stopService()
+        bound = false
 
 //        sendLocationListToFinishActivity(locationList) // FinishActivirty로 list 보내기
     }
