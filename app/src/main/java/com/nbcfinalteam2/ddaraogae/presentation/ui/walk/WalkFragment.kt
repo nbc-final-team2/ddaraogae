@@ -267,8 +267,6 @@ class WalkFragment : Fragment() {
     }
 
     private fun addMarkers(stores: List<StoreEntity?>) {
-        /* TODO:
-        *   클릭시 정보창 띄우기로 변경, 마커 사이즈 줄이기, bound는 어떻게 */
         stores.forEach { store ->
             store?.let { storeEntity ->
                 val latLng = LatLng(storeEntity.lat!!.toDouble(), storeEntity.lng!!.toDouble())
