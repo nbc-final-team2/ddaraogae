@@ -15,8 +15,6 @@ import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
@@ -25,7 +23,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FinishActivity : FragmentActivity(), OnMapReadyCallback {
+class FinishActivity : FragmentActivity() {
 
     private val binding by lazy { ActivityFinishBinding.inflate(layoutInflater) }
 

@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.model
 
-import com.nbcfinalteam2.ddaraogae.domain.entity.LatLngEntity
 import java.util.Date
 
 data class WalkingInfo (
@@ -10,5 +9,5 @@ data class WalkingInfo (
     val distance: Double?,
     val startDateTime: Date?,
     val endDateTime: Date?,
-    val path: List<LatLngEntity>?
+    val walkingImage: String?
 )

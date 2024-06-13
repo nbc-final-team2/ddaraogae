@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -91,7 +90,7 @@ class HomeViewModel @Inject constructor(
                     distance = entity.distance,
                     startDateTime = entity.startDateTime,
                     endDateTime = entity.endDateTime,
-                    path = entity.path
+                    walkingImage = entity.walkingImage
                 )
             }
             _walkData.value = walkInfo
