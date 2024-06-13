@@ -131,18 +131,18 @@ class HomeViewModel @Inject constructor(
 
     private fun getConditionDescription(weatherId: Long?): String {
         return when (weatherId?.toInt()) {
-            in 200..232 -> "천둥번개"
-            in 300..321, in 520..531 -> "비"
-            in 500..504 -> "약간 비"
-            511, in 600..622 -> "눈"
-            701, 711, 721, 741 -> "안개"
-            731, 751, 761, 762 -> "황사"
-            in 771..781 -> "태풍"
-            800 -> "맑음"
-            801 -> "약간 흐림"
-            802 -> "흐림"
-            in 803..804 -> "많이 흐림"
-            else -> "날씨 정보 없음"
+            in 200..232 -> R.string.weather_status_thunder.toString()
+            in 300..321, in 520..531 -> R.string.weather_status_rain.toString()
+            in 500..504 -> R.string.weather_status_slight_rain.toString()
+            511, in 600..622 -> R.string.weather_status_snow.toString()
+            701, 711, 721, 741 -> R.string.weather_status_fog.toString()
+            731, 751, 761, 762 -> R.string.weather_status_dust.toString()
+            in 771..781 -> R.string.weather_status_typoon.toString()
+            800 -> R.string.weather_status_sunny.toString()
+            801 -> R.string.weather_status_slightly_cloudy.toString()
+            802 -> R.string.weather_status_cloudy.toString()
+            in 803..804 -> R.string.weather_status_very_cloudy.toString()
+            else -> R.string.weather_status_no_data.toString()
         }
     }
 
@@ -169,21 +169,21 @@ class HomeViewModel @Inject constructor(
 
     private fun getFineDustStatus(pm10: Double?): String {
         return when {
-            pm10 == null -> "좋음"
-            pm10 <= 30 -> "좋음"
-            pm10 <= 80 -> "보통"
-            pm10 <= 150 -> "나쁨"
-            else -> "매우나쁨"
+            pm10 == null -> R.string.fine_dust_status_good.toString()
+            pm10 <= 30 -> R.string.fine_dust_status_good.toString()
+            pm10 <= 80 -> R.string.fine_dust_status_general.toString()
+            pm10 <= 150 -> R.string.fine_dust_status_bad.toString()
+            else -> R.string.fine_dust_status_very_bad.toString()
         }
     }
 
     private fun getUltraFineDustStatus(pm25: Double?): String {
         return when {
-            pm25 == null -> "좋음"
-            pm25 <= 30 -> "좋음"
-            pm25 <= 80 -> "보통"
-            pm25 <= 150 -> "나쁨"
-            else -> "매우나쁨"
+            pm25 == null -> R.string.fine_dust_status_good.toString()
+            pm25 <= 30 -> R.string.fine_dust_status_good.toString()
+            pm25 <= 80 -> R.string.fine_dust_status_general.toString()
+            pm25 <= 150 -> R.string.fine_dust_status_bad.toString()
+            else -> R.string.fine_dust_status_very_bad.toString()
         }
     }
 

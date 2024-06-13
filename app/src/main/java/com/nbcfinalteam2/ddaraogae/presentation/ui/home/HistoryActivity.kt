@@ -138,7 +138,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         for (i in dates.indices) {
             val date = dates[i]
             val distance = dateDistanceMap[date] ?: 0.0
-            Log.d("WalkGraph", "Date: $date, Distance: $distance")
             entries.add(Entry(i.toFloat(), distance.toFloat()))
         }
 
@@ -146,11 +145,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
-            color = Color.parseColor("#7598c9")
+            color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
             lineWidth = 2f
             setDrawCircles(true)
-            setCircleColor(Color.parseColor("#7598c9"))
+            setCircleColor(R.color.light_blue)
             setDrawCircleHole(true)
             setDrawValues(true)
             mode = LineDataSet.Mode.LINEAR

@@ -148,4 +148,24 @@
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>
+
+    <!-- weather - status -->
+    <string name="weather_status_thunder">천둥번개</string>
+    <string name="weather_status_rain">비</string>
+    <string name="weather_status_slight_rain">약간 비</string>
+    <string name="weather_status_snow">눈</string>
+    <string name="weather_status_typoon">태풍</string>
+    <string name="weather_status_dust">황사</string>
+    <string name="weather_status_fog">안개</string>
+    <string name="weather_status_sunny">맑음</string>
+    <string name="weather_status_slightly_cloudy">약간 흐림</string>
+    <string name="weather_status_cloudy">흐림</string>
+    <string name="weather_status_very_cloudy">많이 흐림</string>
+    <string name="weather_status_no_data">날씨 정보 없음</string>
+
+    <!-- fine - dust - status -->
+    <string name="fine_dust_status_good">좋음</string>
+    <string name="fine_dust_status_general">보통</string>
+    <string name="fine_dust_status_bad">나쁨</string>
+    <string name="fine_dust_status_very_bad">매우나쁨</string>
 </resources>

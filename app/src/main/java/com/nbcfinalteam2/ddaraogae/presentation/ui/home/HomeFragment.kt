@@ -124,15 +124,17 @@ class HomeFragment : Fragment() {
 
     private fun getWeatherIconResource(condition: String): Int {
         return when (condition) {
-            "천둥번개" -> R.drawable.ic_weather_thunder
-            "비" -> R.drawable.ic_weather_rain
-            "약간 비" -> R.drawable.ic_weather_slight_rain
-            "눈" -> R.drawable.ic_weather_snow
-            "안개", "황사", "태풍" -> R.drawable.ic_weather_typoon_dust_fog
-            "맑음" -> R.drawable.ic_weather_sunny
-            "약간 흐림" -> R.drawable.ic_weather_slightly_cloudy
-            "흐림" -> R.drawable.ic_weather_cloudy
-            "많이 흐림" -> R.drawable.ic_weather_very_cloudy
+            getString(R.string.weather_status_thunder) -> R.drawable.ic_weather_thunder
+            getString(R.string.weather_status_rain) -> R.drawable.ic_weather_rain
+            getString(R.string.weather_status_slight_rain) -> R.drawable.ic_weather_slight_rain
+            getString(R.string.weather_status_snow) -> R.drawable.ic_weather_snow
+            getString(R.string.weather_status_typoon) -> R.drawable.ic_weather_typoon_dust_fog
+            getString(R.string.weather_status_dust) -> R.drawable.ic_weather_typoon_dust_fog
+            getString(R.string.weather_status_fog) -> R.drawable.ic_weather_typoon_dust_fog
+            getString(R.string.weather_status_sunny) -> R.drawable.ic_weather_sunny
+            getString(R.string.weather_status_slightly_cloudy) -> R.drawable.ic_weather_slightly_cloudy
+            getString(R.string.weather_status_cloudy) -> R.drawable.ic_weather_cloudy
+            getString(R.string.weather_status_very_cloudy) -> R.drawable.ic_weather_very_cloudy
             else -> R.drawable.ic_x
         }
     }
@@ -190,7 +192,6 @@ class HomeFragment : Fragment() {
         val dates = DateFormatter.generateLast7Days()
         dates.forEachIndexed { index, date ->
             val distance = dateDistanceMap[date] ?: 0.0
-            Log.d("WalkGraph", "Date: $date, Distance: $distance")
             entries.add(Entry(index.toFloat(), distance.toFloat()))
         }
 
@@ -199,11 +200,11 @@ class HomeFragment : Fragment() {
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
-            color = Color.parseColor("#7598c9")
+            color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
             lineWidth = 2f
             setDrawCircles(true)
-            setCircleColor(Color.parseColor("#7598c9"))
+            setCircleColor(R.color.light_blue)
             setDrawCircleHole(true)
             setDrawValues(true)
             mode = LineDataSet.Mode.LINEAR
