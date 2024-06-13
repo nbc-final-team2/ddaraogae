@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +16,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityMainBinding
+import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 //        }
         initBottomNavigation()
         testApiCall() //test fun
+
     }
 
     private fun initBottomNavigation() {
