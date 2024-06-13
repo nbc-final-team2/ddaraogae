@@ -27,35 +27,33 @@ class LoginViewModel @Inject constructor(
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : ViewModel() {
-    //0 : 로그인 성공 1: 로그인 실패 2: 없는 계정  99: 그 외
+    //0 : 로그인 성공 / 1: 계정 존재 / 2: 로그인 실패 / 3:인증 메일 보내기  / 99: 그 외
     private val _isPossible = MutableSharedFlow<Int>()
     val userState = _isPossible.asSharedFlow()
 
     fun getCurrentUser() = viewModelScope.launch {
         val getCurrentUser = getCurrentUserUseCase()
-        if(getCurrentUser!=null) _isPossible.emit(0)
+        if(getCurrentUser != null) {_isPossible.emit(0)}
+
     }
 
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
         try{
             val isSuccess = signInWithEmailUseCase(EmailAuthEntity(email, password))
-            if(isSuccess)_isPossible.emit(0)
-            else _isPossible.emit(1)
+            if(isSuccess)_isPossible.emit(1)
+            else _isPossible.emit(2)
 
         }
-        catch (e : Exception){ //IllegalArgumentException,FirebaseAuthInvalidCredentialsException
+        catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
-        }
-        catch (e : FirebaseAuthInvalidCredentialsException){
-            _isPossible.emit(2)
         }
     }
     fun checkVerified() = viewModelScope.launch {
         try {
             val isVerified = isCurrentUserEmailVerifiedUseCase()
             if(isVerified) _isPossible.emit(0)
-            else _isPossible.emit(1)
+            else _isPossible.emit(3)
 
         }catch (e:Exception){
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
@@ -75,7 +73,7 @@ class LoginViewModel @Inject constructor(
         try {
             val isSuccess = signInWithGoogleUseCase(idToken)
             if(isSuccess)_isPossible.emit(0)
-            else _isPossible.emit(1)
+            else _isPossible.emit(2)
         } catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
