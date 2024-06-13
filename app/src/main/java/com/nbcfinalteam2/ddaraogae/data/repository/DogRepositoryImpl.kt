@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.data.repository
 
+import android.net.Uri
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.FirebaseDataSource
 import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toDto
 import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toEntity
@@ -20,12 +21,12 @@ class DogRepositoryImpl @Inject constructor(
         return firebaseDateSource.getDogById(dogId)?.toEntity(dogId)
     }
 
-    override suspend fun insertDog(dogEntity: DogEntity) {
-        firebaseDateSource.insertDog(dogEntity.toDto())
+    override suspend fun insertDog(dogEntity: DogEntity, imageUri: Uri?) {
+        firebaseDateSource.insertDog(dogEntity.toDto(), imageUri)
     }
 
-    override suspend fun updateDog(dogEntity: DogEntity) {
-        firebaseDateSource.updateDog(dogEntity.id.toString(), dogEntity.toDto())
+    override suspend fun updateDog(dogEntity: DogEntity, imageUri: Uri?) {
+        firebaseDateSource.updateDog(dogEntity.id.toString(), dogEntity.toDto(), imageUri)
     }
 
     override suspend fun deleteDog(dogId: String) {
