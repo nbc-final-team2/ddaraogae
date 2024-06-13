@@ -68,7 +68,7 @@ class AddActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.btBack.setOnClickListener { finish() }
+        binding.ivBack.setOnClickListener { finish() }
         addPetData()
     }
 
