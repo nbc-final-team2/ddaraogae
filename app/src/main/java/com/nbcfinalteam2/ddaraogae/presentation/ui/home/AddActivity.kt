@@ -79,7 +79,7 @@ class AddActivity : AppCompatActivity() {
                     Toast.makeText(this, "성별을 선택해 주세요!", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    editDogCompleted()
+                    //editDogCompleted()
                 }
             }
         }
@@ -104,7 +104,7 @@ class AddActivity : AppCompatActivity() {
                     memo = memo,
                     thumbnailUrl = thumbnailUrl
                 )
-                addViewModel.addDog(dogData)
+                //addViewModel.addDog(dogData)
                 finish()
             }
         }
@@ -117,4 +117,3 @@ class AddActivity : AppCompatActivity() {
         }
     }
 }
-
