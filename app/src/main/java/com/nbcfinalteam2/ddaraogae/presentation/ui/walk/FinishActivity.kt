@@ -2,13 +2,9 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -17,9 +13,6 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 class FinishActivity : FragmentActivity(), OnMapReadyCallback {
 
@@ -44,6 +37,8 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         } else {
             initMapView()
         }
+
+        buttonListener()
     }
 
     private fun initMapView() {
@@ -69,23 +64,48 @@ class FinishActivity : FragmentActivity(), OnMapReadyCallback {
         return true
     }
 
-    override fun onMapReady(map: NaverMap) {
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        // 현재 위치
+        naverMap.locationSource = locationSource
+        // 줌 버튼 삭제해버리기
+        naverMap.uiSettings.isZoomControlEnabled = false
+    }
+
+    private fun buttonListener() {
         binding.btnFinishDone.setOnClickListener {
-            map.takeSnapshot {
-                val mapImage = bitmapToUri(it)
-                Log.d("tttttttt", mapImage.toString())
-                //viewmodel에 이미지 저장 요청
+            if (::naverMap.isInitialized) {
+                naverMap.takeSnapshot {
+                    /**
+                     * 아래는 예시 코드입니다.
+                     * : 산책 끝 버튼을 클릭할 때 산책 entity에 값을 담아 insert를 요청합니다.
+                     *
+                     * 지도 이미지를 캡쳐하는 기능의 takeSnapshot은 버튼 클릭 시 처리되도록 하는 것이 좋습니다.
+                     * 별도의 트리거 없이 작동시키려고 하니 이미지가 정상적으로 저장되지 않는 문제가 있었습니다.
+                     */
+                    val mapImage = bitmapToByteArray(it)
+//                    val start = Date()
+//
+//                    val entity = WalkingEntity(
+//                        id = "",
+//                        dogId = "temp",
+//                        timeTaken = 100,
+//                        distance = 200.0,
+//                        startDateTime = start,
+//                        endDateTime = start,
+//                        walkingImage = ""
+//                    )
+//                    viewModel.insertWalkingData(entity, mapImage!!)
+                }
             }
         }
     }
 
-    private fun bitmapToUri(bitmap: Bitmap?) : Uri? {
+    private fun bitmapToByteArray(bitmap: Bitmap?): ByteArray? {
         return bitmap?.let {
-            val file = File(this.cacheDir, "map_image_${System.currentTimeMillis()}.jpg")
-            FileOutputStream(file).use { outputStream ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            }
-            file.toUri()
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            byteArrayOutputStream.toByteArray()
         }
     }
 }
