@@ -84,12 +84,19 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun walkGraphXAxisForEmptyData(xAxis: XAxis, year: Int, month: Int) {
         DateFormatter.generateDatesForMonth(year, month)
+        val dates = DateFormatter.getDatesForMonth()
+        val formatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        }
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(7, true) // x축 레이블 개수 7로 고정
-            axisMinimum = 1f // 해당 월의 첫날
-            axisMaximum = 7f // 해당 월의 7번째 날
-            valueFormatter = DateFormatter
+            axisMinimum = 0f // 해당 월의 첫날
+            axisMaximum = 6f // 해당 월의 7번째 날
+            valueFormatter = formatter
         }
     }
 
