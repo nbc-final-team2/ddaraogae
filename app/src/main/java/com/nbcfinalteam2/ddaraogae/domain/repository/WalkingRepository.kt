@@ -6,5 +6,5 @@ import java.util.Date
 interface WalkingRepository {
     suspend fun getWalkingListByDogIdAndPeriod(dogId: String, start: Date, end: Date): List<WalkingEntity>
     suspend fun getWalkingById(walkingId: String): WalkingEntity?
-    suspend fun insertWalkingData(walkingEntity: WalkingEntity, mapImage: ByteArray)
+    suspend fun insertWalkingData(walkingEntity: WalkingEntity, mapImage: ByteArray?)
 }
