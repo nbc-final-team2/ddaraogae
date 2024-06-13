@@ -60,12 +60,6 @@ object DateFormatter {
         return calendar.time
     }
 
-    fun getDaysInMonth(year: Int, month: Int): Int {
-        val calendar = Calendar.getInstance()
-        calendar.set(year, month - 1, 1)
-        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-    }
-
     fun testDate(dateStr: String): Date {
         return dateFormat.parse(dateStr)
     }
