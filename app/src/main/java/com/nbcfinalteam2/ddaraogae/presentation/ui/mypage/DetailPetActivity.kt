@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,7 +86,7 @@ class DetailPetActivity : AppCompatActivity() {
     private fun setView(getDogData:DogItemModel) = with(binding) {
         dogData = getDogData
         Glide.with(this@DetailPetActivity)
-            .load(dogData.thumbnailUrl)
+            .load(dogData.thumbnailUrl?.toUri())
             .into(ivDogThumbnail)
         tvPetName.text = dogData.name
         tvPetAge.text = dogData.age.toString()

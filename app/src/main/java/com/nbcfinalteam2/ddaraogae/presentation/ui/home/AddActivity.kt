@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,14 +15,13 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.BufferedReader
 import java.io.File
-import java.io.FileReader
 
 @AndroidEntryPoint
 class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
-    private var imageFile: File = File("")
+    //private var imageFile: File = File("")
+    private var imageUri:Uri? = null
     private val viewModel: AddPetViewModel by viewModels()
 
     private val galleryPermissionLauncher =
@@ -39,9 +37,9 @@ class AddActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val imageUri = result.data?.data
+            imageUri = result.data?.data
             imageUri?.let {
-                imageFile = File(getRealPathFromURI(it))
+                //imageFile = File(getRealPathFromURI(it))
                 Glide.with(this)
                     .load(it)
                     .fitCenter()
@@ -87,7 +85,8 @@ class AddActivity : AppCompatActivity() {
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
                 val age = if(etAge.text.toString().isEmpty()) null else etAge.text.toString().toInt()
-                val image = imageFile.toString().ifEmpty { null }
+                //val image = imageFile.toString().ifEmpty { null }
+                val image = imageUri.toString()
 
                 val newDog = DogItemModel("", name, gender, age, breed, memo, image)
                 addPet(newDog)
@@ -99,7 +98,7 @@ class AddActivity : AppCompatActivity() {
 
     //강아지 추가 함수
     private fun addPet(newDog: DogItemModel) {
-        viewModel.insertDog(newDog)
+        viewModel.insertDog(newDog, imageUri.toString())
     }
 
     //uri -> file로 변환

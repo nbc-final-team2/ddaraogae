@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class EditPetViewModel @Inject constructor(
     private val updateDogUseCase: UpdateDogUseCase
 ) : ViewModel() {
-    fun upDateDog(getDogData:DogItemModel) = viewModelScope.launch{
+    fun upDateDog(getDogData:DogItemModel, dogImage:String) = viewModelScope.launch{
             val dogData = getDogData.let {
                 DogEntity(
                     it.id,
@@ -28,7 +29,7 @@ class EditPetViewModel @Inject constructor(
                     it.thumbnailUrl
                 )
             }
-            updateDogUseCase(dogData)
+            updateDogUseCase(dogData, dogImage.toUri())
 
     }
 

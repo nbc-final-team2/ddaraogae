@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
@@ -22,7 +23,8 @@ import java.io.File
 class EditPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPetBinding
     private val viewModel: EditPetViewModel by viewModels()
-    private var imageFile: File = File("")
+//    private var imageFile: File = File("")
+    private var imageUri:Uri? = null
     private lateinit var dogData: DogItemModel
     private lateinit var dogId : String
 
@@ -39,9 +41,9 @@ class EditPetActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val imageUri = result.data?.data
+            imageUri = result.data?.data
             imageUri?.let {
-                imageFile = File(getRealPathFromURI(it))
+                //imageFile = File(getRealPathFromURI(it))
                 Glide.with(this)
                     .load(it)
                     .fitCenter()
@@ -75,7 +77,8 @@ class EditPetActivity : AppCompatActivity() {
         etAge.setText(dogData.age.toString())
         etBreed.setText(dogData.lineage)
         etMemo.setText(dogData.memo)
-        imageFile = File(dogData.thumbnailUrl)
+        //imageFile = File(dogData.thumbnailUrl)
+        imageUri = dogData.thumbnailUrl?.toUri()
         dogId = dogData.id ?: ""
     }
 
@@ -103,9 +106,10 @@ class EditPetActivity : AppCompatActivity() {
                 val age = etAge.text.toString().toInt()
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
-                val image = imageFile.toString().ifEmpty { null }
+                //val image = imageFile.toString().ifEmpty { null }
+                val image = imageUri.toString()
                 val changeDog = DogItemModel(dogId, name,gender, age, breed, memo, image)
-                changePet(changeDog)
+                changePet(changeDog, image)
                 finish()
             }
         }
@@ -129,7 +133,7 @@ class EditPetActivity : AppCompatActivity() {
     }
 
     //강아지 정보 수정 함수
-    private fun changePet(changeDogData: DogItemModel) {
-        viewModel.upDateDog(changeDogData)
+    private fun changePet(changeDogData: DogItemModel, dogImage:String) {
+        viewModel.upDateDog(changeDogData, dogImage)
     }
 }
