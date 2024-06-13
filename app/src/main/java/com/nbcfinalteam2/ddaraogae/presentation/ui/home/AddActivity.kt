@@ -14,14 +14,16 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 @AndroidEntryPoint
 class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
     //private var imageFile: File = File("")
-    private var imageUri:Uri? = null
+    private var imageUri: Uri? = null
     private val viewModel: AddPetViewModel by viewModels()
 
     private val galleryPermissionLauncher =
@@ -44,12 +46,9 @@ class AddActivity : AppCompatActivity() {
                     .load(it)
                     .fitCenter()
                     .into(binding.ivDogThumbnail)
-
             }
         }
-
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +69,7 @@ class AddActivity : AppCompatActivity() {
         }
         //성별 선택
         rgGenderGroup.setOnCheckedChangeListener { radioGroup, id ->
-            if (id == rbFemale.id) gender = 1
-            else gender = 0
+            gender = if (id == rbFemale.id) 1 else 0
         }
         //완료 버튼 클릭 시 데이터 추가
         btnEditCompleted.setOnClickListener {
@@ -89,7 +87,9 @@ class AddActivity : AppCompatActivity() {
                 val image = imageUri.toString()
 
                 val newDog = DogItemModel("", name, gender, age, breed, memo, image)
-                addPet(newDog)
+                val byteImage = uriToByteArray(imageUri, this@AddActivity)
+
+                addPet(newDog, byteImage)
                 finish()
 
             }
@@ -97,8 +97,8 @@ class AddActivity : AppCompatActivity() {
     }
 
     //강아지 추가 함수
-    private fun addPet(newDog: DogItemModel) {
-        viewModel.insertDog(newDog, imageUri.toString())
+    private fun addPet(newDog: DogItemModel, byteImage: ByteArray?) {
+        viewModel.insertDog(newDog, byteImage)
     }
 
     //uri -> file로 변환

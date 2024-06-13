@@ -16,7 +16,7 @@ import javax.inject.Inject
 class AddPetViewModel @Inject constructor(
     private val insertDogUseCase: InsertDogUseCase
 ) : ViewModel(){
-    fun insertDog(getDogData:DogItemModel, dogUri:String) = viewModelScope.launch{
+    fun insertDog(getDogData:DogItemModel, byteImage: ByteArray?) = viewModelScope.launch{
         val dogData = getDogData.let {
             DogEntity(
                 it.id,
@@ -28,6 +28,6 @@ class AddPetViewModel @Inject constructor(
                 it.thumbnailUrl
             )
         }
-        insertDogUseCase(dogData, dogUri.toUri())
+        insertDogUseCase(dogData, byteImage)
     }
 }

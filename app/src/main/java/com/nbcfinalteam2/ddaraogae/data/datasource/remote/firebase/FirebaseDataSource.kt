@@ -11,8 +11,8 @@ interface FirebaseDataSource {
     //dog
     suspend fun getDogList(): List<Pair<String, DogDto>>
     suspend fun getDogById(dogId: String): DogDto?
-    suspend fun insertDog(dogDto: DogDto, imageUri: Uri?)
-    suspend fun updateDog(dogId: String, dogDto: DogDto, imageUri: Uri?)
+    suspend fun insertDog(dogDto: DogDto, byteImage: ByteArray?)
+    suspend fun updateDog(dogId: String, dogDto: DogDto, byteImage: ByteArray?)
     suspend fun deleteDog(dogId: String)
 
     //stamp

@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,8 +15,9 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor
+import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
 
 @AndroidEntryPoint
 class EditPetActivity : AppCompatActivity() {
@@ -108,11 +108,19 @@ class EditPetActivity : AppCompatActivity() {
                 val memo = etMemo.text.toString()
                 //val image = imageFile.toString().ifEmpty { null }
                 val image = imageUri.toString()
+
                 val changeDog = DogItemModel(dogId, name,gender, age, breed, memo, image)
-                changePet(changeDog, image)
+                val byteImage = uriToByteArray(imageUri, this@EditPetActivity)
+
+                changePet(changeDog, byteImage)
                 finish()
             }
         }
+    }
+
+    //강아지 정보 수정 함수
+    private fun changePet(changeDogData: DogItemModel, byteImage: ByteArray?) {
+        viewModel.updateDog(changeDogData, byteImage)
     }
 
     //uri -> file 형태로 변환
@@ -130,10 +138,5 @@ class EditPetActivity : AppCompatActivity() {
         val result = cursor.getString(columnIndex)
         cursor.close()
         return result
-    }
-
-    //강아지 정보 수정 함수
-    private fun changePet(changeDogData: DogItemModel, dogImage:String) {
-        viewModel.upDateDog(changeDogData, dogImage)
     }
 }

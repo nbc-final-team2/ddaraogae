@@ -21,12 +21,12 @@ class DogRepositoryImpl @Inject constructor(
         return firebaseDateSource.getDogById(dogId)?.toEntity(dogId)
     }
 
-    override suspend fun insertDog(dogEntity: DogEntity, imageUri: Uri?) {
-        firebaseDateSource.insertDog(dogEntity.toDto(), imageUri)
+    override suspend fun insertDog(dogEntity: DogEntity, byteImage: ByteArray?) {
+        firebaseDateSource.insertDog(dogEntity.toDto(), byteImage)
     }
 
-    override suspend fun updateDog(dogEntity: DogEntity, imageUri: Uri?) {
-        firebaseDateSource.updateDog(dogEntity.id.toString(), dogEntity.toDto(), imageUri)
+    override suspend fun updateDog(dogEntity: DogEntity, byteImage: ByteArray?) {
+        firebaseDateSource.updateDog(dogEntity.id.toString(), dogEntity.toDto(), byteImage)
     }
 
     override suspend fun deleteDog(dogId: String) {

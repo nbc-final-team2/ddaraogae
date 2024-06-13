@@ -1,12 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateDogUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +14,7 @@ import javax.inject.Inject
 class EditPetViewModel @Inject constructor(
     private val updateDogUseCase: UpdateDogUseCase
 ) : ViewModel() {
-    fun upDateDog(getDogData:DogItemModel, dogImage:String) = viewModelScope.launch{
+    fun updateDog(getDogData:DogItemModel, byteImage: ByteArray?) = viewModelScope.launch{
             val dogData = getDogData.let {
                 DogEntity(
                     it.id,
@@ -29,7 +26,7 @@ class EditPetViewModel @Inject constructor(
                     it.thumbnailUrl
                 )
             }
-            updateDogUseCase(dogData, dogImage.toUri())
+            updateDogUseCase(dogData, byteImage)
 
     }
 
