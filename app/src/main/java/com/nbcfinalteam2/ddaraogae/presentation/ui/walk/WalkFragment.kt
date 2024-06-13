@@ -207,15 +207,6 @@ class WalkFragment : Fragment() {
         startActivity(intent)
     }
 
-    // LocationService의 LatLng를 Location으로 변환하는 확장 함수
-    //TODO: 의미가 있는 코드인지 확인해보기
-    private fun LocationService.LatLng.toLocation(): Location {
-        return Location("").apply {
-            latitude = this@toLocation.latitude
-            longitude = this@toLocation.longitude
-        }
-    }
-
     private fun observeStoreData() {
         viewModel.storeData.observe(viewLifecycleOwner) { storeDataList ->
             Log.d("walk frag", storeDataList.toString())
@@ -261,7 +252,6 @@ class WalkFragment : Fragment() {
                     }
                     true
                 }
-                infoWindow.open(marker)
             }
         }
     }
