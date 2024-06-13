@@ -24,7 +24,7 @@ class DetailPetAdapter(
         }
     }
 ) {
-    private var selectPos = -1
+    private var selectPos = 0
 
     inner class ItemViewHolder(
         private val binding:ItemEditPetDogSelectionBinding,
@@ -36,7 +36,7 @@ class DetailPetAdapter(
                 .load(dogData.thumbnailUrl)
                 .into(ivDogImage)
             dogName.text = dogData.name
-            if(selectPos == position) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)
+            if (selectPos == position) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)
             else binding.ivDogImage.borderColor = context.resources.getColor(R.color.white)
 
             ivDogImage.setOnClickListener {
@@ -50,6 +50,7 @@ class DetailPetAdapter(
             }
         }
     }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
