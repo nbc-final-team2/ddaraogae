@@ -6,24 +6,13 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_dogImage"
+        android:id="@+id/iv_dogAdd"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:padding="@dimen/margin_extra_smaller"
+        android:padding="@dimen/padding_small"
         app:civ_border_color="@color/very_soft_orange"
-        app:civ_border_width="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_launcher_background" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_dogName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/item_home_dog_selection_name"
-        android:textSize="@dimen/text_caption"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_dogImage" />
+        tools:src="@drawable/ic_dog_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>
