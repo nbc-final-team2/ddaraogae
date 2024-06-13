@@ -16,21 +16,28 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
+
 
 @AndroidEntryPoint
 class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
+
     //private var imageFile: File = File("")
     private var imageUri: Uri? = null
+    private var byteImage: ByteArray? = null
     private val viewModel: AddPetViewModel by viewModels()
 
     private val galleryPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                    .apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "image/*"
+                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    }
                 imageResult.launch(intent)
             }
         }
@@ -40,12 +47,19 @@ class AddActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             imageUri = result.data?.data
-            imageUri?.let {
-                //imageFile = File(getRealPathFromURI(it))
+            imageUri?.let { uri ->
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+
+//                imageFile = File(getRealPathFromURI(it))
                 Glide.with(this)
-                    .load(it)
+                    .load(uri)
                     .fitCenter()
                     .into(binding.ivDogThumbnail)
+
+                byteImage = uriToByteArray(uri, this)
             }
         }
     }
@@ -68,7 +82,7 @@ class AddActivity : AppCompatActivity() {
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
         //성별 선택
-        rgGenderGroup.setOnCheckedChangeListener { radioGroup, id ->
+        rgGenderGroup.setOnCheckedChangeListener { _, id ->
             gender = if (id == rbFemale.id) 1 else 0
         }
         //완료 버튼 클릭 시 데이터 추가
@@ -82,16 +96,15 @@ class AddActivity : AppCompatActivity() {
                 val name = etName.text.toString()
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
-                val age = if(etAge.text.toString().isEmpty()) null else etAge.text.toString().toInt()
+                val age =
+                    if (etAge.text.toString().isEmpty()) null else etAge.text.toString().toInt()
                 //val image = imageFile.toString().ifEmpty { null }
-                val image = imageUri.toString()
+                val image = ""
 
                 val newDog = DogItemModel("", name, gender, age, breed, memo, image)
-                val byteImage = uriToByteArray(imageUri, this@AddActivity)
 
                 addPet(newDog, byteImage)
                 finish()
-
             }
         }
     }

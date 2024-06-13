@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
@@ -27,7 +26,5 @@ class EditPetViewModel @Inject constructor(
                 )
             }
             updateDogUseCase(dogData, byteImage)
-
     }
-
 }

@@ -7,7 +7,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.Date
 import javax.inject.Inject
 
@@ -49,17 +52,22 @@ class FirebaseDataSourceImpl @Inject constructor(
     }
 
     override suspend fun updateDog(dogId: String, dogDto: DogDto, byteImage: ByteArray?) {
-        val uid = getUserUid()
-        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
-            .collection(PATH_DOGS).document(dogId)
+        withContext(Dispatchers.IO + NonCancellable) {
+            val uid = getUserUid()
+            val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+                .collection(PATH_DOGS).document(dogId)
 
-        val updateDogDto = byteImage?.let {
-            val convertedUrl = convertImageUrl(it, dogId)
-            dogDto.copy(thumbnailUrl = convertedUrl.toString())
-        } ?: dogDto
+            val updateDogDto = byteImage?.let {
+                val convertedUrl = withContext(Dispatchers.IO + NonCancellable) {
+                    convertImageUrl(it, dogId)
+                }
+                dogDto.copy(thumbnailUrl = convertedUrl.toString())
+            } ?: dogDto
 
-        db.set(updateDogDto).await()
+            db.set(updateDogDto).await()
+        }
     }
+
 
     override suspend fun deleteDog(dogId: String) {
         val storageRef = fbStorage.reference

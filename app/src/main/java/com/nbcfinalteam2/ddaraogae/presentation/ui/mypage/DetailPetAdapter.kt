@@ -1,9 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,8 +10,6 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemEditPetDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
-import de.hdodenhof.circleimageview.CircleImageView
-import okhttp3.internal.notifyAll
 
 class DetailPetAdapter(
     private val onItemClick:(DogItemModel) -> Unit
@@ -29,7 +25,6 @@ class DetailPetAdapter(
     }
 ) {
     private var selectPos = -1
-
 
     inner class ItemViewHolder(
         private val binding:ItemEditPetDogSelectionBinding,

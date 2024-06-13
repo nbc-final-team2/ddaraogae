@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
-import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor
 import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,21 +47,18 @@ class EditPetActivity : AppCompatActivity() {
                     .load(it)
                     .fitCenter()
                     .into(binding.ivDogThumbnail)
-
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditPetBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         binding.btBack.setOnClickListener { finish() }
-        changeDogData()
         initView()
+        changeDogData()
     }
 
     private fun initView() = with(binding) {
