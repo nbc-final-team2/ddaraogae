@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.red
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.naver.maps.geometry.LatLng
@@ -142,7 +143,11 @@ class WalkFragment : Fragment() {
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
             // 위치를 추적하면서 카메라도 따라 움직인다.
-            naverMap.locationTrackingMode = LocationTrackingMode.Follow
+            naverMap.locationTrackingMode = LocationTrackingMode.Face
+            //
+            naverMap.locationOverlay.iconWidth = 60
+            naverMap.locationOverlay.iconHeight = 60
+            naverMap.locationOverlay
             // 카메라 설정
             naverMap.addOnLocationChangeListener {
                 setCamera(it)
@@ -229,6 +234,8 @@ class WalkFragment : Fragment() {
             store?.let { storeEntity ->
                 val latLng = LatLng(storeEntity.lat!!.toDouble(), storeEntity.lng!!.toDouble())
                 val marker = Marker()
+                marker.width = Marker.SIZE_AUTO
+                marker.height = 60 /** 적절한 크기 찾아야하는데..*/
                 marker.position = latLng
                 marker.map = naverMap
                 markerList.add(marker)
