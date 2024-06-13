@@ -53,5 +53,6 @@
             android:name=".presentation.service.LocationService"
             android:foregroundServiceType="location"
             android:exported="false" />
+
     </application>
 </manifest>

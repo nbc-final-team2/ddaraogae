@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_lager"
-                android:text="@string/walk_finish_walking_time"
+                android:text="@string/walk_finish_walking_distance"
                 android:textColor="@color/brown"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintStart_toEndOf="@+id/fl_finish_line2"
