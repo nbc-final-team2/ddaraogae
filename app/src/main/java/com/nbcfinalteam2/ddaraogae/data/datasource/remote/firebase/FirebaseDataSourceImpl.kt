@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
-import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,7 +8,6 @@ import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import kotlinx.coroutines.tasks.await
-import java.io.File
 import java.util.Date
 import javax.inject.Inject
 
@@ -56,7 +54,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .collection(PATH_DOGS).document(dogId)
 
         val updateDogDto = imageUri?.let { uri ->
-            val convertedUrl = convertImageUrl(uri, dogId, PATH_DOGS)
+            val convertedUrl = convertUriUrl(uri, dogId, PATH_DOGS)
             dogDto.copy(thumbnailUrl = convertedUrl.toString())
         } ?: dogDto
 
@@ -125,7 +123,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(WalkingDto::class.java)
     }
 
-    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: Uri?, context: Context) {
+    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: ByteArray?) {
         val uid = getUserUid()
 
         val db = firebaseFs.collection(PATH_USERDATA).document(uid)
@@ -134,29 +132,27 @@ class FirebaseDataSourceImpl @Inject constructor(
         val walkingId = newWalkingDoc.id
 
         newWalkingDoc.set(walkingDto).await()
-        updateWalkingData(walkingId, walkingDto, mapImage, context)
+        updateWalkingData(walkingId, walkingDto, mapImage)
     }
 
-    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: Uri?, context: Context) {
+    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: ByteArray?) {
         val uid = getUserUid()
         val db = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING).document(walkingId)
 
-        val updateWalkingDto = mapImage?.let { bitmap ->
-            val convertedUrl = convertImageUrl(bitmap, walkingId, PATH_WALKING)
+        val updateWalkingDto = mapImage?.let {
+            val convertedUrl = convertByteArrayUrl(it, walkingId, PATH_WALKING)
             walkingDto.copy(walkingImage = convertedUrl.toString())
         } ?: walkingDto
 
-        db.set(updateWalkingDto).addOnSuccessListener {
-            deleteCachedImage(context, mapImage)
-        }
+        db.set(updateWalkingDto).await()
     }
 
     private fun getUserUid(): String {
         return fbAuth.currentUser?.uid?:throw Exception("UNKNOWN USER")
     }
 
-    private suspend fun convertImageUrl(imageUri: Uri, itemId: String, path: String): Uri {
+    private suspend fun convertUriUrl(imageUri: Uri, itemId: String, path: String): Uri? {
         val storageRef = fbStorage.reference
         val uid = getUserUid()
         val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$path/$itemId.$STORAGE_FILE_EXTENSION")
@@ -166,9 +162,14 @@ class FirebaseDataSourceImpl @Inject constructor(
         return uploadRef.downloadUrl.await()
     }
 
-    private fun deleteCachedImage(context: Context, mapImage: Uri?) {
-        val file = File(context.cacheDir, mapImage.toString())
-        if (file.exists()) file.delete()
+    private suspend fun convertByteArrayUrl(imageByteArray: ByteArray, itemId: String, path: String): Uri? {
+        val storageRef = fbStorage.reference
+        val uid = getUserUid()
+        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$path/$itemId.$STORAGE_FILE_EXTENSION")
+
+        uploadRef.putBytes(imageByteArray).await()
+
+        return uploadRef.downloadUrl.await()
     }
 
     companion object {
