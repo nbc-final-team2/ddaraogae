@@ -1,11 +1,13 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,9 +26,11 @@ import kotlin.properties.Delegates
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private var accountCheck = false
     private val viewModel: LoginViewModel by viewModels()
+
+    private var isPossible = -1
+
+    private lateinit var googleSignInClient: GoogleSignInClient
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
@@ -47,9 +51,11 @@ class LoginActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        initGoogle()
+        checkIsPossible()
         clickLoginButton()
-        getStateLogin()
+
+        if(isPossible == 1) Toast.makeText(this, R.string.login_fail, Toast.LENGTH_SHORT).show()
+        else if(isPossible == 99) Toast.makeText(this, R.string.login_unknown_error, Toast.LENGTH_SHORT).show()
     }
 
     override fun onStart() {
@@ -57,74 +63,75 @@ class LoginActivity : AppCompatActivity() {
         viewModel.getCurrentUser()
     }
 
-
-    private fun initGoogle() {
-        //Google 로그인을 앱에 통합
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    private fun checkIsPossible(){
+        lifecycleScope.launch {
+            viewModel.userState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    isPossible = state
+                }
+        }
+    }
+    private fun sendEmail(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.login_dialog_title)
+            .setMessage(R.string.login_dialog_message)
+            .setPositiveButton(R.string.login_dialog_ok, DialogInterface.OnClickListener { _, _ ->
+                viewModel.sendEmail()
+            })
+            .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _ , _ ->
+                viewModel.deleteAccount()
+                Toast.makeText(this, R.string.login_account_delete, Toast.LENGTH_SHORT).show()
+            })
     }
 
-    private fun clickLoginButton() = with(binding){
+    private fun clickLoginButton() = with(binding) {
         //click LoginButton
         btLogin.setOnClickListener {
             val email = etLoginEmail.text.toString().trim()
             val password = etLoginPassword.text.toString().trim()
-
-            viewModel.signInEmail(email, password)
-            if (!accountCheck) Toast.makeText(this@LoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
+            viewModel.signInEmail(email,password)
+            if(isPossible == 0) {
+                viewModel.checkVerified()
+                if(isPossible == 0) successLogIn()
+                else sendEmail()
+            } else if(isPossible == 2) Toast.makeText(this@LoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
+            else Toast.makeText(this@LoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
         }
 
-        //click google Login Button
-        ibtLoginGoogle.setOnClickListener {
-            val signInIntent = googleSignInClient.signInIntent
-            activityResultLauncher.launch(signInIntent)
-        }
 
-        //click SignUp Button
-        tvLoginSignup.setOnClickListener {
-            etLoginEmail.setText(null)
-            etLoginPassword.setText(null)
-            startActivity(Intent(this@LoginActivity, SignUpActivity::class.java))
-            finish()
+            //click google Login Button
+            ibtLoginGoogle.setOnClickListener {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+                googleSignInClient = GoogleSignIn.getClient(this@LoginActivity, gso)
+
+                val signInIntent = googleSignInClient.signInIntent
+                activityResultLauncher.launch(signInIntent)
+            }
+
+            //click SignUp Button
+            tvLoginSignup.setOnClickListener {
+                etLoginEmail.setText(null)
+                etLoginPassword.setText(null)
+                startActivity(Intent(this@LoginActivity, SignUpActivity::class.java))
+                finish()
+
         }
     }
-
-    //로그인 한 이력이 있으면 바로 홈 페이지 이동
-    private fun getStateLogin(){
-        lifecycleScope.launch {
-            viewModel.uiState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    currentUserUI(state.isCurrentUser)
-                    checkVerifiedUpdateUI(state.successLogin, state.verificationState)
-                    accountCheck = state.correctEmailAccount
-                }
-        }
-    }
-
 
     //firebase에 값 넘겨주기, 로그인
     private fun firebaseAuthWithGoogle(idToken: String) {
         viewModel.signInGoogle(idToken)
+        if(isPossible == 0) successLogIn()
     }
 
     //로그인 상태가 true면 홈으로 이동
-    private fun checkVerifiedUpdateUI(user: Boolean, emailVerified : Boolean) {
-        if (user && emailVerified) {
-            Toast.makeText(this@LoginActivity, R.string.login_success, Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        } else if(user && !emailVerified) {
-            viewModel.deleteAccount()
-        }
-    }
-    private fun currentUserUI(user:Boolean){
-        if(user) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
+    private fun successLogIn(){
+        Toast.makeText(this@LoginActivity, R.string.login_success, Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
 

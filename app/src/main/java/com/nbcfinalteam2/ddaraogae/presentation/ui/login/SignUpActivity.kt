@@ -1,17 +1,13 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
@@ -74,8 +70,7 @@ class SignUpActivity:AppCompatActivity() {
                     Toast.makeText(this@SignUpActivity, R.string.signup_success, Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
                     finish()
-                } else if (signUpState == 1) Toast.makeText(
-                    this@SignUpActivity, R.string.signup_email_check, Toast.LENGTH_SHORT).show()
+                } else if (signUpState == 2) Toast.makeText(this@SignUpActivity, R.string.signup_email_check, Toast.LENGTH_SHORT).show()
                 else Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
             }
 

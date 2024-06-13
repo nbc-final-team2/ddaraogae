@@ -1,22 +1,20 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.util.Log
-import android.widget.Toast
+import android.util.LogPrinter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,58 +24,71 @@ class LoginViewModel @Inject constructor(
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val signInWithEmailUseCase: SignInWithEmailUseCase,
     private val isCurrentUserEmailVerifiedUseCase: IsCurrentUserEmailVerifiedUseCase,
-    private val deleteAccountUseCase: DeleteAccountUseCase
+    private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(LoginUiState.init())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    //0 : 로그인 성공 1: 로그인 실패 2: 없는 계정  99: 그 외
+    private val _isPossible = MutableSharedFlow<Int>()
+    val userState = _isPossible.asSharedFlow()
 
-    init {
-        getCurrentUser()
-    }
     fun getCurrentUser() = viewModelScope.launch {
         val getCurrentUser = getCurrentUserUseCase()
-        var currentUser = getCurrentUser != null
-        Log.d("currentUser", "${currentUser}, ${getCurrentUser}")
-
-        _uiState.update { prev ->
-            prev.copy(
-                isCurrentUser = currentUser
-            )
-        }
+        if(getCurrentUser!=null) _isPossible.emit(0)
     }
+
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
-        var successSignInEmail: Boolean
-        var successSignInEmailTemp : Boolean
-        var checkEmailVerified : Boolean
         try{
-            successSignInEmailTemp = signInWithEmailUseCase(EmailAuthEntity(email, password))
-            checkEmailVerified = isCurrentUserEmailVerifiedUseCase()
-            successSignInEmail = successSignInEmailTemp
+            val isSuccess = signInWithEmailUseCase(EmailAuthEntity(email, password))
+            if(isSuccess)_isPossible.emit(0)
+            else _isPossible.emit(1)
+
         }
         catch (e : Exception){ //IllegalArgumentException,FirebaseAuthInvalidCredentialsException
-            successSignInEmail = false
-            checkEmailVerified = false
+            _isPossible.emit(99)
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
-            _uiState.update { prev ->
-                prev.copy(
-                    // 유효하지 않은 계정일 시 관련 메세지를 띄워주기 위함.
-                    correctEmailAccount = successSignInEmail,
-                    successLogin = successSignInEmail,
-                    verificationState = checkEmailVerified
-                )
-            }
+        catch (e : FirebaseAuthInvalidCredentialsException){
+            _isPossible.emit(2)
+        }
+    }
+    fun checkVerified() = viewModelScope.launch {
+        try {
+            val isVerified = isCurrentUserEmailVerifiedUseCase()
+            if(isVerified) _isPossible.emit(0)
+            else _isPossible.emit(1)
 
+        }catch (e:Exception){
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
+        }
+    }
+
+    fun sendEmail() = viewModelScope.launch {
+        try {
+            sendVerificationEmailUseCase()
+        }catch (e:Exception){
+            _isPossible.emit(99)
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
+        }
     }
 
     fun signInGoogle(idToken: String) = viewModelScope.launch {
-        val successSignInGoogle = signInWithGoogleUseCase(idToken)
-        _uiState.update { prev ->
-            prev.copy(
-                successLogin = successSignInGoogle
-            )
+        try {
+            val isSuccess = signInWithGoogleUseCase(idToken)
+            if(isSuccess)_isPossible.emit(0)
+            else _isPossible.emit(1)
+        } catch (e : Exception){
+            _isPossible.emit(99)
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
     }
-    fun deleteAccount() = viewModelScope.launch {
-        deleteAccountUseCase()
+
+    fun deleteAccount() = viewModelScope.launch{
+        try {
+            deleteAccountUseCase()
+        }catch (e : Exception){
+            _isPossible.emit(99)
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
+        }
+
     }
 }
