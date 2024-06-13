@@ -277,8 +277,11 @@ class WalkFragment : Fragment() {
                 marker.map = naverMap
                 markerList.add(marker)
 
-                val contentString =
-                    storeEntity.placeName // Assuming `storeEntity` has a `name` property
+                val contentString = """
+                ${storeEntity.placeName} | ${storeEntity.categoryGroupName}
+                    ${storeEntity.address}
+                    ${storeEntity.phone} 
+                """.trimIndent()
 
                 val infoWindow = InfoWindow().apply {
                     adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
