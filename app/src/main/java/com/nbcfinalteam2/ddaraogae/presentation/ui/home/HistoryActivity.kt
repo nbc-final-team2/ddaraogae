@@ -63,63 +63,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupWalkGraphForEmptyData(year: Int, month: Int) {
         val lineChart = binding.lcArea
-        walkGraphSettingsForEmptyData(lineChart)
-        walkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
-        walkGraphYAxisForEmptyData(lineChart.axisLeft)
-    }
-
-    private fun walkGraphSettingsForEmptyData(lineChart: LineChart) {
-        lineChart.data = LineData()
-
-        lineChart.apply {
-            axisRight.isEnabled = false
-            legend.isEnabled = false
-            description.isEnabled = false
-            setDrawGridBackground(true)
-            setGridBackgroundColor(resources.getColor(R.color.grey, null))
-            setTouchEnabled(false)
-            setPinchZoom(false)
-            setScaleEnabled(false)
-            isDragXEnabled = false
-            isDragYEnabled = false
-        }
-        lineChart.invalidate()
-    }
-
-    private fun walkGraphXAxisForEmptyData(xAxis: XAxis, year: Int, month: Int) {
-        val dates = DateFormatter.generateDatesForMonth(year, month)
-        xAxis.apply {
-            position = XAxis.XAxisPosition.BOTTOM
-            setLabelCount(7, true) // x축 레이블 개수 7로 고정
-            axisMinimum = 0f
-            axisMaximum = (dates.size - 1).toFloat()
-            valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    val index = value.toInt()
-                    return if (index >= 0 && index < dates.size) dates[index] else ""
-                }
-            }
-        }
-    }
-
-    private fun walkGraphYAxisForEmptyData(yAxis: YAxis) {
-        yAxis.apply {
-            setLabelCount(5, true)
-            axisMinimum = 1f
-            axisMaximum = 5f
-            valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return when (value) {
-                        1f -> "1km"
-                        2f -> "3km"
-                        3f -> "6km"
-                        4f -> "9km"
-                        5f -> "12km"
-                        else -> ""
-                    }
-                }
-            }
-        }
+        GraphUtils.HistorySetupWalkGraphSettingsForEmptyData(lineChart, this)
+        GraphUtils.HistorySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
+        GraphUtils.HistorySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     private fun setupListener() {

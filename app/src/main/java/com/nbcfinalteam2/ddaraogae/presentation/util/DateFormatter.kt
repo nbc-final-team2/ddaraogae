@@ -60,7 +60,7 @@ object DateFormatter {
         return calendar.time
     }
 
-    fun testDate(dateStr: String): Date {
+    fun testDate(dateStr: String): Date? {
         return dateFormat.parse(dateStr)
     }
 

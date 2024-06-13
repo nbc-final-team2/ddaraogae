@@ -264,16 +264,15 @@ class HomeFragment : Fragment() {
 
     private fun setupWalkGraphForEmptyData() {
         val lineChart = binding.lcArea
-        GraphUtils.setupWalkGraphSettingsForEmptyData(lineChart, requireContext())
-        val formatter = object : ValueFormatter() {
+        GraphUtils.HomeSetupWalkGraphSettingsForEmptyData(lineChart, requireContext())
+        GraphUtils.HomeSetupWalkGraphXAxisForEmptyData(lineChart.xAxis, object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val dates = DateFormatter.generateLast7Days()
                 val index = value.toInt()
                 return if (index >= 0 && index < dates.size) dates[index] else ""
             }
-        }
-        GraphUtils.setupWalkGraphXAxisForEmptyData(lineChart.xAxis, formatter)
-        GraphUtils.setupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
+        })
+        GraphUtils.HomeSetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     override fun onDestroyView() {
