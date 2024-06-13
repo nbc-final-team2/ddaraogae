@@ -50,6 +50,13 @@ class LoginActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+
+        checkIsPossible()
+        clickLoginButton()
+        viewModel.getCurrentUser()
+    }
+
+    private fun checkIsPossible() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
@@ -62,14 +69,6 @@ class LoginActivity : AppCompatActivity() {
                         this@LoginActivity, R.string.login_unknown_error, Toast.LENGTH_SHORT).show()
                 }
         }
-
-        checkIsPossible()
-        clickLoginButton()
-        viewModel.getCurrentUser()
-    }
-
-    private fun checkIsPossible() {
-        viewModel.getCurrentUser()
     }
 
     private fun sendEmail() {
