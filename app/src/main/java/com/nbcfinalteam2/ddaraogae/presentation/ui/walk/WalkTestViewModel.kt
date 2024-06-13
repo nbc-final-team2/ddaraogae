@@ -34,7 +34,7 @@ class WalkTestViewModel @Inject constructor(
             /** 2. 팀원분이 만들어주신 DistanceCalculator로 지도에서 쓰이는 lat, lng
              * api 호출시에 판단할 latitude, lngtitude를 가지고 거리를 판단합니다. */
             val distanceDiff = DistanceCalculator.getDistance(lat, lng, latitude, lngtitude)
-            if (distanceDiff > 1000) { /** 1은 1m를 의미합니다.*/
+            if (distanceDiff > 1) { /** 1은 1m를 의미합니다.*/
                 /** latitude = lat lngtitude = lng,
                  * api 요청이 실패하면 위의 위치 정보와 같은 업데이트(값을 할당)를 하면 안됩니다.
                  * 이 뷰모델 로직은 조금 더 이해가 필요함.*/
