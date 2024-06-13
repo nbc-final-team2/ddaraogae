@@ -9,6 +9,7 @@ import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.toUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
@@ -39,6 +40,30 @@ class WalkViewModel @Inject constructor(
     //저장된 최근 위치
     private var latitude: Double = 0.0
     private var lngtitude: Double = 0.0
+
+    fun fetchDogList() {
+        viewModelScope.launch {
+            runCatching {
+                val dogList = getDogListUseCase().map {
+                    DogInfo(
+                        id = it.id!!,
+                        name = it.name!!,
+                        gender = it.gender!!,
+                        age = it.age,
+                        lineage = it.lineage,
+                        memo = it.memo,
+                        thumbnailUrl = it.thumbnailUrl,
+                        false
+                    )
+                }
+                println(dogList)
+                _dogSelectionState.update {
+                    DogSelectionState(dogList)
+                }
+            }.onFailure {  }
+
+        }
+    }
 
     fun setWalking() {
         _walkUiState.update {

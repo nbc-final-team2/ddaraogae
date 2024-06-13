@@ -30,6 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class LocationService : Service() {
 
@@ -71,6 +72,8 @@ class LocationService : Service() {
     private val binder = LocalBinder()
 
     val locationList = mutableListOf<LatLng>()
+    var savedDogIdList: List<String>? = null
+    var savedStartDate: Date? = null
     private var timerJob: Job? = null
 
     override fun onCreate() {
@@ -102,6 +105,11 @@ class LocationService : Service() {
 
     override fun onBind(p0: Intent?): IBinder {
         return binder
+    }
+
+    fun saveData(dogIdList: List<String>, startDateTime: Date) {
+        savedDogIdList = dogIdList
+        savedStartDate = startDateTime
     }
 
     fun stopService() {

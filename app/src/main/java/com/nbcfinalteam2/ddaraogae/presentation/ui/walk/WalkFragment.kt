@@ -31,6 +31,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +40,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Date
 
 @AndroidEntryPoint
 class WalkFragment : Fragment() {
@@ -72,17 +74,28 @@ class WalkFragment : Fragment() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as LocationService.LocalBinder
             locationService = binder.getService()
+            serviceInfoStateFlow = LocationService.serviceInfoState.asStateFlow()
+            startCollectingServiceFlow()
             bound = true
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            stopCollectingServiceFlow()
             serviceInfoStateFlow = null
             bound = false
             locationService = null
         }
     }
-    //TODO: 버튼애 리스너를 달아놓고 bind됫는지 확인하고 값을 가져온다, 서비스
-    //값 가져오고, map이나 다른 함수로 변환해도된다.
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if(LocationService.isRunning) {
+            walkViewModel.setWalking()
+        }
+
+        walkViewModel.fetchDogList()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -176,35 +189,49 @@ class WalkFragment : Fragment() {
     private fun initView() {
         binding.btnWalkStart.setOnClickListener {
             walkViewModel.walkToggle()
+            startLocationService()
+//            serviceInfoStateFlow = LocationService.serviceInfoState.asStateFlow()
+            bindToService()
+            locationService?.saveData(
+                walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it.id },
+                Date(System.currentTimeMillis())
+            )
         }
         binding.ibWalkStop.setOnClickListener {
             //todo 정보 미리 저장
+            val walkingUiModel = WalkingUiModel(
+                id = null,
+                dogId = null,
+                timeTaken = serviceInfoStateFlow?.value?.time,
+                distance = serviceInfoStateFlow?.value?.distance,
+                startDateTime = locationService?.savedStartDate,
+                endDateTime = null,
+                path = null
+            )
+
+            val walkedDogIdList = locationService?.savedDogIdList
+
+            Log.d("check", walkingUiModel.toString())
+            Log.d("check", walkedDogIdList.toString())
+
             walkViewModel.walkToggle()
+            serviceInfoStateFlow = null
+            endLocationService()
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
     }
 
     private fun initViewModel() {
 
-        if(LocationService.isRunning) {
-            walkViewModel.setWalking()
-        }
-
         lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     if (it.isWalking) {
-                        startLocationService()
                         binding.grWalkPrev.isVisible = false
                         binding.grWalkUi.isVisible = true
-                        serviceInfoStateFlow = LocationService.serviceInfoState.asStateFlow()
-                        bindToService()
                     } else {
                         binding.grWalkUi.isVisible = false
                         binding.grWalkPrev.isVisible = true
-                        unbindFromService()
-                        serviceInfoStateFlow = null
-                        endLocationService()
                     }
                 }
         }
@@ -212,7 +239,7 @@ class WalkFragment : Fragment() {
         lifecycleScope.launch {
             walkViewModel.dogSelectionState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
-
+                    walkDogAdapter.submitList(it.dogList)
                 }
         }
 
@@ -260,6 +287,7 @@ class WalkFragment : Fragment() {
 
     private fun startLocationService() {
         if(!LocationService.isRunning) {
+            Log.d("startLocationService()", "invoked")
             val intent = Intent(requireContext(), LocationService::class.java)
             requireActivity().startForegroundService(intent)
         }
@@ -269,6 +297,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun bindToService() {
+        Log.d("bind()", "invoked")
         Intent(requireContext(), LocationService::class.java).also { intent ->
             requireContext().bindService(
                 intent,
@@ -276,7 +305,6 @@ class WalkFragment : Fragment() {
                 Context.BIND_AUTO_CREATE
             )
         }
-        startCollectingServiceFlow()
         bound = true
 
     }
@@ -303,15 +331,8 @@ class WalkFragment : Fragment() {
     }
 
     private fun endLocationService() {
-        // 서비스에서 리스트 받아오기
-        val locationList = locationService?.locationList?.map {
-            LatLng(it.latitude, it.longitude)
-        }.orEmpty().toTypedArray() // Null되면 빈 리스트가 들어감
-        // 종료 할 때
         locationService?.stopService()
         bound = false
-
-//        sendLocationListToFinishActivity(locationList) // FinishActivirty로 list 보내기
     }
 
     override fun onStart() {
@@ -336,12 +357,12 @@ class WalkFragment : Fragment() {
 
     /** 좋은 방법인지는 모르겠으나 서비스 도입하면서 이렇게 Intent를 보내게 되었음. */
     private fun sendLocationListToFinishActivity(locationList: Array<LatLng>) {
-        val intent = Intent(requireContext(), FinishActivity::class.java).apply {
-            putExtra("locationList", locationList)
+//        val intent = Intent(requireContext(), FinishActivity::class.java).apply {
+//            putExtra("locationList", locationList)
 //            putExtra("time", totalWalkTime)
 //            putExtra("distance", totalDistance)
-        }
-        startActivity(intent)
+//        }
+//        startActivity(intent)
     }
 
     private fun updateDistanceText(dist: Double) {
