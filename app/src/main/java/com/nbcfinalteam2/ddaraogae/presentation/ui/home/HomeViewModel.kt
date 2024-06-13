@@ -104,16 +104,16 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             Log.d("lat", lat)
             Log.d("l", lat)
-//            val weatherEntity = getWeatherDataUseCase(lat, lon)
-//            val weatherInfo = WeatherInfo(
-//                id = weatherEntity.id.toString(),
-//                temperature = "${weatherEntity.temperature}°",
-//                city = weatherEntity.city ?: "Unknown",
-//                condition = getConditionDescription(weatherEntity.id),
-//                fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
-//                ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
-//            )
-//            _weatherInfo.value = weatherInfo
+            val weatherEntity = getWeatherDataUseCase(lat, lon)
+            val weatherInfo = WeatherInfo(
+                id = weatherEntity.id.toString(),
+                temperature = "${weatherEntity.temperature}°",
+                city = weatherEntity.city ?: "Unknown",
+                condition = getConditionDescription(weatherEntity.id),
+                fineDustStatusIcon = getFineDustIcon(weatherEntity.pm10),
+                ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25)
+            )
+            _weatherInfo.value = weatherInfo
         }
     }
 

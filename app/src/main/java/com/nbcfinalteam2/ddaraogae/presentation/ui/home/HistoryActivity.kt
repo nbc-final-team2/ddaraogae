@@ -11,18 +11,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityHistoryBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
-import java.util.Date
 
 @AndroidEntryPoint
 class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
@@ -77,7 +73,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.grey, null))
-            setTouchEnabled(true)
+            setTouchEnabled(false)
             setPinchZoom(false)
             setScaleEnabled(false)
             isDragXEnabled = false
@@ -94,7 +90,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             axisMinimum = 1f // 해당 월의 첫날
             axisMaximum = 7f // 해당 월의 7번째 날
             valueFormatter = DateFormatter
-            setAvoidFirstLastClipping(true) // 첫 번째와 마지막 레이블 클리핑 방지
         }
     }
 
