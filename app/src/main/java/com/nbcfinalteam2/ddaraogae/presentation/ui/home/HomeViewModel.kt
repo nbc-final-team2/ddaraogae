@@ -53,22 +53,19 @@ class HomeViewModel @Inject constructor(
 
     fun loadDogs() {
         viewModelScope.launch {
-            val user = getCurrentUserUseCase()
-            user?.let {
-                val dogEntities = getDogListUseCase().orEmpty()
-                val dogInfo = dogEntities.map {
-                    DogInfo(
-                        id = it.id ?: "",
-                        name = it.name ?: "",
-                        gender = it.gender ?: 0,
-                        age = it.age,
-                        lineage = it.lineage,
-                        memo = it.memo,
-                        thumbnailUrl = it.thumbnailUrl
-                    )
-                }
-                _dogList.value = dogInfo
+            val dogEntities = getDogListUseCase().orEmpty()
+            val dogInfo = dogEntities.map {
+                DogInfo(
+                    id = it.id ?: "",
+                    name = it.name ?: "",
+                    gender = it.gender ?: 0,
+                    age = it.age,
+                    lineage = it.lineage,
+                    memo = it.memo,
+                    thumbnailUrl = it.thumbnailUrl
+                )
             }
+            _dogList.value = dogInfo
         }
     }
 
@@ -135,6 +132,7 @@ class HomeViewModel @Inject constructor(
                 context,
                 R.string.weather_status_rain
             )
+
             in 500..504 -> ContextCompat.getString(context, R.string.weather_status_slight_rain)
             511, in 600..622 -> ContextCompat.getString(context, R.string.weather_status_snow)
             701, 711, 721, 741 -> ContextCompat.getString(context, R.string.weather_status_fog)
