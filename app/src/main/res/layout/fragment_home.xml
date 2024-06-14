@@ -146,7 +146,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView"
+                        android:id="@+id/tv_todayWeatherTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_extra_small"
@@ -166,7 +166,7 @@
                         android:layout_marginEnd="@dimen/margin_medium"
                         android:src="@drawable/ic_renewal"
                         android:visibility="invisible"
-                        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_todayWeatherTime"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
