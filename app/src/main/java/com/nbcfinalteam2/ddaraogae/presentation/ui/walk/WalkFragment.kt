@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -162,10 +161,11 @@ class WalkFragment : Fragment() {
             naverMap.uiSettings.isLocationButtonEnabled = true
             // 위치를 추적하면서 카메라도 따라 움직인다.
             naverMap.locationTrackingMode = LocationTrackingMode.Face
-            //
+
             naverMap.locationOverlay.iconWidth = 60
             naverMap.locationOverlay.iconHeight = 60
             naverMap.locationOverlay
+
             // 카메라 설정
             lifecycleScope.launch {
                 walkViewModel.storeListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
@@ -190,7 +190,6 @@ class WalkFragment : Fragment() {
         binding.btnWalkStart.setOnClickListener {
             walkViewModel.walkToggle()
             startLocationService()
-//            serviceInfoStateFlow = LocationService.serviceInfoState.asStateFlow()
             bindToService()
             locationService?.saveData(
                 walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it.id },
@@ -205,18 +204,21 @@ class WalkFragment : Fragment() {
                 timeTaken = serviceInfoStateFlow?.value?.time,
                 distance = serviceInfoStateFlow?.value?.distance,
                 startDateTime = locationService?.savedStartDate,
-                endDateTime = null,
-                path = null
+                endDateTime = Date(System.currentTimeMillis()),
+                url = null
             )
 
             val walkedDogIdList = locationService?.savedDogIdList
 
-            Log.d("check", walkingUiModel.toString())
-            Log.d("check", walkedDogIdList.toString())
+//            for test
+//            Log.d("check", walkingUiModel.toString())
+//            Log.d("check", walkedDogIdList.toString())
 
             walkViewModel.walkToggle()
             serviceInfoStateFlow = null
             endLocationService()
+
+            getFinishActivity()
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
     }
@@ -287,7 +289,6 @@ class WalkFragment : Fragment() {
 
     private fun startLocationService() {
         if(!LocationService.isRunning) {
-            Log.d("startLocationService()", "invoked")
             val intent = Intent(requireContext(), LocationService::class.java)
             requireActivity().startForegroundService(intent)
         }
@@ -297,7 +298,6 @@ class WalkFragment : Fragment() {
     }
 
     private fun bindToService() {
-        Log.d("bind()", "invoked")
         Intent(requireContext(), LocationService::class.java).also { intent ->
             requireContext().bindService(
                 intent,
@@ -356,13 +356,8 @@ class WalkFragment : Fragment() {
     }
 
     /** 좋은 방법인지는 모르겠으나 서비스 도입하면서 이렇게 Intent를 보내게 되었음. */
-    private fun sendLocationListToFinishActivity(locationList: Array<LatLng>) {
-//        val intent = Intent(requireContext(), FinishActivity::class.java).apply {
-//            putExtra("locationList", locationList)
-//            putExtra("time", totalWalkTime)
-//            putExtra("distance", totalDistance)
-//        }
-//        startActivity(intent)
+    //인자 정의 필요
+    private fun getFinishActivity() {
     }
 
     private fun updateDistanceText(dist: Double) {

@@ -1,21 +1,13 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nbcfinalteam2.ddaraogae.domain.entity.StoreEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.toUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -56,7 +48,6 @@ class WalkViewModel @Inject constructor(
                         false
                     )
                 }
-                println(dogList)
                 _dogSelectionState.update {
                     DogSelectionState(dogList)
                 }

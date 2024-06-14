@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.model
 
-import android.graphics.Bitmap
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import java.util.Date
@@ -13,5 +12,5 @@ data class WalkingUiModel (
     val distance: Double?,
     val startDateTime: Date?,
     val endDateTime: Date?,
-    val path: Bitmap?
+    val url: String?
 ): Parcelable

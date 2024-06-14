@@ -10,7 +10,6 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -21,11 +20,9 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -45,14 +42,6 @@ class LocationService : Service() {
         override fun onLocationResult(locationResult: LocationResult) {
             for (location in locationResult.locations) {
                 if (locationList.isNotEmpty()) {
-//                    distanceSumState.update { prev ->
-//                        prev + DistanceCalculator.getDistance(
-//                            locationList.last().latitude,
-//                            locationList.last().longitude,
-//                            location.latitude,
-//                            location.longitude
-//                        )
-//                    }
                     serviceInfoState.update { prev ->
                         prev.copy(
                             distance = prev.distance + DistanceCalculator.getDistance(
@@ -125,6 +114,7 @@ class LocationService : Service() {
                 0
             )
         }
+        isRunning = false
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
