@@ -12,8 +12,12 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseC
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,11 +30,23 @@ class LoginViewModel @Inject constructor(
     private val isCurrentUserEmailVerifiedUseCase: IsCurrentUserEmailVerifiedUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val signOutUseCase: SignOutUseCase,
 ) : ViewModel() {
     //0 : 로그인 성공 / 1: 계정 존재 / 2: 로그인 실패 / 3:인증 메일 보내기  / 99: 그 외
     private val _isPossible = MutableSharedFlow<Int>(replay = 1)
     val userState = _isPossible.asSharedFlow()
 
+
+    //스플래시 화면 관련
+    private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    val isLoading : StateFlow<Boolean> get() = _isLoading
+
+    init {
+        viewModelScope.launch {
+            delay(1000)
+            _isLoading.value = false
+        }
+    }
 
     fun getCurrentUser() = viewModelScope.launch {
         val getCurrentUser = getCurrentUserUseCase()
@@ -63,6 +79,7 @@ class LoginViewModel @Inject constructor(
     fun sendEmail() = viewModelScope.launch {
         try {
             sendVerificationEmailUseCase()
+            signOut()
         }catch (e:Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
@@ -78,6 +95,10 @@ class LoginViewModel @Inject constructor(
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
+    }
+
+    private fun signOut() = viewModelScope.launch{
+        signOutUseCase()
     }
 
     fun deleteAccount() = viewModelScope.launch{

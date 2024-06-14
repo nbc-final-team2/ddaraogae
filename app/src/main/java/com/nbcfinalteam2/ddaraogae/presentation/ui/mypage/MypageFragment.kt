@@ -2,7 +2,6 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +35,9 @@ class MypageFragment : Fragment() {
         }
 
         logOut()
+        binding.tvPrivacyPolicy.setOnClickListener {
+            startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java))
+        }
     }
 
     private fun logOut(){

@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view" />
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_myDogAdd"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/mypage_information_dog_add"
@@ -63,7 +63,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_myDogEdit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/mypage_information_dog_edit"
@@ -91,46 +91,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_myDogEdit" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_titleSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginTop="30dp"
-        android:text="@string/mypage_setting_title"
-        android:textSize="@dimen/text_text"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_darkTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_medium"
-        android:text="@string/mypage_setting_dark_theme"
-        android:textSize="@dimen/text_caption"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_titleSettings" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/sw_toggleTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_darkTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_darkTheme" />
-
-    <View
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_margin="@dimen/margin_medium"
-        android:background="@color/grey"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_darkTheme" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_titleUserManager"
@@ -142,7 +103,7 @@
         android:textSize="@dimen/text_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_signOut"
@@ -176,7 +137,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_privacyPolicy"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/mypage_privacy_policy"
