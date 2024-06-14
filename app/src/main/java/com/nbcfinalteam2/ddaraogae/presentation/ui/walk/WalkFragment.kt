@@ -148,11 +148,15 @@ class WalkFragment : Fragment() {
     // hasPermission()에서는 위치 권한이 있을 경우 true를, 없을 경우 false를 반환한다.
     private fun hasPermissions(): Boolean {
         return getPermissionsToRequest().all {
-            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                it
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 
     private fun getPermissionsToRequest(): Array<String> {
+        // If API level is 33 or above, include POST_NOTIFICATIONS in the permissions array
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             LOCATION_PERMISSIONS + NOTIFICATION_PERMISSION
         } else {
