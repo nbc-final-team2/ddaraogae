@@ -26,7 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 
 class HomeViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getDogListUseCase: GetDogListUseCase,
     private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
     private val getWeatherDataUseCase: GetWeatherDataUseCase,
