@@ -28,13 +28,13 @@ class LoginViewModel @Inject constructor(
     private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : ViewModel() {
     //0 : 로그인 성공 / 1: 계정 존재 / 2: 로그인 실패 / 3:인증 메일 보내기  / 99: 그 외
-    private val _isPossible = MutableSharedFlow<Int>()
+    private val _isPossible = MutableSharedFlow<Int>(replay = 1)
     val userState = _isPossible.asSharedFlow()
+
 
     fun getCurrentUser() = viewModelScope.launch {
         val getCurrentUser = getCurrentUserUseCase()
         if(getCurrentUser != null) {_isPossible.emit(0)}
-
     }
 
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
