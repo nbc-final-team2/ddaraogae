@@ -68,7 +68,6 @@ class FinishActivity : FragmentActivity() {
 
         val walkingUiModel: WalkingUiModel? = intent.getParcelableExtra("wakingInfo")
         val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
-        val stamps = ""
         val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
 
         lifecycleScope.launch {
