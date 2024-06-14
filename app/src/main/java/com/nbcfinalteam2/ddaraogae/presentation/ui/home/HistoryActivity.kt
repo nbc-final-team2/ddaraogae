@@ -182,10 +182,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.grey, null))
             setTouchEnabled(true)
-            setPinchZoom(true)
-            setScaleEnabled(true)
+            setPinchZoom(false)
+            setScaleEnabled(false)
             isDragXEnabled = true
-            isDragYEnabled = true
+            isDragYEnabled = false
+            setVisibleXRange(0f, 7f)
         }
         lineChart.invalidate()
     }
@@ -201,10 +202,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
-            setLabelCount(dates.size, true)
+            setLabelCount(dates.size, false)
             axisMinimum = 0f
             axisMaximum = (dates.size - 1).toFloat()
             valueFormatter = formatter
+            isGranularityEnabled = true
         }
     }
 
