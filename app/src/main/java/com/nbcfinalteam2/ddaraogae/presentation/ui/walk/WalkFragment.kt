@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
@@ -55,9 +56,12 @@ class WalkFragment : Fragment() {
     }
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
+    private val POST_NOTIFICATION_PERMISSION_REQUEST_CODE = 5001
+
     private val PERMISSIONS = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.POST_NOTIFICATIONS
     )
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
@@ -132,20 +136,33 @@ class WalkFragment : Fragment() {
         return true
     }
 
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                initMapView()
-            } else {
-                Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    initMapView()
+                    initView()
+                    initViewModel()
+                } else {
+                    Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            POST_NOTIFICATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startLocationService()
+                } else {
+                    Toast.makeText(requireContext(), "알림 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
+
 
     private fun initMapView() {
         val fm = childFragmentManager
@@ -294,14 +311,23 @@ class WalkFragment : Fragment() {
     }
 
     private fun startLocationService() {
-        if(!LocationService.isRunning) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 이상
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), POST_NOTIFICATION_PERMISSION_REQUEST_CODE)
+                return
+            }
+        }
+
+        if (!LocationService.isRunning) {
             val intent = Intent(requireContext(), LocationService::class.java)
             requireActivity().startForegroundService(intent)
         }
+
         if (!bound) {
             bindToService()
         }
     }
+
 
     private fun bindToService() {
         Intent(requireContext(), LocationService::class.java).also { intent ->
