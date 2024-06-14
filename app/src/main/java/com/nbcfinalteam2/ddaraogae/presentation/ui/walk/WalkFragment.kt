@@ -57,11 +57,13 @@ class WalkFragment : Fragment() {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
 
-    private val PERMISSIONS = arrayOf(
+    private val LOCATION_PERMISSIONS = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.POST_NOTIFICATIONS
+        Manifest.permission.ACCESS_COARSE_LOCATION
     )
+    private val NOTIFICATION_PERMISSION = Manifest.permission.POST_NOTIFICATIONS
+
+
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
     private lateinit var cameraPosition: CameraPosition
@@ -112,7 +114,7 @@ class WalkFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (!hasPermissions()) {
-            locationPermissionLauncher.launch(PERMISSIONS)
+            locationPermissionLauncher.launch(getPermissionsToRequest())
         } else {
             initViewModel()
             initView()
@@ -145,11 +147,16 @@ class WalkFragment : Fragment() {
 
     // hasPermission()에서는 위치 권한이 있을 경우 true를, 없을 경우 false를 반환한다.
     private fun hasPermissions(): Boolean {
-        return PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                it
-            ) == PackageManager.PERMISSION_GRANTED
+        return getPermissionsToRequest().all {
+            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun getPermissionsToRequest(): Array<String> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            LOCATION_PERMISSIONS + NOTIFICATION_PERMISSION
+        } else {
+            LOCATION_PERMISSIONS
         }
     }
 
