@@ -68,7 +68,6 @@ class FinishActivity : FragmentActivity() {
 
         val walkingUiModel: WalkingUiModel? = intent.getParcelableExtra("wakingInfo")
         val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
-        val stamps = ""
         val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
 
         lifecycleScope.launch {
@@ -100,7 +99,6 @@ class FinishActivity : FragmentActivity() {
                 }
             }
         }
-
 
         //산책 시간
         tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
@@ -229,17 +227,6 @@ class FinishActivity : FragmentActivity() {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)
                 viewModel.insertWalkingData(walkingUiModel, mapImage!!)
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
-                    InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
-                    InsertTaskState.Success -> finish()
-                    is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
-                }
             }
         }
     }
