@@ -9,7 +9,8 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 
-class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) : ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
+    ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WalkingInfo>() {
@@ -37,7 +38,8 @@ class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) : ListAdapter<
         return currentList.size
     }
 
-    class ViewHolder(private val binding: ItemHomeHistoryWalkBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemHomeHistoryWalkBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: WalkingInfo, onPolyLineClick: () -> Unit) {
             with(binding) {
                 Glide.with(ivWalkPolyLine.context)

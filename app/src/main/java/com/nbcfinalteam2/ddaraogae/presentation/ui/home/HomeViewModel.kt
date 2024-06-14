@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
     private val getDogListUseCase: GetDogListUseCase,
     private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
     private val getWeatherDataUseCase: GetWeatherDataUseCase,
-    @ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _dogList = MutableLiveData<List<DogInfo>>()
@@ -131,7 +131,10 @@ class HomeViewModel @Inject constructor(
     private fun getConditionDescription(weatherId: Long?): String {
         return when (weatherId?.toInt()) {
             in 200..232 -> ContextCompat.getString(context, R.string.weather_status_thunder)
-            in 300..321, in 520..531 -> ContextCompat.getString(context, R.string.weather_status_rain)
+            in 300..321, in 520..531 -> ContextCompat.getString(
+                context,
+                R.string.weather_status_rain
+            )
             in 500..504 -> ContextCompat.getString(context, R.string.weather_status_slight_rain)
             511, in 600..622 -> ContextCompat.getString(context, R.string.weather_status_snow)
             701, 711, 721, 741 -> ContextCompat.getString(context, R.string.weather_status_fog)

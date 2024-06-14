@@ -2,7 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.model
 
 import java.util.Date
 
-data class WalkingInfo (
+data class WalkingInfo(
     val id: String?,
     val dogId: String?,
     val timeTaken: Int?,

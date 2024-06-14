@@ -71,7 +71,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupAdapter() {
         walkHistoryAdapter = WalkHistoryAdapter(
-            onPolyLineClick = { /* 이미지 클릭 이벤트 넣을것 */  }
+            onPolyLineClick = { /* 이미지 클릭 이벤트 넣을것 */ }
         )
         binding.rvWalkHistoryArea.adapter = walkHistoryAdapter
     }
@@ -113,8 +113,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 binding.tvWalkHistoryData.visibility = View.GONE
             }
         }
-
-
     }
 
     private fun getDogInfo() {

@@ -50,10 +50,12 @@ class HomeFragment : Fragment() {
                 getLastLocation()
                 toggleWeatherVisible()
             }
+
             permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                 getLastLocation()
                 toggleWeatherVisible()
             }
+
             else -> {
                 toggleWeatherInvisible()
             }
@@ -191,21 +193,27 @@ class HomeFragment : Fragment() {
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(
                 requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
                 getLastLocation()
                 toggleWeatherVisible()
             }
+
             ContextCompat.checkSelfPermission(
                 requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) -> {
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) -> {
                 getLastLocation()
                 toggleWeatherVisible()
             }
+
             else -> {
-                locationPermissionRequest.launch(arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ))
+                locationPermissionRequest.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
             }
         }
     }
@@ -214,8 +222,10 @@ class HomeFragment : Fragment() {
         binding.tvWeatherData.setOnClickListener {
             AlertDialog.Builder(context)
                 .setTitle("위치 권한 설정")
-                .setMessage("오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용하셔야 합니다. \n" +
-                        "위치 권한 설정 화면으로 이동하시겠습니까?")
+                .setMessage(
+                    "오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용하셔야 합니다. \n" +
+                            "위치 권한 설정 화면으로 이동하시겠습니까?"
+                )
                 .setPositiveButton("네", object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
