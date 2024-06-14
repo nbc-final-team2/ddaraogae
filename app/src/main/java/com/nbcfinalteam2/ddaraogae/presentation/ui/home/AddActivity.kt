@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
-import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConverter.uriToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
 
 

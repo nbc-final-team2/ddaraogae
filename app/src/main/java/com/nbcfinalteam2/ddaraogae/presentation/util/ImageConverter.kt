@@ -1,13 +1,14 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-object UriToByteArrayConverter {
+object ImageConverter {
     private const val TAG = "UriToByteArrayConvertor"
 
     fun uriToByteArray(uri: Uri?, context: Context): ByteArray? {
@@ -24,5 +25,13 @@ object UriToByteArrayConverter {
         val byteArrayOutputStream = ByteArrayOutputStream()
         byteArrayOutputStream.write(inputStream.readBytes())
         return byteArrayOutputStream.toByteArray()
+    }
+
+    fun bitmapToByteArray(bitmap: Bitmap?): ByteArray? {
+        return bitmap?.let {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            byteArrayOutputStream.toByteArray()
+        }
     }
 }
