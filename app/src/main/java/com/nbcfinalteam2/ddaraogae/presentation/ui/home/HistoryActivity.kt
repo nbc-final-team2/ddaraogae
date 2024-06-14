@@ -105,12 +105,14 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 setupWalkGraphForEmptyData(year, month)
                 binding.tvWalkData.visibility = View.VISIBLE
                 binding.tvWalkHistoryData.visibility = View.VISIBLE
+                binding.rvWalkHistoryArea.visibility = View.GONE
 
             } else {
                 setupWalkGraphForHaveData(walkData, year, month)
                 binding.tvWalkData.visibility = View.GONE
                 walkHistoryAdapter.submitList(walkData)
                 binding.tvWalkHistoryData.visibility = View.GONE
+                binding.rvWalkHistoryArea.visibility = View.VISIBLE
             }
         }
     }
