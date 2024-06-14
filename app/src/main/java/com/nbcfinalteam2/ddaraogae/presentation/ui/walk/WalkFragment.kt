@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -196,7 +197,10 @@ class WalkFragment : Fragment() {
             )
         }
         binding.ibWalkStop.setOnClickListener {
-            //todo 정보 미리 저장
+            val locationList = locationService?.locationList?.map {
+                LatLng(it.latitude, it.longitude)
+            }.orEmpty().toTypedArray()
+
             val walkingUiModel = WalkingUiModel(
                 id = null,
                 dogId = null,
@@ -210,14 +214,14 @@ class WalkFragment : Fragment() {
             val walkedDogIdList = locationService?.savedDogIdList
 
 //            for test
-//            Log.d("check", walkingUiModel.toString())
-//            Log.d("check", walkedDogIdList.toString())
+            Log.d("check", walkingUiModel.toString())
+            Log.d("check", walkedDogIdList.toString())
 
             walkViewModel.walkToggle()
             serviceInfoStateFlow = null
             endLocationService()
 
-            getFinishActivity(walkingUiModel, walkedDogIdList)
+            getFinishActivity(walkingUiModel, walkedDogIdList, locationList)
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
     }
@@ -334,11 +338,11 @@ class WalkFragment : Fragment() {
         bound = false
     }
 
-    private fun getFinishActivity(walkingUiModel: WalkingUiModel, walkedDogIdList: List<DogInfo>?) {
-        val locationList = locationService?.locationList?.map {
-            LatLng(it.latitude, it.longitude)
-        }.orEmpty().toTypedArray()
-
+    private fun getFinishActivity(
+        walkingUiModel: WalkingUiModel,
+        walkedDogIdList: List<DogInfo>?,
+        locationList: Array<LatLng>
+    ) {
         val intent = Intent(requireContext(), FinishActivity::class.java).apply {
             putExtra("locationList", locationList)
             putExtra("wakingInfo", walkingUiModel)
