@@ -7,6 +7,6 @@ import javax.inject.Inject
 class GetStampNumByPeriodUseCaseImpl @Inject constructor(
     private val stampRepository: StampRepository
 ) : GetStampNumByPeriodUseCase {
-    override suspend fun invoke(dogId: String, start: Date, end: Date): Int =
-        stampRepository.getStampNumByDogIdAndPeriod(dogId, start, end)
+    override suspend fun invoke(start: Date, end: Date): Int =
+        stampRepository.getStampNumByPeriod(start, end)
 }

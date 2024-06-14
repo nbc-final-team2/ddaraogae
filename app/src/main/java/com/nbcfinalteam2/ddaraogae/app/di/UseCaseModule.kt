@@ -12,6 +12,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByPeriodUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStoreDataUseCase
@@ -73,8 +75,13 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindGetStampNumByPeriodUseCase(
-        getStampNumByDogIdAndPeriodUseCaseImpl: GetStampNumByPeriodUseCaseImpl
+        getStampNumByPeriodUseCaseImpl: GetStampNumByPeriodUseCaseImpl
     ): GetStampNumByPeriodUseCase
+
+    @Binds
+    abstract fun bindGetStampListByPeriodUseCase(
+        getStampListByPeriodUseCaseImpl: GetStampListByPeriodUseCaseImpl
+    ): GetStampListByPeriodUseCase
 
     @Binds
     abstract fun bindGetWalkingByIdUseCase(

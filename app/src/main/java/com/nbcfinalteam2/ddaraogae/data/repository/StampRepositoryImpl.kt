@@ -15,6 +15,12 @@ class StampRepositoryImpl @Inject constructor(
         return firebaseDateSource.getStampNumByPeriod(start, end)
     }
 
+    override suspend fun getStampListByPeriod(start: Date, end: Date): List<StampEntity> {
+        return firebaseDateSource.getStampListByPeriod(start, end).map {
+            it.second.toEntity(it.first)
+        }
+    }
+
     override suspend fun insertStamp(stampEntity: StampEntity) {
         firebaseDateSource.insertStamp(stampEntity.toDto())
     }

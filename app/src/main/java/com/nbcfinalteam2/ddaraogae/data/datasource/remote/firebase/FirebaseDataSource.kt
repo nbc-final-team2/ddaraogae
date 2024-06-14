@@ -16,6 +16,7 @@ interface FirebaseDataSource {
 
     //stamp
     suspend fun getStampNumByPeriod(start: Date, end: Date): Int
+    suspend fun getStampListByPeriod(start: Date, end: Date): List<Pair<String, StampDto>>
     suspend fun insertStamp(stampDto: StampDto)
     suspend fun checkStampCondition(dogId: String, date: Date): List<Pair<String, StampDto>>
 
