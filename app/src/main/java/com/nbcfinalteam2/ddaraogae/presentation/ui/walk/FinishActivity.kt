@@ -2,10 +2,10 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -18,14 +18,22 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
-import java.io.ByteArrayOutputStream
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
+import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class FinishActivity : FragmentActivity() {
-
     private val binding by lazy { ActivityFinishBinding.inflate(layoutInflater) }
+    private val viewModel: FinishViewModel by viewModels()
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private val PERMISSIONS = arrayOf(
@@ -50,22 +58,43 @@ class FinishActivity : FragmentActivity() {
             (intent.getParcelableArrayExtra("locationList") as? Array<LatLng>)?.toList().orEmpty()
         }
 
-        if (!hasPermission()) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
-        } else {
-            initMapView()
-        }
-
-        buttonListener()
         initView()
     }
-    //intent로 받은 값 넣기
-    private fun initView(){
-        val distance = intent.getStringExtra("distance")
-        val walkTime = intent.getStringExtra("time")
 
-        binding.tvFinishWalkingTime.text = walkTime
-        binding.tvFinishWalkingDistance.text = distance+"km"
+    private fun initView() = with(binding) {
+        if (!hasPermission()) {
+            ActivityCompat.requestPermissions(this@FinishActivity, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
+        } else { initMapView() }
+
+        val walkingUiModel: WalkingUiModel? = intent.getParcelableExtra("wakingInfo")
+        val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
+        val stamps = ""
+        val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
+
+        //산책 시간
+        tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
+            timeIntToString(it)
+        }
+
+        //산책 거리
+        tvFinishWalkingDistance.text = walkingUiModel?.distance?.let {
+            distanceDoubleToString(it)
+        }
+
+        //반려견 목록
+        rvFinishDogs.adapter = dogsAdapter
+
+        //날짜
+        tvFinishDate.text = walkingUiModel?.startDateTime?.let {
+            dateDateToString(it)
+        }
+
+        //산책도장 목록
+
+        //산책 끝 버튼
+        btnFinishDone.setOnClickListener {
+            if (walkingUiModel != null) { finishWalking(walkingUiModel) }
+        }
     }
 
     private fun initMapView() {
@@ -90,9 +119,7 @@ class FinishActivity : FragmentActivity() {
 
     private fun hasPermission(): Boolean {
         for (permission in PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 return false
             }
         }
@@ -162,40 +189,23 @@ class FinishActivity : FragmentActivity() {
         }
     }
 
-    private fun buttonListener() {
-        binding.btnFinishDone.setOnClickListener {
-            if (::naverMap.isInitialized) {
-                naverMap.takeSnapshot {
-                    /**
-                     * 아래는 예시 코드입니다.
-                     * : 산책 끝 버튼을 클릭할 때 산책 entity에 값을 담아 insert를 요청합니다.
-                     *
-                     * 지도 이미지를 캡쳐하는 기능의 takeSnapshot은 버튼 클릭 시 처리되도록 하는 것이 좋습니다.
-                     * 별도의 트리거 없이 작동시키려고 하니 이미지가 정상적으로 저장되지 않는 문제가 있었습니다.
-                     */
-                    val mapImage = bitmapToByteArray(it)
-//                    val start = Date()
-//
-//                    val entity = WalkingEntity(
-//                        id = "",
-//                        dogId = "temp",
-//                        timeTaken = 100,
-//                        distance = 200.0,
-//                        startDateTime = start,
-//                        endDateTime = start,
-//                        walkingImage = ""
-//                    )
-//                    viewModel.insertWalkingData(entity, mapImage!!)
-                }
+    private fun finishWalking(walkingUiModel: WalkingUiModel) {
+        if (::naverMap.isInitialized) {
+            naverMap.takeSnapshot {
+                val mapImage = bitmapToByteArray(it)
+                viewModel.insertWalkingData(walkingUiModel, mapImage!!)
             }
         }
-    }
 
-    private fun bitmapToByteArray(bitmap: Bitmap?): ByteArray? {
-        return bitmap?.let {
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-            byteArrayOutputStream.toByteArray()
+        lifecycleScope.launch {
+            viewModel.taskState.collectLatest { state ->
+                when (state) {
+                    InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
+                    InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
+                    InsertTaskState.Success -> finish()
+                    is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
+                }
+            }
         }
     }
 }
