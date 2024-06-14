@@ -1,14 +1,20 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.Manifest
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.LineChart
@@ -66,7 +72,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupWalkGraphForEmptyData()
-        moveToHistory()
+        setupListener()
         setupAdapter()
         observeViewModel()
         checkLocationPermissions()
@@ -83,6 +89,11 @@ class HomeFragment : Fragment() {
             onAddClick = { moveToAdd() },
         )
         binding.rvDogArea.adapter = dogProfileAdapter
+    }
+
+    private fun setupListener() {
+        moveToHistory()
+        checkForMoveToLocationSettingsDialog()
     }
 
     private fun observeViewModel() {
@@ -177,13 +188,53 @@ class HomeFragment : Fragment() {
     }
 
     private fun checkLocationPermissions() {
-        // 여기서 체크 셀프 펄미션
-        // isgranted가 안되어있으면 locationPermissionRequest.launch 얘 실행
-        // requireActivity = CONTEXT
-        locationPermissionRequest.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                getLastLocation()
+                toggleWeatherVisible()
+            }
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) -> {
+                getLastLocation()
+                toggleWeatherVisible()
+            }
+            else -> {
+                locationPermissionRequest.launch(arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ))
+            }
+        }
+    }
+
+    private fun checkForMoveToLocationSettingsDialog() {
+        binding.tvWeatherData.setOnClickListener {
+            AlertDialog.Builder(context)
+                .setTitle("위치 권한 설정")
+                .setMessage("오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용하셔야 합니다. \n" +
+                        "위치 권한 설정 화면으로 이동하시겠습니까?")
+                .setPositiveButton("네", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                        context?.startActivity(intent)
+                    }
+                })
+                .setNegativeButton("아니요", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        p0?.dismiss()
+                    }
+                })
+                .setNeutralButton("나중에", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        p0?.dismiss()
+                    }
+                })
+                .create()
+                .show()
+        }
     }
 
     private fun getLastLocation() {
