@@ -47,8 +47,8 @@ class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
                     .load(item.walkingImage)
                     .into(ivWalkPolyLine)
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
-                tvDistance.text = item.distance.toString()
-                tvDuration.text = item.timeTaken.toString()
+                tvDistance.text = item.distance.toString().plus("km")
+                tvDuration.text = item.timeTaken.toString().plus("분")
 
                 ivWalkPolyLine.setOnClickListener {
                     onPolyLineClick()
