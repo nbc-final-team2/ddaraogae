@@ -102,8 +102,6 @@ class DetailPetActivity : AppCompatActivity() {
         dogData = getDogData
         Glide.with(this@DetailPetActivity)
             .load(dogData.thumbnailUrl?.toUri())
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .skipMemoryCache(true)
             .into(ivDogThumbnail)
         tvPetName.text = dogData.name
         tvPetAge.text = dogData.age.toString()
