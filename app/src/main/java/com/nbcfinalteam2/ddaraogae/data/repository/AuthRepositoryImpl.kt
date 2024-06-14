@@ -37,8 +37,15 @@ class AuthRepositoryImpl @Inject constructor(
         val uid = firebaseAuth.currentUser?.uid ?: throw Exception("USER NOT EXIST")
 
         firebaseFs.collection(PATH_USERDATA).document(uid).delete().await()
-        val deleteRef = fbStorage.reference.child("${PATH_USERDATA}/$uid")
-        deleteRef.delete().await()
+        val deleteRef = fbStorage.reference.child("$PATH_USERDATA/$uid")
+        deleteRef.listAll().await().prefixes.forEach { pref ->
+            pref.listAll().await().items.forEach { item ->
+                item.delete().await()
+            }
+            pref.delete().await()
+        }
+        deleteRef.delete()
+
         firebaseAuth.currentUser?.delete()?.await()
     }
 
