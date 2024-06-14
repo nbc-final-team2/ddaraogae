@@ -45,7 +45,7 @@ class HistoryViewModel @Inject constructor(
             val startDate = DateFormatter.getStartDateForAllDay(year, month)
             val endDate = DateFormatter.getEndDateForAllDay(year, month)
 
-            val dogId = _dogInfo.value?.id ?: "처리할것"
+            val dogId = _dogInfo.value?.id ?: return@launch
             val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
             val walkInfo = walkEntities.map { entity ->
                 WalkingInfo(

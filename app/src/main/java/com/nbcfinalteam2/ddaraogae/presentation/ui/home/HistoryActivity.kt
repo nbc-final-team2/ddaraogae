@@ -30,6 +30,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     private lateinit var binding: ActivityHistoryBinding
     private val historyViewModel: HistoryViewModel by viewModels()
     private lateinit var dogInfo: DogInfo
+    private lateinit var walkHistoryAdapter: WalkHistoryAdapter
 
     override fun onMonthClick(year: Int, monthNumber: Int) {
         Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
@@ -48,6 +49,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             insets
         }
         setupWalkGraph()
+        setupAdapter()
         setupListener()
         setupObserve()
         getDogInfo()
@@ -65,6 +67,13 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         GraphUtils.historySetupWalkGraphSettingsForEmptyData(lineChart, this)
         GraphUtils.historySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
         GraphUtils.historySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
+    }
+
+    private fun setupAdapter() {
+        walkHistoryAdapter = WalkHistoryAdapter(
+            onPolyLineClick = { /* 이미지 클릭 이벤트 넣을것 */  }
+        )
+        binding.rvWalkHistoryArea.adapter = walkHistoryAdapter
     }
 
     private fun setupListener() {
@@ -95,11 +104,17 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             if (walkData.isEmpty()) {
                 setupWalkGraphForEmptyData(year, month)
                 binding.tvWalkData.visibility = View.VISIBLE
+                binding.tvWalkHistoryData.visibility = View.VISIBLE
+
             } else {
                 setupWalkGraphForHaveData(walkData, year, month)
                 binding.tvWalkData.visibility = View.GONE
+                walkHistoryAdapter.submitList(walkData)
+                binding.tvWalkHistoryData.visibility = View.GONE
             }
         }
+
+
     }
 
     private fun getDogInfo() {
