@@ -19,8 +19,17 @@ import com.google.android.gms.location.Priority
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.util.Date
 
-class LocationService: Service() {
+class LocationService : Service() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val locationRequest by lazy {
@@ -31,14 +40,18 @@ class LocationService: Service() {
     }
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            for(location in locationResult.locations) {
-                if(locationList.isNotEmpty()) {
-                    distanceSum += DistanceCalculator.getDistance(
-                        locationList.last().latitude,
-                        locationList.last().longitude,
-                        location.latitude,
-                        location.longitude
-                    )
+            for (location in locationResult.locations) {
+                if (locationList.isNotEmpty()) {
+                    serviceInfoState.update { prev ->
+                        prev.copy(
+                            distance = prev.distance + DistanceCalculator.getDistance(
+                                locationList.last().latitude,
+                                locationList.last().longitude,
+                                location.latitude,
+                                location.longitude
+                            )
+                        )
+                    }
                 }
                 locationList.add(location.toLatLng())
             }
@@ -48,7 +61,9 @@ class LocationService: Service() {
     private val binder = LocalBinder()
 
     val locationList = mutableListOf<LatLng>()
-    var distanceSum = 0.0
+    var savedDogIdList: List<String>? = null
+    var savedStartDate: Date? = null
+    private var timerJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -71,7 +86,9 @@ class LocationService: Service() {
             .build()
 
         startForeground(NOTIFICATION_ID, notification)
+        startTimer()
         startLocationUpdates()
+        isRunning = true
         return START_STICKY
     }
 
@@ -79,15 +96,31 @@ class LocationService: Service() {
         return binder
     }
 
+    fun saveData(dogIdList: List<String>, startDateTime: Date) {
+        savedDogIdList = dogIdList
+        savedStartDate = startDateTime
+    }
+
     fun stopService() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         locationList.clear()
-        distanceSum = 0.0
+        distanceSumState.update { _ ->
+            0.0
+        }
+        stopTimer()
+        serviceInfoState.update { _ ->
+            ServiceInfoState(
+                0.0,
+                0
+            )
+        }
+        isRunning = false
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
     override fun onDestroy() {
+        isRunning = false
         super.onDestroy()
     }
 
@@ -103,27 +136,61 @@ class LocationService: Service() {
     }
 
     private fun startLocationUpdates() {
-
+        if(isRunning) return
         try {
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
 
     }
 
+    private fun startTimer() {
+        if(isRunning) return
+        timerJob = CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+            while (true) {
+                delay(1000)
+                serviceInfoState.update { prev ->
+                    prev.copy(
+                        time = prev.time + 1
+                    )
+                }
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+        timerJob = null
+        serviceInfoState.update { prev ->
+            prev.copy(
+                time = 0
+            )
+        }
+    }
+
     data class LatLng(
         val latitude: Double,
         val longitude: Double
     )
+
     private fun Location.toLatLng() = LatLng(latitude = latitude, longitude = longitude)
 
-    inner class LocalBinder: Binder() {
+    inner class LocalBinder : Binder() {
         fun getService(): LocationService = this@LocationService
     }
 
     companion object {
         private const val CHANNEL_ID = "LocationServiceChannel"
         private const val NOTIFICATION_ID = 1
+
+        val distanceSumState = MutableStateFlow(0.0)
+        val serviceInfoState = MutableStateFlow(ServiceInfoState.init())
+
+        var isRunning = false
     }
 }
