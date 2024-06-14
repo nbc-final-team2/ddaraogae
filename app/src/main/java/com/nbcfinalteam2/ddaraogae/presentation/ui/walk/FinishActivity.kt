@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
@@ -66,8 +67,6 @@ class FinishActivity : FragmentActivity() {
         val walkingUiModel: WalkingUiModel? = intent.getParcelableExtra("wakingInfo")
         val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
 
-        viewModel.checkStampCondition(walkingUiModel?.endDateTime!!)
-
         initView(walkingUiModel, walkingDogs)
     }
 
@@ -81,6 +80,25 @@ class FinishActivity : FragmentActivity() {
 
     private fun initView(walkingUiModel: WalkingUiModel?, walkingDogs: List<DogInfo>?) = with(binding) {
         val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
+
+        lifecycleScope.launch {
+            viewModel.taskState.collectLatest { state ->
+                when (state) {
+                    InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
+                    InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
+                    InsertTaskState.Success -> {
+                        viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
+                    }
+                    is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.stampState.collectLatest { state ->
+                Log.d("test finish stamp", state.toString())
+            }
+        }
 
 
         //산책 시간
@@ -126,15 +144,20 @@ class FinishActivity : FragmentActivity() {
             // 더블 터치시 줌되는 제스처 막기
             naverMap.uiSettings.isZoomGesturesEnabled = false
 
+            naverMap.addOnCameraChangeListener { i, b ->
+                naverMap.takeSnapshot {
+                    Log.d("finish", it.toString())
+                    Glide.with(this@FinishActivity)
+                        .load(it)
+                        .into(binding.ivTest)
+//                    binding.ivTest.setImageBitmap(it)
+                }
+            }
 
             drawPolyLine()
             setCameraOnPolyLine()
 
-            if (::naverMap.isInitialized) {
-                naverMap.takeSnapshot {
-                    binding.ivTest.setImageBitmap(it)
-                }
-            }
+
         }
     }
 
@@ -210,6 +233,8 @@ class FinishActivity : FragmentActivity() {
             cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
             naverMap.moveCamera(cameraUpdate)
             Log.d("setCameraOnPolyLine", "Camera moved to $center")
+
+
         } else {
             Log.d("setCameraOnPolyLine", "Location list is empty, cannot set camera")
         }
@@ -220,17 +245,6 @@ class FinishActivity : FragmentActivity() {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)
                 viewModel.insertWalkingData(walkingUiModel, mapImage!!)
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
-                    InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
-                    InsertTaskState.Success -> finish()
-                    is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
-                }
             }
         }
     }

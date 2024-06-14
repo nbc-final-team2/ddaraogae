@@ -25,6 +25,10 @@ class FinishViewModel @Inject constructor(
     private val _taskState = MutableStateFlow<InsertTaskState>(InsertTaskState.Idle)
     val taskState: StateFlow<InsertTaskState> = _taskState.asStateFlow()
 
+    private val _stampState = MutableStateFlow<List<StampEntity>>(emptyList())
+    val stampState: StateFlow<List<StampEntity>> = _stampState.asStateFlow()
+
+
     fun insertWalkingData(walk: WalkingUiModel, image: ByteArray) {
         viewModelScope.launch {
             val walkingData = walk.let {
@@ -53,6 +57,7 @@ class FinishViewModel @Inject constructor(
             try {
                 val temp = checkStampConditionUseCase(date)
                 Log.d("viewmodel", temp.toString())
+                _stampState.value = temp
             } catch (e: Exception) {
                 e.printStackTrace()
             }
