@@ -13,7 +13,10 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,6 +34,17 @@ class LoginViewModel @Inject constructor(
     private val _isPossible = MutableSharedFlow<Int>(replay = 1)
     val userState = _isPossible.asSharedFlow()
 
+
+    //스플래시 화면 관련
+    private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    val isLoading : StateFlow<Boolean> get() = _isLoading
+
+    init {
+        viewModelScope.launch {
+            delay(1000)
+            _isLoading.value = false
+        }
+    }
 
     fun getCurrentUser() = viewModelScope.launch {
         val getCurrentUser = getCurrentUserUseCase()
