@@ -7,13 +7,14 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -47,10 +48,44 @@ import java.util.Date
 
 @AndroidEntryPoint
 class WalkFragment : Fragment() {
-
     private val walkViewModel: WalkViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
     private val binding get() = _binding!!
+
+    private val initMapPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        ) {
+            println("런처 1, ")
+            initMapView()
+        } else {
+            println("런처 2")
+            Toast.makeText(
+                requireContext(),
+                "지도 기능 이용을 위해 권한 허용이 필요합니다",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private val startServicePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true &&
+            permissions[Manifest.permission.POST_NOTIFICATIONS] == true
+        ) {
+            startServiceAndWalk()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "산책 기능 이용을 위해 권한 허용이 필요합니다",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     private val walkDogAdapter by lazy {
         WalkDogAdapter { walkViewModel.selectDog(it) }
@@ -95,7 +130,6 @@ class WalkFragment : Fragment() {
         if (LocationService.isRunning) {
             walkViewModel.setWalking()
         }
-
         walkViewModel.fetchDogList()
     }
 
@@ -109,42 +143,31 @@ class WalkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
 
-        if (!hasPermission()) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                PERMISSIONS,
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            initMapView()
-        }
-
+        checkMapPermission()
         initView()
         initViewModel()
-
     }
 
-    // hasPermission()에서는 위치 권한이 있을 경우 true를, 없을 경우 false를 반환한다.
-    private fun hasPermission(): Boolean {
-        for (permission in PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(requireActivity(), permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                return false
-            }
+    private fun checkMapPermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            initMapView()
+        } else {
+            initMapPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            )
         }
-        return true
     }
 
     private fun initMapView() {
@@ -157,14 +180,16 @@ class WalkFragment : Fragment() {
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         // fragment의 getMapAsync() 메서드로 OnMapReadyCallback 콜백을 등록하면 비동기로 NaverMap 객체를 얻을 수 있다.
         mapFragment.getMapAsync { map ->
-            naverMap = map // 현재 위치 활성화
-            naverMap.locationSource = locationSource // 현재 위치 버튼 기능
-            naverMap.uiSettings.isLocationButtonEnabled = true // 위치를 추적하면서 카메라도 따라 움직인다.
+            naverMap = map
+            // 현재 위치 활성화
+            naverMap.locationSource = locationSource
+            // 현재 위치 버튼 기능
+            naverMap.uiSettings.isLocationButtonEnabled = true
+            // 위치를 추적하면서 카메라도 따라 움직인다.
             naverMap.locationTrackingMode = LocationTrackingMode.Face
 
             naverMap.locationOverlay.iconWidth = 60
             naverMap.locationOverlay.iconHeight = 60
-            naverMap.locationOverlay
 
             // 카메라 설정
             lifecycleScope.launch {
@@ -188,13 +213,7 @@ class WalkFragment : Fragment() {
 
     private fun initView() {
         binding.btnWalkStart.setOnClickListener {
-            walkViewModel.walkToggle()
-            startLocationService()
-            bindToService()
-            locationService?.saveData(
-                walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it },
-                Date(System.currentTimeMillis())
-            )
+            checkServicePermission()
         }
         binding.ibWalkStop.setOnClickListener {
             val locationList = locationService?.locationList?.map {
@@ -214,8 +233,8 @@ class WalkFragment : Fragment() {
             val walkedDogIdList = locationService?.savedDogIdList
 
 //            for test
-            Log.d("check", walkingUiModel.toString())
-            Log.d("check", walkedDogIdList.toString())
+//            Log.d("check", walkingUiModel.toString())
+//            Log.d("check", walkedDogIdList.toString())
 
             walkViewModel.walkToggle()
             serviceInfoStateFlow = null
@@ -226,8 +245,52 @@ class WalkFragment : Fragment() {
         binding.rvWalkDogs.adapter = walkDogAdapter
     }
 
-    private fun initViewModel() {
+    private fun checkServicePermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            startServiceAndWalk()
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                startServicePermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
+                )
+            } else {
+                startServicePermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                    )
+                )
+            }
+        }
+    }
 
+    private fun startServiceAndWalk() {
+        walkViewModel.walkToggle()
+        startLocationService()
+        bindToService()
+        locationService?.saveData(
+            walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it },
+            Date(System.currentTimeMillis())
+        )
+    }
+
+    private fun initViewModel() {
         lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
@@ -268,13 +331,16 @@ class WalkFragment : Fragment() {
             marker.map = naverMap
             markerList.add(marker)
 
-            val contentString =
-                store.placeName // Assuming `storeEntity` has a `name` property
+            val contentString = """
+                ${store.placeName} | ${store.categoryGroupName}
+                    ${store.address}
+                    ${store.phone} 
+                """.trimIndent()
 
             val infoWindow = InfoWindow().apply {
                 adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                     override fun getText(infoWindow: InfoWindow): CharSequence {
-                        return contentString.toString()
+                        return contentString
                     }
                 }
             }
