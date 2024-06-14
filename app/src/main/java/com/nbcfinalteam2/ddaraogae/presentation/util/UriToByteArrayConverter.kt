@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-object UriToByteArrayConvertor {
+object UriToByteArrayConverter {
     private const val TAG = "UriToByteArrayConvertor"
 
     fun uriToByteArray(uri: Uri?, context: Context): ByteArray? {

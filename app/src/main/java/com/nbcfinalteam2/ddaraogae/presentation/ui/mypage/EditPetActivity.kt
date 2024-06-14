@@ -11,19 +11,16 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
-import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor.uriToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConverter.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 @AndroidEntryPoint
