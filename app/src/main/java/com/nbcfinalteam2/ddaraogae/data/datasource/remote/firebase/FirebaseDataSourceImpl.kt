@@ -81,17 +81,34 @@ class FirebaseDataSourceImpl @Inject constructor(
         deleteRef.delete()
     }
 
-    override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Date, end: Date): Int {
+    override suspend fun getStampNumByPeriod(start: Date, end: Date): Int {
         val uid = getUserUid()
 
         val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_STAMPS)
-            .whereEqualTo(FIELD_DOG_ID, dogId)
             .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, start)
             .whereLessThanOrEqualTo(FIELD_GET_DATETIME, end)
             .get().await()
 
         return queriedList.size()
+    }
+
+    override suspend fun getStampListByPeriod(
+        start: Date,
+        end: Date
+    ): List<Pair<String, StampDto>> {
+        val uid = getUserUid()
+
+        val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_STAMPS)
+            .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, start)
+            .whereLessThanOrEqualTo(FIELD_GET_DATETIME, end)
+            .get().await()
+            .map {
+                it.id to it.toObject(StampDto::class.java)
+            }
+
+        return queriedList
     }
 
     override suspend fun insertStamp(stampDto: StampDto) {
