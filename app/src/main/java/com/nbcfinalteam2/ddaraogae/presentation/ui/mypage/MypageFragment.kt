@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.home.AddActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,13 +27,13 @@ class MypageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        logOut()
-        binding.tvPrivacyPolicy.setOnClickListener {
-            startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java))
-        }
+        clickAboutAccountBtn()
+        clickAboutPetBtn()
+        clickPrivacyBtn()
+        
     }
 
-    private fun logOut(){
+    private fun clickAboutAccountBtn(){
         binding.tvSignOut.setOnClickListener {
             viewModel.logOut()
             startActivity(Intent.makeRestartActivityTask(requireContext().packageManager.getLaunchIntentForPackage(requireContext().packageName)?.component).apply {
@@ -45,6 +46,19 @@ class MypageFragment : Fragment() {
 
         binding.tvSignDelete.setOnClickListener {
             viewModel.deleteUser()
+        }
+    }
+    private fun clickAboutPetBtn(){
+        binding.tvMyDogAdd.setOnClickListener {
+            startActivity(Intent(requireActivity(), AddActivity::class.java))
+        }
+        binding.tvMyDogEdit.setOnClickListener {
+            startActivity(Intent(requireActivity(), EditPetActivity::class.java))
+        }
+    }
+    private fun clickPrivacyBtn(){
+        binding.tvPrivacyPolicy.setOnClickListener {
+            startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java))
         }
     }
 
