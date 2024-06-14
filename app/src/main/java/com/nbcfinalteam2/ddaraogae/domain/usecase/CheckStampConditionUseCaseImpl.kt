@@ -7,5 +7,5 @@ import javax.inject.Inject
 class CheckStampConditionUseCaseImpl @Inject constructor(
     private val stampRepository: StampRepository
 ): CheckStampConditionUseCase {
-    override suspend fun invoke(dogId: String, date: Date) = stampRepository.checkStampCondition(dogId, date)
+    override suspend fun invoke(date: Date) = stampRepository.checkStampCondition(date)
 }
