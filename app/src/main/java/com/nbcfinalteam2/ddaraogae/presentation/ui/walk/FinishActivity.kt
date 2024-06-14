@@ -9,6 +9,8 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
@@ -20,6 +22,7 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
+import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.StampDialogFragment.Companion.ARG_STAMP_LIST
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
@@ -67,6 +70,52 @@ class FinishActivity : FragmentActivity() {
         val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
 
         initView(walkingUiModel, walkingDogs)
+
+        lifecycleScope.launch {
+            viewModel.taskState.collectLatest { state ->
+                when (state) {
+                    InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
+                    InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
+                    InsertTaskState.Success -> {
+                        Log.d("finsh", "InsertTaskState.Success")
+                        viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
+                    }
+                    is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.stampState.collectLatest { state ->
+                when (state) {
+                    StampTaskState.Idle -> binding.btnFinishDone.isEnabled = true
+                    StampTaskState.Loading -> binding.btnFinishDone.isEnabled = false
+                    StampTaskState.Success -> {
+                    }
+                    is StampTaskState.Error -> binding.btnFinishDone.isEnabled = true
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.stampList.collectLatest { list ->
+                if (list.isNotEmpty()) {
+                    // 받을 스탬프가 있을 때
+                    val dialogFragment = StampDialogFragment.newInstance(ArrayList(list))
+                    dialogFragment.isCancelable = false
+                    dialogFragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
+                        override fun onDestroy(owner: LifecycleOwner) {
+                            super.onDestroy(owner)
+                            finish()
+                        }
+                    })
+                    dialogFragment.show(supportFragmentManager, ARG_STAMP_LIST)
+                } else {
+                    // 받을 스탬프가 없을 때
+                    finish()
+                }
+            }
+        }
     }
 
     private fun requestPermissionForMap() {
@@ -79,48 +128,6 @@ class FinishActivity : FragmentActivity() {
 
     private fun initView(walkingUiModel: WalkingUiModel?, walkingDogs: List<DogInfo>?) = with(binding) {
         val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
-
-        lifecycleScope.launch {
-            //insert task state
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
-                    InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
-                    InsertTaskState.Success -> {
-                        viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
-                    }
-                    is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.stampList.collectLatest { stampList ->
-                if (stampList.isNotEmpty()) {
-                    val dialogFragment = StampDialogFragment.newInstance(ArrayList(stampList))
-                    dialogFragment.show(supportFragmentManager, "stamp")
-                } else {
-                    finish() // 스탬프가 없으면 Activity 종료
-                }
-            }
-        }
-
-//        lifecycleScope.launch {
-//            //stamp task state
-//            viewModel.stampState.collectLatest { state ->
-//                when (state) {
-//                    StampTaskState.Idle -> binding.btnFinishDone.isEnabled = true
-//                    StampTaskState.Loading -> binding.btnFinishDone.isEnabled = false
-//                    StampTaskState.Success -> {
-//                        val stampList = viewModel.stampList.value
-//                        val dialogFragment = StampDialogFragment.newInstance(ArrayList(stampList))
-//                        dialogFragment.show(supportFragmentManager, "stamp")
-//                    }
-//                    is StampTaskState.Error -> binding.btnFinishDone.isEnabled = true
-//                }
-//            }
-//        }
-
 
         //산책 시간
         tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
