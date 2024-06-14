@@ -77,7 +77,6 @@ class FinishActivity : FragmentActivity() {
                     InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
                     InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
                     InsertTaskState.Success -> {
-                        Log.d("finsh", "InsertTaskState.Success")
                         viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
                     }
                     is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
@@ -233,7 +232,8 @@ class FinishActivity : FragmentActivity() {
                 distanceDiff > 2.5 -> 10.0
                 distanceDiff > 1.5 -> 12.5
                 distanceDiff > 0.5 -> 15.0
-                else -> 7.5 /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
+                else -> 7.5
+                /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
                 다만 거리마다 적합한 줌 배율을 정해야 하는데 이건 테스트가 필요하다 */
             }
 
