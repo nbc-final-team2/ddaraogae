@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -57,7 +56,6 @@ class WalkFragment : Fragment() {
     }
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
-    private val POST_NOTIFICATION_PERMISSION_REQUEST_CODE = 5001
 
     private val PERMISSIONS = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -95,7 +93,7 @@ class WalkFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(LocationService.isRunning) {
+        if (LocationService.isRunning) {
             walkViewModel.setWalking()
         }
 
@@ -116,9 +114,9 @@ class WalkFragment : Fragment() {
         if (!hasPermissions()) {
             locationPermissionLauncher.launch(PERMISSIONS)
         } else {
-            initMapView()
-            initView()
             initViewModel()
+            initView()
+            initMapView()
         }
     }
 
@@ -148,10 +146,12 @@ class WalkFragment : Fragment() {
     // hasPermission()에서는 위치 권한이 있을 경우 true를, 없을 경우 false를 반환한다.
     private fun hasPermissions(): Boolean {
         return PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                it
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
-
 
 
     private fun initMapView() {
@@ -202,7 +202,8 @@ class WalkFragment : Fragment() {
             startLocationService()
             bindToService()
             locationService?.saveData(
-                walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it.id },
+                walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }
+                    .map { it.id },
                 Date(System.currentTimeMillis())
             )
         }
@@ -302,7 +303,11 @@ class WalkFragment : Fragment() {
 
     private fun startLocationService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 이상
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 return
             }
@@ -366,7 +371,7 @@ class WalkFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        if(bound) {
+        if (bound) {
             stopCollectingServiceFlow()
             unbindFromService()
         }
