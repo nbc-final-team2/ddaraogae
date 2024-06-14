@@ -71,7 +71,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupAdapter() {
         walkHistoryAdapter = WalkHistoryAdapter(
-            onPolyLineClick = { /* 이미지 클릭 이벤트 넣을것 */ }
+            onMapClick = { Toast.makeText(this, "테스트", Toast.LENGTH_SHORT).show() }
         )
         binding.rvWalkHistoryArea.adapter = walkHistoryAdapter
     }
@@ -83,7 +83,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupDatePicker() {
         binding.tvSelectedCalendar.setOnClickListener {
-            val dialog = DialogFragment()
+            val dialog = CalendarDialog()
             dialog.setOnMonthClickListener(this)
             dialog.show(supportFragmentManager, "")
         }
