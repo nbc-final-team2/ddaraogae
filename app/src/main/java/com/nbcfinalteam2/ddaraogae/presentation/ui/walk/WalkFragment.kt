@@ -163,11 +163,10 @@ class WalkFragment : Fragment() {
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
             // 위치를 추적하면서 카메라도 따라 움직인다.
-            naverMap.locationTrackingMode = LocationTrackingMode.Face
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
-            naverMap.locationOverlay.iconWidth = 60
-            naverMap.locationOverlay.iconHeight = 60
-            naverMap.locationOverlay
+            naverMap.locationOverlay.circleRadius = 20
+            naverMap.locationOverlay.circleColor = Color.RED
 
             // 카메라 설정
             lifecycleScope.launch {
