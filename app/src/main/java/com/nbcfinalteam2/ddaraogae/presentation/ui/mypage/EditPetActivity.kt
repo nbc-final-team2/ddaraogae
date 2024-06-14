@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,22 +11,30 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.UriToByteArrayConvertor.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 @AndroidEntryPoint
 class EditPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPetBinding
     private val viewModel: EditPetViewModel by viewModels()
-//    private var imageFile: File = File("")
-    private var imageUri:Uri? = null
+
+    //    private var imageFile: File = File("")
+    private var imageUri: Uri? = null
     private lateinit var dogData: DogItemModel
-    private lateinit var dogId : String
+    private lateinit var dogId: String
 
     private val galleryPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -79,6 +88,7 @@ class EditPetActivity : AppCompatActivity() {
     }
 
     //강아지 정보 수정
+    @SuppressLint("ResourceAsColor")
     private fun changeDogData() = with(binding) {
         var gender = 0
         ivDogThumbnail.setOnClickListener {
@@ -104,18 +114,27 @@ class EditPetActivity : AppCompatActivity() {
                 //val image = imageFile.toString().ifEmpty { null }
                 val image = imageUri.toString()
 
-                val changeDog = DogItemModel(dogId, name,gender, age, breed, memo, image)
+                val changeDog = DogItemModel(dogId, name, gender, age, breed, memo, image)
                 val byteImage = uriToByteArray(imageUri, this@EditPetActivity)
 
-                changePet(changeDog, byteImage)
-                setResult(RESULT_OK)
-                finish()
+                requestChangeDogData(changeDog, byteImage)
+
+                lifecycleScope.launch {
+                    viewModel.taskState.collectLatest { state ->
+                        when (state) {
+                            UpdateTaskState.Idle -> btnEditCompleted.isEnabled = true
+                            UpdateTaskState.Loading -> btnEditCompleted.isEnabled = false
+                            UpdateTaskState.Success -> finish()
+                            is UpdateTaskState.Error -> btnEditCompleted.isEnabled = true
+                        }
+                    }
+                }
             }
         }
     }
 
     //강아지 정보 수정 함수
-    private fun changePet(changeDogData: DogItemModel, byteImage: ByteArray?) {
+    private fun requestChangeDogData(changeDogData: DogItemModel, byteImage: ByteArray?) {
         viewModel.updateDog(changeDogData, byteImage)
     }
 

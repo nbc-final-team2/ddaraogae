@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.signature.ObjectKey
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemEditPetDogSelectionBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
@@ -17,8 +16,9 @@ class DetailPetAdapter(
     private val onItemClick:(DogItemModel) -> Unit
 ) : ListAdapter<DogItemModel,DetailPetAdapter.ItemViewHolder>(
     object :DiffUtil.ItemCallback<DogItemModel>(){
+
         override fun areItemsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
-            return oldItem == newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
@@ -68,9 +68,5 @@ class DetailPetAdapter(
 
     override fun onBindViewHolder(holder: DetailPetAdapter.ItemViewHolder, position: Int) {
         holder.bind(getItem(position), position)
-    }
-
-    override fun submitList(list: List<DogItemModel>?) {
-        super.submitList(list?.let { ArrayList(it) })
     }
 }
