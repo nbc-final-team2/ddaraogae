@@ -45,9 +45,6 @@
             android:name=".presentation.ui.mypage.DetailPetActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.home.AddActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.ui.main.MainActivity"
             android:exported="false" />
         <activity
