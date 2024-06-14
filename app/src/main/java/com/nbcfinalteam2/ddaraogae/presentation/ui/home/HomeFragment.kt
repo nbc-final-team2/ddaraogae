@@ -226,22 +226,14 @@ class HomeFragment : Fragment() {
                     "오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용하셔야 합니다. \n" +
                             "위치 권한 설정 화면으로 이동하시겠습니까?"
                 )
-                .setPositiveButton("네", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                        context?.startActivity(intent)
-                    }
-                })
-                .setNegativeButton("아니요", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        p0?.dismiss()
-                    }
-                })
-                .setNeutralButton("나중에", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        p0?.dismiss()
-                    }
-                })
+                .setPositiveButton("네") { _, _ ->
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    context?.startActivity(intent)
+                }
+                .setNegativeButton("아니요"
+                ) { p0, _ -> p0?.dismiss() }
+                .setNeutralButton("나중에"
+                ) { p0, _ -> p0?.dismiss() }
                 .create()
                 .show()
         }
