@@ -42,12 +42,14 @@ class HomeFragment : Fragment() {
         when {
             permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
                 getLastLocation()
+                toggleWeatherVisible()
             }
             permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                 getLastLocation()
+                toggleWeatherVisible()
             }
             else -> {
-
+                toggleWeatherInvisible()
             }
         }
     }
@@ -67,7 +69,7 @@ class HomeFragment : Fragment() {
         moveToHistory()
         setupAdapter()
         observeViewModel()
-        getLastLocation()
+        checkLocationPermissions()
     }
 
     override fun onResume() {
@@ -107,31 +109,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun checkLocationPermissions() {
-        locationPermissionRequest.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
-    }
-
-    private fun getLastLocation() {
-        checkLocationPermissions()
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        try {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    location?.let {
-                        val lat = it.latitude.toString()
-                        val lon = it.longitude.toString()
-                        homeViewModel.loadWeather(lat, lon)
-                    }
-                }
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-            Toast.makeText(context, "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun updateWeatherUI(weatherInfo: WeatherInfo) {
         with(binding) {
             val weatherCondition = weatherInfo.condition
@@ -160,6 +137,69 @@ class HomeFragment : Fragment() {
             getString(R.string.weather_status_cloudy) -> R.drawable.ic_weather_cloudy
             getString(R.string.weather_status_very_cloudy) -> R.drawable.ic_weather_very_cloudy
             else -> R.drawable.ic_x
+        }
+    }
+
+    private fun toggleWeatherVisible() {
+        with(binding) {
+            ivWeatherIcon.visibility = View.VISIBLE
+            tvLocation.visibility = View.VISIBLE
+            tvLocationTemperature.visibility = View.VISIBLE
+            tvLocationConditions.visibility = View.VISIBLE
+            tvFineDust.visibility = View.VISIBLE
+            ivFineDustIcon.visibility = View.VISIBLE
+            tvFineDustConditions.visibility = View.VISIBLE
+            tvUltraFineDust.visibility = View.VISIBLE
+            ivUltraFineDustIcon.visibility = View.VISIBLE
+            tvUltraFineDustConditions.visibility = View.VISIBLE
+            ivWeatherRenewal.visibility = View.VISIBLE
+            tvTodayWeatherTime.visibility = View.VISIBLE
+            tvWeatherData.visibility = View.GONE
+        }
+    }
+
+    private fun toggleWeatherInvisible() {
+        with(binding) {
+            ivWeatherIcon.visibility = View.INVISIBLE
+            tvLocation.visibility = View.INVISIBLE
+            tvLocationTemperature.visibility = View.INVISIBLE
+            tvLocationConditions.visibility = View.INVISIBLE
+            tvFineDust.visibility = View.INVISIBLE
+            ivFineDustIcon.visibility = View.INVISIBLE
+            tvFineDustConditions.visibility = View.INVISIBLE
+            tvUltraFineDust.visibility = View.INVISIBLE
+            ivUltraFineDustIcon.visibility = View.INVISIBLE
+            tvUltraFineDustConditions.visibility = View.INVISIBLE
+            ivWeatherRenewal.visibility = View.INVISIBLE
+            tvTodayWeatherTime.visibility = View.INVISIBLE
+            tvWeatherData.visibility = View.VISIBLE
+        }
+    }
+
+    private fun checkLocationPermissions() {
+        // 여기서 체크 셀프 펄미션
+        // isgranted가 안되어있으면 locationPermissionRequest.launch 얘 실행
+        // requireActivity = CONTEXT
+        locationPermissionRequest.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
+    }
+
+    private fun getLastLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        val lat = it.latitude.toString()
+                        val lon = it.longitude.toString()
+                        homeViewModel.loadWeather(lat, lon)
+                    }
+                }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            Toast.makeText(context, "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
