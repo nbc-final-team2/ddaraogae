@@ -52,27 +52,28 @@ class WalkFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-
     private val initMapPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        if(permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
-            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        ) {
+            println("런처 1, ")
             initMapView()
         } else {
+            println("런처 2")
             Toast.makeText(
                 requireContext(),
                 "지도 기능 이용을 위해 권한 허용이 필요합니다",
                 Toast.LENGTH_SHORT
-            )
+            ).show()
         }
-
     }
 
     private val startServicePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        if(permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
             permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true &&
             permissions[Manifest.permission.POST_NOTIFICATIONS] == true
         ) {
@@ -82,7 +83,7 @@ class WalkFragment : Fragment() {
                 requireContext(),
                 "산책 기능 이용을 위해 권한 허용이 필요합니다",
                 Toast.LENGTH_SHORT
-            )
+            ).show()
         }
     }
 
@@ -146,7 +147,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun checkMapPermission() {
-        if(ContextCompat.checkSelfPermission(
+        if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED &&
@@ -239,7 +240,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun checkServicePermission() {
-        if(ContextCompat.checkSelfPermission(
+        if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED &&
