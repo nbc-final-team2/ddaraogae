@@ -35,7 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var dogProfileAdapter: DogProfileAdapter
@@ -96,6 +95,7 @@ class HomeFragment : Fragment() {
     private fun setupListener() {
         moveToHistory()
         checkForMoveToLocationSettingsDialog()
+        weatherRefreshClickListener()
     }
 
     private fun observeViewModel() {
@@ -119,6 +119,18 @@ class HomeFragment : Fragment() {
 
         homeViewModel.weatherInfo.observe(viewLifecycleOwner) { weatherInfo ->
             updateWeatherUI(weatherInfo)
+        }
+    }
+
+    private fun weatherRefreshClickListener() {
+        binding.tvTodayWeatherTime.setOnClickListener {
+            getLastLocation()
+            binding.tvTodayWeatherTime.text = DateFormatter.getTodayDate()
+        }
+
+        binding.ivWeatherRenewal.setOnClickListener {
+            getLastLocation()
+            binding.tvTodayWeatherTime.text = DateFormatter.getTodayDate()
         }
     }
 
@@ -168,6 +180,7 @@ class HomeFragment : Fragment() {
             ivWeatherRenewal.visibility = View.VISIBLE
             tvTodayWeatherTime.visibility = View.VISIBLE
             tvWeatherData.visibility = View.GONE
+            tvTodayWeatherTime.text = DateFormatter.getTodayDate()
         }
     }
 
