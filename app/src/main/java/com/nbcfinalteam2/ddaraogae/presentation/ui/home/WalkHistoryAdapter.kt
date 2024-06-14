@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
 class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
@@ -45,7 +46,7 @@ class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
                 Glide.with(ivWalkPolyLine.context)
                     .load(item.walkingImage)
                     .into(ivWalkPolyLine)
-                tvWalkHistoryDate.text = item.endDateTime.toString()
+                tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
                 tvDistance.text = item.distance.toString()
                 tvDuration.text = item.timeTaken.toString()
 

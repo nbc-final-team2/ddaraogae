@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
+import okhttp3.internal.format
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -80,6 +81,11 @@ object DateFormatter {
 
     fun getTodayDate(): String {
         return todayDateFormat.format(Date())
+    }
+
+    fun getHistoryDate(walkEndTime: Date): String {
+        val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
+        return format.format(walkEndTime)
     }
 
 }
