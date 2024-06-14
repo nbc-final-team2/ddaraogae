@@ -56,15 +56,15 @@ class HomeViewModel @Inject constructor(
             val user = getCurrentUserUseCase()
             user?.let {
                 val dogEntities = getDogListUseCase().orEmpty()
-                val dogInfo = dogEntities.map { entity ->
+                val dogInfo = dogEntities.map {
                     DogInfo(
-                        id = entity.id!!,
-                        name = entity.name!!,
-                        gender = entity.gender!!,
-                        age = entity.age,
-                        lineage = entity.lineage,
-                        memo = entity.memo,
-                        thumbnailUrl = entity.thumbnailUrl
+                        id = it.id ?: "",
+                        name = it.name ?: "",
+                        gender = it.gender ?: 0,
+                        age = it.age,
+                        lineage = it.lineage,
+                        memo = it.memo,
+                        thumbnailUrl = it.thumbnailUrl
                     )
                 }
                 _dogList.value = dogInfo
@@ -89,15 +89,15 @@ class HomeViewModel @Inject constructor(
             val startDate = DateFormatter.getStartDateForWeek()
             val endDate = DateFormatter.getEndDateForWeek()
             val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-            val walkInfo = walkEntities.map { entity ->
+            val walkInfo = walkEntities.map {
                 WalkingInfo(
-                    id = entity.id,
-                    dogId = entity.dogId,
-                    timeTaken = entity.timeTaken,
-                    distance = entity.distance,
-                    startDateTime = entity.startDateTime,
-                    endDateTime = entity.endDateTime,
-                    walkingImage = entity.walkingImage
+                    id = it.id,
+                    dogId = it.dogId,
+                    timeTaken = it.timeTaken,
+                    distance = it.distance,
+                    startDateTime = it.startDateTime,
+                    endDateTime = it.endDateTime,
+                    walkingImage = it.walkingImage
                 )
             }
             _walkData.value = walkInfo
