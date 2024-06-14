@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
     private fun checkIsPossible() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
+                .collect { state ->
                     isPossible = state
                     if (isPossible == 0) successLogIn()
                     if (isPossible == 1) viewModel.checkVerified()

@@ -52,7 +52,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun checkSignUpState() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
+                .collect { state ->
                     signUpState = state
                     if (signUpState == 0) logIn()
                     if (signUpState == 1)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
