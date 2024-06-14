@@ -186,13 +186,10 @@ class WalkFragment : Fragment() {
             // 위치를 추적하면서 카메라도 따라 움직인다.
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
-<<<<<<< HEAD
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
-=======
             naverMap.locationOverlay.iconWidth = 60
             naverMap.locationOverlay.iconHeight = 60
->>>>>>> develop
 
             // 카메라 설정
             lifecycleScope.launch {
@@ -453,6 +450,3 @@ class WalkFragment : Fragment() {
         binding.tvWalkTime.text = totalTimeText
     }
 }
-
-
-
