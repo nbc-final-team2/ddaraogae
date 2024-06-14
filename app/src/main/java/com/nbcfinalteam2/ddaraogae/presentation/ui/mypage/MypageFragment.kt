@@ -30,7 +30,7 @@ class MypageFragment : Fragment() {
         clickAboutAccountBtn()
         clickAboutPetBtn()
         clickPrivacyBtn()
-        
+
     }
 
     private fun clickAboutAccountBtn(){
@@ -53,7 +53,7 @@ class MypageFragment : Fragment() {
             startActivity(Intent(requireActivity(), AddActivity::class.java))
         }
         binding.tvMyDogEdit.setOnClickListener {
-            startActivity(Intent(requireActivity(), EditPetActivity::class.java))
+            startActivity(Intent(requireActivity(), DetailPetActivity::class.java))
         }
     }
     private fun clickPrivacyBtn(){
