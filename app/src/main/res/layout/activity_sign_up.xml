@@ -5,6 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:padding="@dimen/padding_medium">
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ibt_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:background="@null"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_signup_title"
         android:layout_width="wrap_content"
@@ -25,6 +33,7 @@
         android:layout_marginTop="70dp"
         app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_signup_title"/>
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_signup_email_warning"
         android:layout_width="wrap_content"
@@ -44,6 +53,7 @@
         android:background="@drawable/login_box"
         android:paddingLeft="20dp"
         android:maxLength="16"
+        android:inputType="textPassword"
         android:layout_marginTop="@dimen/margin_larger"
         app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
         app:layout_constraintTop_toBottomOf="@+id/et_signup_email"/>
@@ -65,6 +75,7 @@
         android:hint="@string/signup_password_check"
         android:background="@drawable/login_box"
         android:paddingLeft="20dp"
+        android:inputType="textPassword"
         android:maxLength="16"
         android:layout_marginTop="@dimen/margin_larger"
         app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
@@ -81,14 +92,15 @@
         app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check"
         app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"/>
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_login"
+        android:id="@+id/bt_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:background="@drawable/rec_finish_done"
         android:text="@string/signup_complete"
         android:textColor="@color/white"
         android:textSize="@dimen/text_body"
-        android:background="@drawable/rec_finish_done"
-        android:layout_marginTop="90dp"
-        app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check"
-        app:layout_constraintStart_toStartOf="@+id/tv_signup_title"/>
+        app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

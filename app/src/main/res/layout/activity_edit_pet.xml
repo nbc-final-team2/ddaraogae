@@ -29,18 +29,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_edit"
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/bt_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:text="@string/mypage_edit_pet_edit_button"
-                android:textSize="@dimen/text_text"
-                app:layout_constraintBottom_toTopOf="@+id/topBar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                android:src="@drawable/ic_back"
+                android:background="@null"
+                android:layout_marginLeft="@dimen/margin_medium"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_appBar"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_appBar"/>
             <View
                 android:id="@+id/topBar"
                 android:layout_width="match_parent"
@@ -51,19 +49,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_appBar" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_dogArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@+id/iv_dogThumbnail"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/topBar"
-                tools:listitem="@layout/item_edit_pet_dog_selection" />
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_dogThumbnail"
                 android:layout_width="130dp"
@@ -73,7 +58,7 @@
                 app:civ_border_width="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_dogArea"
+                app:layout_constraintTop_toBottomOf="@+id/topBar"
                 tools:src="@drawable/ic_launcher_background" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -131,6 +116,7 @@
                     android:layout_width="84dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_medium"
+                    android:checked="true"
                     android:background="@drawable/radio_button_selector"
                     android:button="@android:color/transparent"
                     android:gravity="center"
@@ -251,7 +237,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
-                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/et_memo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

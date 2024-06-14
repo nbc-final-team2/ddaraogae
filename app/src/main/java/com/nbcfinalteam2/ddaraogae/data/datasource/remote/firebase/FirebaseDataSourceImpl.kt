@@ -3,13 +3,15 @@ package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.Date
 import javax.inject.Inject
 
@@ -39,7 +41,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(DogDto::class.java)
     }
 
-    override suspend fun insertDog(dogDto: DogDto, imageUri: Uri?) {
+    override suspend fun insertDog(dogDto: DogDto, byteImage: ByteArray?) {
         val uid = getUserUid()
         val db = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS)
@@ -47,20 +49,24 @@ class FirebaseDataSourceImpl @Inject constructor(
         val dogId = newDogDoc.id
 
         newDogDoc.set(dogDto).await()
-        updateDog(dogId, dogDto, imageUri)
+        updateDog(dogId, dogDto, byteImage)
     }
 
-    override suspend fun updateDog(dogId: String, dogDto: DogDto, imageUri: Uri?) {
-        val uid = getUserUid()
-        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
-            .collection(PATH_DOGS).document(dogId)
+    override suspend fun updateDog(dogId: String, dogDto: DogDto, byteImage: ByteArray?) {
+        withContext(Dispatchers.IO + NonCancellable) {
+            val uid = getUserUid()
+            val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+                .collection(PATH_DOGS).document(dogId)
 
-        val updateDogDto = imageUri?.let { uri ->
-            val convertedUrl = convertImageUrl(uri, dogId)
-            dogDto.copy(thumbnailUrl = convertedUrl.toString())
-        } ?: dogDto
+            val updateDogDto = byteImage?.let {
+                val convertedUrl = withContext(Dispatchers.IO + NonCancellable) {
+                    convertImageUrl(it, dogId)
+                }
+                dogDto.copy(thumbnailUrl = convertedUrl.toString())
+            } ?: dogDto
 
-        db.set(updateDogDto).await()
+            db.set(updateDogDto).await()
+        }
     }
 
     override suspend fun deleteDog(dogId: String) {
@@ -245,23 +251,51 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(WalkingDto::class.java)
     }
 
-    override suspend fun insertWalkingData(walkingDto: WalkingDto) {
+    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: ByteArray?) {
         val uid = getUserUid()
 
-        firebaseFs.collection(PATH_USERDATA).document(uid)
-            .collection(PATH_WALKING).add(walkingDto)
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING)
+        val newWalkingDoc = db.document()
+        val walkingId = newWalkingDoc.id
+
+        newWalkingDoc.set(walkingDto).await()
+        updateWalkingData(walkingId, walkingDto, mapImage)
+    }
+
+    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: ByteArray?) {
+        val uid = getUserUid()
+        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING).document(walkingId)
+
+        val updateWalkingDto = mapImage?.let {
+            val convertedUrl = convertByteArrayUrl(it, walkingId, PATH_WALKING)
+            walkingDto.copy(walkingImage = convertedUrl.toString())
+        } ?: walkingDto
+
+        db.set(updateWalkingDto).await()
     }
 
     private fun getUserUid(): String {
         return fbAuth.currentUser?.uid?:throw Exception("UNKNOWN USER")
     }
 
-    private suspend fun convertImageUrl(imageUri: Uri, dogId: String): Uri {
+    private suspend fun convertImageUrl(byteImage: ByteArray, dogId: String): Uri? {
         val storageRef = fbStorage.reference
         val uid = getUserUid()
         val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
 
-        uploadRef.putFile(imageUri).await()
+        uploadRef.putBytes(byteImage).await()
+
+        return uploadRef.downloadUrl.await()
+    }
+
+    private suspend fun convertByteArrayUrl(imageByteArray: ByteArray, itemId: String, path: String): Uri? {
+        val storageRef = fbStorage.reference
+        val uid = getUserUid()
+        val uploadRef = storageRef.child("$PATH_USERDATA/$uid/$path/$itemId.$STORAGE_FILE_EXTENSION")
+
+        uploadRef.putBytes(imageByteArray).await()
 
         return uploadRef.downloadUrl.await()
     }

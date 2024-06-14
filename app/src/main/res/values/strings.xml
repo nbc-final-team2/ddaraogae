@@ -68,6 +68,7 @@
     <string name="home_add_dog_memo_title">메모</string>
     <string name="home_add_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="home_add_edit_completed_button">완료</string>
+    <string name="please_add_name">이름은 필수 작성 항목입니다!</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>
@@ -85,6 +86,7 @@
     <string name="mypage_title">마이페이지</string>
     <string name="mypage_information_edit_title">정보 수정</string>
     <string name="mypage_information_dog_edit">나의 반려견 정보 수정</string>
+    <string name="mypage_information_dog_add">나의 반려견 정보 추가</string>
     <string name="mypage_setting_title">설정</string>
     <string name="mypage_setting_dark_theme">다크테마</string>
     <string name="mypage_membership_management_title">회원 관리</string>
@@ -111,7 +113,9 @@
     <string name="mypage_edit_pet_dog_memo_title">메모</string>
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
-
+    <string name="mypage_delete_dog">삭제 하기</string>
+    <!-- mypage - detail - pet -->
+    <string name="detail_pet_empty_list">반려견 정보가 없습니다.</string>
     <!-- item - home - history -->
     <string name="item_home_history_date">2024.05.28 17:38</string>
     <string name="item_home_history_location">광진구 화양동</string>
@@ -134,6 +138,17 @@
     <string name="login_signup">회원가입</string>
     <string name="login_sns">SNS 로그인</string>
     <string name="login_google">Google 로그인</string>
+    <string name="login_error">유효하지 않은 계정입니다.</string>
+    <string name="login_success">로그인에 성공하셨습니다.</string>
+    <string name="login_fail">로그인에 실패하셨습니다.</string>
+    <string name="login_dialog_title">이메일 인증이 되지 않은 계정 입니다!</string>
+    <string name="login_dialog_message">이메일 인증을 진행 해 주세요.</string>
+    <string name="login_dialog_ok">인증 하기</string>
+    <string name="login_dialog_no">회원 탈퇴</string>
+    <string name="login_send_email">이메일이 발송 되었습니다.</string>
+    <string name="login_unknown_error">실패했습니다.</string>
+    <string name="login_account_delete">계정이 삭제되었습니다.</string>
+    <string name="login_input_account">계정을 입력해주세요.</string>
 
     <!-- signup -->
     <string name="signup_title">환영합니다!\n이메일과 비밀번호를\n입력해주세요.</string>
@@ -144,7 +159,11 @@
     <string name="signup_password_check">비밀번호 확인</string>
     <string name="signup_password_check_warning">비밀번호와 일치하지 않습니다.</string>
     <string name="signup_complete">완료</string>
-    <string name="signup_check_email">인증하기</string>
+    <string name="signup_success">회원가입에 성공하셨습니다.</string>
+    <string name="signup_fail">회원가입에 실패하셨습니다.</string>
+    <string name="signup_email_check">"존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요."</string>
+    <string name="signup_account_warning">계정이 유효하지 않습니다.</string>
+
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>

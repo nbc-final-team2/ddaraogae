@@ -8,5 +8,5 @@ data class WalkingDto(
     val distance: Double? = null,
     val startDateTime: Date? = null,
     val endDateTime: Date? = null,
-    val path: String? = null,
+    val walkingImage: String? = null,
 )

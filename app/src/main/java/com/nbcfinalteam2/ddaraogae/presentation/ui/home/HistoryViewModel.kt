@@ -55,7 +55,7 @@ class HistoryViewModel @Inject constructor(
                     distance = entity.distance,
                     startDateTime = entity.startDateTime,
                     endDateTime = entity.endDateTime,
-                    path = entity.path
+                    walkingImage = entity.walkingImage
                 )
             }
             _walkData.value = walkInfo
