@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private val viewModel: LoginViewModel by viewModels()
 
-    private var isPossible = -1
+    //private var isPossible = -1
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private val activityResultLauncher =
@@ -64,13 +64,12 @@ class LoginActivity : AppCompatActivity() {
     private fun checkIsPossible() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    isPossible = state
-                    if (isPossible == 0) successLogIn()
-                    if (isPossible == 1) viewModel.checkVerified()
-                    if (isPossible == 2) Toast.makeText(this@LoginActivity, R.string.login_fail, Toast.LENGTH_SHORT).show()
-                    if (isPossible == 3) sendEmail()
-                    if (isPossible > 10) Toast.makeText(
+                .collect { state ->
+                    if (state == 0) successLogIn()
+                    if (state == 1) viewModel.checkVerified()
+                    if (state == 2) Toast.makeText(this@LoginActivity, R.string.login_fail, Toast.LENGTH_SHORT).show()
+                    if (state == 3) sendEmail()
+                    if (state > 10) Toast.makeText(
                         this@LoginActivity, R.string.login_unknown_error, Toast.LENGTH_SHORT).show()
                 }
         }

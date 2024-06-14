@@ -23,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val signUpWithEmailUseCase: SignUpWithEmailUseCase,
+    private val signOutUseCase: SignOutUseCase,
 ):ViewModel(){
     //회원가입 여부 판단
     private val _userState = MutableSharedFlow<Int>()
@@ -32,7 +33,7 @@ class SignUpViewModel @Inject constructor(
     fun signUp(email:String, password:String) = viewModelScope.launch{
         try {
             val isSuccess = signUpWithEmailUseCase(EmailAuthEntity(email, password))
-            if(isSuccess) _userState.emit(0)
+            if(isSuccess) logOut()
             else _userState.emit(1)
         } catch (e : FirebaseAuthUserCollisionException) {
             //이메일 중복 체크
@@ -41,5 +42,15 @@ class SignUpViewModel @Inject constructor(
             _userState.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
+    }
+    private fun logOut() = viewModelScope.launch{
+        try {
+            signOutUseCase()
+            _userState.emit(0)
+        } catch (e:Exception){
+            _userState.emit(99)
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
+        }
+
     }
 }

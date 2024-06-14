@@ -26,8 +26,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var email: String
     private lateinit var password: String
-
-    private var signUpState = -1
+    
     private var correctEmail = false
     private var correctPassword = false
     private var correctPasswordCheck = false
@@ -52,15 +51,13 @@ class SignUpActivity : AppCompatActivity() {
     private fun checkSignUpState() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    signUpState = state
-                    if (signUpState == 0) logIn()
-                    if (signUpState == 1)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
-                    if (signUpState == 2) Toast.makeText(this@SignUpActivity, R.string.signup_email_check, Toast.LENGTH_SHORT).show()
-                    if (signUpState > 10)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
+                .collect { state ->
+                    if (state == 0) logIn()
+                    if (state == 1)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
+                    if (state == 2) Toast.makeText(this@SignUpActivity, R.string.signup_email_check, Toast.LENGTH_SHORT).show()
+                    if (state > 10)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
                 }
         }
-
     }
 
     private fun logIn() {
@@ -80,8 +77,6 @@ class SignUpActivity : AppCompatActivity() {
             ).show()
             else {
                 viewModel.signUp(email, password)
-
-
             }
 
         }

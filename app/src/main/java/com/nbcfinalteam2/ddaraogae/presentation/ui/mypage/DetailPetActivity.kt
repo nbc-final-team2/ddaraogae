@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.widget.ScrollView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +14,15 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class DetailPetActivity : AppCompatActivity() {
@@ -34,18 +38,31 @@ class DetailPetActivity : AppCompatActivity() {
     private var dogData = DogItemModel("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
     private var dogDataList = listOf<DogItemModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailPetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel.getDogList()
 
         setAdapter()
         checkPetListEmpty()
 
         binding.btBack.setOnClickListener { finish() }
 
+        lifecycleScope.launch {
+            viewModel.uiState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    withContext(Dispatchers.Main) {
+                        adapter.submitList(state.listPet)
+                    }
+                }
+        }
+    }
+
+    //edit -> detail로 돌아왔을 때 데이터를 반영하기 위함
+    override fun onResume() {
+        super.onResume()
+        viewModel.getDogList()
     }
 
     //user의 반려견 정보가 없으면 빈 창을 보여줌
@@ -128,11 +145,4 @@ class DetailPetActivity : AppCompatActivity() {
         viewModel.deleteDogData(dogId)
         viewModel.getDogList()
     }
-
-    //edit->detail로 돌아왔을 때 데이터를 반영하기 위함
-    override fun onStart() {
-        super.onStart()
-        viewModel.getDogList()
-    }
-
 }
