@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
@@ -25,8 +24,11 @@ class FinishViewModel @Inject constructor(
     private val _taskState = MutableStateFlow<InsertTaskState>(InsertTaskState.Idle)
     val taskState: StateFlow<InsertTaskState> = _taskState.asStateFlow()
 
-    private val _stampState = MutableStateFlow<List<StampEntity>>(emptyList())
-    val stampState: StateFlow<List<StampEntity>> = _stampState.asStateFlow()
+    private val _stampState = MutableStateFlow<StampTaskState>(StampTaskState.Idle)
+    val stampState: StateFlow<StampTaskState> = _stampState.asStateFlow()
+
+    private val _stampList = MutableStateFlow<List<StampEntity>>(emptyList())
+    val stampList: StateFlow<List<StampEntity>> = _stampList.asStateFlow()
 
 
     fun insertWalkingData(walk: WalkingUiModel, image: ByteArray) {
@@ -55,11 +57,10 @@ class FinishViewModel @Inject constructor(
     fun checkStampCondition(date: Date) {
         viewModelScope.launch {
             try {
-                val temp = checkStampConditionUseCase(date)
-                Log.d("viewmodel", temp.toString())
-                _stampState.value = temp
+                _stampList.value = checkStampConditionUseCase(date)
+                _stampState.value = StampTaskState.Success
             } catch (e: Exception) {
-                e.printStackTrace()
+                _stampState.value = StampTaskState.Error(e)
             }
         }
     }
