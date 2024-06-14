@@ -10,7 +10,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
-class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
+class WalkHistoryAdapter(private val onMapClick: () -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -32,7 +32,7 @@ class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(getItem(position), onPolyLineClick)
+        (holder as ViewHolder).bind(getItem(position), onMapClick)
     }
 
     override fun getItemCount(): Int {
@@ -41,17 +41,14 @@ class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
 
     class ViewHolder(private val binding: ItemHomeHistoryWalkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: WalkingInfo, onPolyLineClick: () -> Unit) {
+        fun bind(item: WalkingInfo, onMapClick: () -> Unit) {
             with(binding) {
-                Glide.with(ivWalkPolyLine.context)
-                    .load(item.walkingImage)
-                    .into(ivWalkPolyLine)
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
                 tvDistance.text = item.distance.toString().plus("km")
                 tvDuration.text = item.timeTaken.toString().plus("분")
 
-                ivWalkPolyLine.setOnClickListener {
-                    onPolyLineClick()
+                ivWalkMap.setOnClickListener {
+                    onMapClick()
                 }
             }
         }
