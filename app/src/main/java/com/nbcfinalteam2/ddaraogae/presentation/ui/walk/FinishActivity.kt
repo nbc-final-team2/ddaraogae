@@ -45,12 +45,17 @@ class FinishActivity : FragmentActivity() {
     private var polyline = PolylineOverlay()
     private lateinit var cameraPosition: CameraPosition
     private lateinit var cameraUpdate: CameraUpdate
-
     private lateinit var locationList: List<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        getDataForInitView()
+    }
+
+    private fun getDataForInitView() {
+        requestPermissionForMap()
 
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra("locationList", LatLng::class.java)?.toList().orEmpty()
@@ -58,16 +63,21 @@ class FinishActivity : FragmentActivity() {
             (intent.getParcelableArrayExtra("locationList") as? Array<LatLng>)?.toList().orEmpty()
         }
 
-        initView()
-    }
-
-    private fun initView() = with(binding) {
-        if (!hasPermission()) {
-            ActivityCompat.requestPermissions(this@FinishActivity, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
-        } else { initMapView() }
-
         val walkingUiModel: WalkingUiModel? = intent.getParcelableExtra("wakingInfo")
         val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
+
+        initView(walkingUiModel, walkingDogs)
+    }
+
+    private fun requestPermissionForMap() {
+        if (!hasPermission()) {
+            ActivityCompat.requestPermissions(this@FinishActivity, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            initMapView()
+        }
+    }
+
+    private fun initView(walkingUiModel: WalkingUiModel?, walkingDogs: List<DogInfo>?) = with(binding) {
         val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
 
         lifecycleScope.launch {
@@ -85,20 +95,32 @@ class FinishActivity : FragmentActivity() {
         }
 
         lifecycleScope.launch {
-            //stamp task state
-            viewModel.stampState.collectLatest { state ->
-                when (state) {
-                    StampTaskState.Idle -> binding.btnFinishDone.isEnabled = true
-                    StampTaskState.Loading -> binding.btnFinishDone.isEnabled = false
-                    StampTaskState.Success -> {
-                        val stampList = viewModel.stampList.value
-                        val dialogFragment = StampDialogFragment.newInstance(ArrayList(stampList))
-                        dialogFragment.show(supportFragmentManager, "stamp")
-                    }
-                    is StampTaskState.Error -> binding.btnFinishDone.isEnabled = true
+            viewModel.stampList.collectLatest { stampList ->
+                if (stampList.isNotEmpty()) {
+                    val dialogFragment = StampDialogFragment.newInstance(ArrayList(stampList))
+                    dialogFragment.show(supportFragmentManager, "stamp")
+                } else {
+                    finish() // 스탬프가 없으면 Activity 종료
                 }
             }
         }
+
+//        lifecycleScope.launch {
+//            //stamp task state
+//            viewModel.stampState.collectLatest { state ->
+//                when (state) {
+//                    StampTaskState.Idle -> binding.btnFinishDone.isEnabled = true
+//                    StampTaskState.Loading -> binding.btnFinishDone.isEnabled = false
+//                    StampTaskState.Success -> {
+//                        val stampList = viewModel.stampList.value
+//                        val dialogFragment = StampDialogFragment.newInstance(ArrayList(stampList))
+//                        dialogFragment.show(supportFragmentManager, "stamp")
+//                    }
+//                    is StampTaskState.Error -> binding.btnFinishDone.isEnabled = true
+//                }
+//            }
+//        }
+
 
         //산책 시간
         tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
@@ -204,7 +226,8 @@ class FinishActivity : FragmentActivity() {
                 distanceDiff > 2500.0 -> 5.0
                 distanceDiff > 1500.0 -> 10.0
                 distanceDiff > 500.0 -> 15.0
-                else -> 3.0 /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
+                else -> 3.0
+                /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
                 다만 거리마다 적합한 줌 배율을 정해야 하는데 이건 테스트가 필요하다 */
             }
 

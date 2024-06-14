@@ -346,8 +346,7 @@ class WalkFragment : Fragment() {
         val intent = Intent(requireContext(), FinishActivity::class.java).apply {
             putExtra("locationList", locationList)
             putExtra("wakingInfo", walkingUiModel)
-            putExtra("walkingDogs", walkedDogIdList?.let {
-                ArrayList(it) })
+            putExtra("walkingDogs", walkedDogIdList?.let { ArrayList(it) })
         }
         startActivity(intent)
     }
@@ -381,6 +380,3 @@ class WalkFragment : Fragment() {
         binding.tvWalkTime.text = timeIntToString(time)
     }
 }
-
-
-

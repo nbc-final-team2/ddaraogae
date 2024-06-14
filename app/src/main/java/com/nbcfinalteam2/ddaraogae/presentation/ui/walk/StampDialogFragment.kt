@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentStampDialogBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class StampDialogFragment : DialogFragment() {
 
     private var _binding: FragmentStampDialogBinding?= null
