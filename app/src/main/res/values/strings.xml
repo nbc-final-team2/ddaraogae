@@ -168,6 +168,7 @@
     <!-- location service -->
     <string name="is_walking">산책 중..</string>
 
+
     <!-- weather - status -->
     <string name="weather_status_thunder">천둥번개</string>
     <string name="weather_status_rain">비</string>

@@ -81,6 +81,7 @@ class LoginActivity : AppCompatActivity() {
             .setMessage(R.string.login_dialog_message)
             .setPositiveButton(R.string.login_dialog_ok, DialogInterface.OnClickListener { _, _ ->
                 viewModel.sendEmail()
+                Toast.makeText(this@LoginActivity, R.string.login_send_email, Toast.LENGTH_SHORT).show()
             })
             .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _, _ ->
                 viewModel.deleteAccount()
