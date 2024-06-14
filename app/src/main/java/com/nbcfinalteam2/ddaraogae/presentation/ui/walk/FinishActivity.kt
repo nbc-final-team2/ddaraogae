@@ -45,12 +45,17 @@ class FinishActivity : FragmentActivity() {
     private var polyline = PolylineOverlay()
     private lateinit var cameraPosition: CameraPosition
     private lateinit var cameraUpdate: CameraUpdate
-
     private lateinit var locationList: List<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        getDataForInitView()
+    }
+
+    private fun getDataForInitView() {
+        requestPermissionForMap()
 
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra("locationList", LatLng::class.java)?.toList().orEmpty()
@@ -58,18 +63,25 @@ class FinishActivity : FragmentActivity() {
             (intent.getParcelableArrayExtra("locationList") as? Array<LatLng>)?.toList().orEmpty()
         }
 
-        initView()
-    }
-
-    private fun initView() = with(binding) {
-        if (!hasPermission()) {
-            ActivityCompat.requestPermissions(this@FinishActivity, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
-        } else { initMapView() }
-
         val walkingUiModel: WalkingUiModel? = intent.getParcelableExtra("wakingInfo")
         val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
-        val stamps = ""
+
+        viewModel.checkStampCondition(walkingUiModel?.endDateTime!!)
+
+        initView(walkingUiModel, walkingDogs)
+    }
+
+    private fun requestPermissionForMap() {
+        if (!hasPermission()) {
+            ActivityCompat.requestPermissions(this@FinishActivity, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            initMapView()
+        }
+    }
+
+    private fun initView(walkingUiModel: WalkingUiModel?, walkingDogs: List<DogInfo>?) = with(binding) {
         val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
+
 
         //산책 시간
         tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
@@ -93,7 +105,9 @@ class FinishActivity : FragmentActivity() {
 
         //산책 끝 버튼
         btnFinishDone.setOnClickListener {
-            if (walkingUiModel != null) { finishWalking(walkingUiModel) }
+            if (walkingUiModel != null) {
+                finishWalking(walkingUiModel)
+            }
         }
     }
 
@@ -112,14 +126,25 @@ class FinishActivity : FragmentActivity() {
             // 더블 터치시 줌되는 제스처 막기
             naverMap.uiSettings.isZoomGesturesEnabled = false
 
+
             drawPolyLine()
             setCameraOnPolyLine()
+
+            if (::naverMap.isInitialized) {
+                naverMap.takeSnapshot {
+                    binding.ivTest.setImageBitmap(it)
+                }
+            }
         }
     }
 
     private fun hasPermission(): Boolean {
         for (permission in PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 return false
             }
         }
@@ -171,7 +196,8 @@ class FinishActivity : FragmentActivity() {
                 distanceDiff > 2500.0 -> 5.0
                 distanceDiff > 1500.0 -> 10.0
                 distanceDiff > 500.0 -> 15.0
-                else -> 3.0 /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
+                else -> 3.0
+                /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
                 다만 거리마다 적합한 줌 배율을 정해야 하는데 이건 테스트가 필요하다 */
             }
 
