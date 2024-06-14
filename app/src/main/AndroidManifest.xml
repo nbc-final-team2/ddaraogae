@@ -46,7 +46,7 @@
             android:exported="false" />
         <activity
             android:name=".presentation.ui.main.MainActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".presentation.ui.login.SignUpActivity"
             android:exported="true"/>

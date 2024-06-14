@@ -12,6 +12,10 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -106,29 +110,28 @@ class WalkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
 
-        if (!hasPermission()) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                PERMISSIONS,
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
+        if (!hasPermissions()) {
+            requestPermissions(PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
             initMapView()
         }
 
-        initView()
-        initViewModel()
+        binding.btnWalkStart.setOnClickListener {
+            if (hasPermissions()) {
+                startLocationService()
+                startTimer()
+            } else {
+                requestPermissions(PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
+            }
+        }
+
+        binding.ibWalkStop.setOnClickListener {
+            endLocationService() // 트래킹 비활성화
+            timerTask?.cancel() // 타이머 멈춤
+        }
+        observeStoreData() // 마커를 새로 그리기(맵뷰애 있으면 안됨)
+    }
 
     }
 
@@ -180,6 +183,32 @@ class WalkFragment : Fragment() {
             }
         }
     }
+
+    // hasPermission()에서는 위치 권한이 있을 경우 true를, 없을 경우 false를 반환한다.
+    private fun hasPermissions(): Boolean {
+        for (permission in PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(requireActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                initMapView()
+            } else {
+                Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private fun setCamera(lastLocation: Location) {
         val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
@@ -252,26 +281,28 @@ class WalkFragment : Fragment() {
         markerList.clear()
     }
 
-    private fun addMarkers(storeListState: StoreListState) {
-        /* TODO:
-        *   클릭시 정보창 띄우기로 변경, 마커 사이즈 줄이기, bound는 어떻게 */
-        storeListState.storeList.forEach { store ->
-            val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
-            val marker = Marker()
-            marker.width = Marker.SIZE_AUTO
-            marker.height = 60
-            /** 적절한 크기 찾아야하는데..*/
-            marker.position = latLng
-            marker.map = naverMap
-            markerList.add(marker)
+    private fun addMarkers(stores: List<StoreEntity?>) {
+        stores.forEach { store ->
+            store?.let { storeEntity ->
+                val latLng = LatLng(storeEntity.lat!!.toDouble(), storeEntity.lng!!.toDouble())
+                val marker = Marker()
+                marker.width = Marker.SIZE_AUTO
+                marker.height = 60 /** 적절한 크기 찾아야하는데..*/
+                marker.position = latLng
+                marker.map = naverMap
+                markerList.add(marker)
 
-            val contentString =
-                store.placeName // Assuming `storeEntity` has a `name` property
+                val contentString = """
+                ${storeEntity.placeName} | ${storeEntity.categoryGroupName}
+                    ${storeEntity.address}
+                    ${storeEntity.phone} 
+                """.trimIndent()
 
-            val infoWindow = InfoWindow().apply {
-                adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
-                    override fun getText(infoWindow: InfoWindow): CharSequence {
-                        return contentString.toString()
+                val infoWindow = InfoWindow().apply {
+                    adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
+                        override fun getText(infoWindow: InfoWindow): CharSequence {
+                            return contentString
+                        }
                     }
                 }
             }
