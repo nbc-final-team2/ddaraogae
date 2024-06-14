@@ -17,7 +17,7 @@ class StampDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     companion object {
-        private const val ARG_STAMP_LIST = "stamp"
+        const val ARG_STAMP_LIST = "stamp"
 
         fun newInstance(stampList: ArrayList<StampEntity>): StampDialogFragment {
             val fragment = StampDialogFragment()
