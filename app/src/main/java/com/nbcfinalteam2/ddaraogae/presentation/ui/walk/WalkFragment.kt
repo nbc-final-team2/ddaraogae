@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -106,42 +107,44 @@ class WalkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
 
-        if (!hasPermission()) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                PERMISSIONS,
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
+        if (!hasPermissions()) {
+            requestPermissions(PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
         } else {
             initMapView()
         }
 
-        initView()
-        initViewModel()
-
+        if (hasPermissions()) {
+            initView()
+            initViewModel()
+        } else {
+            requestPermissions(PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
+        }
     }
 
     // hasPermission()에서는 위치 권한이 있을 경우 true를, 없을 경우 false를 반환한다.
-    private fun hasPermission(): Boolean {
+    private fun hasPermissions(): Boolean {
         for (permission in PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(requireActivity(), permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ContextCompat.checkSelfPermission(requireActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 return false
             }
         }
         return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                initMapView()
+            } else {
+                Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initMapView() {
@@ -265,13 +268,16 @@ class WalkFragment : Fragment() {
             marker.map = naverMap
             markerList.add(marker)
 
-            val contentString =
-                store.placeName // Assuming `storeEntity` has a `name` property
+            val contentString = """
+                ${store.placeName} | ${store.categoryGroupName}
+                    ${store.address}
+                    ${store.phone} 
+                """.trimIndent()
 
             val infoWindow = InfoWindow().apply {
                 adapter = object : InfoWindow.DefaultTextAdapter(requireContext()) {
                     override fun getText(infoWindow: InfoWindow): CharSequence {
-                        return contentString.toString()
+                        return contentString
                     }
                 }
             }
