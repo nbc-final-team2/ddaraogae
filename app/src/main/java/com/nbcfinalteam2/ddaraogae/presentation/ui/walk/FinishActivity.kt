@@ -13,6 +13,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -23,7 +24,6 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.StampDialogFragment.Companion.ARG_STAMP_LIST
-import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
@@ -79,6 +79,7 @@ class FinishActivity : FragmentActivity() {
                     InsertTaskState.Success -> {
                         viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
                     }
+
                     is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
                 }
             }
@@ -91,6 +92,7 @@ class FinishActivity : FragmentActivity() {
                     StampTaskState.Loading -> binding.btnFinishDone.isEnabled = false
                     StampTaskState.Success -> {
                     }
+
                     is StampTaskState.Error -> binding.btnFinishDone.isEnabled = true
                 }
             }
@@ -119,40 +121,45 @@ class FinishActivity : FragmentActivity() {
 
     private fun requestPermissionForMap() {
         if (!hasPermission()) {
-            ActivityCompat.requestPermissions(this@FinishActivity, PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this@FinishActivity,
+                PERMISSIONS,
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
         } else {
             initMapView()
         }
     }
 
-    private fun initView(walkingUiModel: WalkingUiModel?, walkingDogs: List<DogInfo>?) = with(binding) {
-        val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
+    private fun initView(walkingUiModel: WalkingUiModel?, walkingDogs: List<DogInfo>?) =
+        with(binding) {
+            val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
 
-        //산책 시간
-        tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
-            timeIntToString(it)
-        }
+            //산책 시간
+            tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
+                timeIntToString(it)
+            }
 
-        //산책 거리
-        tvFinishWalkingDistance.text = walkingUiModel?.distance?.let {
-            distanceDoubleToString(it)
-        }
+            //산책 거리
+            tvFinishWalkingDistance.text = walkingUiModel?.distance?.let {
+                distanceDoubleToString(it)
+            }
 
-        //반려견 목록
-        rvFinishDogs.adapter = dogsAdapter
+            //반려견 목록
+            rvFinishDogs.adapter = dogsAdapter
 
-        //날짜
-        tvFinishDate.text = walkingUiModel?.startDateTime?.let {
-            dateDateToString(it)
-        }
+            //날짜
+            tvFinishDate.text = walkingUiModel?.startDateTime?.let {
+                dateDateToString(it)
+            }
 
-        //산책 끝 버튼
-        btnFinishDone.setOnClickListener {
-            if (walkingUiModel != null) {
-                finishWalking(walkingUiModel)
+            //산책 끝 버튼
+            btnFinishDone.setOnClickListener {
+                if (walkingUiModel != null) {
+                    finishWalking(walkingUiModel)
+                }
             }
         }
-    }
 
     private fun initMapView() {
         val fm = supportFragmentManager
@@ -209,44 +216,18 @@ class FinishActivity : FragmentActivity() {
     }
 
     private fun setCameraOnPolyLine() {
-        /** 위도 경도의 최대값과 최소값을 통해 중심점을 찾아 카메라포지션을 잡기
-         * '위치 정보를 불러왔을때' 조건을 추가해주면 되겠다. */
-
         if (locationList.isNotEmpty()) {
-            var latMin = locationList[0].latitude
-            var latMax = locationList[0].latitude
-            var lngMin = locationList[0].longitude
-            var lngMax = locationList[0].longitude
-
+            val boundsBuilder = LatLngBounds.Builder()
             for (latLng in locationList) {
-                if (latLng.latitude < latMin) latMin = latLng.latitude
-                if (latLng.latitude > latMax) latMax = latLng.latitude
-                if (latLng.longitude < lngMin) lngMin = latLng.longitude
-                if (latLng.longitude > lngMax) lngMax = latLng.longitude
+                boundsBuilder.include(latLng)
             }
+            val bounds = boundsBuilder.build()
 
-            val distanceDiff = DistanceCalculator.getDistance(latMin, lngMin, latMax, lngMax)
-            // maxDiff를 기준으로 줌 레벨 조정
-            Log.d("distanceDiff", "$distanceDiff")
+            val padding = 100
 
-            val zoomLevel = when {
-                distanceDiff > 2.5 -> 10.0
-                distanceDiff > 1.5 -> 12.5
-                distanceDiff > 0.5 -> 15.0
-                else -> 7.5
-                /** 500부터 2500으로 했었는데 거꾸로 바꿔주니까 when문을 잘 탄다!
-                다만 거리마다 적합한 줌 배율을 정해야 하는데 이건 테스트가 필요하다 */
-            }
-
-            val centerLat = (latMin + latMax) / 2
-            val centerLng = (lngMin + lngMax) / 2
-            val center = LatLng(centerLat, centerLng)
-
-            cameraPosition = CameraPosition(center, zoomLevel)
-            Log.d("cameraPosition", "$zoomLevel")
-            cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
+            val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
             naverMap.moveCamera(cameraUpdate)
-            Log.d("setCameraOnPolyLine", "Camera moved to $center")
+            Log.d("setCameraOnPolyLine", "Camera moved to fit bounds")
         } else {
             Log.d("setCameraOnPolyLine", "Location list is empty, cannot set camera")
         }
