@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
@@ -44,8 +44,8 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
         fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
             with(binding) {
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
-                tvDistance.text = item.distance.toString().plus("km")
-                tvDuration.text = item.timeTaken.toString().plus("분")
+                tvDistance.text = item.distance.toString().plus(R.string.home_history_walk_adapter_km)
+                tvDuration.text = item.timeTaken.toString().plus(R.string.home_history_walk_adapter_minute)
 
                 ivWalkMap.setOnClickListener {
                     onMapClick(item.walkingImage ?: "")

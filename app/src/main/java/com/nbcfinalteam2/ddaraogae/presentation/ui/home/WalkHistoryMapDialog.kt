@@ -1,8 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
-import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +25,6 @@ class WalkHistoryMapDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("셋업뷰", walkHistoryMap.toString())
         setupView()
     }
 
@@ -40,7 +37,6 @@ class WalkHistoryMapDialog : DialogFragment() {
     }
 
     fun setEnlargementOfImage(image: String) {
-        Log.d("이미지확대", "setEnlargementOfImage")
         walkHistoryMap = image
     }
 

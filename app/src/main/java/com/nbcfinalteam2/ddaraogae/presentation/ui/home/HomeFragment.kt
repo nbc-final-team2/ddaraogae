@@ -232,18 +232,15 @@ class HomeFragment : Fragment() {
     private fun checkForMoveToLocationSettingsDialog() {
         binding.tvWeatherData.setOnClickListener {
             AlertDialog.Builder(context)
-                .setTitle("위치 권한 설정")
-                .setMessage(
-                    "오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용하셔야 합니다. \n" +
-                            "위치 권한 설정 화면으로 이동하시겠습니까?"
-                )
-                .setPositiveButton("네") { _, _ ->
+                .setTitle(getString(R.string.home_dialog_location_title))
+                .setMessage(getString(R.string.home_dialog_location_message))
+                .setPositiveButton(getString(R.string.home_dialog_location_positive_button)) { _, _ ->
                     val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     context?.startActivity(intent)
                 }
-                .setNegativeButton("아니요"
+                .setNegativeButton(getString(R.string.home_dialog_location_negative_button)
                 ) { p0, _ -> p0?.dismiss() }
-                .setNeutralButton("나중에"
+                .setNeutralButton(getString(R.string.home_dialog_location_neutral_button)
                 ) { p0, _ -> p0?.dismiss() }
                 .create()
                 .show()
@@ -263,7 +260,7 @@ class HomeFragment : Fragment() {
                 }
         } catch (e: SecurityException) {
             e.printStackTrace()
-            Toast.makeText(context, "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.home_toast_location_no_permission), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -280,7 +277,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("DOG_INFO", dogInfo)
                 startActivity(intent)
             } else {
-                Toast.makeText(context, "선택된 반려견이 없습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.home_no_selected_dog), Toast.LENGTH_SHORT).show()
             }
         }
     }
