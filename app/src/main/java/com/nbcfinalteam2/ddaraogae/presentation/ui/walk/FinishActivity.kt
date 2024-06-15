@@ -225,9 +225,10 @@ class FinishActivity : FragmentActivity() {
                 if (latLng.longitude > lngMax) lngMax = latLng.longitude
             }
 
-            val distanceDiff = DistanceCalculator.getDistance(latMin, latMax, lngMin, lngMax)
+            val distanceDiff = DistanceCalculator.getDistance(latMin, lngMin, latMax, lngMax)
             // maxDiff를 기준으로 줌 레벨 조정
             Log.d("distanceDiff", "$distanceDiff")
+
             val zoomLevel = when {
                 distanceDiff > 2.5 -> 10.0
                 distanceDiff > 1.5 -> 12.5
