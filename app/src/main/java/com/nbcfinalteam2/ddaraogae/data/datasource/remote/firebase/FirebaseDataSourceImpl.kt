@@ -78,7 +78,7 @@ class FirebaseDataSourceImpl @Inject constructor(
             .collection(PATH_DOGS).document(dogId)
             .delete().await()
 
-        deleteRef.delete()
+        deleteRef.delete().await()
     }
 
     override suspend fun getStampNumByPeriod(start: Date, end: Date): Int {
