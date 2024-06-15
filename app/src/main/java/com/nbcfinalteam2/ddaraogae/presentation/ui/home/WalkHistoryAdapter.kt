@@ -44,8 +44,8 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
         fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
             with(binding) {
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
-                tvDistance.text = item.distance.toString().plus(R.string.home_history_walk_adapter_km)
-                tvDuration.text = item.timeTaken.toString().plus(R.string.home_history_walk_adapter_minute)
+                tvDistance.text = item.distance.toString().plus("km") // "home_history_walk_adapter_km"
+                tvDuration.text = item.timeTaken.toString().plus("분") // "home_history_walk_adapter_minute"
 
                 ivWalkMap.setOnClickListener {
                     onMapClick(item.walkingImage ?: "")
