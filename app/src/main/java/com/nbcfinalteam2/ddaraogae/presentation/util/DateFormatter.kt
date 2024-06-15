@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
-import okhttp3.internal.format
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -62,9 +61,6 @@ object DateFormatter {
         return calendar.time
     }
 
-    fun testDate(dateStr: String): Date? {
-        return dateFormat.parse(dateStr)
-    }
 
     fun generateDatesForMonth(year: Int, month: Int): List<String> {
         val calendar = Calendar.getInstance()
@@ -87,5 +83,4 @@ object DateFormatter {
         val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
         return format.format(walkEndTime)
     }
-
 }
