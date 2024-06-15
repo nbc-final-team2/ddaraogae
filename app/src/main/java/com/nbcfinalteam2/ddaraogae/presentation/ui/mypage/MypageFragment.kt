@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.home.AddActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +30,9 @@ class MypageFragment : Fragment() {
         logOut()
         binding.tvPrivacyPolicy.setOnClickListener {
             startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java))
+        }
+        binding.tvMyDogAdd.setOnClickListener {
+            startActivity(Intent(requireActivity(), AddActivity::class.java))
         }
     }
 
