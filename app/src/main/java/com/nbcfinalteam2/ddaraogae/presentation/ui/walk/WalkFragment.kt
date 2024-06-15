@@ -189,8 +189,7 @@ class WalkFragment : Fragment() {
 
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
-            naverMap.locationOverlay.iconWidth = 60
-            naverMap.locationOverlay.iconHeight = 60
+//            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
 
             // 카메라 설정
             lifecycleScope.launch {
