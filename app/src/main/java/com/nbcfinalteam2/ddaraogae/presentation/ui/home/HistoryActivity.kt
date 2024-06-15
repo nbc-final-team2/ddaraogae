@@ -71,7 +71,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupAdapter() {
         walkHistoryAdapter = WalkHistoryAdapter(
-            onMapClick = { Toast.makeText(this, "테스트", Toast.LENGTH_SHORT).show() }
+            onMapClick = { walkMap ->
+                val dialog = WalkHistoryMapDialog()
+                dialog.setEnlargementOfImage(walkMap)
+                dialog.show(supportFragmentManager, "")
+            }
         )
         binding.rvWalkHistoryArea.adapter = walkHistoryAdapter
     }

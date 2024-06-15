@@ -10,7 +10,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
-class WalkHistoryAdapter(private val onMapClick: () -> Unit) :
+class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -41,14 +41,14 @@ class WalkHistoryAdapter(private val onMapClick: () -> Unit) :
 
     class ViewHolder(private val binding: ItemHomeHistoryWalkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: WalkingInfo, onMapClick: () -> Unit) {
+        fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
             with(binding) {
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
                 tvDistance.text = item.distance.toString().plus("km")
                 tvDuration.text = item.timeTaken.toString().plus("분")
 
                 ivWalkMap.setOnClickListener {
-                    onMapClick()
+                    onMapClick(item.walkingImage ?: "")
                 }
             }
         }
