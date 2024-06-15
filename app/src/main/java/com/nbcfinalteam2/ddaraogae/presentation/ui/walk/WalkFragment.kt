@@ -30,6 +30,7 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
@@ -323,6 +324,7 @@ class WalkFragment : Fragment() {
         storeListState.storeList.forEach { store ->
             val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
             val marker = Marker()
+            marker.icon = OverlayImage.fromResource(R.drawable.spotmarker)
             marker.width = Marker.SIZE_AUTO
             marker.height = Marker.SIZE_AUTO
             marker.position = latLng
