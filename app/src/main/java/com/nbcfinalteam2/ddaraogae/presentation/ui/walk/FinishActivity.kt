@@ -14,7 +14,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -46,8 +45,6 @@ class FinishActivity : FragmentActivity() {
 
     private lateinit var naverMap: NaverMap
     private var polyline = PolylineOverlay()
-    private lateinit var cameraPosition: CameraPosition
-    private lateinit var cameraUpdate: CameraUpdate
     private lateinit var locationList: List<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
