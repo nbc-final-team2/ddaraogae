@@ -81,6 +81,14 @@
     <string name="walk_finish_with_dogs">오늘 산책을 함께한 반려견</string>
     <string name="walk_finish_stamp">오늘 모은 산책 도장</string>
     <string name="walk_finish_done">산책 끝!</string>
+    <string name="require_map_permission">지도 기능 이용을 위해 권한 허용이 필요합니다</string>
+    <string name="require_walk_permission">산책 기능 이용을 위해 권한 허용이 필요합니다</string>
+
+    <string name="msg_no_selected_dog">선택된 반려견이 없습니다</string>
+    <string name="msg_load_store_fail">인근 스폿 정보를 불러올 수 없습니다</string>
+    <string name="msg_load_dog_fail">반려견 데이터 불러오기에 실패했습니다</string>
+    <string name="msg_no_network_connection">인터넷 연결 상태를 확인해주세요</string>
+    <string name="msg_no_gps_connection">산책 정보를 트래킹 하기 위해 GPS를 켜주세요</string>
 
     <!-- mypage -->
     <string name="mypage_title">마이페이지</string>
@@ -188,4 +196,6 @@
     <string name="fine_dust_status_general">보통</string>
     <string name="fine_dust_status_bad">나쁨</string>
     <string name="fine_dust_status_very_bad">매우나쁨</string>
+
+
 </resources>
