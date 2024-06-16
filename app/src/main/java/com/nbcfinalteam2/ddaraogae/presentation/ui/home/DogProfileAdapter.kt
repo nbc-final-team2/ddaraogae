@@ -35,6 +35,8 @@ class DogProfileAdapter(
         fun bind(dogData: DogInfo, position: Int) = with(binding){
             Glide.with(context)
                 .load(dogData.thumbnailUrl)
+                .error(R.drawable.ic_dog_default_thumbnail)
+                .fallback(R.drawable.ic_dog_default_thumbnail)
                 .into(ivDogImage)
             tvDogName.text = dogData.name
             if (selectPos == position) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)

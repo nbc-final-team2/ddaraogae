@@ -36,10 +36,10 @@ class SignUpActivity : AppCompatActivity() {
     private var correctPasswordCheck = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        enableEdgeToEdge()
         uiSetting()
         checkSignUpState()
         checkAuthentication()
@@ -54,7 +54,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            view.updatePadding(view.paddingLeft + insets.left, view.paddingTop + insets.top, view.paddingRight + insets.right, view.paddingBottom + insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
