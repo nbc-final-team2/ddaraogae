@@ -25,8 +25,8 @@ class StampRepositoryImpl @Inject constructor(
         firebaseDateSource.insertStamp(stampEntity.toDto())
     }
 
-    override suspend fun checkStampCondition(dogId: String, date: Date): List<StampEntity> {
-        return firebaseDateSource.checkStampCondition(dogId, date).map {
+    override suspend fun checkStampCondition(date: Date): List<StampEntity> {
+        return firebaseDateSource.checkStampCondition(date).map {
             it.second.toEntity(it.first)
         }
     }
