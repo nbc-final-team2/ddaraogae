@@ -12,5 +12,5 @@ data class DogInfo (
     val lineage: String?,
     val memo: String?,
     val thumbnailUrl: String?,
-    var isSelected: Boolean = false
+    val isSelected: Boolean = false
 ) : Parcelable

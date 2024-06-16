@@ -16,6 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -31,9 +34,13 @@ import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
+import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
+import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -48,6 +55,7 @@ class HomeFragment : Fragment() {
     private var dogList = listOf<DogInfo>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
+    private val sharedEventViewModel: SharedEventViewModel by viewModels()
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -73,13 +81,14 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        homeViewModel.loadDogs()
         setupWalkGraphForEmptyData()
         setupListener()
         setupAdapter()
@@ -87,10 +96,6 @@ class HomeFragment : Fragment() {
         checkLocationPermissions()
     }
 
-    override fun onResume() {
-        super.onResume()
-        homeViewModel.loadDogs()
-    }
     private fun changeDogPortrait(){
         if(dogList.isEmpty()) {
             Log.d("ginger", "호출")
@@ -126,8 +131,9 @@ class HomeFragment : Fragment() {
             changeDogPortrait()
         }
 
-        homeViewModel.dogName.observe(viewLifecycleOwner) { dogName ->
-            binding.tvDogGraph.text = "${dogName}의 산책 그래프"
+        homeViewModel.selectedDogInfo.observe(viewLifecycleOwner) { dogInfo ->
+            binding.tvDogGraph.text = "${dogInfo.name}의 산책 그래프"
+            homeViewModel.loadSelectedDogWalkGraph()
         }
 
         homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
@@ -142,6 +148,14 @@ class HomeFragment : Fragment() {
 
         homeViewModel.weatherInfo.observe(viewLifecycleOwner) { weatherInfo ->
             updateWeatherUI(weatherInfo)
+        }
+
+        lifecycleScope.launch {
+            sharedEventViewModel.sharedEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when (event) {
+                    is SharedEvent.DogRefreshment -> homeViewModel.refreshDogList()
+                }
+            }
         }
     }
 

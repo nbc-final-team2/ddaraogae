@@ -49,8 +49,27 @@ class HomeViewModel @Inject constructor(
 
     fun loadDogs() {
         viewModelScope.launch {
-            val dogEntities = getDogListUseCase().orEmpty()
-            val dogInfo = dogEntities.map {
+            val dogEntities = getDogListUseCase()
+            val dogInfo = dogEntities.mapIndexed { ind, dogEntity ->
+                DogInfo(
+                    id = dogEntity.id ?: "",
+                    name = dogEntity.name ?: "",
+                    gender = dogEntity.gender ?: 0,
+                    age = dogEntity.age,
+                    lineage = dogEntity.lineage,
+                    memo = dogEntity.memo,
+                    thumbnailUrl = dogEntity.thumbnailUrl,
+                    isSelected = ind==0
+                )
+            }
+            _dogList.value = dogInfo
+            _selectedDogInfo.value = _dogList.value.orEmpty().firstOrNull()
+        }
+    }
+
+    fun refreshDogList() {
+        viewModelScope.launch {
+            val newDogInfoList = getDogListUseCase().map {
                 DogInfo(
                     id = it.id ?: "",
                     name = it.name ?: "",
@@ -58,43 +77,45 @@ class HomeViewModel @Inject constructor(
                     age = it.age,
                     lineage = it.lineage,
                     memo = it.memo,
-                    thumbnailUrl = it.thumbnailUrl
+                    thumbnailUrl = it.thumbnailUrl,
+                    isSelected = if(selectedDogInfo.isInitialized) {
+                        it.id == selectedDogInfo.value?.id
+                    } else false
                 )
             }
-            _dogList.value = dogInfo
+            _dogList.value = newDogInfoList
         }
     }
 
-    private fun selectedWalkGraphDogName(dogName: String, dogId: String) {
+    fun loadSelectedDogWalkGraph() {
         viewModelScope.launch {
-            _dogName.value = dogName
-            loadWalkData(dogId)
+            selectedDogInfo.value?.id?.let { dogId ->
+                val startDate = DateFormatter.getStartDateForWeek()
+                val endDate = DateFormatter.getEndDateForWeek()
+                val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
+                val walkInfo = walkEntities.map {
+                    WalkingInfo(
+                        id = it.id,
+                        dogId = it.dogId,
+                        timeTaken = it.timeTaken,
+                        distance = it.distance,
+                        startDateTime = it.startDateTime,
+                        endDateTime = it.endDateTime,
+                        walkingImage = it.walkingImage
+                    )
+                }
+                _walkData.value = walkInfo
+                _isWalkData.value = walkInfo.isNotEmpty()
+            }
         }
     }
 
     fun selectDog(dogInfo: DogInfo) {
         _selectedDogInfo.value = dogInfo
-        selectedWalkGraphDogName(dogInfo.name, dogInfo.id)
-    }
-
-    private fun loadWalkData(dogId: String) {
-        viewModelScope.launch {
-            val startDate = DateFormatter.getStartDateForWeek()
-            val endDate = DateFormatter.getEndDateForWeek()
-            val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-            val walkInfo = walkEntities.map {
-                WalkingInfo(
-                    id = it.id,
-                    dogId = it.dogId,
-                    timeTaken = it.timeTaken,
-                    distance = it.distance,
-                    startDateTime = it.startDateTime,
-                    endDateTime = it.endDateTime,
-                    walkingImage = it.walkingImage
-                )
-            }
-            _walkData.value = walkInfo
-            _isWalkData.value = walkInfo.isNotEmpty()
+        _dogList.value = dogList.value.orEmpty().map {
+            it.copy(
+                isSelected = dogInfo.id==it.id
+            )
         }
     }
 
