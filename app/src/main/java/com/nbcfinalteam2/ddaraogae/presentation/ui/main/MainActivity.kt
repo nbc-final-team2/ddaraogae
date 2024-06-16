@@ -3,6 +3,9 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.main
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -20,8 +23,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
-
+        uiSetting()
         initBottomNavigation()
+    }
+
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            view.updatePadding(0, insets.top, 0, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initBottomNavigation() {

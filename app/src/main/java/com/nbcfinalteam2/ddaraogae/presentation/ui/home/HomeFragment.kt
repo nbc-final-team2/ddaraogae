@@ -1,15 +1,19 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -45,18 +49,23 @@ class HomeFragment : Fragment() {
     private var dogList = listOf<DogInfo>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
-    val locationPermissionRequest = registerForActivityResult(
+
+    private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         when {
             permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
                 getLastLocation()
+                toggleWeatherVisible()
             }
+
             permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                 getLastLocation()
+                toggleWeatherVisible()
             }
+
             else -> {
-                Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+                toggleWeatherInvisible()
             }
         }
     }
@@ -73,7 +82,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupWalkGraphForEmptyData()
-        moveToHistory()
+        setupListener()
         setupAdapter()
         observeViewModel()
         checkLocationPermissions()
@@ -103,6 +112,11 @@ class HomeFragment : Fragment() {
     }
     private fun onItemClick(dogData: DogInfo) {
         homeViewModel.selectDog(dogData)
+    }
+
+    private fun setupListener() {
+        moveToHistory()
+        checkForMoveToLocationSettingsDialog()
     }
 
     private fun observeViewModel() {
@@ -162,11 +176,90 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun toggleWeatherVisible() {
+        with(binding) {
+            ivWeatherIcon.visibility = View.VISIBLE
+            tvLocation.visibility = View.VISIBLE
+            tvLocationTemperature.visibility = View.VISIBLE
+            tvLocationConditions.visibility = View.VISIBLE
+            tvFineDust.visibility = View.VISIBLE
+            ivFineDustIcon.visibility = View.VISIBLE
+            tvFineDustConditions.visibility = View.VISIBLE
+            tvUltraFineDust.visibility = View.VISIBLE
+            ivUltraFineDustIcon.visibility = View.VISIBLE
+            tvUltraFineDustConditions.visibility = View.VISIBLE
+            ivWeatherRenewal.visibility = View.VISIBLE
+            tvTodayWeatherTime.visibility = View.VISIBLE
+            tvWeatherData.visibility = View.GONE
+        }
+    }
+
+    private fun toggleWeatherInvisible() {
+        with(binding) {
+            ivWeatherIcon.visibility = View.INVISIBLE
+            tvLocation.visibility = View.INVISIBLE
+            tvLocationTemperature.visibility = View.INVISIBLE
+            tvLocationConditions.visibility = View.INVISIBLE
+            tvFineDust.visibility = View.INVISIBLE
+            ivFineDustIcon.visibility = View.INVISIBLE
+            tvFineDustConditions.visibility = View.INVISIBLE
+            tvUltraFineDust.visibility = View.INVISIBLE
+            ivUltraFineDustIcon.visibility = View.INVISIBLE
+            tvUltraFineDustConditions.visibility = View.INVISIBLE
+            ivWeatherRenewal.visibility = View.INVISIBLE
+            tvTodayWeatherTime.visibility = View.INVISIBLE
+            tvWeatherData.visibility = View.VISIBLE
+        }
+    }
+
     private fun checkLocationPermissions() {
-        locationPermissionRequest.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
+                getLastLocation()
+                toggleWeatherVisible()
+            }
+
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) -> {
+                getLastLocation()
+                toggleWeatherVisible()
+            }
+
+            else -> {
+                locationPermissionRequest.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+            }
+        }
+    }
+
+    private fun checkForMoveToLocationSettingsDialog() {
+        binding.tvWeatherData.setOnClickListener {
+            AlertDialog.Builder(context)
+                .setTitle("위치 권한 설정")
+                .setMessage(
+                    "오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용하셔야 합니다. \n" +
+                            "위치 권한 설정 화면으로 이동하시겠습니까?"
+                )
+                .setPositiveButton("네") { _, _ ->
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    context?.startActivity(intent)
+                }
+                .setNegativeButton("아니요"
+                ) { p0, _ -> p0?.dismiss() }
+                .setNeutralButton("나중에"
+                ) { p0, _ -> p0?.dismiss() }
+                .create()
+                .show()
+        }
     }
 
     private fun getLastLocation() {
@@ -182,6 +275,7 @@ class HomeFragment : Fragment() {
                 }
         } catch (e: SecurityException) {
             e.printStackTrace()
+            Toast.makeText(context, "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 

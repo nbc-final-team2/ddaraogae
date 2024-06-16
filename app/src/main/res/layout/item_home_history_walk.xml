@@ -31,16 +31,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_smaller"
-                android:text="@string/item_home_history_location"
-                android:textSize="@dimen/text_text"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_walkHistoryDate" />
-
-            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_distance"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
@@ -48,10 +38,11 @@
                 android:text="@string/item_home_history_distance"
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
+                android:layout_marginTop="@dimen/margin_medium"
                 app:layout_constraintBottom_toTopOf="@+id/tv_distanceLabel"
                 app:layout_constraintEnd_toStartOf="@id/tv_duration"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_location" />
+                app:layout_constraintTop_toBottomOf="@id/tv_walkHistoryDate" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_duration"
@@ -61,21 +52,21 @@
                 android:text="@string/item_home_history_duration"
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/tv_stamp"
+                android:layout_marginTop="@dimen/margin_medium"
+                app:layout_constraintEnd_toStartOf="@id/iv_walkPolyLine"
                 app:layout_constraintStart_toEndOf="@id/tv_distance"
-                app:layout_constraintTop_toBottomOf="@id/tv_location" />
+                app:layout_constraintTop_toBottomOf="@id/tv_walkHistoryDate" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_stamp"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:text="@string/item_home_history_stamp"
-                android:textSize="@dimen/text_body"
-                android:textStyle="bold"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_walkPolyLine"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_durationLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_duration"
-                app:layout_constraintTop_toBottomOf="@id/tv_location" />
+                app:layout_constraintTop_toTopOf="@+id/tv_duration" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_distanceLabel"
@@ -98,22 +89,9 @@
                 android:text="@string/item_home_history_duration_label"
                 android:textColor="@color/dark_grey"
                 android:textSize="@dimen/text_mini"
-                app:layout_constraintEnd_toStartOf="@id/tv_stampLabel"
+                app:layout_constraintEnd_toStartOf="@id/iv_walkPolyLine"
                 app:layout_constraintStart_toEndOf="@id/tv_distanceLabel"
                 app:layout_constraintTop_toBottomOf="@id/tv_duration" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_stampLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/item_home_history_stamp_label"
-                android:textColor="@color/dark_grey"
-                android:textSize="@dimen/text_mini"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_durationLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_durationLabel"
-                app:layout_constraintTop_toBottomOf="@id/tv_stamp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
+import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,16 +18,19 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
+
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getDogListUseCase: GetDogListUseCase,
     private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
-    private val getWeatherDataUseCase: GetWeatherDataUseCase
+    private val getWeatherDataUseCase: GetWeatherDataUseCase,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _dogList = MutableLiveData<List<DogInfo>>()
@@ -46,22 +53,19 @@ class HomeViewModel @Inject constructor(
 
     fun loadDogs() {
         viewModelScope.launch {
-            val user = getCurrentUserUseCase()
-            user?.let {
-                val dogEntities = getDogListUseCase().orEmpty()
-                val dogInfo = dogEntities.map { entity ->
-                    DogInfo(
-                        id = entity.id!!,
-                        name = entity.name!!,
-                        gender = entity.gender!!,
-                        age = entity.age,
-                        lineage = entity.lineage,
-                        memo = entity.memo,
-                        thumbnailUrl = entity.thumbnailUrl
-                    )
-                }
-                _dogList.value = dogInfo
+            val dogEntities = getDogListUseCase().orEmpty()
+            val dogInfo = dogEntities.map {
+                DogInfo(
+                    id = it.id ?: "",
+                    name = it.name ?: "",
+                    gender = it.gender ?: 0,
+                    age = it.age,
+                    lineage = it.lineage,
+                    memo = it.memo,
+                    thumbnailUrl = it.thumbnailUrl
+                )
             }
+            _dogList.value = dogInfo
         }
     }
 
@@ -82,15 +86,15 @@ class HomeViewModel @Inject constructor(
             val startDate = DateFormatter.getStartDateForWeek()
             val endDate = DateFormatter.getEndDateForWeek()
             val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-            val walkInfo = walkEntities.map { entity ->
+            val walkInfo = walkEntities.map {
                 WalkingInfo(
-                    id = entity.id,
-                    dogId = entity.dogId,
-                    timeTaken = entity.timeTaken,
-                    distance = entity.distance,
-                    startDateTime = entity.startDateTime,
-                    endDateTime = entity.endDateTime,
-                    walkingImage = entity.walkingImage
+                    id = it.id,
+                    dogId = it.dogId,
+                    timeTaken = it.timeTaken,
+                    distance = it.distance,
+                    startDateTime = it.startDateTime,
+                    endDateTime = it.endDateTime,
+                    walkingImage = it.walkingImage
                 )
             }
             _walkData.value = walkInfo
@@ -123,18 +127,22 @@ class HomeViewModel @Inject constructor(
 
     private fun getConditionDescription(weatherId: Long?): String {
         return when (weatherId?.toInt()) {
-            in 200..232 -> R.string.weather_status_thunder.toString()
-            in 300..321, in 520..531 -> R.string.weather_status_rain.toString()
-            in 500..504 -> R.string.weather_status_slight_rain.toString()
-            511, in 600..622 -> R.string.weather_status_snow.toString()
-            701, 711, 721, 741 -> R.string.weather_status_fog.toString()
-            731, 751, 761, 762 -> R.string.weather_status_dust.toString()
-            in 771..781 -> R.string.weather_status_typoon.toString()
-            800 -> R.string.weather_status_sunny.toString()
-            801 -> R.string.weather_status_slightly_cloudy.toString()
-            802 -> R.string.weather_status_cloudy.toString()
-            in 803..804 -> R.string.weather_status_very_cloudy.toString()
-            else -> R.string.weather_status_no_data.toString()
+            in 200..232 -> ContextCompat.getString(context, R.string.weather_status_thunder)
+            in 300..321, in 520..531 -> ContextCompat.getString(
+                context,
+                R.string.weather_status_rain
+            )
+
+            in 500..504 -> ContextCompat.getString(context, R.string.weather_status_slight_rain)
+            511, in 600..622 -> ContextCompat.getString(context, R.string.weather_status_snow)
+            701, 711, 721, 741 -> ContextCompat.getString(context, R.string.weather_status_fog)
+            731, 751, 761, 762 -> ContextCompat.getString(context, R.string.weather_status_dust)
+            in 771..781 -> ContextCompat.getString(context, R.string.weather_status_typoon)
+            800 -> ContextCompat.getString(context, R.string.weather_status_sunny)
+            801 -> ContextCompat.getString(context, R.string.weather_status_slightly_cloudy)
+            802 -> ContextCompat.getString(context, R.string.weather_status_cloudy)
+            in 803..804 -> ContextCompat.getString(context, R.string.weather_status_very_cloudy)
+            else -> ContextCompat.getString(context, R.string.weather_status_no_data)
         }
     }
 
@@ -160,21 +168,21 @@ class HomeViewModel @Inject constructor(
 
     private fun getFineDustStatus(pm10: Double?): String {
         return when {
-            pm10 == null -> R.string.fine_dust_status_good.toString()
-            pm10 <= 30 -> R.string.fine_dust_status_good.toString()
-            pm10 <= 80 -> R.string.fine_dust_status_general.toString()
-            pm10 <= 150 -> R.string.fine_dust_status_bad.toString()
-            else -> R.string.fine_dust_status_very_bad.toString()
+            pm10 == null -> ContextCompat.getString(context, R.string.fine_dust_status_good)
+            pm10 <= 30 -> ContextCompat.getString(context, R.string.fine_dust_status_good)
+            pm10 <= 80 -> ContextCompat.getString(context, R.string.fine_dust_status_general)
+            pm10 <= 150 -> ContextCompat.getString(context, R.string.fine_dust_status_bad)
+            else -> ContextCompat.getString(context, R.string.fine_dust_status_very_bad)
         }
     }
 
     private fun getUltraFineDustStatus(pm25: Double?): String {
         return when {
-            pm25 == null -> R.string.fine_dust_status_good.toString()
-            pm25 <= 30 -> R.string.fine_dust_status_good.toString()
-            pm25 <= 80 -> R.string.fine_dust_status_general.toString()
-            pm25 <= 150 -> R.string.fine_dust_status_bad.toString()
-            else -> R.string.fine_dust_status_very_bad.toString()
+            pm25 == null -> ContextCompat.getString(context, R.string.fine_dust_status_good)
+            pm25 <= 30 -> ContextCompat.getString(context, R.string.fine_dust_status_good)
+            pm25 <= 80 -> ContextCompat.getString(context, R.string.fine_dust_status_general)
+            pm25 <= 150 -> ContextCompat.getString(context, R.string.fine_dust_status_bad)
+            else -> ContextCompat.getString(context, R.string.fine_dust_status_very_bad)
         }
     }
 }

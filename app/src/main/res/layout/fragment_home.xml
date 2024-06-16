@@ -75,8 +75,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_small"
+                android:layout_marginEnd="@dimen/margin_medium"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:cardElevation="@dimen/margin_extra_small"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -120,10 +121,10 @@
                 android:id="@+id/tv_todayWeather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_medium"
                 android:text="@string/home_weather_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                android:layout_margin="@dimen/margin_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cv_graph" />
 
@@ -132,8 +133,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_small"
+                android:layout_marginEnd="@dimen/margin_medium"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:cardElevation="@dimen/margin_extra_small"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -153,14 +155,14 @@
                         android:padding="@dimen/padding_small"
                         android:text="@string/home_weather_no_data"
                         android:textSize="@dimen/text_mini"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView"
+                        android:id="@+id/tv_todayWeatherTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_extra_small"
@@ -168,6 +170,7 @@
                         android:text="@string/home_weather_real_time_data"
                         android:textColor="@color/grey"
                         android:textSize="@dimen/text_mini"
+                        android:visibility="invisible"
                         app:layout_constraintEnd_toStartOf="@+id/iv_weatherRenewal"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -178,7 +181,8 @@
                         android:layout_marginTop="@dimen/margin_extra_small"
                         android:layout_marginEnd="@dimen/margin_medium"
                         android:src="@drawable/ic_renewal"
-                        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_todayWeatherTime"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -188,6 +192,7 @@
                         android:layout_height="50dp"
                         android:layout_margin="@dimen/margin_medium"
                         android:scaleType="centerCrop"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -200,18 +205,19 @@
                         android:layout_marginStart="@dimen/margin_smaller"
                         android:text="@string/home_weather_location"
                         android:textSize="@dimen/text_caption"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toEndOf="@+id/iv_weatherIcon"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_fineDust"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_medium"
-
                         android:text="@string/home_weather_fine_dust"
                         android:textSize="@dimen/text_caption"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintEnd_toStartOf="@+id/tv_ultraFineDust"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -223,6 +229,7 @@
                         android:layout_marginEnd="@dimen/margin_medium"
                         android:text="@string/home_weather_ultra_fine_dust"
                         android:textSize="@dimen/text_caption"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -234,6 +241,7 @@
                         android:text="@string/home_weather_location_temperature"
                         android:textSize="@dimen/text_mini"
                         android:textStyle="bold"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toStartOf="@+id/tv_location"
                         app:layout_constraintTop_toBottomOf="@+id/tv_location" />
@@ -246,6 +254,7 @@
                         android:text="@string/home_weather_location_conditions"
                         android:textSize="@dimen/text_mini"
                         android:textStyle="bold"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toEndOf="@+id/tv_locationTemperature"
                         app:layout_constraintTop_toBottomOf="@+id/tv_location" />
@@ -254,6 +263,7 @@
                         android:id="@+id/iv_fineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toStartOf="@+id/tv_fineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_fineDust"
@@ -267,6 +277,7 @@
                         android:text="@string/home_weather_fine_dust_conditions"
                         android:textSize="@dimen/text_mini"
                         android:textStyle="bold"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toEndOf="@+id/iv_fineDustIcon"
                         app:layout_constraintTop_toBottomOf="@+id/tv_fineDust" />
@@ -275,6 +286,7 @@
                         android:id="@+id/iv_ultraFineDustIcon"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toStartOf="@+id/tv_ultraFineDust"
                         app:layout_constraintTop_toBottomOf="@+id/tv_ultraFineDust"
@@ -288,6 +300,7 @@
                         android:text="@string/home_weather_ultra_fine_dust_conditions"
                         android:textSize="@dimen/text_mini"
                         android:textStyle="bold"
+                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
                         app:layout_constraintStart_toEndOf="@+id/iv_ultraFineDustIcon"
                         app:layout_constraintTop_toBottomOf="@+id/tv_ultraFineDust" />
