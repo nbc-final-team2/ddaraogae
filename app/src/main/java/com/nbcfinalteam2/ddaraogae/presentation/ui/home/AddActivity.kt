@@ -14,12 +14,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
+import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -27,9 +34,9 @@ class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
 
     //private var imageFile: File = File("")
-    private var imageUri: Uri? = null
     private var byteImage: ByteArray? = null
     private val viewModel: AddPetViewModel by viewModels()
+    private val sharedEventViewModel: SharedEventViewModel by viewModels()
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -50,21 +57,7 @@ class AddActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            imageUri = result.data?.data
-            imageUri?.let { uri ->
-                contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-
-//                imageFile = File(getRealPathFromURI(it))
-                Glide.with(this)
-                    .load(uri)
-                    .fitCenter()
-                    .into(binding.ivDogThumbnail)
-
-                byteImage = uriToByteArray(uri, this)
-            }
+            viewModel.setImageUri(result.data?.data, uriToByteArray(result.data?.data, this))
         }
     }
 
@@ -74,8 +67,9 @@ class AddActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
         uiSetting()
+        initView()
+        initViewModel()
         binding.ivBack.setOnClickListener { finish() }
-        addPetData()
     }
 
     private fun uiSetting() {
@@ -86,19 +80,14 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-    private fun addPetData() = with(binding) {
-        var gender = 0
-
+    private fun initView() = with(binding) {
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
             else
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
-        //성별 선택
-        rgGenderGroup.setOnCheckedChangeListener { _, id ->
-            gender = if (id == rbFemale.id) 1 else 0
-        }
+
         //완료 버튼 클릭 시 데이터 추가
         btnEditCompleted.setOnClickListener {
             if (etName.text!!.isBlank()) Toast.makeText(
@@ -108,6 +97,7 @@ class AddActivity : AppCompatActivity() {
             ).show()
             else {
                 val name = etName.text.toString()
+                val gender = if(rgGenderGroup.checkedRadioButtonId==rbFemale.id) 1 else 0
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
                 val age =
@@ -117,15 +107,42 @@ class AddActivity : AppCompatActivity() {
 
                 val newDog = DogItemModel("", name, gender, age, breed, memo, image)
 
-                addPet(newDog, byteImage)
-                finish()
+                viewModel.insertDog(newDog)
             }
         }
     }
 
-    //강아지 추가 함수
-    private fun addPet(newDog: DogItemModel, byteImage: ByteArray?) {
-        viewModel.insertDog(newDog, byteImage)
+    private fun initViewModel() {
+        lifecycleScope.launch {
+            viewModel.addUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                state.imageUri?.let { uri ->
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+
+//                imageFile = File(getRealPathFromURI(it))
+                    Glide.with(binding.ivDogThumbnail)
+                        .load(uri)
+                        .fitCenter()
+                        .into(binding.ivDogThumbnail)
+
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.insertEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
+                    DefaultEvent.Loading -> {}
+                    DefaultEvent.Success -> {
+                        sharedEventViewModel.notifyDogListChanged()
+                        finish()
+                    }
+                }
+            }
+        }
     }
 
     //uri -> file로 변환
