@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -41,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
     private var dogList = listOf<DogInfo>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
-    private val sharedEventViewModel: SharedEventViewModel by viewModels()
+    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -153,10 +153,11 @@ class HomeFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            sharedEventViewModel.sharedEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+            sharedEventViewModel.dogRefreshEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when (event) {
-                    is SharedEvent.DogRefreshment ->  {
-                        homeViewModel.refreshDogList()}
+                    is SharedEvent.Occur ->  {
+                        homeViewModel.refreshDogList()
+                    }
                 }
             }
         }

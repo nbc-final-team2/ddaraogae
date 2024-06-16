@@ -25,13 +25,14 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
 
     private val viewModel: AddPetViewModel by viewModels()
-    private val sharedEventViewModel: SharedEventViewModel by viewModels()
+    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -132,7 +133,7 @@ class AddActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
                     DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
-                        sharedEventViewModel.notifyDogListChanged()
+                        sharedEventViewModel.notifyDogRefreshEvent()
                         finish()
                     }
                 }
