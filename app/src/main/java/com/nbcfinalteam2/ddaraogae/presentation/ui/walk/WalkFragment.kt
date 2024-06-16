@@ -36,6 +36,9 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
+import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.LOCATIONLIST
+import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGDOGS
+import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGUIMODEL
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
 import dagger.hilt.android.AndroidEntryPoint
@@ -410,9 +413,9 @@ class WalkFragment : Fragment() {
         locationList: Array<LatLng>
     ) {
         val intent = Intent(requireContext(), FinishActivity::class.java).apply {
-            putExtra("locationList", locationList)
-            putExtra("wakingInfo", walkingUiModel)
-            putExtra("walkingDogs", walkedDogIdList?.let { ArrayList(it) })
+            putExtra(LOCATIONLIST, locationList)
+            putExtra(WALKINGUIMODEL, walkingUiModel)
+            putExtra(WALKINGDOGS, walkedDogIdList?.let { ArrayList(it) })
         }
         startActivity(intent)
     }

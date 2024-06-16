@@ -58,13 +58,22 @@ class FinishActivity : FragmentActivity() {
         requestPermissionForMap()
 
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableArrayExtra("locationList", LatLng::class.java)?.toList().orEmpty()
+            intent.getParcelableArrayExtra(LOCATIONLIST, LatLng::class.java)?.toList().orEmpty()
         } else {
-            (intent.getParcelableArrayExtra("locationList") as? Array<LatLng>)?.toList().orEmpty()
+            (intent.getParcelableArrayExtra(LOCATIONLIST) as? Array<LatLng>)?.toList().orEmpty()
         }
 
-        val walkingUiModel: WalkingUiModel? = intent.getParcelableExtra("wakingInfo")
-        val walkingDogs: List<DogInfo>? = intent.getParcelableArrayListExtra("walkingDogs")
+        val walkingUiModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(WALKINGUIMODEL, WalkingUiModel::class.java)
+        } else {
+            intent.getParcelableExtra(WALKINGUIMODEL)
+        }
+
+        val walkingDogs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayListExtra(WALKINGDOGS, DogInfo::class.java).orEmpty()
+        } else {
+            intent.getParcelableArrayListExtra<DogInfo?>(WALKINGDOGS).orEmpty()
+        }
 
         initView(walkingUiModel, walkingDogs)
 
@@ -237,5 +246,11 @@ class FinishActivity : FragmentActivity() {
                 viewModel.insertWalkingData(walkingUiModel, mapImage!!)
             }
         }
+    }
+
+    companion object {
+        val LOCATIONLIST = "LOCATIONLIST"
+        val WALKINGUIMODEL = "WALKINGUIMODEL"
+        val WALKINGDOGS = "WALKINGDOGS"
     }
 }
