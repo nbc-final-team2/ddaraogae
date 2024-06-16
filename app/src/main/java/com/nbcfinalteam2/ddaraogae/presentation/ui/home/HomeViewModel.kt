@@ -1,15 +1,12 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.content.Context
-import android.graphics.drawable.Drawable
-import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
@@ -26,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 
 class HomeViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getDogListUseCase: GetDogListUseCase,
     private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
     private val getWeatherDataUseCase: GetWeatherDataUseCase,

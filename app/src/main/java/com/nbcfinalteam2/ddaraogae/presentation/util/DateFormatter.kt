@@ -12,6 +12,7 @@ object DateFormatter {
     private val dateFormat = SimpleDateFormat("MM/dd", Locale.getDefault()).apply {
         timeZone = this@DateFormatter.timeZone
     }
+    private val todayDateFormat = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
 
     fun generateLast7Days(): List<String> {
         val calendar = Calendar.getInstance()
@@ -60,9 +61,6 @@ object DateFormatter {
         return calendar.time
     }
 
-    fun testDate(dateStr: String): Date? {
-        return dateFormat.parse(dateStr)
-    }
 
     fun generateDatesForMonth(year: Int, month: Int): List<String> {
         val calendar = Calendar.getInstance()
@@ -75,5 +73,14 @@ object DateFormatter {
             calendar.set(Calendar.DAY_OF_MONTH, day)
             dateFormat.format(calendar.time)
         }
+    }
+
+    fun getTodayDate(): String {
+        return todayDateFormat.format(Date())
+    }
+
+    fun getHistoryDate(walkEndTime: Date): String {
+        val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
+        return format.format(walkEndTime)
     }
 }

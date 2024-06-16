@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
-class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
+class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -31,7 +32,7 @@ class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(getItem(position), onPolyLineClick)
+        (holder as ViewHolder).bind(getItem(position), onMapClick)
     }
 
     override fun getItemCount(): Int {
@@ -40,17 +41,14 @@ class WalkHistoryAdapter(private val onPolyLineClick: () -> Unit) :
 
     class ViewHolder(private val binding: ItemHomeHistoryWalkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: WalkingInfo, onPolyLineClick: () -> Unit) {
+        fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
             with(binding) {
-                Glide.with(ivWalkPolyLine.context)
-                    .load(item.walkingImage)
-                    .into(ivWalkPolyLine)
-                tvWalkHistoryDate.text = item.endDateTime.toString()
-                tvDistance.text = item.distance.toString()
-                tvDuration.text = item.timeTaken.toString()
+                tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
+                tvDistance.text = item.distance.toString().plus("km") // "home_history_walk_adapter_km"
+                tvDuration.text = item.timeTaken.toString().plus("분") // "home_history_walk_adapter_minute"
 
-                ivWalkPolyLine.setOnClickListener {
-                    onPolyLineClick()
+                ivWalkMap.setOnClickListener {
+                    onMapClick(item.walkingImage ?: "")
                 }
             }
         }

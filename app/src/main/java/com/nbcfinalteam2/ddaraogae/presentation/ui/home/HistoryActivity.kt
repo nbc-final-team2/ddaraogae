@@ -71,7 +71,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupAdapter() {
         walkHistoryAdapter = WalkHistoryAdapter(
-            onPolyLineClick = { /* 이미지 클릭 이벤트 넣을것 */ }
+            onMapClick = { walkMap ->
+                val dialog = WalkHistoryMapDialog()
+                dialog.setEnlargementOfImage(walkMap)
+                dialog.show(supportFragmentManager, "")
+            }
         )
         binding.rvWalkHistoryArea.adapter = walkHistoryAdapter
     }
@@ -83,7 +87,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupDatePicker() {
         binding.tvSelectedCalendar.setOnClickListener {
-            val dialog = DialogFragment()
+            val dialog = CalendarDialog()
             dialog.setOnMonthClickListener(this)
             dialog.show(supportFragmentManager, "")
         }
@@ -105,12 +109,14 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 setupWalkGraphForEmptyData(year, month)
                 binding.tvWalkData.visibility = View.VISIBLE
                 binding.tvWalkHistoryData.visibility = View.VISIBLE
+                binding.rvWalkHistoryArea.visibility = View.GONE
 
             } else {
                 setupWalkGraphForHaveData(walkData, year, month)
                 binding.tvWalkData.visibility = View.GONE
                 walkHistoryAdapter.submitList(walkData)
                 binding.tvWalkHistoryData.visibility = View.GONE
+                binding.rvWalkHistoryArea.visibility = View.VISIBLE
             }
         }
     }
@@ -182,10 +188,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.grey, null))
             setTouchEnabled(true)
-            setPinchZoom(true)
-            setScaleEnabled(true)
+            setPinchZoom(false)
+            setScaleEnabled(false)
             isDragXEnabled = true
-            isDragYEnabled = true
+            isDragYEnabled = false
+            setVisibleXRange(0f, 7f)
         }
         lineChart.invalidate()
     }
@@ -201,10 +208,11 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
-            setLabelCount(dates.size, true)
+            setLabelCount(dates.size, false)
             axisMinimum = 0f
             axisMaximum = (dates.size - 1).toFloat()
             valueFormatter = formatter
+            isGranularityEnabled = true
         }
     }
 

@@ -137,7 +137,7 @@
                     android:text="@string/home_history_walk_history_no_data"
                     android:textSize="@dimen/text_text"
                     android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="@+id/rv_walkHistoryArea"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -146,6 +146,7 @@
                     android:id="@+id/rv_walkHistoryArea"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

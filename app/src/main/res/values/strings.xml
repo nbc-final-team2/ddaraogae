@@ -21,6 +21,13 @@
     <string name="home_weather_real_time_data">2024.05.28 17:38</string>
     <string name="item_home_dog_selection_name">{dogname}</string>
     <string name="home_weather_no_data">위치 권한 필요합니다.</string>
+    <string name="home_dialog_location_title">위치 권한 설정</string>
+    <string name="home_dialog_location_message">오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용 해야 합니다. 위치 권한 설정 화면으로 이동하시겠습니까?</string>
+    <string name="home_dialog_location_positive_button">네</string>
+    <string name="home_dialog_location_negative_button">아니요</string>
+    <string name="home_dialog_location_neutral_button">나중에</string>
+    <string name="home_toast_location_no_permission">위치 권한이 없습니다.</string>
+    <string name="home_no_selected_dog">반려견을 선택해 주세요.</string>
 
     <!-- home - detail-->
     <string name="home_detail_title">산책 이력</string>
@@ -53,6 +60,10 @@
     <string name="home_history_dialog_month_10">10월</string>
     <string name="home_history_dialog_month_11">11월</string>
     <string name="home_history_dialog_month_12">12월</string>
+
+    <!-- home - history - walk - adapter-->
+    <string name="home_history_walk_adapter_km">km</string>
+    <string name="home_history_walk_adapter_minute">분</string>
 
     <!-- home - add -->
     <string name="home_add_title">반려견 정보</string>

@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.nbcfinalteam2.ddaraogae.databinding.FragmentDialogBinding
+import com.nbcfinalteam2.ddaraogae.databinding.DialogCalendarBinding
 import java.util.Calendar
 
-class DialogFragment : DialogFragment() {
+class CalendarDialog : DialogFragment() {
 
-    private var _binding: FragmentDialogBinding? = null
+    private var _binding: DialogCalendarBinding? = null
     private val binding get() = _binding!!
     private lateinit var listener: HistoryOnClickListener
     private var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
@@ -19,7 +19,7 @@ class DialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDialogBinding.inflate(inflater, container, false)
+        _binding = DialogCalendarBinding.inflate(inflater, container, false)
         return binding.root
     }
 

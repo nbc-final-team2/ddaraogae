@@ -47,6 +47,7 @@ dependencies {
 
     // Glide
     implementation (libs.glide)
+    annotationProcessor(libs.glide.compiler)
 
     // MPAndroidChart
     implementation(libs.mpandroid.chart)
@@ -99,8 +100,6 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    //Glide
-    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     // Testing Navigation
