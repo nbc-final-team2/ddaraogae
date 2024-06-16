@@ -14,7 +14,6 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -38,6 +37,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.LOCATIONLIST
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGDOGS
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGUIMODEL
@@ -53,6 +53,7 @@ import java.util.Date
 
 @AndroidEntryPoint
 class WalkFragment : Fragment() {
+
     private val walkViewModel: WalkViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
     private val binding get() = _binding!!
@@ -63,15 +64,9 @@ class WalkFragment : Fragment() {
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true &&
             permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         ) {
-            println("런처 1, ")
             initMapView()
         } else {
-            println("런처 2")
-            Toast.makeText(
-                requireContext(),
-                "지도 기능 이용을 위해 권한 허용이 필요합니다",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastMaker.make(requireContext(), R.string.require_map_permission)
         }
     }
 
@@ -82,13 +77,9 @@ class WalkFragment : Fragment() {
             permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true &&
             permissions[Manifest.permission.POST_NOTIFICATIONS] == true
         ) {
-            startServiceAndWalk()
+            walkViewModel.walkToggle()
         } else {
-            Toast.makeText(
-                requireContext(),
-                "산책 기능 이용을 위해 권한 허용이 필요합니다",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastMaker.make(requireContext(), R.string.require_walk_permission)
         }
     }
 
@@ -97,10 +88,6 @@ class WalkFragment : Fragment() {
     }
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
-    private val PERMISSIONS = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
     private lateinit var cameraPosition: CameraPosition
@@ -118,6 +105,10 @@ class WalkFragment : Fragment() {
             locationService = binder.getService()
             serviceInfoStateFlow = LocationService.serviceInfoState.asStateFlow()
             startCollectingServiceFlow()
+            locationService?.saveData(
+                walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it },
+                Date(System.currentTimeMillis())
+            )
             bound = true
         }
 
@@ -222,31 +213,7 @@ class WalkFragment : Fragment() {
             checkServicePermission()
         }
         binding.ibWalkStop.setOnClickListener {
-            val locationList = locationService?.locationList?.map {
-                LatLng(it.latitude, it.longitude)
-            }.orEmpty().toTypedArray()
-
-            val walkingUiModel = WalkingUiModel(
-                id = null,
-                dogId = null,
-                timeTaken = serviceInfoStateFlow?.value?.time,
-                distance = serviceInfoStateFlow?.value?.distance,
-                startDateTime = locationService?.savedStartDate,
-                endDateTime = Date(System.currentTimeMillis()),
-                url = null
-            )
-
-            val walkedDogIdList = locationService?.savedDogIdList
-
-//            for test
-//            Log.d("check", walkingUiModel.toString())
-//            Log.d("check", walkedDogIdList.toString())
-
             walkViewModel.walkToggle()
-            serviceInfoStateFlow = null
-            endLocationService()
-
-            getFinishActivity(walkingUiModel, walkedDogIdList, locationList)
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
     }
@@ -265,7 +232,7 @@ class WalkFragment : Fragment() {
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            startServiceAndWalk()
+            walkViewModel.walkToggle()
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 startServicePermissionLauncher.launch(
@@ -287,13 +254,33 @@ class WalkFragment : Fragment() {
     }
 
     private fun startServiceAndWalk() {
-        walkViewModel.walkToggle()
         startLocationService()
         bindToService()
-        locationService?.saveData(
-            walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it },
-            Date(System.currentTimeMillis())
+    }
+
+    private fun stopServiceAndWalk() {
+        val locationList = locationService?.locationList?.map {
+            LatLng(it.latitude, it.longitude)
+        }.orEmpty().toTypedArray()
+
+        val walkingUiModel = WalkingUiModel(
+            id = null,
+            dogId = null,
+            timeTaken = serviceInfoStateFlow?.value?.time,
+            distance = serviceInfoStateFlow?.value?.distance,
+            startDateTime = locationService?.savedStartDate,
+            endDateTime = Date(System.currentTimeMillis()),
+            url = null
         )
+
+        val walkedDogIdList = locationService?.savedDogIdList
+//            for test
+//            Log.d("check", walkingUiModel.toString())
+//            Log.d("check", walkedDogIdList.toString())
+
+        endLocationService()
+
+        getFinishActivity(walkingUiModel, walkedDogIdList, locationList)
     }
 
     private fun initViewModel() {
@@ -317,6 +304,20 @@ class WalkFragment : Fragment() {
                 }
         }
 
+        lifecycleScope.launch {
+            walkViewModel.walkEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { event ->
+                    when(event) {
+                        is WalkEvent.Error -> ToastMaker.make(requireContext(), event.strResId)
+                        is WalkEvent.StartWalking -> {
+                            startServiceAndWalk()
+                        }
+                        is WalkEvent.StopWalking -> {
+                            stopServiceAndWalk()
+                        }
+                    }
+                }
+        }
     }
 
     private fun clearMarkers() {
@@ -366,9 +367,6 @@ class WalkFragment : Fragment() {
         if (!LocationService.isRunning) {
             val intent = Intent(requireContext(), LocationService::class.java)
             requireActivity().startForegroundService(intent)
-        }
-        if (!bound) {
-            bindToService()
         }
     }
 
@@ -426,7 +424,7 @@ class WalkFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (!bound) {
+        if (!bound && LocationService.isRunning) {
             bindToService()
         }
     }

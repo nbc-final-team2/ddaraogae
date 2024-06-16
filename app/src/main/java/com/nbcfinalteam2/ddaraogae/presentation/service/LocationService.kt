@@ -98,8 +98,10 @@ class LocationService : Service() {
     }
 
     fun saveData(dogIdList: List<DogInfo>, startDateTime: Date) {
-        savedDogIdList = dogIdList
-        savedStartDate = startDateTime
+        if(savedDogIdList == null && savedStartDate == null) {
+            savedDogIdList = dogIdList
+            savedStartDate = startDateTime
+        }
     }
 
     fun stopService() {
