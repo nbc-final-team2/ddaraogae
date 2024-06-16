@@ -5,11 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -54,11 +58,19 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLogInBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-
+        enableEdgeToEdge()
+        uiSetting()
         checkIsPossible()
         clickLoginButton()
         viewModel.getCurrentUser()
+    }
+
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            view.updatePadding(0, insets.top, 0, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun checkIsPossible() {
@@ -103,7 +115,7 @@ class LoginActivity : AppCompatActivity() {
         //click google Login Button
         ibtLoginGoogle.setOnClickListener {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.ddaraogae_client_id))
                 .requestEmail()
                 .build()
             googleSignInClient = GoogleSignIn.getClient(this@LoginActivity, gso)

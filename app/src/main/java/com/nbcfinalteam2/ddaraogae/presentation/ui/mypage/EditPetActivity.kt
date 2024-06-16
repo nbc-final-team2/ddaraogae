@@ -8,10 +8,14 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
@@ -61,10 +65,19 @@ class EditPetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEditPetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        enableEdgeToEdge()
+        uiSetting()
         binding.btBack.setOnClickListener { finish() }
         initView()
         changeDogData()
+    }
+
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            view.updatePadding(0, insets.top, 0, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initView() = with(binding) {
