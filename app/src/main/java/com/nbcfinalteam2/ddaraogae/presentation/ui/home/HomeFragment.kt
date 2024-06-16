@@ -100,9 +100,6 @@ class HomeFragment : Fragment() {
             binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
             binding.rvDogArea.visibility = RecyclerView.VISIBLE
         }
-        binding.ivDogAdd.setOnClickListener {
-            moveToAdd()
-        }
     }
 
     private fun setupAdapter() {
@@ -116,6 +113,10 @@ class HomeFragment : Fragment() {
         moveToHistory()
         checkForMoveToLocationSettingsDialog()
         weatherRefreshClickListener()
+
+        binding.ivDogAdd.setOnClickListener {
+            moveToAdd()
+        }
     }
 
     private fun observeViewModel() {
