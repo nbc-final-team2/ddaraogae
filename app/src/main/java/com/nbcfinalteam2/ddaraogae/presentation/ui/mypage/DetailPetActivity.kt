@@ -122,7 +122,7 @@ class DetailPetActivity : AppCompatActivity() {
             .fallback(R.drawable.ic_dog_default_thumbnail)
             .into(ivDogThumbnail)
         tvPetName.text = dogData.name
-        tvPetAge.text = dogData.age.toString()
+        tvPetAge.text = dogData.age?.toString()?:""
         tvPetBreed.text = dogData.lineage
         tvPetMemo.text = dogData.memo
         if (dogData.gender == 1) {
