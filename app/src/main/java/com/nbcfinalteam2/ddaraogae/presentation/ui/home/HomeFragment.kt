@@ -45,7 +45,6 @@ class HomeFragment : Fragment() {
             onItemClick(item)
         }
     }
-    private var dogList = listOf<DogInfo>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -91,7 +90,7 @@ class HomeFragment : Fragment() {
         super.onResume()
         homeViewModel.loadDogs()
     }
-    private fun changeDogPortrait(){
+    private fun changeDogPortrait(dogList: List<DogInfo>){
         if(dogList.isEmpty()) {
             Log.d("ginger", "호출")
             binding.ivDogAdd.visibility = CircleImageView.VISIBLE
@@ -122,8 +121,7 @@ class HomeFragment : Fragment() {
     private fun observeViewModel() {
         homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
             dogProfileAdapter.submitList(dogs)
-            dogList = dogs
-            changeDogPortrait()
+            changeDogPortrait(dogs)
         }
 
         homeViewModel.dogName.observe(viewLifecycleOwner) { dogName ->
