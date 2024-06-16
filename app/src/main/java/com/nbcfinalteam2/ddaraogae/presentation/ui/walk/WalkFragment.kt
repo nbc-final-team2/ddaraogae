@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -29,6 +30,7 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
@@ -189,10 +191,11 @@ class WalkFragment : Fragment() {
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
             // 위치를 추적하면서 카메라도 따라 움직인다.
-            naverMap.locationTrackingMode = LocationTrackingMode.Face
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
-            naverMap.locationOverlay.iconWidth = 60
-            naverMap.locationOverlay.iconHeight = 60
+            naverMap.locationOverlay.circleRadius = 20
+            naverMap.locationOverlay.circleColor = Color.RED
+//            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
 
             // 카메라 설정
             lifecycleScope.launch {
@@ -327,9 +330,9 @@ class WalkFragment : Fragment() {
         storeListState.storeList.forEach { store ->
             val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
             val marker = Marker()
+            marker.icon = OverlayImage.fromResource(R.drawable.spotmarker)
             marker.width = Marker.SIZE_AUTO
-            marker.height = 60
-            /** 적절한 크기 찾아야하는데..*/
+            marker.height = Marker.SIZE_AUTO
             marker.position = latLng
             marker.map = naverMap
             markerList.add(marker)
