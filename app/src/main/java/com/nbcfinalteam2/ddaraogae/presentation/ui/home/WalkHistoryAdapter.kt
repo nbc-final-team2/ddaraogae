@@ -43,7 +43,7 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
             with(binding) {
-                tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.endDateTime ?: return)
+                tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.startDateTime ?: return)
                 tvDistance.text = String.format("%.1f km", item.distance) // "home_history_walk_adapter_km"
                 tvDuration.text = String.format("%.0f 분", item.timeTaken?.toDouble()) // "home_history_walk_adapter_minute"
 
