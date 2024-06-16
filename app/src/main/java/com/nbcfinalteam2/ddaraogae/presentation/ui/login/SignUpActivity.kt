@@ -6,9 +6,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -35,7 +39,8 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        enableEdgeToEdge()
+        uiSetting()
         checkSignUpState()
         checkAuthentication()
         clickSignupButton()
@@ -46,6 +51,13 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            view.updatePadding(0, insets.top, 0, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
+    }
 
     //email 중복 상태 체크
     private fun checkSignUpState() {

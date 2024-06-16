@@ -5,12 +5,16 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.widget.ScrollView
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,7 +48,8 @@ class DetailPetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailPetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        enableEdgeToEdge()
+        uiSetting()
         setAdapter()
         checkPetListEmpty()
 
@@ -64,6 +69,14 @@ class DetailPetActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.getDogList()
+    }
+
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            view.updatePadding(0, insets.top, 0, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     //user의 반려견 정보가 없으면 빈 창을 보여줌
