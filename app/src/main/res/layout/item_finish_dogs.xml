@@ -6,7 +6,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_finish_dogs_item"
         android:layout_width="35dp"
         android:layout_height="35dp"

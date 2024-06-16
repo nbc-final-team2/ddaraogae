@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ScrollView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -73,10 +74,12 @@ class DetailPetActivity : AppCompatActivity() {
                     if(state.listPetEmpty){
                         binding.clPetListEmpty.visibility = ConstraintLayout.VISIBLE
                         binding.scDetailPet.visibility = ScrollView.INVISIBLE
+                        binding.tvEdit.visibility = AppCompatTextView.INVISIBLE
 
                     } else {
                         binding.clPetListEmpty.visibility = ConstraintLayout.INVISIBLE
                         binding.scDetailPet.visibility = ScrollView.VISIBLE
+                        binding.tvEdit.visibility = AppCompatTextView.VISIBLE
                     }
                 }
         }

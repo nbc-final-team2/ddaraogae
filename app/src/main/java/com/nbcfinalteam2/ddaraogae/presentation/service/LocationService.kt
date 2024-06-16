@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.nbcfinalteam2.ddaraogae.R
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DistanceCalculator
 import kotlinx.coroutines.CoroutineScope
@@ -61,7 +62,7 @@ class LocationService : Service() {
     private val binder = LocalBinder()
 
     val locationList = mutableListOf<LatLng>()
-    var savedDogIdList: List<String>? = null
+    var savedDogIdList: List<DogInfo>? = null
     var savedStartDate: Date? = null
     private var timerJob: Job? = null
 
@@ -96,7 +97,7 @@ class LocationService : Service() {
         return binder
     }
 
-    fun saveData(dogIdList: List<String>, startDateTime: Date) {
+    fun saveData(dogIdList: List<DogInfo>, startDateTime: Date) {
         savedDogIdList = dogIdList
         savedStartDate = startDateTime
     }
