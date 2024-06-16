@@ -91,7 +91,7 @@ class EditPetActivity : AppCompatActivity() {
             .fallback(R.drawable.ic_dog_default_thumbnail)
             .into(ivDogThumbnail)
         etName.setText(dogData.name)
-        etAge.setText(dogData.age.toString())
+        etAge.setText(dogData.age?.toString())
         etBreed.setText(dogData.lineage)
         etMemo.setText(dogData.memo)
         //imageFile = File(dogData.thumbnailUrl)

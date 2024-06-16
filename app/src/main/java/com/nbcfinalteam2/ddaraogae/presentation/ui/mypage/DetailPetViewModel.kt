@@ -5,10 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,40 +26,95 @@ class DetailPetViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(DetailDogUiState.init())
     val uiState: StateFlow<DetailDogUiState> = _uiState.asStateFlow()
 
-    fun getDogList() = viewModelScope.launch{
-        try{
-            val loadPetList = getDogListUseCase()
-            val petList = loadPetList.map {
+    private val _dogListState = MutableStateFlow<List<DogInfo>>(emptyList())
+    val dogListState: StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
+
+    private val _selectedDogState = MutableStateFlow<DogInfo?>(null)
+    val selectedDogState: StateFlow<DogInfo?> = _selectedDogState.asStateFlow()
+
+    private val _deleteEvent = MutableSharedFlow<DefaultEvent>()
+    val deleteEvent: SharedFlow<DefaultEvent> = _deleteEvent.asSharedFlow()
+
+    fun getDogList() = viewModelScope.launch {
+        runCatching {
+            val dogList = getDogListUseCase().mapIndexed { ind, dogEntity ->
                 DogInfo(
-                    it.id,
-                    it.name,
-                    it.gender,
-                    it.age,
-                    it.lineage,
-                    it.memo,
-                    it.thumbnailUrl
+                    id = dogEntity.id,
+                    name = dogEntity.name,
+                    gender = dogEntity.gender,
+                    age = dogEntity.age,
+                    lineage = dogEntity.lineage,
+                    memo = dogEntity.memo,
+                    thumbnailUrl = dogEntity.thumbnailUrl,
+                    isSelected = ind == 0
                 )
             }
-            petList.let { list ->
-                _uiState.update { prev ->
-                    prev.copy(
-                        listPet = list,
-                        pet = list[0],
-                        listPetEmpty = false
-                    )
-                }
+            _dogListState.update {
+                dogList
             }
-        } catch (e:IndexOutOfBoundsException){
-            Log.e("error : detailPetViewModel", "$e")
-                _uiState.update { prev ->
-                    prev.copy(
-                        listPetEmpty = true
-                    )
-
+            _selectedDogState.update {
+                _dogListState.value.firstOrNull()
             }
         }
     }
-    fun deleteDogData(dogId:String) = viewModelScope.launch{
-        deleteDogUseCase(dogId)
+
+    fun refreshDogList() = viewModelScope.launch {
+        runCatching {
+            var selectedDogInd: Int? = null
+
+            val dogList = getDogListUseCase().mapIndexed { ind, dogEntity ->
+                DogInfo(
+                    id = dogEntity.id,
+                    name = dogEntity.name,
+                    gender = dogEntity.gender,
+                    age = dogEntity.age,
+                    lineage = dogEntity.lineage,
+                    memo = dogEntity.memo,
+                    thumbnailUrl = dogEntity.thumbnailUrl,
+                    isSelected = selectedDogState.value?.let {
+                        if(it.id == dogEntity.id) {
+                            selectedDogInd = ind
+                            true
+                        } else {
+                            false
+                        }
+                    }?:false
+                )
+            }
+            _dogListState.update {
+                dogList
+            }
+            _selectedDogState.update {
+                selectedDogInd?.let {
+                    dogList[it]
+                }?: dogList.firstOrNull()
+            }
+        }
+    }
+
+    fun deleteSelectedDogData() = viewModelScope.launch {
+        println("delete")
+        runCatching {
+            selectedDogState.value?.let {
+                deleteDogUseCase(it.id!!)
+            }
+        }.onSuccess {
+            _deleteEvent.emit(DefaultEvent.Success)
+        }.onFailure {
+
+        }
+    }
+
+    fun selectDog(dogInfo: DogInfo) {
+        _dogListState.update { prev ->
+            prev.map {
+                it.copy(
+                    isSelected = dogInfo.id == it.id
+                )
+            }
+        }
+        _selectedDogState.update {
+            dogInfo
+        }
     }
 }
