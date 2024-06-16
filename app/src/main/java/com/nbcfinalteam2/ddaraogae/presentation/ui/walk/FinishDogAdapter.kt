@@ -25,6 +25,8 @@ class FinishDogAdapter(private val dogList: List<DogInfo>) : RecyclerView.Adapte
         val item = dogList[position]
         Glide.with(holder.itemView.context)
             .load(item.thumbnailUrl)
+            .error(R.drawable.ic_dog_thumbnail)
+            .fallback(R.drawable.ic_dog_thumbnail)
             .into(holder.imageView)
     }
 

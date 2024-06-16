@@ -37,8 +37,8 @@ class WalkDogAdapter(
             with(binding.civWalkDogsItem) {
                 Glide.with(this.context)
                     .load(item.thumbnailUrl)
-                    .error(R.color.white)
-                    .fallback(R.color.white)
+                    .error(R.drawable.ic_dog_thumbnail)
+                    .fallback(R.drawable.ic_dog_thumbnail)
                     .into(this)
 
                 borderColor = ContextCompat.getColor(
