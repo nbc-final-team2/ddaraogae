@@ -42,25 +42,30 @@ class HistoryViewModel @Inject constructor(
 
     private fun loadWalkData(year: Int, month: Int) {
         viewModelScope.launch {
-            val startDate = DateFormatter.getStartDateForAllDay(year, month)
-            val endDate = DateFormatter.getEndDateForAllDay(year, month)
+            try {
+                val startDate = DateFormatter.getStartDateForAllDay(year, month)
+                val endDate = DateFormatter.getEndDateForAllDay(year, month)
 
-            val dogId = _dogInfo.value?.id ?: return@launch
-            val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-            val walkInfo = walkEntities.map {
-                WalkingInfo(
-                    id = it.id,
-                    dogId = it.dogId,
-                    timeTaken = it.timeTaken,
-                    distance = it.distance,
-                    startDateTime = it.startDateTime,
-                    endDateTime = it.endDateTime,
-                    walkingImage = it.walkingImage
-                )
+                val dogId = _dogInfo.value?.id ?: return@launch
+                val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
+                val walkInfo = walkEntities.map {
+                    WalkingInfo(
+                        id = it.id,
+                        dogId = it.dogId,
+                        timeTaken = it.timeTaken,
+                        distance = it.distance,
+                        startDateTime = it.startDateTime,
+                        endDateTime = it.endDateTime,
+                        walkingImage = it.walkingImage
+                    )
+                }
+                _walkData.value = walkInfo
+            } catch (exception: Exception) {
+                exception.printStackTrace()
             }
-            _walkData.value = walkInfo
         }
     }
+
 
     fun getSelectedYearMonth(): Pair<Int, Int> {
         return Pair(selectedYear, selectedMonth)

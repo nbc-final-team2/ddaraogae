@@ -9,18 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemEditPetDogSelectionBinding
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 class DetailPetAdapter(
-    private val onItemClick:(DogItemModel) -> Unit
-) : ListAdapter<DogItemModel,DetailPetAdapter.ItemViewHolder>(
-    object :DiffUtil.ItemCallback<DogItemModel>(){
+    private val onItemClick:(DogInfo) -> Unit
+) : ListAdapter<DogInfo,DetailPetAdapter.ItemViewHolder>(
+    object :DiffUtil.ItemCallback<DogInfo>(){
 
-        override fun areItemsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
+        override fun areItemsTheSame(oldItem: DogInfo, newItem: DogInfo): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
+        override fun areContentsTheSame(oldItem: DogInfo, newItem: DogInfo): Boolean {
             return oldItem == newItem
         }
     }
@@ -30,9 +30,9 @@ class DetailPetAdapter(
     inner class ItemViewHolder(
         private val binding:ItemEditPetDogSelectionBinding,
         private val context: Context,
-        private val onItemClick: (DogItemModel) -> Unit
+        private val onItemClick: (DogInfo) -> Unit
     ): RecyclerView.ViewHolder(binding.root){
-        fun bind(dogData: DogItemModel, position: Int) = with(binding){
+        fun bind(dogData: DogInfo, position: Int) = with(binding){
             Glide.with(context)
                 .load(dogData.thumbnailUrl)
                 .error(R.drawable.ic_dog_default_thumbnail)

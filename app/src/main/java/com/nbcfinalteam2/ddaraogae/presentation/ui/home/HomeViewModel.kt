@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -46,32 +47,40 @@ class HomeViewModel @Inject constructor(
 
     fun loadDogs() {
         viewModelScope.launch {
-            val dogEntities = getDogListUseCase().orEmpty()
-            val dogInfo = dogEntities.map {
-                DogInfo(
-                    id = it.id ?: "",
-                    name = it.name ?: "",
-                    gender = it.gender ?: 0,
-                    age = it.age,
-                    lineage = it.lineage,
-                    memo = it.memo,
-                    thumbnailUrl = it.thumbnailUrl
-                )
+            try {
+                val dogEntities = getDogListUseCase().orEmpty()
+                val dogInfo = dogEntities.map {
+                    DogInfo(
+                        id = it.id ?: "",
+                        name = it.name ?: "",
+                        gender = it.gender ?: 0,
+                        age = it.age,
+                        lineage = it.lineage,
+                        memo = it.memo,
+                        thumbnailUrl = it.thumbnailUrl
+                    )
+                }
+                _dogList.value = dogInfo
+            } catch (exception: Exception) {
+                exception.printStackTrace()
             }
-            _dogList.value = dogInfo
         }
     }
 
     private fun selectedWalkGraphDogName(dogName: String, dogId: String) {
         viewModelScope.launch {
-            _dogName.value = dogName
-            loadWalkData(dogId)
+            try {
+                _dogName.value = dogName
+                loadWalkData(dogId)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
         }
     }
 
     fun selectDog(dogInfo: DogInfo) {
         _selectedDogInfo.value = dogInfo
-        selectedWalkGraphDogName(dogInfo.name, dogInfo.id)
+        selectedWalkGraphDogName(dogInfo.name ?: "", dogInfo.id ?: "")
     }
 
     private fun loadWalkData(dogId: String) {
@@ -109,9 +118,7 @@ class HomeViewModel @Inject constructor(
                     ultraFineDustStatus = getUltraFineDustStatus(weatherEntity.pm25)
                 )
                 _weatherInfo.value = weatherInfo
-            } catch (
-                e: Exception
-            ) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }

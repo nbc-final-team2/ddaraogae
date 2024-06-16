@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateDogUseCase
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ class EditPetViewModel @Inject constructor(
     private val _taskState = MutableStateFlow<UpdateTaskState>(UpdateTaskState.Idle)
     val taskState: StateFlow<UpdateTaskState> = _taskState.asStateFlow()
 
-    fun updateDog(getDogData: DogItemModel, byteImage: ByteArray?) = viewModelScope.launch {
+    fun updateDog(getDogData: DogInfo, byteImage: ByteArray?) = viewModelScope.launch {
         val dogData = getDogData.let {
             DogEntity(
                 it.id,

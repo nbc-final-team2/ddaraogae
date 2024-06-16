@@ -20,8 +20,8 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -105,7 +105,7 @@ class AddActivity : AppCompatActivity() {
                 //val image = imageFile.toString().ifEmpty { null }
                 val image = ""
 
-                val newDog = DogItemModel("", name, gender, age, breed, memo, image)
+                val newDog = DogInfo("", name, gender, age, breed, memo, image)
 
                 viewModel.insertDog(newDog)
             }

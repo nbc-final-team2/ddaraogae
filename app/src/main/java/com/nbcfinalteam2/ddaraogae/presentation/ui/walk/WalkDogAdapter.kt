@@ -47,7 +47,7 @@ class WalkDogAdapter(
                 )
             }
             binding.root.setOnClickListener {
-                onClick(item.id)
+                onClick(item.id ?: "")
             }
         }
     }
