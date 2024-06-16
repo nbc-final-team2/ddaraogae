@@ -58,9 +58,9 @@ class AddActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         initView()
         initViewModel()
@@ -117,6 +117,8 @@ class AddActivity : AppCompatActivity() {
 
                     Glide.with(binding.ivDogThumbnail)
                         .load(uri)
+                        .error(R.drawable.ic_dog_default_thumbnail)
+                        .fallback(R.drawable.ic_dog_default_thumbnail)
                         .fitCenter()
                         .into(binding.ivDogThumbnail)
 

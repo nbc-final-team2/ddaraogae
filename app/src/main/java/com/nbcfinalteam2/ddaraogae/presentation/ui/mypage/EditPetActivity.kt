@@ -63,9 +63,9 @@ class EditPetActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityEditPetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         binding.btBack.setOnClickListener { finish() }
         initView()
@@ -87,6 +87,8 @@ class EditPetActivity : AppCompatActivity() {
         else rbMale.isChecked = true
         Glide.with(this@EditPetActivity)
             .load(dogData.thumbnailUrl)
+            .error(R.drawable.ic_dog_default_thumbnail)
+            .fallback(R.drawable.ic_dog_default_thumbnail)
             .into(ivDogThumbnail)
         etName.setText(dogData.name)
         etAge.setText(dogData.age.toString())

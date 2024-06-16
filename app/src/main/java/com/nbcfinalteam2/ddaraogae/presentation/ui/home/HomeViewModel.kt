@@ -41,9 +41,6 @@ class HomeViewModel @Inject constructor(
     private val _walkData = MutableLiveData<List<WalkingInfo>>()
     val walkData: LiveData<List<WalkingInfo>> get() = _walkData
 
-    private val _isWalkData = MutableLiveData<Boolean>()
-    val isWalkData: LiveData<Boolean> get() = _isWalkData
-
     private val _weatherInfo = MutableLiveData<WeatherInfo>()
     val weatherInfo: LiveData<WeatherInfo> get() = _weatherInfo
 
@@ -61,7 +58,7 @@ class HomeViewModel @Inject constructor(
                     thumbnailUrl = dogEntity.thumbnailUrl,
                     isSelected = ind==0
                 )
-            }.orEmpty()
+            }
 
             _dogList.value = dogInfo
             _selectedDogInfo.value = _dogList.value.orEmpty().firstOrNull()
@@ -106,7 +103,6 @@ class HomeViewModel @Inject constructor(
                     )
                 }
                 _walkData.value = walkInfo
-                _isWalkData.value = walkInfo.isNotEmpty()
             }
         }
     }

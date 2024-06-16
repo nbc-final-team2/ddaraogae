@@ -155,7 +155,8 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             sharedEventViewModel.sharedEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when (event) {
-                    is SharedEvent.DogRefreshment -> homeViewModel.refreshDogList()
+                    is SharedEvent.DogRefreshment ->  {
+                        homeViewModel.refreshDogList()}
                 }
             }
         }

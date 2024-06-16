@@ -41,9 +41,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         setupWalkGraph()
         setupAdapter()
@@ -119,7 +119,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             } else {
                 setupWalkGraphForHaveData(walkData, year, month)
                 binding.tvWalkData.visibility = View.GONE
-                walkHistoryAdapter.submitList(walkData)
+                walkHistoryAdapter.submitList(walkData.sortedByDescending { it.startDateTime })
                 binding.tvWalkHistoryData.visibility = View.GONE
                 binding.rvWalkHistoryArea.visibility = View.VISIBLE
             }

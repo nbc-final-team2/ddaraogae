@@ -46,9 +46,9 @@ class DetailPetActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityDetailPetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         setAdapter()
         checkPetListEmpty()
@@ -118,6 +118,8 @@ class DetailPetActivity : AppCompatActivity() {
         dogData = getDogData
         Glide.with(this@DetailPetActivity)
             .load(dogData.thumbnailUrl?.toUri())
+            .error(R.drawable.ic_dog_default_thumbnail)
+            .fallback(R.drawable.ic_dog_default_thumbnail)
             .into(ivDogThumbnail)
         tvPetName.text = dogData.name
         tvPetAge.text = dogData.age.toString()
