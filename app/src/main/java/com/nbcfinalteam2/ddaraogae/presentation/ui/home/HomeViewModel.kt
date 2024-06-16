@@ -61,7 +61,8 @@ class HomeViewModel @Inject constructor(
                     thumbnailUrl = dogEntity.thumbnailUrl,
                     isSelected = ind==0
                 )
-            }
+            }.orEmpty()
+
             _dogList.value = dogInfo
             _selectedDogInfo.value = _dogList.value.orEmpty().firstOrNull()
         }

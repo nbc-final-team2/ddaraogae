@@ -132,8 +132,10 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.selectedDogInfo.observe(viewLifecycleOwner) { dogInfo ->
-            binding.tvDogGraph.text = "${dogInfo.name}의 산책 그래프"
-            homeViewModel.loadSelectedDogWalkGraph()
+            if(dogInfo!=null) {
+                binding.tvDogGraph.text = "${dogInfo.name}의 산책 그래프"
+                homeViewModel.loadSelectedDogWalkGraph()
+            }
         }
 
         homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
