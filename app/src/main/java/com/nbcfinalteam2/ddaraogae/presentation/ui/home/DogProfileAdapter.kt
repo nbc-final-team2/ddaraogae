@@ -25,30 +25,23 @@ class DogProfileAdapter(
         }
     }
 ) {
-    private var selectPos = 0
 
     inner class ItemViewHolder(
         private val binding:ItemHomeDogSelectionBinding,
         private val context: Context,
         private val onItemClick: (DogInfo) -> Unit
     ): RecyclerView.ViewHolder(binding.root){
-        fun bind(dogData: DogInfo, position: Int) = with(binding){
+        fun bind(dogData: DogInfo) = with(binding){
             Glide.with(context)
                 .load(dogData.thumbnailUrl)
                 .error(R.drawable.ic_dog_default_thumbnail)
                 .fallback(R.drawable.ic_dog_default_thumbnail)
                 .into(ivDogImage)
             tvDogName.text = dogData.name
-            if (selectPos == position) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)
+            if (dogData.isSelected) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)
             else binding.ivDogImage.borderColor = context.resources.getColor(R.color.white)
 
-            ivDogImage.setOnClickListener {
-                val oldPos = selectPos
-                selectPos = position
-
-                notifyItemChanged(oldPos)
-                notifyItemChanged(selectPos)
-
+            binding.root.setOnClickListener {
                 onItemClick(dogData)
             }
         }
@@ -66,6 +59,6 @@ class DogProfileAdapter(
     }
 
     override fun onBindViewHolder(holder: DogProfileAdapter.ItemViewHolder, position: Int) {
-        holder.bind(getItem(position), position)
+        holder.bind(getItem(position))
     }
 }
