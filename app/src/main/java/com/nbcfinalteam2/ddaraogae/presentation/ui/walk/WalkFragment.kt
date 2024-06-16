@@ -34,9 +34,15 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
+import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.LOCATIONLIST
+import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGDOGS
+import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGUIMODEL
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
@@ -47,12 +53,9 @@ import java.util.Date
 
 @AndroidEntryPoint
 class WalkFragment : Fragment() {
-
-    /** SearchApi 데이터를 사용하기 위해 임의로 TestViewModel을 참고하여, WalkTestViewModel을 만들었습니다.*/
     private val walkViewModel: WalkViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
     private val binding get() = _binding!!
-
 
     private val initMapPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -94,7 +97,10 @@ class WalkFragment : Fragment() {
     }
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
-
+    private val PERMISSIONS = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
     private lateinit var cameraPosition: CameraPosition
@@ -216,7 +222,10 @@ class WalkFragment : Fragment() {
             checkServicePermission()
         }
         binding.ibWalkStop.setOnClickListener {
-            //todo 정보 미리 저장
+            val locationList = locationService?.locationList?.map {
+                LatLng(it.latitude, it.longitude)
+            }.orEmpty().toTypedArray()
+
             val walkingUiModel = WalkingUiModel(
                 id = null,
                 dogId = null,
@@ -237,7 +246,7 @@ class WalkFragment : Fragment() {
             serviceInfoStateFlow = null
             endLocationService()
 
-            getFinishActivity()
+            getFinishActivity(walkingUiModel, walkedDogIdList, locationList)
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
     }
@@ -282,14 +291,12 @@ class WalkFragment : Fragment() {
         startLocationService()
         bindToService()
         locationService?.saveData(
-            walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }
-                .map { it.id },
+            walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it },
             Date(System.currentTimeMillis())
         )
     }
 
     private fun initViewModel() {
-
         lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
@@ -365,7 +372,6 @@ class WalkFragment : Fragment() {
         }
     }
 
-
     private fun bindToService() {
         Intent(requireContext(), LocationService::class.java).also { intent ->
             requireContext().bindService(
@@ -404,6 +410,20 @@ class WalkFragment : Fragment() {
         bound = false
     }
 
+    private fun getFinishActivity(
+        walkingUiModel: WalkingUiModel,
+        walkedDogIdList: List<DogInfo>?,
+        locationList: Array<LatLng>
+    ) {
+        val intent = Intent(requireContext(), FinishActivity::class.java).apply {
+            putExtra(LOCATIONLIST, locationList)
+            putExtra(WALKINGUIMODEL, walkingUiModel)
+            putExtra(WALKINGDOGS, walkedDogIdList?.let { ArrayList(it) })
+        }
+        startActivity(intent)
+    }
+
+
     override fun onStart() {
         super.onStart()
         if (!bound) {
@@ -424,30 +444,11 @@ class WalkFragment : Fragment() {
         super.onDestroyView()
     }
 
-    /** 좋은 방법인지는 모르겠으나 서비스 도입하면서 이렇게 Intent를 보내게 되었음. */
-    //인자 정의 필요
-    private fun getFinishActivity() {
-    }
-
     private fun updateDistanceText(dist: Double) {
-        binding.tvWalkDistance.text = String.format("%.1f km", dist)
+        binding.tvWalkDistance.text = distanceDoubleToString(dist)
     }
 
     private fun updateTimerText(time: Int) {
-        //시간 구하기
-        val hour = time / 3600
-        val min = (time / 60) % 60
-        val sec = time % 60
-
-        //한자리 수 일땐 앞에 0을 붙이기 위함
-        val tHour = "%02d".format(hour)
-        val tMin = "%02d".format(min)
-        val tSec = "%02d".format(sec)
-
-        //1시간 이상 측정 시 시간 단위로 표현
-        val totalTimeText = if (hour >= 1) "${tHour}시간  ${tMin}분" else "${tMin}분 ${tSec}초"
-
-        //ui수정
-        binding.tvWalkTime.text = totalTimeText
+        binding.tvWalkTime.text = timeIntToString(time)
     }
 }

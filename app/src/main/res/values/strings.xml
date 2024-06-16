@@ -81,6 +81,15 @@
     <string name="walk_finish_with_dogs">오늘 산책을 함께한 반려견</string>
     <string name="walk_finish_stamp">오늘 모은 산책 도장</string>
     <string name="walk_finish_done">산책 끝!</string>
+    <string name="walk_finish_stamp_done">확인했어요!</string>
+    <string name="walk_finish_stamp1">오늘의 산책 완료</string>
+    <string name="walk_finish_stamp2">3일 연속 산책</string>
+    <string name="walk_finish_stamp3">오늘의 산책 완료</string>
+    <string name="walk_finish_stamp4">오늘의 산책 완료</string>
+    <string name="walk_finish_stamp5">다다익선</string>
+    <string name="walk_finish_stamp6">단거리 마라토너</string>
+    <string name="walk_finish_stamp7">중거리 마라토너</string>
+    <string name="walk_finish_stamp8">장거리 마라토너</string>
 
     <!-- mypage -->
     <string name="mypage_title">마이페이지</string>
