@@ -46,9 +46,9 @@ class DetailPetActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityDetailPetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         setAdapter()
         checkPetListEmpty()

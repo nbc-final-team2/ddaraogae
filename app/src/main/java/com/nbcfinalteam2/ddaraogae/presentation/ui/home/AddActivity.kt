@@ -70,9 +70,9 @@ class AddActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         binding.ivBack.setOnClickListener { finish() }
         addPetData()

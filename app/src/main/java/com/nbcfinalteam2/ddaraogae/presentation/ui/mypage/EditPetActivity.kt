@@ -63,9 +63,9 @@ class EditPetActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityEditPetBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         binding.btBack.setOnClickListener { finish() }
         initView()

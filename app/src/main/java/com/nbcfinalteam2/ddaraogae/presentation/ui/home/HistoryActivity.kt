@@ -41,9 +41,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         setupWalkGraph()
         setupAdapter()

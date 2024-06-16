@@ -53,8 +53,8 @@ class FinishActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
         enableEdgeToEdge()
+        setContentView(binding.root)
         uiSetting()
         getDataForInitView()
     }
