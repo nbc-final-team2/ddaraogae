@@ -124,6 +124,8 @@ class AddActivity : AppCompatActivity() {
 //                imageFile = File(getRealPathFromURI(it))
                     Glide.with(binding.ivDogThumbnail)
                         .load(uri)
+                        .error(R.drawable.ic_dog_default_thumbnail)
+                        .fallback(R.drawable.ic_dog_default_thumbnail)
                         .fitCenter()
                         .into(binding.ivDogThumbnail)
 
