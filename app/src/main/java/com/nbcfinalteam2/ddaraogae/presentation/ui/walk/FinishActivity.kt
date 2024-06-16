@@ -174,8 +174,8 @@ class FinishActivity : FragmentActivity() {
 
             //산책 끝 버튼
             btnFinishDone.setOnClickListener {
-                if (walkingUiModel != null) {
-                    finishWalking(walkingUiModel)
+                if (walkingUiModel != null && walkingDogs != null) {
+                    finishWalking(walkingUiModel, walkingDogs)
                 }
             }
         }
@@ -252,18 +252,25 @@ class FinishActivity : FragmentActivity() {
         }
     }
 
-    private fun finishWalking(walkingUiModel: WalkingUiModel) {
+    private fun finishWalking(walkingUiModel: WalkingUiModel, walkingDogs: List<DogInfo>) {
         if (::naverMap.isInitialized) {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)
-                viewModel.insertWalkingData(walkingUiModel, mapImage!!)
+                for(dog in walkingDogs) {
+                    viewModel.insertWalkingData(
+                        walk = walkingUiModel.copy(
+                            dogId = dog.id
+                        ),
+                        image = mapImage!!
+                    )
+                }
             }
         }
     }
 
     companion object {
-        val LOCATIONLIST = "LOCATIONLIST"
-        val WALKINGUIMODEL = "WALKINGUIMODEL"
-        val WALKINGDOGS = "WALKINGDOGS"
+        const val LOCATIONLIST = "LOCATIONLIST"
+        const val WALKINGUIMODEL = "WALKINGUIMODEL"
+        const val WALKINGDOGS = "WALKINGDOGS"
     }
 }
