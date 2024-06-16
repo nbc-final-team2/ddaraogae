@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -28,17 +30,25 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import de.hdodenhof.circleimageview.CircleImageView
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var dogProfileAdapter: DogProfileAdapter
+
+    private val dogProfileAdapter: DogProfileAdapter by lazy {
+        DogProfileAdapter{ item ->
+            onItemClick(item)
+        }
+    }
+    private var dogList = listOf<DogInfo>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -84,13 +94,26 @@ class HomeFragment : Fragment() {
         super.onResume()
         homeViewModel.loadDogs()
     }
+    private fun changeDogPortrait(){
+        if(dogList.isEmpty()) {
+            Log.d("ginger", "호출")
+            binding.ivDogAdd.visibility = CircleImageView.VISIBLE
+            binding.rvDogArea.visibility = RecyclerView.INVISIBLE
+        } else {
+            Log.d("ginger", "호출")
+            binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
+            binding.rvDogArea.visibility = RecyclerView.VISIBLE
+        }
+        binding.ivDogAdd.setOnClickListener {
+            moveToAdd()
+        }
+    }
 
     private fun setupAdapter() {
-        dogProfileAdapter = DogProfileAdapter(
-            onDogClick = { dogData -> homeViewModel.selectDog(dogData) },
-            onAddClick = { moveToAdd() },
-        )
         binding.rvDogArea.adapter = dogProfileAdapter
+    }
+    private fun onItemClick(dogData: DogInfo) {
+        homeViewModel.selectDog(dogData)
     }
 
     private fun setupListener() {
@@ -101,6 +124,8 @@ class HomeFragment : Fragment() {
     private fun observeViewModel() {
         homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
             dogProfileAdapter.submitList(dogs)
+            dogList = dogs
+            changeDogPortrait()
         }
 
         homeViewModel.dogName.observe(viewLifecycleOwner) { dogName ->

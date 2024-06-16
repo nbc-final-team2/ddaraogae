@@ -11,16 +11,22 @@ import javax.inject.Inject
 class StampRepositoryImpl @Inject constructor(
     private val firebaseDateSource: FirebaseDataSource
 ): StampRepository {
-    override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Date, end: Date): Int {
-        return firebaseDateSource.getStampNumByDogIdAndPeriod(dogId, start, end)
+    override suspend fun getStampNumByPeriod(start: Date, end: Date): Int {
+        return firebaseDateSource.getStampNumByPeriod(start, end)
+    }
+
+    override suspend fun getStampListByPeriod(start: Date, end: Date): List<StampEntity> {
+        return firebaseDateSource.getStampListByPeriod(start, end).map {
+            it.second.toEntity(it.first)
+        }
     }
 
     override suspend fun insertStamp(stampEntity: StampEntity) {
         firebaseDateSource.insertStamp(stampEntity.toDto())
     }
 
-    override suspend fun checkStampCondition(dogId: String, date: Date): List<StampEntity> {
-        return firebaseDateSource.checkStampCondition(dogId, date).map {
+    override suspend fun checkStampCondition(date: Date): List<StampEntity> {
+        return firebaseDateSource.checkStampCondition(date).map {
             it.second.toEntity(it.first)
         }
     }

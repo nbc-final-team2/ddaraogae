@@ -78,20 +78,37 @@ class FirebaseDataSourceImpl @Inject constructor(
             .collection(PATH_DOGS).document(dogId)
             .delete().await()
 
-        deleteRef.delete()
+        deleteRef.delete().await()
     }
 
-    override suspend fun getStampNumByDogIdAndPeriod(dogId: String, start: Date, end: Date): Int {
+    override suspend fun getStampNumByPeriod(start: Date, end: Date): Int {
         val uid = getUserUid()
 
         val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_STAMPS)
-            .whereEqualTo(FIELD_DOG_ID, dogId)
             .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, start)
             .whereLessThanOrEqualTo(FIELD_GET_DATETIME, end)
             .get().await()
 
         return queriedList.size()
+    }
+
+    override suspend fun getStampListByPeriod(
+        start: Date,
+        end: Date
+    ): List<Pair<String, StampDto>> {
+        val uid = getUserUid()
+
+        val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_STAMPS)
+            .whereGreaterThanOrEqualTo(FIELD_GET_DATETIME, start)
+            .whereLessThanOrEqualTo(FIELD_GET_DATETIME, end)
+            .get().await()
+            .map {
+                it.id to it.toObject(StampDto::class.java)
+            }
+
+        return queriedList
     }
 
     override suspend fun insertStamp(stampDto: StampDto) {
@@ -110,14 +127,13 @@ class FirebaseDataSourceImpl @Inject constructor(
      * #5 : 7 walking in a week
      * #6~8 : total distance 10km+/15km+/20km+
      */
-    override suspend fun checkStampCondition(dogId: String, date: Date): List<Pair<String, StampDto>> {
+    override suspend fun checkStampCondition(date: Date): List<Pair<String, StampDto>> {
         val uid = getUserUid()
 
         val (mondayStart, sundayEnd) = date.getWeekStartAndEnd()
 
         val queriedWalkingList = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING)
-            .whereEqualTo(FIELD_DOG_ID, dogId)
             .whereGreaterThanOrEqualTo(FIELD_START_DATETIME, mondayStart)
             .whereLessThanOrEqualTo(FIELD_START_DATETIME, sundayEnd)
             .orderBy(FIELD_START_DATETIME, Query.Direction.ASCENDING)
