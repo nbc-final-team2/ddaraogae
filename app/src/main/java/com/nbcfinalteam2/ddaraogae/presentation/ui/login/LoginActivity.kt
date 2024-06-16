@@ -53,12 +53,11 @@ class LoginActivity : AppCompatActivity() {
         installSplashScreen().apply {
             setKeepOnScreenCondition { viewModel.isLoading.value }
         }
-
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityLogInBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        enableEdgeToEdge()
         uiSetting()
         checkIsPossible()
         clickLoginButton()
@@ -68,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            view.updatePadding(view.paddingLeft + insets.left, view.paddingTop + insets.top, view.paddingRight + insets.right, view.paddingBottom + insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
@@ -115,7 +114,7 @@ class LoginActivity : AppCompatActivity() {
         //click google Login Button
         ibtLoginGoogle.setOnClickListener {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.ddaraogae_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
             googleSignInClient = GoogleSignIn.getClient(this@LoginActivity, gso)
