@@ -1,16 +1,16 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 data class DetailDogUiState(
-    val listPet:List<DogItemModel>,
-    val pet: DogItemModel,
+    val listPet:List<DogInfo>,
+    val pet: DogInfo,
     val listPetEmpty : Boolean
 ) {
     companion object{
         fun init() = DetailDogUiState(
             listPet = emptyList(),
-            pet = DogItemModel("", "", 0),
+            pet = DogInfo("", "", 0),
             listPetEmpty = false
         )
     }

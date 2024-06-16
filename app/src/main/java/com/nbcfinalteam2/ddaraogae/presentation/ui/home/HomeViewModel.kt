@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -46,22 +47,26 @@ class HomeViewModel @Inject constructor(
 
     fun loadDogs() {
         viewModelScope.launch {
-            val dogEntities = getDogListUseCase()
-            val dogInfo = dogEntities.mapIndexed { ind, dogEntity ->
-                DogInfo(
-                    id = dogEntity.id ?: "",
-                    name = dogEntity.name ?: "",
-                    gender = dogEntity.gender ?: 0,
-                    age = dogEntity.age,
-                    lineage = dogEntity.lineage,
-                    memo = dogEntity.memo,
-                    thumbnailUrl = dogEntity.thumbnailUrl,
-                    isSelected = ind==0
-                )
-            }
+            try {
+                val dogEntities = getDogListUseCase()
+                val dogInfo = dogEntities.mapIndexed { ind, dogEntity ->
+                    DogInfo(
+                        id = dogEntity.id ?: "",
+                        name = dogEntity.name ?: "",
+                        gender = dogEntity.gender ?: 0,
+                        age = dogEntity.age,
+                        lineage = dogEntity.lineage,
+                        memo = dogEntity.memo,
+                        thumbnailUrl = dogEntity.thumbnailUrl,
+                        isSelected = ind==0
+                    )
+                }
 
-            _dogList.value = dogInfo
-            _selectedDogInfo.value = _dogList.value.orEmpty().firstOrNull()
+                _dogList.value = dogInfo
+                _selectedDogInfo.value = _dogList.value.orEmpty().firstOrNull()
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
         }
     }
 
@@ -76,7 +81,7 @@ class HomeViewModel @Inject constructor(
                     lineage = it.lineage,
                     memo = it.memo,
                     thumbnailUrl = it.thumbnailUrl,
-                    isSelected = if(selectedDogInfo.isInitialized) {
+                    isSelected = if (selectedDogInfo.isInitialized) {
                         it.id == selectedDogInfo.value?.id
                     } else false
                 )
@@ -87,22 +92,26 @@ class HomeViewModel @Inject constructor(
 
     fun loadSelectedDogWalkGraph() {
         viewModelScope.launch {
-            selectedDogInfo.value?.id?.let { dogId ->
-                val startDate = DateFormatter.getStartDateForWeek()
-                val endDate = DateFormatter.getEndDateForWeek()
-                val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-                val walkInfo = walkEntities.map {
-                    WalkingInfo(
-                        id = it.id,
-                        dogId = it.dogId,
-                        timeTaken = it.timeTaken,
-                        distance = it.distance,
-                        startDateTime = it.startDateTime,
-                        endDateTime = it.endDateTime,
-                        walkingImage = it.walkingImage
-                    )
+            try {
+                selectedDogInfo.value?.id?.let { dogId ->
+                    val startDate = DateFormatter.getStartDateForWeek()
+                    val endDate = DateFormatter.getEndDateForWeek()
+                    val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
+                    val walkInfo = walkEntities.map {
+                        WalkingInfo(
+                            id = it.id,
+                            dogId = it.dogId,
+                            timeTaken = it.timeTaken,
+                            distance = it.distance,
+                            startDateTime = it.startDateTime,
+                            endDateTime = it.endDateTime,
+                            walkingImage = it.walkingImage
+                        )
+                    }
+                    _walkData.value = walkInfo
                 }
-                _walkData.value = walkInfo
+            } catch (exception: Exception) {
+                exception.printStackTrace()
             }
         }
     }
@@ -111,7 +120,7 @@ class HomeViewModel @Inject constructor(
         _selectedDogInfo.value = dogInfo
         _dogList.value = dogList.value.orEmpty().map {
             it.copy(
-                isSelected = dogInfo.id==it.id
+                isSelected = dogInfo.id == it.id
             )
         }
     }
@@ -131,9 +140,7 @@ class HomeViewModel @Inject constructor(
                     ultraFineDustStatus = getUltraFineDustStatus(weatherEntity.pm25)
                 )
                 _weatherInfo.value = weatherInfo
-            } catch (
-                e: Exception
-            ) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }

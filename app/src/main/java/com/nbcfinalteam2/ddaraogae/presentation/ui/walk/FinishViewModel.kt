@@ -7,7 +7,7 @@ import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.CheckStampConditionUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertWalkingDataUseCase
-import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +35,7 @@ class FinishViewModel @Inject constructor(
     val stampList: SharedFlow<List<StampEntity>> = _stampList.asSharedFlow()
 
 
-    fun insertWalkingData(walk: WalkingUiModel, image: ByteArray) {
+    fun insertWalkingData(walk: WalkingInfo, image: ByteArray) {
         viewModelScope.launch {
             val walkingData = walk.let {
                 WalkingEntity(
@@ -45,7 +45,7 @@ class FinishViewModel @Inject constructor(
                     it.distance,
                     it.startDateTime,
                     it.endDateTime,
-                    it.url
+                    it.walkingImage
                 )
             }
 

@@ -20,7 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,7 +34,7 @@ class EditPetActivity : AppCompatActivity() {
 
     //    private var imageFile: File = File("")
     private var imageUri: Uri? = null
-    private lateinit var dogData: DogItemModel
+    private lateinit var dogData: DogInfo
     private lateinit var dogId: String
 
     private val galleryPermissionLauncher =
@@ -126,7 +126,7 @@ class EditPetActivity : AppCompatActivity() {
                 //val image = imageFile.toString().ifEmpty { null }
                 val image = imageUri.toString()
 
-                val changeDog = DogItemModel(dogId, name, gender, age, breed, memo, image)
+                val changeDog = DogInfo(dogId, name, gender, age, breed, memo, image)
                 val byteImage = uriToByteArray(imageUri, this@EditPetActivity)
 
                 requestChangeDogData(changeDog, byteImage)
@@ -146,7 +146,7 @@ class EditPetActivity : AppCompatActivity() {
     }
 
     //강아지 정보 수정 함수
-    private fun requestChangeDogData(changeDogData: DogItemModel, byteImage: ByteArray?) {
+    private fun requestChangeDogData(changeDogData: DogInfo, byteImage: ByteArray?) {
         viewModel.updateDog(changeDogData, byteImage)
     }
 

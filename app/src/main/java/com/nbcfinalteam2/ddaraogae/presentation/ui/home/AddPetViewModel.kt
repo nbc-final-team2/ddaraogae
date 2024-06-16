@@ -7,7 +7,7 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertDogUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +29,7 @@ class AddPetViewModel @Inject constructor(
     private val _insertEvent = MutableSharedFlow<DefaultEvent>()
     val insertEvent: SharedFlow<DefaultEvent> = _insertEvent.asSharedFlow()
 
-    fun insertDog(getDogData: DogItemModel) = viewModelScope.launch {
+    fun insertDog(getDogData: DogInfo) = viewModelScope.launch {
         runCatching {
             val dogData = getDogData.let {
                 DogEntity(
