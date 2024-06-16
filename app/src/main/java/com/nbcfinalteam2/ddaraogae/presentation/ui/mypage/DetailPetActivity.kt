@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -37,12 +37,12 @@ class DetailPetActivity : AppCompatActivity() {
             onItemClick(item)
         }
     }
-    private fun onItemClick(dogData: DogItemModel) {
+    private fun onItemClick(dogData: DogInfo) {
         setView(dogData)
     }
-    private var dogData = DogItemModel("", "", 0)
+    private var dogData = DogInfo("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
-    private var dogDataList = listOf<DogItemModel>()
+    private var dogDataList = listOf<DogInfo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +114,7 @@ class DetailPetActivity : AppCompatActivity() {
     }
 
     //초기, 클릭시 강아지 정보 입력
-    private fun setView(getDogData:DogItemModel) = with(binding) {
+    private fun setView(getDogData:DogInfo) = with(binding) {
         dogData = getDogData
         Glide.with(this@DetailPetActivity)
             .load(dogData.thumbnailUrl?.toUri())

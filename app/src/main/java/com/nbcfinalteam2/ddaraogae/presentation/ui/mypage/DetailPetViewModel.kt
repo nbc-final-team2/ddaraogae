@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +26,7 @@ class DetailPetViewModel @Inject constructor(
         try{
             val loadPetList = getDogListUseCase()
             val petList = loadPetList.map {
-                DogItemModel(
+                DogInfo(
                     it.id,
                     it.name,
                     it.gender,

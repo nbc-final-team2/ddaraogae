@@ -71,7 +71,7 @@ class HomeViewModel @Inject constructor(
 
     fun selectDog(dogInfo: DogInfo) {
         _selectedDogInfo.value = dogInfo
-        selectedWalkGraphDogName(dogInfo.name, dogInfo.id)
+        selectedWalkGraphDogName(dogInfo.name ?: "", dogInfo.id ?: "")
     }
 
     private fun loadWalkData(dogId: String) {

@@ -5,12 +5,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DogInfo (
-    val id: String,
-    val name: String,
-    val gender: Int, // 0: Mail, 1: Female
-    val age: Int?,
-    val lineage: String?,
-    val memo: String?,
-    val thumbnailUrl: String?,
+    val id: String?,
+    val name: String?,
+    val gender: Int?, // 0: Mail, 1: Female
+    val age: Int? = null,
+    val lineage: String? = null,
+    val memo: String? = null,
+    val thumbnailUrl: String? = null,
     var isSelected: Boolean = false
 ) : Parcelable
