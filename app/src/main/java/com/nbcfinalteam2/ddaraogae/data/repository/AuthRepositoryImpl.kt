@@ -52,6 +52,7 @@ class AuthRepositoryImpl @Inject constructor(
         deleteWalkingRef.listAll().await().items.forEach { it.delete().await() }
 
         firebaseAuth.currentUser?.delete()?.await()
+        firebaseAuth.signOut()
     }
 
     override suspend fun sendVerificationEmail() {
