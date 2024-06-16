@@ -107,6 +107,8 @@ class LocationService : Service() {
     fun stopService() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         locationList.clear()
+        savedDogIdList = null
+        savedStartDate = null
         distanceSumState.update { _ ->
             0.0
         }

@@ -256,6 +256,10 @@ class WalkFragment : Fragment() {
     private fun startServiceAndWalk() {
         startLocationService()
         bindToService()
+        locationService?.saveData(
+            walkViewModel.dogSelectionState.value.dogList.filter { it.isSelected }.map { it },
+            Date(System.currentTimeMillis())
+        )
     }
 
     private fun stopServiceAndWalk() {
