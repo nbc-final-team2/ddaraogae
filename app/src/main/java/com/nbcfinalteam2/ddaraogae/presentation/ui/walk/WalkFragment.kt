@@ -282,7 +282,7 @@ class WalkFragment : Fragment() {
         endLocationService()
 
         if(locationList.size<2) {
-            ToastMaker.make(requireContext(), "산책 시간이 너무 짧아 기록되지 않았습니다")
+            ToastMaker.make(requireContext(), getString(R.string.msg_short_walking_time))
             return
         }
 
