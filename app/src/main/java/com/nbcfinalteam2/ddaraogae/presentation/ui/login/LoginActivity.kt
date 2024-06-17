@@ -5,11 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -20,7 +24,6 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -49,16 +52,23 @@ class LoginActivity : AppCompatActivity() {
         installSplashScreen().apply {
             setKeepOnScreenCondition { viewModel.isLoading.value }
         }
-
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityLogInBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-
+        uiSetting()
         checkIsPossible()
         clickLoginButton()
         viewModel.getCurrentUser()
+    }
+
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            windowInsets
+        }
     }
 
     private fun checkIsPossible() {

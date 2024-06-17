@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -40,19 +41,23 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        uiSetting()
         setupWalkGraph()
         setupAdapter()
         setupListener()
         setupObserve()
         getDogInfo()
+    }
+
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            view.updatePadding(0, insets.top, 0, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun setupWalkGraph() {
@@ -114,7 +119,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             } else {
                 setupWalkGraphForHaveData(walkData, year, month)
                 binding.tvWalkData.visibility = View.GONE
-                walkHistoryAdapter.submitList(walkData)
+                walkHistoryAdapter.submitList(walkData.sortedByDescending { it.startDateTime })
                 binding.tvWalkHistoryData.visibility = View.GONE
                 binding.rvWalkHistoryArea.visibility = View.VISIBLE
             }

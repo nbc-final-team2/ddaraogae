@@ -72,13 +72,19 @@ class FirebaseDataSourceImpl @Inject constructor(
     override suspend fun deleteDog(dogId: String) {
         val storageRef = fbStorage.reference
         val uid = getUserUid()
-        val deleteRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
+
+        try {
+            val deleteRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
+            deleteRef.delete().await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS).document(dogId)
             .delete().await()
 
-        deleteRef.delete().await()
+
     }
 
     override suspend fun getStampNumByPeriod(start: Date, end: Date): Int {

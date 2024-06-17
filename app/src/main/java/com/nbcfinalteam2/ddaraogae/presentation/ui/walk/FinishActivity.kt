@@ -5,9 +5,13 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -21,7 +25,7 @@ import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.StampDialogFragment.Companion.ARG_STAMP_LIST
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
@@ -49,9 +53,18 @@ class FinishActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(binding.root)
-
+        uiSetting()
         getDataForInitView()
+    }
+
+    private fun uiSetting() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            view.updatePadding(0, insets.top, 0, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun getDataForInitView() {
@@ -64,7 +77,7 @@ class FinishActivity : FragmentActivity() {
         }
 
         val walkingUiModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(WALKINGUIMODEL, WalkingUiModel::class.java)
+            intent.getParcelableExtra(WALKINGUIMODEL, WalkingInfo::class.java)
         } else {
             intent.getParcelableExtra(WALKINGUIMODEL)
         }
@@ -137,7 +150,7 @@ class FinishActivity : FragmentActivity() {
         }
     }
 
-    private fun initView(walkingUiModel: WalkingUiModel?, walkingDogs: List<DogInfo>?) =
+    private fun initView(walkingUiModel: WalkingInfo?, walkingDogs: List<DogInfo>?) =
         with(binding) {
             val dogsAdapter = walkingDogs?.let { FinishDogAdapter(it) }
 
@@ -239,7 +252,7 @@ class FinishActivity : FragmentActivity() {
         }
     }
 
-    private fun finishWalking(walkingUiModel: WalkingUiModel, walkingDogs: List<DogInfo>) {
+    private fun finishWalking(walkingUiModel: WalkingInfo, walkingDogs: List<DogInfo>) {
         if (::naverMap.isInitialized) {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)

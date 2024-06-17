@@ -80,6 +80,7 @@
     <string name="home_add_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="home_add_edit_completed_button">완료</string>
     <string name="please_add_name">이름은 필수 작성 항목입니다!</string>
+    <string name="msg_fail_insert">반려견 정보 업로드에 실패했습니다</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>
@@ -110,6 +111,7 @@
     <string name="msg_load_dog_fail">반려견 데이터 불러오기에 실패했습니다</string>
     <string name="msg_no_network_connection">인터넷 연결 상태를 확인해주세요</string>
     <string name="msg_no_gps_connection">산책 정보를 트래킹 하기 위해 GPS를 켜주세요</string>
+    <string name="msg_short_walking_time">산책 시간이 너무 짧아 기록되지 않았습니다</string>
 
     <!-- mypage -->
     <string name="mypage_title">마이페이지</string>
