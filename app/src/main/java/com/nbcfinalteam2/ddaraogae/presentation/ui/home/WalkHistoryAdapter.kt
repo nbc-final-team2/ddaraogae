@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter

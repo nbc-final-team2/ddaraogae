@@ -5,16 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
-import com.nbcfinalteam2.ddaraogae.domain.entity.UserEntity
-import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignUpWithEmailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch

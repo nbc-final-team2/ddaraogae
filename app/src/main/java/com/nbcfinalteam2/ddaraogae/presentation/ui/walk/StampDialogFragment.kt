@@ -1,7 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,10 +37,6 @@ class StampDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val stampList: ArrayList<StampEntity>? = arguments?.getParcelableArrayList(ARG_STAMP_LIST)
-        stampList?.let {
-            // 전달받은 stampList를 사용하여 필요한 작업 수행
-            Log.d("StampDialogFragment", "Stamp list: $it")
-        }
 
         val adapter = stampList?.let { FinishStampAdapter(it) }
         binding.rvWalkFinishStampList.adapter = adapter

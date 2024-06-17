@@ -1,8 +1,8 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
 sealed class UpdateTaskState {
-    object Idle : UpdateTaskState()
-    object Loading : UpdateTaskState()
-    object Success : UpdateTaskState()
-    data class Error(val exception: Exception) : UpdateTaskState()
+    data object Idle : UpdateTaskState()
+    data object Loading : UpdateTaskState()
+    data object Success : UpdateTaskState()
+    data class Error(val exception: Throwable) : UpdateTaskState()
 }

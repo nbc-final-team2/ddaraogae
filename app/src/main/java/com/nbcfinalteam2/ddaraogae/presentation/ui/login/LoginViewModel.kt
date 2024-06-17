@@ -1,10 +1,8 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.util.Log
-import android.util.LogPrinter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase

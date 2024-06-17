@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,7 +86,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.loadDogs()
         setupWalkGraphForEmptyData()
         setupListener()
         setupAdapter()
@@ -97,11 +95,9 @@ class HomeFragment : Fragment() {
 
     private fun changeDogPortrait(dogList: List<DogInfo>){
         if(dogList.isEmpty()) {
-            Log.d("ginger", "호출")
             binding.ivDogAdd.visibility = CircleImageView.VISIBLE
             binding.rvDogArea.visibility = RecyclerView.INVISIBLE
         } else {
-            Log.d("ginger", "호출")
             binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
             binding.rvDogArea.visibility = RecyclerView.VISIBLE
         }
