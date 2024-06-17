@@ -7,47 +7,41 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemEditPetDogSelectionBinding
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 class DetailPetAdapter(
-    private val onItemClick:(DogItemModel) -> Unit
-) : ListAdapter<DogItemModel,DetailPetAdapter.ItemViewHolder>(
-    object :DiffUtil.ItemCallback<DogItemModel>(){
+    private val onItemClick:(DogInfo) -> Unit
+) : ListAdapter<DogInfo,DetailPetAdapter.ItemViewHolder>(
+    object :DiffUtil.ItemCallback<DogInfo>(){
 
-        override fun areItemsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
+        override fun areItemsTheSame(oldItem: DogInfo, newItem: DogInfo): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: DogItemModel, newItem: DogItemModel): Boolean {
+        override fun areContentsTheSame(oldItem: DogInfo, newItem: DogInfo): Boolean {
             return oldItem == newItem
         }
     }
 ) {
-    private var selectPos = 0
 
     inner class ItemViewHolder(
         private val binding:ItemEditPetDogSelectionBinding,
         private val context: Context,
-        private val onItemClick: (DogItemModel) -> Unit
+        private val onItemClick: (DogInfo) -> Unit
     ): RecyclerView.ViewHolder(binding.root){
-        fun bind(dogData: DogItemModel, position: Int) = with(binding){
+        fun bind(dogData: DogInfo) = with(binding){
             Glide.with(context)
                 .load(dogData.thumbnailUrl)
+                .error(R.drawable.ic_dog_default_thumbnail)
+                .fallback(R.drawable.ic_dog_default_thumbnail)
                 .into(ivDogImage)
             dogName.text = dogData.name
-            if (selectPos == position) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)
+            if (dogData.isSelected) binding.ivDogImage.borderColor = context.resources.getColor(R.color.banana)
             else binding.ivDogImage.borderColor = context.resources.getColor(R.color.white)
 
             ivDogImage.setOnClickListener {
-                val oldPos = selectPos
-                selectPos = position
-
-                notifyItemChanged(oldPos)
-                notifyItemChanged(selectPos)
-
                 onItemClick(dogData)
             }
         }
@@ -65,6 +59,6 @@ class DetailPetAdapter(
     }
 
     override fun onBindViewHolder(holder: DetailPetAdapter.ItemViewHolder, position: Int) {
-        holder.bind(getItem(position), position)
+        holder.bind(getItem(position))
     }
 }

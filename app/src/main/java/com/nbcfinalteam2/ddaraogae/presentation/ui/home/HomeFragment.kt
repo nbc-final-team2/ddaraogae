@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -31,9 +32,14 @@ import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
+import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
+import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -45,9 +51,9 @@ class HomeFragment : Fragment() {
             onItemClick(item)
         }
     }
-    private var dogList = listOf<DogInfo>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
+    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -73,7 +79,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -87,22 +93,13 @@ class HomeFragment : Fragment() {
         checkLocationPermissions()
     }
 
-    override fun onResume() {
-        super.onResume()
-        homeViewModel.loadDogs()
-    }
-    private fun changeDogPortrait(){
+    private fun changeDogPortrait(dogList: List<DogInfo>){
         if(dogList.isEmpty()) {
-            Log.d("ginger", "호출")
             binding.ivDogAdd.visibility = CircleImageView.VISIBLE
             binding.rvDogArea.visibility = RecyclerView.INVISIBLE
         } else {
-            Log.d("ginger", "호출")
             binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
             binding.rvDogArea.visibility = RecyclerView.VISIBLE
-        }
-        binding.ivDogAdd.setOnClickListener {
-            moveToAdd()
         }
     }
 
@@ -117,17 +114,23 @@ class HomeFragment : Fragment() {
         moveToHistory()
         checkForMoveToLocationSettingsDialog()
         weatherRefreshClickListener()
+
+        binding.ivDogAdd.setOnClickListener {
+            moveToAdd()
+        }
     }
 
     private fun observeViewModel() {
         homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
             dogProfileAdapter.submitList(dogs)
-            dogList = dogs
-            changeDogPortrait()
+            changeDogPortrait(dogs)
         }
 
-        homeViewModel.dogName.observe(viewLifecycleOwner) { dogName ->
-            binding.tvDogGraph.text = "${dogName}의 산책 그래프"
+        homeViewModel.selectedDogInfo.observe(viewLifecycleOwner) { dogInfo ->
+            if(dogInfo!=null) {
+                binding.tvDogGraph.text = "${dogInfo.name}의 산책 그래프"
+                homeViewModel.loadSelectedDogWalkGraph()
+            }
         }
 
         homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
@@ -142,6 +145,16 @@ class HomeFragment : Fragment() {
 
         homeViewModel.weatherInfo.observe(viewLifecycleOwner) { weatherInfo ->
             updateWeatherUI(weatherInfo)
+        }
+
+        lifecycleScope.launch {
+            sharedEventViewModel.dogRefreshEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when (event) {
+                    is SharedEvent.Occur ->  {
+                        homeViewModel.refreshDogList()
+                    }
+                }
+            }
         }
     }
 

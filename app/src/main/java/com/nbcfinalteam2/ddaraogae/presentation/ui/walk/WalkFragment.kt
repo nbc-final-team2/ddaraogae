@@ -34,7 +34,7 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingUiModel
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
@@ -269,22 +269,24 @@ class WalkFragment : Fragment() {
             LatLng(it.latitude, it.longitude)
         }.orEmpty().toTypedArray()
 
-        val walkingUiModel = WalkingUiModel(
+        val walkingUiModel = WalkingInfo(
             id = null,
             dogId = null,
             timeTaken = serviceInfoStateFlow?.value?.time,
             distance = serviceInfoStateFlow?.value?.distance,
             startDateTime = locationService?.savedStartDate,
             endDateTime = Date(System.currentTimeMillis()),
-            url = null
+            walkingImage = null
         )
 
         val walkedDogIdList = locationService?.savedDogIdList
-//            for test
-//            Log.d("check", walkingUiModel.toString())
-//            Log.d("check", walkedDogIdList.toString())
 
         endLocationService()
+
+        if(locationList.size<2) {
+            ToastMaker.make(requireContext(), getString(R.string.msg_short_walking_time))
+            return
+        }
 
         getFinishActivity(walkingUiModel, walkedDogIdList, locationList)
     }
@@ -415,7 +417,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun getFinishActivity(
-        walkingUiModel: WalkingUiModel,
+        walkingUiModel: WalkingInfo,
         walkedDogIdList: List<DogInfo>?,
         locationList: Array<LatLng>
     ) {

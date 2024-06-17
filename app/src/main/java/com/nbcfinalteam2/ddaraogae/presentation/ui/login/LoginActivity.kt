@@ -24,7 +24,6 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -53,12 +52,11 @@ class LoginActivity : AppCompatActivity() {
         installSplashScreen().apply {
             setKeepOnScreenCondition { viewModel.isLoading.value }
         }
-
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityLogInBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        enableEdgeToEdge()
         uiSetting()
         checkIsPossible()
         clickLoginButton()
@@ -67,9 +65,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
-            WindowInsetsCompat.CONSUMED
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            windowInsets
         }
     }
 

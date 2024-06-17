@@ -9,5 +9,4 @@ data class AddUiState(
     companion object {
         fun init() = AddUiState(imageUri = null, byteArray = null)
     }
-
 }

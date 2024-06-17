@@ -2,10 +2,8 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.Manifest
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,23 +18,21 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
+import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
-import com.nbcfinalteam2.ddaraogae.presentation.ui.model.DogItemModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
 
-    //private var imageFile: File = File("")
-    private var byteImage: ByteArray? = null
     private val viewModel: AddPetViewModel by viewModels()
-    private val sharedEventViewModel: SharedEventViewModel by viewModels()
+    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -63,9 +59,9 @@ class AddActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
         uiSetting()
         initView()
         initViewModel()
@@ -102,10 +98,9 @@ class AddActivity : AppCompatActivity() {
                 val memo = etMemo.text.toString()
                 val age =
                     if (etAge.text.toString().isEmpty()) null else etAge.text.toString().toInt()
-                //val image = imageFile.toString().ifEmpty { null }
                 val image = ""
 
-                val newDog = DogItemModel("", name, gender, age, breed, memo, image)
+                val newDog = DogInfo("", name, gender, age, breed, memo, image)
 
                 viewModel.insertDog(newDog)
             }
@@ -121,9 +116,10 @@ class AddActivity : AppCompatActivity() {
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
 
-//                imageFile = File(getRealPathFromURI(it))
                     Glide.with(binding.ivDogThumbnail)
                         .load(uri)
+                        .error(R.drawable.ic_dog_default_thumbnail)
+                        .fallback(R.drawable.ic_dog_default_thumbnail)
                         .fitCenter()
                         .into(binding.ivDogThumbnail)
 
@@ -137,28 +133,11 @@ class AddActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
                     DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
-                        sharedEventViewModel.notifyDogListChanged()
+                        sharedEventViewModel.notifyDogRefreshEvent()
                         finish()
                     }
                 }
             }
         }
-    }
-
-    //uri -> file로 변환
-    private fun getRealPathFromURI(uri: Uri): String {
-        val buildName = Build.MANUFACTURER
-        if (buildName.equals("Xiaomi")) {
-            return uri.path!!
-        }
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = contentResolver.query(uri, proj, null, null, null)
-        if (cursor!!.moveToFirst()) {
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        }
-        val result = cursor.getString(columnIndex)
-        cursor.close()
-        return result
     }
 }
