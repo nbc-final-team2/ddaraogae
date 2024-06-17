@@ -1,7 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,7 +17,6 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,9 +31,6 @@ class HomeViewModel @Inject constructor(
     private val _dogList = MutableLiveData<List<DogInfo>>()
     val dogList: LiveData<List<DogInfo>> get() = _dogList
 
-    private val _dogName = MutableLiveData<String>()
-    val dogName: LiveData<String> get() = _dogName
-
     private val _selectedDogInfo = MutableLiveData<DogInfo>()
     val selectedDogInfo: LiveData<DogInfo> get() = _selectedDogInfo
 
@@ -45,7 +40,11 @@ class HomeViewModel @Inject constructor(
     private val _weatherInfo = MutableLiveData<WeatherInfo>()
     val weatherInfo: LiveData<WeatherInfo> get() = _weatherInfo
 
-    fun loadDogs() {
+    init {
+        loadDogs()
+    }
+
+    private fun loadDogs() {
         viewModelScope.launch {
             try {
                 val dogEntities = getDogListUseCase()
@@ -72,21 +71,25 @@ class HomeViewModel @Inject constructor(
 
     fun refreshDogList() {
         viewModelScope.launch {
-            val newDogInfoList = getDogListUseCase().map {
-                DogInfo(
-                    id = it.id ?: "",
-                    name = it.name ?: "",
-                    gender = it.gender ?: 0,
-                    age = it.age,
-                    lineage = it.lineage,
-                    memo = it.memo,
-                    thumbnailUrl = it.thumbnailUrl,
-                    isSelected = if (selectedDogInfo.isInitialized) {
-                        it.id == selectedDogInfo.value?.id
-                    } else false
-                )
+            try {
+                val newDogInfoList = getDogListUseCase().map {
+                    DogInfo(
+                        id = it.id ?: "",
+                        name = it.name ?: "",
+                        gender = it.gender ?: 0,
+                        age = it.age,
+                        lineage = it.lineage,
+                        memo = it.memo,
+                        thumbnailUrl = it.thumbnailUrl,
+                        isSelected = if (selectedDogInfo.isInitialized) {
+                            it.id == selectedDogInfo.value?.id
+                        } else false
+                    )
+                }
+                _dogList.value = newDogInfoList
+            } catch (exception: Exception) {
+                exception.printStackTrace()
             }
-            _dogList.value = newDogInfoList
         }
     }
 
@@ -153,7 +156,6 @@ class HomeViewModel @Inject constructor(
                 context,
                 R.string.weather_status_rain
             )
-
             in 500..504 -> ContextCompat.getString(context, R.string.weather_status_slight_rain)
             511, in 600..622 -> ContextCompat.getString(context, R.string.weather_status_snow)
             701, 711, 721, 741 -> ContextCompat.getString(context, R.string.weather_status_fog)

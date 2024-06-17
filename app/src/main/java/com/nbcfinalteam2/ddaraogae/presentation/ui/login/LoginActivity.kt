@@ -24,7 +24,6 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -76,7 +75,6 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
                 .collect { state ->
-                    println(state.toString() + " : login code")
                     if (state == 0) successLogIn()
                     if (state == 1) viewModel.checkVerified()
                     if (state == 2) Toast.makeText(this@LoginActivity, R.string.login_fail, Toast.LENGTH_SHORT).show()
