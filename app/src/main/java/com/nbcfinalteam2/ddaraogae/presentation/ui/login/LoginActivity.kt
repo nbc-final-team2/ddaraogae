@@ -65,9 +65,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(view.paddingLeft + insets.left, view.paddingTop + insets.top, view.paddingRight + insets.right, view.paddingBottom + insets.bottom)
-            WindowInsetsCompat.CONSUMED
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            windowInsets
         }
     }
 
