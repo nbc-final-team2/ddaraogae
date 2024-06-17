@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
@@ -82,9 +81,12 @@ class DetailPetViewModel @Inject constructor(
                         }
                     }?:false
                 )
-            }
+            }.toMutableList()
+
             _dogListState.update {
-                dogList
+                selectedDogInd?.let {
+                    dogList
+                }?:dogList.apply { if(this.isNotEmpty()) this[0].isSelected=true }
             }
             _selectedDogState.update {
                 selectedDogInd?.let {
@@ -95,7 +97,6 @@ class DetailPetViewModel @Inject constructor(
     }
 
     fun deleteSelectedDogData() = viewModelScope.launch {
-        println("delete")
         runCatching {
             selectedDogState.value?.let {
                 deleteDogUseCase(it.id!!)

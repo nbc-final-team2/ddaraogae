@@ -1,7 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,7 +17,6 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,9 +30,6 @@ class HomeViewModel @Inject constructor(
 
     private val _dogList = MutableLiveData<List<DogInfo>>()
     val dogList: LiveData<List<DogInfo>> get() = _dogList
-
-    private val _dogName = MutableLiveData<String>()
-    val dogName: LiveData<String> get() = _dogName
 
     private val _selectedDogInfo = MutableLiveData<DogInfo>()
     val selectedDogInfo: LiveData<DogInfo> get() = _selectedDogInfo

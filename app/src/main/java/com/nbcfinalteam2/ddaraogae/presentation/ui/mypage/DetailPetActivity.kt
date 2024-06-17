@@ -25,10 +25,8 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
 import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -105,7 +103,6 @@ class DetailPetActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.selectedDogState.flowWithLifecycle(lifecycle).collectLatest { dogInfo ->
                 dogInfo?.let {
-                    println(it.toString())
                     setView(dogInfo)
                 }
             }
