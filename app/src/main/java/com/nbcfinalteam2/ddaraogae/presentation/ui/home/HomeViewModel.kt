@@ -45,7 +45,11 @@ class HomeViewModel @Inject constructor(
     private val _weatherInfo = MutableLiveData<WeatherInfo>()
     val weatherInfo: LiveData<WeatherInfo> get() = _weatherInfo
 
-    fun loadDogs() {
+    init {
+        loadDogs()
+    }
+
+    private fun loadDogs() {
         viewModelScope.launch {
             try {
                 val dogEntities = getDogListUseCase()

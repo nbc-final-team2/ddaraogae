@@ -56,12 +56,6 @@ class DetailPetActivity : AppCompatActivity() {
 
     }
 
-    //edit -> detail로 돌아왔을 때 데이터를 반영하기 위함
-    override fun onResume() {
-        super.onResume()
-        viewModel.getDogList()
-    }
-
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())

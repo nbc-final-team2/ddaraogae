@@ -4,5 +4,5 @@ sealed class UpdateTaskState {
     data object Idle : UpdateTaskState()
     data object Loading : UpdateTaskState()
     data object Success : UpdateTaskState()
-    data class Error(val exception: Exception) : UpdateTaskState()
+    data class Error(val exception: Throwable) : UpdateTaskState()
 }

@@ -23,8 +23,6 @@ class DetailPetViewModel @Inject constructor(
     private val deleteDogUseCase: DeleteDogUseCase,
     private val getDogListUseCase: GetDogListUseCase,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(DetailDogUiState.init())
-    val uiState: StateFlow<DetailDogUiState> = _uiState.asStateFlow()
 
     private val _dogListState = MutableStateFlow<List<DogInfo>>(emptyList())
     val dogListState: StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
@@ -35,7 +33,11 @@ class DetailPetViewModel @Inject constructor(
     private val _deleteEvent = MutableSharedFlow<DefaultEvent>()
     val deleteEvent: SharedFlow<DefaultEvent> = _deleteEvent.asSharedFlow()
 
-    fun getDogList() = viewModelScope.launch {
+    init {
+        getDogList()
+    }
+
+    private fun getDogList() = viewModelScope.launch {
         runCatching {
             val dogList = getDogListUseCase().mapIndexed { ind, dogEntity ->
                 DogInfo(
