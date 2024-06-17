@@ -278,11 +278,13 @@ class WalkFragment : Fragment() {
         )
 
         val walkedDogIdList = locationService?.savedDogIdList
-//            for test
-//            Log.d("check", walkingUiModel.toString())
-//            Log.d("check", walkedDogIdList.toString())
 
         endLocationService()
+
+        if(locationList.size<2) {
+            ToastMaker.make(requireContext(), "산책 시간이 너무 짧아 기록되지 않았습니다")
+            return
+        }
 
         getFinishActivity(walkingUiModel, walkedDogIdList, locationList)
     }
