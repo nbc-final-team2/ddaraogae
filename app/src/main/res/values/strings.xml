@@ -151,6 +151,7 @@
     <string name="mypage_delete_dog_thumbnail_negative">취소</string>
     <string name="mypage_edit_msg_fail_update">반려견 정보 업데이트에 실패했습니다.</string>
     <string name="mypage_edit_msg_success_update">반려견 정보가 업데이트되었습니다.</string>
+    <string name="mypage_edit_msg_there_are_not_changed">업데이트 할 정보가 없습니다.</string>
 
     <!-- mypage - detail - pet -->
     <string name="detail_pet_empty_list">반려견 정보가 없습니다.</string>

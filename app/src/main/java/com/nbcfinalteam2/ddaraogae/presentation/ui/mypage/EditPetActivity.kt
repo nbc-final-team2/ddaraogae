@@ -156,7 +156,20 @@ class EditPetActivity : AppCompatActivity() {
 
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
 
-                viewModel.updateDog(changedDog)
+                val isSame = dogData?.let {
+                    it.name == changedDog.name &&
+                            it.gender == changedDog.gender &&
+                            it.age == changedDog.age &&
+                            it.lineage == changedDog.lineage &&
+                            it.memo == changedDog.memo &&
+                            it.thumbnailUrl == changedDog.thumbnailUrl
+                } ?: false
+
+                if (!isSame || viewModel.editUiState.value.imageUri != null) {
+                    viewModel.updateDog(changedDog)
+                } else {
+                    Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_there_are_not_changed, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
