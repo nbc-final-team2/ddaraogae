@@ -94,6 +94,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ib_walk_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="138dp"
+        android:src="@drawable/locationbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/gr_walk_ui"
         android:layout_width="wrap_content"
