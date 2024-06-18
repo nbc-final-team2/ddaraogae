@@ -20,10 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ class DetailPetActivity : AppCompatActivity() {
 
     private var dogData = DogInfo("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
-    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,16 +112,14 @@ class DetailPetActivity : AppCompatActivity() {
                 when(event) {
                     is DefaultEvent.Failure -> {}
                     DefaultEvent.Loading -> {}
-                    DefaultEvent.Success -> sharedEventViewModel.notifyDogRefreshEvent()
+                    DefaultEvent.Success -> itemChangedEventBus.notifyItemChanged()
                 }
             }
         }
 
         lifecycleScope.launch {
-            sharedEventViewModel.dogRefreshEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
-                    SharedEvent.Occur -> viewModel.refreshDogList()
-                }
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+                viewModel.refreshDogList()
             }
         }
     }
