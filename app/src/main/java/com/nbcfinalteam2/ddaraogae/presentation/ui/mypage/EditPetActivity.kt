@@ -132,19 +132,19 @@ class EditPetActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this@EditPetActivity)
             builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
             builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+
                 ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
                 viewModel.setImageUri(null, null)
+                ivRemoveThumbnail.visibility = View.GONE
             }
             builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
             builder.show()
         }
 
         btnEditCompleted.setOnClickListener {
-            if (etName.text!!.isEmpty()) Toast.makeText(
-                this@EditPetActivity,
-                R.string.home_add_please_add_name,
-                Toast.LENGTH_SHORT
-            ).show()
+            if (etName.text.toString().isEmpty()) {
+                Toast.makeText(this@EditPetActivity, R.string.home_add_please_add_name, Toast.LENGTH_SHORT).show()
+            }
             else {
                 val dogId = dogData?.id
                 val name = etName.text.toString()
@@ -156,20 +156,7 @@ class EditPetActivity : AppCompatActivity() {
 
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
 
-                val isSame = dogData?.let {
-                    it.name == changedDog.name &&
-                            it.gender == changedDog.gender &&
-                            it.age == changedDog.age &&
-                            it.lineage == changedDog.lineage &&
-                            it.memo == changedDog.memo &&
-                            it.thumbnailUrl == changedDog.thumbnailUrl
-                } ?: false
-
-                if (!isSame || viewModel.editUiState.value.imageUri != null) {
-                    viewModel.updateDog(changedDog)
-                } else {
-                    Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_there_are_not_changed, Toast.LENGTH_SHORT).show()
-                }
+                viewModel.updateDog(changedDog)
             }
         }
     }
@@ -186,7 +173,7 @@ class EditPetActivity : AppCompatActivity() {
                         .into(binding.ivDogThumbnail)
                 }
 
-                binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible) View.VISIBLE else View.GONE
+                binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible || dogData?.thumbnailUrl != null) View.VISIBLE else View.GONE
             }
         }
 
