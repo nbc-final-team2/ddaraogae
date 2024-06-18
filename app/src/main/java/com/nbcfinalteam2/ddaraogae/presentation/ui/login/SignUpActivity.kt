@@ -9,6 +9,7 @@ import android.view.WindowInsets
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
@@ -34,6 +35,10 @@ class SignUpActivity : AppCompatActivity() {
     private var correctEmail = false
     private var correctPassword = false
     private var correctPasswordCheck = false
+
+    private var checkTerms = false
+    private var checkPrivateTerms = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -44,6 +49,7 @@ class SignUpActivity : AppCompatActivity() {
         checkSignUpState()
         checkAuthentication()
         clickSignupButton()
+        clickTerms()
 
         binding.ibtBack.setOnClickListener {
             startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
@@ -85,6 +91,11 @@ class SignUpActivity : AppCompatActivity() {
             if (!correctEmail || !correctPassword || !correctPasswordCheck) Toast.makeText(
                 this,
                 R.string.signup_account_warning,
+                Toast.LENGTH_SHORT
+            ).show()
+            else if (!checkTerms || !checkPrivateTerms)Toast.makeText(
+                this,
+                R.string.signup_check_terms,
                 Toast.LENGTH_SHORT
             ).show()
             else {
@@ -145,4 +156,21 @@ private fun checkPasswordAgain(): Boolean {
         return false
     }
 }
+    private fun clickTerms(){
+        binding.cbSignupTerms.setOnCheckedChangeListener { _, isChecked ->
+            checkTerms = isChecked
+        }
+        binding.cbSignupPersonalTerms.setOnCheckedChangeListener { _, isChecked ->
+            checkTerms = isChecked
+        }
+        binding.tvSignupTerms.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(R.string.signup_terms)
+                .setMessage("")
+            /** 이용 약관 채워 넣기 **/
+        }
+        binding.tvSignupPersonalTerms.setOnClickListener {
+            /** 이용 약관 채워 넣기 **/
+        }
+    }
 }

@@ -194,6 +194,9 @@
     <string name="signup_fail">회원가입에 실패하셨습니다.</string>
     <string name="signup_email_check">"존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요."</string>
     <string name="signup_account_warning">계정이 유효하지 않습니다.</string>
+    <string name="signup_terms">이용약관 동의(필수)</string>
+    <string name="signup_personal_terms">개인정보 처리방침(필수)</string>
+    <string name="signup_check_terms">약관 동의를 해주세요.</string>
 
 
     <!-- location service -->
