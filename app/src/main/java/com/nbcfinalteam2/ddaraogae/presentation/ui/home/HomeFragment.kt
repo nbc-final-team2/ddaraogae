@@ -29,11 +29,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
@@ -53,7 +52,7 @@ class HomeFragment : Fragment() {
     }
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
-    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -148,12 +147,8 @@ class HomeFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            sharedEventViewModel.dogRefreshEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when (event) {
-                    is SharedEvent.Occur ->  {
-                        homeViewModel.refreshDogList()
-                    }
-                }
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+                homeViewModel.refreshDogList()
             }
         }
     }

@@ -17,9 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
 
     private val viewModel: AddPetViewModel by viewModels()
-    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -133,7 +133,7 @@ class AddActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
                     DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
-                        sharedEventViewModel.notifyDogRefreshEvent()
+                        itemChangedEventBus.notifyItemChanged()
                         finish()
                     }
                 }
