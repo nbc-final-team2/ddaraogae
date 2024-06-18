@@ -45,11 +45,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiSetting()
+        getDogInfo()
+        initData()
         setupWalkGraph()
         setupAdapter()
         setupListener()
         setupObserve()
-        getDogInfo()
     }
 
     private fun uiSetting() {
@@ -60,18 +61,32 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
     }
 
+    private fun getDogInfo() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("DOG_INFO", DogInfo::class.java)?.let {
+                dogInfo = it
+                historyViewModel.setDogInfo(dogInfo)
+            }
+        } else {
+            intent.getParcelableExtra<DogInfo>("DOG_INFO")?.let {
+                dogInfo = it
+                historyViewModel.setDogInfo(dogInfo)
+            }
+        }
+    }
+
+    private fun initData() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1
+        historyViewModel.setSelectedDate(year, month)
+    }
+
     private fun setupWalkGraph() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH) + 1
         setupWalkGraphForEmptyData(year, month)
-    }
-
-    private fun setupWalkGraphForEmptyData(year: Int, month: Int) {
-        val lineChart = binding.lcArea
-        GraphUtils.historySetupWalkGraphSettingsForEmptyData(lineChart, this)
-        GraphUtils.historySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
-        GraphUtils.historySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     private fun setupAdapter() {
@@ -105,6 +120,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         historyViewModel.dogInfo.observe(this) { dog ->
             binding.tvWalkGraphDogName.text = "${dog.name}의 산책 그래프"
+
         }
 
         historyViewModel.walkData.observe(this) { walkData ->
@@ -126,24 +142,17 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
     }
 
-    private fun getDogInfo() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("DOG_INFO", DogInfo::class.java)?.let {
-                dogInfo = it
-                historyViewModel.setDogInfo(dogInfo)
-            }
-        } else {
-            intent.getParcelableExtra<DogInfo>("DOG_INFO")?.let {
-                dogInfo = it
-                historyViewModel.setDogInfo(dogInfo)
-            }
-        }
-    }
-
     private fun moveToBack() {
         binding.ivBack.setOnClickListener {
             finish()
         }
+    }
+
+    private fun setupWalkGraphForEmptyData(year: Int, month: Int) {
+        val lineChart = binding.lcArea
+        GraphUtils.historySetupWalkGraphSettingsForEmptyData(lineChart, this)
+        GraphUtils.historySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
+        GraphUtils.historySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>, year: Int, month: Int) {
