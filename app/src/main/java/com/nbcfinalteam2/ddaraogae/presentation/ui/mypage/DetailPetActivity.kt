@@ -111,7 +111,6 @@ class DetailPetActivity : AppCompatActivity() {
             viewModel.deleteEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> {}
-                    DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> itemChangedEventBus.notifyItemChanged()
                 }
             }

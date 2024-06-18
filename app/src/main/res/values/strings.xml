@@ -113,6 +113,9 @@
     <string name="msg_no_gps_connection">산책 정보를 트래킹 하기 위해 GPS를 켜주세요</string>
     <string name="msg_short_walking_time">산책 시간이 너무 짧아 기록되지 않았습니다</string>
 
+    <string name="msg_walk_upload_fail">산책 결과 업로드에 실패했습니다</string>
+    <string name="msg_check_stamp_fail">스탬프 확인에 실패했습니다</string>
+
     <!-- mypage -->
     <string name="mypage_title">마이페이지</string>
     <string name="mypage_information_edit_title">정보 수정</string>
@@ -219,6 +222,5 @@
     <string name="fine_dust_status_general">보통</string>
     <string name="fine_dust_status_bad">나쁨</string>
     <string name="fine_dust_status_very_bad">매우나쁨</string>
-
 
 </resources>

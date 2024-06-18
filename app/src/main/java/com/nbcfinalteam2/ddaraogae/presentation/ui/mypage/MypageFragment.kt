@@ -40,7 +40,6 @@ class MypageFragment : Fragment() {
             viewModel.restartEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 when(it) {
                     is DefaultEvent.Failure -> {}
-                    DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
                         startActivity(Intent.makeRestartActivityTask(requireContext().packageManager.getLaunchIntentForPackage(requireContext().packageName)?.component).apply {
                             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

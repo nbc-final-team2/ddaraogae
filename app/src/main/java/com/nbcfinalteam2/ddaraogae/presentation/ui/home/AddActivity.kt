@@ -131,7 +131,6 @@ class AddActivity : AppCompatActivity() {
             viewModel.insertEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
-                    DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
                         finish()
