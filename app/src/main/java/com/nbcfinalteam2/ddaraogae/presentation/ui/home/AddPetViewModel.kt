@@ -31,6 +31,7 @@ class AddPetViewModel @Inject constructor(
 
     fun insertDog(getDogData: DogInfo) = viewModelScope.launch {
         runCatching {
+            _insertEvent.emit(DefaultEvent.Loading)
             val dogData = getDogData.let {
                 DogEntity(
                     it.id,

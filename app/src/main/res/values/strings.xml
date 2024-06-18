@@ -80,7 +80,8 @@
     <string name="home_add_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="home_add_edit_completed_button">완료</string>
     <string name="please_add_name">이름은 필수 작성 항목입니다!</string>
-    <string name="msg_fail_insert">반려견 정보 업로드에 실패했습니다</string>
+    <string name="msg_fail_insert">반려견 정보 업로드에 실패했습니다.</string>
+    <string name="msg_success_insert">반려견 정보가 추가되었습니다.</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>

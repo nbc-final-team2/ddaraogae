@@ -81,6 +81,24 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
+        lifecycleScope.launch {
+            viewModel.insertEvent.collectLatest { state ->
+                when (state) {
+                    DefaultEvent.Success -> {
+                        btnEditCompleted.isEnabled = false
+                        Toast.makeText(this@AddActivity, R.string.msg_success_insert, Toast.LENGTH_SHORT).show()
+                    }
+                    DefaultEvent.Loading -> {
+                        btnEditCompleted.isEnabled = false
+                    }
+                    is DefaultEvent.Failure -> {
+                        btnEditCompleted.isEnabled = true
+                        Toast.makeText(this@AddActivity, R.string.msg_fail_insert, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
@@ -90,11 +108,9 @@ class AddActivity : AppCompatActivity() {
 
         //완료 버튼 클릭 시 데이터 추가
         btnEditCompleted.setOnClickListener {
-            if (etName.text!!.isBlank()) Toast.makeText(
-                this@AddActivity,
-                R.string.please_add_name,
-                Toast.LENGTH_SHORT
-            ).show()
+            if (etName.text.toString().isBlank()) {
+                Toast.makeText(this@AddActivity, R.string.please_add_name, Toast.LENGTH_SHORT).show()
+            }
             else {
                 val name = etName.text.toString()
                 val gender = if(rgGenderGroup.checkedRadioButtonId==rbFemale.id) 1 else 0
