@@ -173,14 +173,14 @@ class HomeFragment : Fragment() {
     private fun updateWeatherUI(weatherInfo: WeatherInfo) {
         with(binding) {
             val weatherCondition = weatherInfo.condition
-            ivWeatherIcon.setImageResource(getWeatherIconResource(weatherCondition))
+            ivWeatherIcon.setImageResource(getWeatherIconResource(getString(weatherCondition)))
             tvLocation.text = weatherInfo.city
             tvLocationTemperature.text = weatherInfo.temperature
-            tvLocationConditions.text = weatherInfo.condition
+            tvLocationConditions.text = getString(weatherInfo.condition)
             ivFineDustIcon.setImageResource(weatherInfo.fineDustStatusIcon)
             ivUltraFineDustIcon.setImageResource(weatherInfo.ultraFineDustStatusIcon)
-            tvFineDustConditions.text = weatherInfo.fineDustStatus
-            tvUltraFineDustConditions.text = weatherInfo.ultraFineDustStatus
+            tvFineDustConditions.text = getString(weatherInfo.fineDustStatus)
+            tvUltraFineDustConditions.text = getString(weatherInfo.ultraFineDustStatus)
         }
     }
 

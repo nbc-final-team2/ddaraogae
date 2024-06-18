@@ -1,7 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
-import android.content.Context
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,7 +13,6 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +21,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getDogListUseCase: GetDogListUseCase,
     private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
-    private val getWeatherDataUseCase: GetWeatherDataUseCase,
-    @ApplicationContext private val context: Context
+    private val getWeatherDataUseCase: GetWeatherDataUseCase
 ) : ViewModel() {
 
     private val _dogList = MutableLiveData<List<DogInfo>>()
@@ -133,7 +129,7 @@ class HomeViewModel @Inject constructor(
             try {
                 val weatherEntity = getWeatherDataUseCase(lat, lon)
                 val weatherInfo = WeatherInfo(
-                    id = weatherEntity.id.toString(),
+                    id = weatherEntity.id,
                     temperature = "${weatherEntity.temperature}°",
                     city = weatherEntity.city ?: "Unknown",
                     condition = getConditionDescription(weatherEntity.id),
@@ -149,23 +145,20 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getConditionDescription(weatherId: Long?): String {
+    private fun getConditionDescription(weatherId: Long?): Int {
         return when (weatherId?.toInt()) {
-            in 200..232 -> ContextCompat.getString(context, R.string.weather_status_thunder)
-            in 300..321, in 520..531 -> ContextCompat.getString(
-                context,
-                R.string.weather_status_rain
-            )
-            in 500..504 -> ContextCompat.getString(context, R.string.weather_status_slight_rain)
-            511, in 600..622 -> ContextCompat.getString(context, R.string.weather_status_snow)
-            701, 711, 721, 741 -> ContextCompat.getString(context, R.string.weather_status_fog)
-            731, 751, 761, 762 -> ContextCompat.getString(context, R.string.weather_status_dust)
-            in 771..781 -> ContextCompat.getString(context, R.string.weather_status_typoon)
-            800 -> ContextCompat.getString(context, R.string.weather_status_sunny)
-            801 -> ContextCompat.getString(context, R.string.weather_status_slightly_cloudy)
-            802 -> ContextCompat.getString(context, R.string.weather_status_cloudy)
-            in 803..804 -> ContextCompat.getString(context, R.string.weather_status_very_cloudy)
-            else -> ContextCompat.getString(context, R.string.weather_status_no_data)
+            in 200..232 -> R.string.weather_status_thunder
+            in 300..321, in 520..531 -> R.string.weather_status_rain
+            in 500..504 -> R.string.weather_status_slight_rain
+            511, in 600..622 -> R.string.weather_status_snow
+            701, 711, 721, 741 -> R.string.weather_status_fog
+            731, 751, 761, 762 -> R.string.weather_status_dust
+            in 771..781 -> R.string.weather_status_typoon
+            800 -> R.string.weather_status_sunny
+            801 -> R.string.weather_status_slightly_cloudy
+            802 -> R.string.weather_status_cloudy
+            in 803..804 -> R.string.weather_status_very_cloudy
+            else -> R.string.weather_status_no_data
         }
     }
 
@@ -189,23 +182,23 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getFineDustStatus(pm10: Double?): String {
+    private fun getFineDustStatus(pm10: Double?): Int {
         return when {
-            pm10 == null -> ContextCompat.getString(context, R.string.fine_dust_status_good)
-            pm10 <= 30 -> ContextCompat.getString(context, R.string.fine_dust_status_good)
-            pm10 <= 80 -> ContextCompat.getString(context, R.string.fine_dust_status_general)
-            pm10 <= 150 -> ContextCompat.getString(context, R.string.fine_dust_status_bad)
-            else -> ContextCompat.getString(context, R.string.fine_dust_status_very_bad)
+            pm10 == null -> R.string.fine_dust_status_good
+            pm10 <= 30 -> R.string.fine_dust_status_good
+            pm10 <= 80 -> R.string.fine_dust_status_general
+            pm10 <= 150 -> R.string.fine_dust_status_bad
+            else ->  R.string.fine_dust_status_very_bad
         }
     }
 
-    private fun getUltraFineDustStatus(pm25: Double?): String {
+    private fun getUltraFineDustStatus(pm25: Double?): Int {
         return when {
-            pm25 == null -> ContextCompat.getString(context, R.string.fine_dust_status_good)
-            pm25 <= 30 -> ContextCompat.getString(context, R.string.fine_dust_status_good)
-            pm25 <= 80 -> ContextCompat.getString(context, R.string.fine_dust_status_general)
-            pm25 <= 150 -> ContextCompat.getString(context, R.string.fine_dust_status_bad)
-            else -> ContextCompat.getString(context, R.string.fine_dust_status_very_bad)
+            pm25 == null -> R.string.fine_dust_status_good
+            pm25 <= 30 -> R.string.fine_dust_status_good
+            pm25 <= 80 -> R.string.fine_dust_status_general
+            pm25 <= 150 -> R.string.fine_dust_status_bad
+            else -> R.string.fine_dust_status_very_bad
         }
     }
 }
