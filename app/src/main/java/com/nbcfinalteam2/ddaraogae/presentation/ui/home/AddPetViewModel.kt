@@ -54,7 +54,8 @@ class AddPetViewModel @Inject constructor(
     fun setImageUri(imageUri: Uri?, byteArray: ByteArray?) {
         _addUiState.value = AddUiState(
             imageUri = imageUri,
-            byteArray = byteArray
+            byteArray = byteArray,
+            isThumbnailVisible = imageUri != null || byteArray != null
         )
     }
 }

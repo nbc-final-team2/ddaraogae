@@ -57,7 +57,6 @@ class AddActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             viewModel.setImageUri(result.data?.data, uriToByteArray(result.data?.data, this))
-            activeRemoveThumbnail(result.data?.data)
         }
     }
 
@@ -106,6 +105,17 @@ class AddActivity : AppCompatActivity() {
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
+        ivRemoveThumbnail.setOnClickListener {
+            val builder = AlertDialog.Builder(this@AddActivity)
+            builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
+                viewModel.setImageUri(null, null)
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
+        }
+
         //완료 버튼 클릭 시 데이터 추가
         btnEditCompleted.setOnClickListener {
             if (etName.text.toString().isBlank()) {
@@ -127,25 +137,6 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-    private fun activeRemoveThumbnail(data: Uri?) = with(binding) {
-        if (data != null || viewModel.addUiState.value.byteArray != null) {
-            ivRemoveThumbnail.visibility = View.VISIBLE
-
-            ivRemoveThumbnail.setOnClickListener {
-                val builder = AlertDialog.Builder(this@AddActivity)
-                builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
-                builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-                    ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
-                    viewModel.setImageUri(null, null)
-                    ivRemoveThumbnail.visibility = View.GONE
-                }
-                builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
-                builder.show()
-            }
-        } else {
-            ivRemoveThumbnail.visibility = View.GONE
-        }
-    }
 
     private fun initViewModel() {
         lifecycleScope.launch {
@@ -164,6 +155,8 @@ class AddActivity : AppCompatActivity() {
                         .into(binding.ivDogThumbnail)
 
                 }
+
+                binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible) View.VISIBLE else View.GONE
             }
         }
 
