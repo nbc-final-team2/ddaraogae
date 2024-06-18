@@ -47,7 +47,7 @@ class AddPetViewModel @Inject constructor(
         }.onSuccess {
             _insertEvent.emit(DefaultEvent.Success)
         }.onFailure {
-            _insertEvent.emit(DefaultEvent.Failure(R.string.msg_fail_insert))
+            _insertEvent.emit(DefaultEvent.Failure(R.string.home_add_msg_fail_insert))
         }
     }
 

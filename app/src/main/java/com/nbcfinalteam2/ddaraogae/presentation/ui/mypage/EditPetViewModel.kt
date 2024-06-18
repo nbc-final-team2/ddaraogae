@@ -26,6 +26,7 @@ class EditPetViewModel @Inject constructor(
 
     fun updateDog(getDogData: DogInfo) = viewModelScope.launch {
         runCatching {
+            _taskState.value = UpdateTaskState.Loading
             val dogData = getDogData.let {
                 DogEntity(
                     it.id,
