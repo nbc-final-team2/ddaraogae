@@ -183,6 +183,8 @@ class WalkFragment : Fragment() {
             naverMap.uiSettings.isLocationButtonEnabled = true
             // 위치를 추적하면서 카메라도 따라 움직인다.
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
+            // 나침반 비활성화
+            naverMap.uiSettings.isCompassEnabled = false
 
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
