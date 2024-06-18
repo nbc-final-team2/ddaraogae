@@ -2,12 +2,15 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.Manifest
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -54,6 +57,7 @@ class AddActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             viewModel.setImageUri(result.data?.data, uriToByteArray(result.data?.data, this))
+            activeRemoveThumbnail(result.data?.data)
         }
     }
 
@@ -104,6 +108,26 @@ class AddActivity : AppCompatActivity() {
 
                 viewModel.insertDog(newDog)
             }
+        }
+    }
+
+    private fun activeRemoveThumbnail(data: Uri?) = with(binding) {
+        if (data != null || viewModel.addUiState.value.byteArray != null) {
+            ivRemoveThumbnail.visibility = View.VISIBLE
+
+            ivRemoveThumbnail.setOnClickListener {
+                val builder = AlertDialog.Builder(this@AddActivity)
+                builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
+                builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                    ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
+                    viewModel.setImageUri(null, null)
+                    ivRemoveThumbnail.visibility = View.GONE
+                }
+                builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+                builder.show()
+            }
+        } else {
+            ivRemoveThumbnail.visibility = View.GONE
         }
     }
 
