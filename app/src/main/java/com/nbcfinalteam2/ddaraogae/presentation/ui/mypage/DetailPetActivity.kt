@@ -24,6 +24,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
 import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.EditPetActivity.Companion.DOGDATA
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -70,7 +71,7 @@ class DetailPetActivity : AppCompatActivity() {
         binding.tvEdit.setOnClickListener {
             viewModel.selectedDogState.value?.let {
                 val intent = Intent(this@DetailPetActivity, EditPetActivity::class.java)
-                intent.putExtra("dogData", it)
+                intent.putExtra(DOGDATA, it)
                 startActivity(intent)
             }
         }

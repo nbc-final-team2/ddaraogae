@@ -73,9 +73,9 @@ class EditPetActivity : AppCompatActivity() {
 
     private fun getDataFromIntent() {
         dogData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("dogData", DogInfo::class.java)
+            intent.getParcelableExtra(DOGDATA, DogInfo::class.java)
         } else {
-            intent.getParcelableExtra("dogData") as DogInfo?
+            intent.getParcelableExtra(DOGDATA) as DogInfo?
         }
     }
 
@@ -155,5 +155,9 @@ class EditPetActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val DOGDATA = "DOGDATA"
     }
 }
