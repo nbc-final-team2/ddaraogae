@@ -19,8 +19,10 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -143,15 +145,13 @@ class EditPetActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    UpdateTaskState.Idle -> binding.btnEditCompleted.isEnabled = true
-                    UpdateTaskState.Loading -> binding.btnEditCompleted.isEnabled = false
-                    UpdateTaskState.Success -> {
+            viewModel.updateEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@EditPetActivity, event.msg)
+                    DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
                         finish()
                     }
-                    is UpdateTaskState.Error -> binding.btnEditCompleted.isEnabled = true
                 }
             }
         }

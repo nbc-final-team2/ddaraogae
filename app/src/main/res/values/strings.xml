@@ -222,5 +222,6 @@
     <string name="fine_dust_status_general">보통</string>
     <string name="fine_dust_status_bad">나쁨</string>
     <string name="fine_dust_status_very_bad">매우나쁨</string>
+    <string name="msg_edit__fail">수정사항 업데이트에 실패했습니다</string>
 
 </resources>
