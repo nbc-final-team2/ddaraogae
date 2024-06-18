@@ -29,16 +29,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/bt_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back"
-                android:background="@null"
                 android:layout_marginLeft="@dimen/margin_medium"
+                android:background="@null"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_appBar"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_appBar"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_appBar"/>
+                app:layout_constraintTop_toTopOf="@+id/tv_appBar" />
+
             <View
                 android:id="@+id/topBar"
                 android:layout_width="match_parent"
@@ -67,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_smaller"
                 android:src="@drawable/ic_remove"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@+id/iv_dogThumbnail"
                 app:layout_constraintTop_toTopOf="@+id/iv_dogThumbnail" />
 
@@ -125,9 +128,9 @@
                     android:layout_width="84dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_medium"
-                    android:checked="true"
                     android:background="@drawable/radio_button_selector"
                     android:button="@android:color/transparent"
+                    android:checked="true"
                     android:gravity="center"
                     android:text="@string/mypage_edit_pet_dog_gender_male" />
 
@@ -246,10 +249,10 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_body"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@+id/et_memo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_memo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

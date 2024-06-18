@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,6 +50,7 @@ class EditPetActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             viewModel.setImageUri(result.data?.data, uriToByteArray(result.data?.data, this))
+            activeRemoveThumbnail()
         }
     }
 
@@ -107,16 +109,7 @@ class EditPetActivity : AppCompatActivity() {
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
-        ivRemoveThumbnail.setOnClickListener {
-            val builder = AlertDialog.Builder(this@EditPetActivity)
-            builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
-            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-                ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
-                viewModel.setImageUri(null, null)
-            }
-            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
-            builder.show()
-        }
+        activeRemoveThumbnail()
 
         btnEditCompleted.setOnClickListener {
             if (etName.text!!.isEmpty()) Toast.makeText(
@@ -137,6 +130,26 @@ class EditPetActivity : AppCompatActivity() {
 
                 viewModel.updateDog(changedDog)
             }
+        }
+    }
+
+    private fun activeRemoveThumbnail() = with(binding) {
+        if (dogData?.thumbnailUrl != null || viewModel.editUiState.value.byteArray != null) {
+            ivRemoveThumbnail.visibility = View.VISIBLE
+
+            ivRemoveThumbnail.setOnClickListener {
+                val builder = AlertDialog.Builder(this@EditPetActivity)
+                builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
+                builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                    ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
+                    viewModel.setImageUri(null, null)
+                    ivRemoveThumbnail.visibility = View.GONE
+                }
+                builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+                builder.show()
+            }
+        } else {
+            ivRemoveThumbnail.visibility = View.GONE
         }
     }
 
