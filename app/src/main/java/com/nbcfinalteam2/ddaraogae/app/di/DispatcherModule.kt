@@ -1,20 +1,21 @@
 package com.nbcfinalteam2.ddaraogae.app.di
 
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SharedEventViewModelModule {
+object DispatcherModule {
 
     @Provides
     @Singleton
-    fun provideSharedEventViewModel(): SharedEventViewModel {
-        return SharedEventViewModel()
+    fun provideCoroutineDispatcher(): CoroutineDispatcher {
+        return Dispatchers.Default
     }
 
 }

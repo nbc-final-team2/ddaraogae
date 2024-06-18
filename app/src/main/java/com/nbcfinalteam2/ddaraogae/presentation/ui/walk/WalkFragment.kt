@@ -91,7 +91,6 @@ class WalkFragment : Fragment() {
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
     private lateinit var cameraPosition: CameraPosition
-    private lateinit var cameraUpdate: CameraUpdate /*TODO: 나중에 animate을 위해 남김*/
 
     private var locationService: LocationService? = null
     private var bound = false
@@ -185,7 +184,9 @@ class WalkFragment : Fragment() {
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 나침반 비활성화
             naverMap.uiSettings.isCompassEnabled = false
-
+            // 현재 위치 버튼 비활성화
+            naverMap.uiSettings.isLocationButtonEnabled = false
+            
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
 //            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
@@ -218,6 +219,10 @@ class WalkFragment : Fragment() {
             walkViewModel.walkToggle()
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
+        binding.ibWalkLocation.setOnClickListener {
+            naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
+        }
+
     }
 
     private fun checkServicePermission() {

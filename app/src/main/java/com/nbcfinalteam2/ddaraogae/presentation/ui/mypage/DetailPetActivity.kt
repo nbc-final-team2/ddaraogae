@@ -23,10 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.EditPetActivity.Companion.DOGDATA
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -44,7 +43,7 @@ class DetailPetActivity : AppCompatActivity() {
 
     private var dogData = DogInfo("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
-    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +124,7 @@ class DetailPetActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> {}
                     DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
-                        sharedEventViewModel.notifyDogRefreshEvent()
+                        itemChangedEventBus.notifyItemChanged()
                         Toast.makeText(this@DetailPetActivity, R.string.detail_pet_delete_complete, Toast.LENGTH_SHORT).show()
                         binding.scDetailPet.fullScroll(ScrollView.FOCUS_UP)
                     }
@@ -134,10 +133,8 @@ class DetailPetActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            sharedEventViewModel.dogRefreshEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
-                    SharedEvent.Occur -> viewModel.refreshDogList()
-                }
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+                viewModel.refreshDogList()
             }
         }
     }

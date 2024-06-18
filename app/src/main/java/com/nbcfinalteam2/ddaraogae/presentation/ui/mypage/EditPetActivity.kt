@@ -20,8 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +32,7 @@ import javax.inject.Inject
 class EditPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPetBinding
     private val viewModel: EditPetViewModel by viewModels()
-    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private var dogData: DogInfo? = null
 
@@ -183,7 +183,7 @@ class EditPetActivity : AppCompatActivity() {
                     UpdateTaskState.Idle -> binding.btnEditCompleted.isEnabled = true
                     UpdateTaskState.Loading -> binding.btnEditCompleted.isEnabled = false
                     UpdateTaskState.Success -> {
-                        sharedEventViewModel.notifyDogRefreshEvent()
+                        itemChangedEventBus.notifyItemChanged()
                         finish()
                     }
                     is UpdateTaskState.Error -> binding.btnEditCompleted.isEnabled = true
