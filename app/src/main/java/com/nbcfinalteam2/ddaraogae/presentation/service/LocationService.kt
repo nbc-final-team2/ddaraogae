@@ -156,7 +156,7 @@ class LocationService : Service() {
 
     private fun startTimer() {
         if(isRunning) return
-        timerJob = CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+        timerJob = CoroutineScope(Dispatchers.Default).launch {
             while (true) {
                 delay(1000)
                 serviceInfoState.update { prev ->
