@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -104,6 +105,17 @@ class EditPetActivity : AppCompatActivity() {
                 galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
             else
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        ivRemoveThumbnail.setOnClickListener {
+            val builder = AlertDialog.Builder(this@EditPetActivity)
+            builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
+                viewModel.setImageUri(null, null)
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
         }
 
         btnEditCompleted.setOnClickListener {

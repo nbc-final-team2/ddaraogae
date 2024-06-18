@@ -58,14 +58,29 @@ class FirebaseDataSourceImpl @Inject constructor(
             val db = firebaseFs.collection(PATH_USERDATA).document(uid)
                 .collection(PATH_DOGS).document(dogId)
 
-            val updateDogDto = byteImage?.let {
+            val updateDogDto = if (byteImage == null) {
+                deleteDogThumbnail(dogId)
+                dogDto.copy(thumbnailUrl = null)
+            } else {
                 val convertedUrl = withContext(Dispatchers.IO + NonCancellable) {
-                    convertImageUrl(it, dogId)
+                    convertImageUrl(byteImage, dogId)
                 }
                 dogDto.copy(thumbnailUrl = convertedUrl.toString())
-            } ?: dogDto
+            }
 
             db.set(updateDogDto).await()
+        }
+    }
+
+    private suspend fun deleteDogThumbnail(dogId: String) {
+        val storageRef = fbStorage.reference
+        val uid = getUserUid()
+
+        try {
+            val deleteDogThumbnailRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
+            deleteDogThumbnailRef.delete().await()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -83,8 +98,6 @@ class FirebaseDataSourceImpl @Inject constructor(
         firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS).document(dogId)
             .delete().await()
-
-
     }
 
     override suspend fun getStampNumByPeriod(start: Date, end: Date): Int {
