@@ -36,7 +36,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     override fun onMonthClick(year: Int, monthNumber: Int) {
         Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
         historyViewModel.setSelectedDate(year, monthNumber)
-        setupWalkGraphForEmptyData(year, monthNumber)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +45,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         setContentView(binding.root)
         uiSetting()
         getDogInfo()
-        initData()
+        if (savedInstanceState == null) {
+            initData()
+        }
         setupWalkGraph()
         setupAdapter()
         setupListener()
