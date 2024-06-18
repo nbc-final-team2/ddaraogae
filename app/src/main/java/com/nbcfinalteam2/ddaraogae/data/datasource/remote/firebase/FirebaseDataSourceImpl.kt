@@ -58,14 +58,16 @@ class FirebaseDataSourceImpl @Inject constructor(
             val db = firebaseFs.collection(PATH_USERDATA).document(uid)
                 .collection(PATH_DOGS).document(dogId)
 
-            val updateDogDto = if (byteImage == null) {
+            val updateDogDto = if (byteImage == null && dogDto.thumbnailUrl == null) {
                 deleteDogThumbnail(dogId)
                 dogDto.copy(thumbnailUrl = null)
-            } else {
+            } else if (byteImage != null) {
                 val convertedUrl = withContext(Dispatchers.IO + NonCancellable) {
                     convertImageUrl(byteImage, dogId)
                 }
                 dogDto.copy(thumbnailUrl = convertedUrl.toString())
+            } else {
+                dogDto.copy()
             }
 
             db.set(updateDogDto).await()
