@@ -3,7 +3,6 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
