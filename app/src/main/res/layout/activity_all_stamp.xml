@@ -7,7 +7,7 @@
     android:background="@color/white">
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/bt_back"
+        android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"

@@ -27,7 +27,8 @@ class AllStampActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiSetting()
         setupAdapter()
-        setupViewModel()
+        observeViewModel()
+        setupListener()
     }
 
     private fun uiSetting() {
@@ -43,11 +44,18 @@ class AllStampActivity : AppCompatActivity() {
         binding.rvStampArea.adapter = allStampAdapter
     }
 
-    private fun setupViewModel() {
+    private fun observeViewModel() {
         lifecycleScope.launch {
             allStampViewModel.stampListState.collectLatest { stampList ->
                 allStampAdapter.submitList(stampList)
             }
         }
     }
+
+    private fun setupListener() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+    }
 }
+
