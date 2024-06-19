@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/circleImageView"
+                android:id="@+id/iv_stamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_lager"
@@ -33,28 +33,29 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView3"
+                android:id="@+id/tv_stampName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="다다익선"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/circleImageView"
-                app:layout_constraintStart_toStartOf="@+id/circleImageView"
-                app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
+                app:layout_constraintEnd_toEndOf="@+id/iv_stamp"
+                app:layout_constraintStart_toStartOf="@+id/iv_stamp"
+                app:layout_constraintTop_toBottomOf="@+id/iv_stamp" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView2"
+                android:id="@+id/tv_stampNumTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_extra_small"
                 android:text="총 얻은 도장 갯수"
                 android:textSize="@dimen/text_caption"
-                app:layout_constraintEnd_toEndOf="@+id/appCompatTextView3"
-                app:layout_constraintStart_toStartOf="@+id/appCompatTextView3"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView3" />
+                app:layout_constraintEnd_toEndOf="@+id/tv_stampName"
+                app:layout_constraintStart_toStartOf="@+id/tv_stampName"
+                app:layout_constraintTop_toBottomOf="@+id/tv_stampName" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_stampNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_extra_small"
@@ -62,9 +63,9 @@
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/appCompatTextView2"
-                app:layout_constraintStart_toStartOf="@+id/appCompatTextView2"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2" />
+                app:layout_constraintEnd_toEndOf="@+id/tv_stampNumTitle"
+                app:layout_constraintStart_toStartOf="@+id/tv_stampNumTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tv_stampNumTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
