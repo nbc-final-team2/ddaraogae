@@ -29,13 +29,16 @@ class AllStampViewModel @Inject constructor(
     private val _loadStampEvent = MutableSharedFlow<DefaultEvent>()
     val loadStampEvent: SharedFlow<DefaultEvent> = _loadStampEvent.asSharedFlow()
 
+    private val _updateStampEvent = MutableSharedFlow<DefaultEvent>()
+    val updateStampEvent: SharedFlow<DefaultEvent> = _updateStampEvent.asSharedFlow()
+
     init {
         loadStampList()
     }
 
-    private fun loadStampList() = viewModelScope.launch {
+    fun loadStampList() = viewModelScope.launch {
         val startDate = Calendar.getInstance().apply {
-            set(2024, Calendar.JUNE, 1)
+            set(2024, Calendar.JUNE, 1) // 2024년 6월 1일부터 도장이 기록이됩니다.
         }.time
 
         val endDate = Date()

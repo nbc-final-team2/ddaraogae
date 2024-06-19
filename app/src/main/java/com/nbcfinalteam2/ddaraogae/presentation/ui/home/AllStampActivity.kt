@@ -10,11 +10,13 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAllStampBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AllStampActivity : AppCompatActivity() {
@@ -22,6 +24,7 @@ class AllStampActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAllStampBinding
     private val allStampViewModel: AllStampViewModel by viewModels()
     private lateinit var allStampAdapter: AllStampAdapter
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +63,12 @@ class AllStampActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AllStampActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
+            }
+        }
+
+        lifecycleScope.launch{
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+                allStampViewModel.loadStampList()
             }
         }
     }

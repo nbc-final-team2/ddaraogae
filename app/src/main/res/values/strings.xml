@@ -89,6 +89,7 @@
 
     <!-- home - All - Stamp -->
     <string name="home_all_stamp_msg_data_fail">도장 데이터를 불러오기에 실패했습니다.</string>
+    <string name="home_all_stamp_msg_load_changes_fail">변경된 도장 데이터를 정상적으로 불러오지 못했습니다.</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>
@@ -169,7 +170,7 @@
     <string name="detail_pet_delete_positive">확인</string>
     <string name="detail_pet_delete_negative">취소</string>
     <string name="detail_pet_delete_complete">삭제되었습니다.</string>
-    <string name="msg_load_changes_fail">변경된 반려견 데이터를 정상적으로 불러오지 못했습니다</string>
+    <string name="msg_load_changes_fail">변경된 반려견 데이터를 정상적으로 불러오지 못했습니다.</string>
     <string name="msg_delete_dog_fail">반려견 삭제가 실패했습니다</string>
 
     <!-- item - home - history -->
