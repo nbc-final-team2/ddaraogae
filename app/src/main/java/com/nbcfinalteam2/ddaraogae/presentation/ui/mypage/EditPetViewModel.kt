@@ -50,7 +50,7 @@ class EditPetViewModel @Inject constructor(
         _editUiState.value = EditUiState(
             imageSource = imageUri?.let { ImageSource.ImageUri(imageUri) },
             byteArray = byteArray,
-            isThumbnailVisible = imageUri != null || byteArray != null
+            isThumbnailVisible = imageUri != null
         )
     }
 
