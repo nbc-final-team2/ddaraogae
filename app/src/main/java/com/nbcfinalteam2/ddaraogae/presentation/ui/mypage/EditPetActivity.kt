@@ -83,26 +83,6 @@ class EditPetActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
-        lifecycleScope.launch {
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    UpdateTaskState.Idle -> {
-                        btnEditCompleted.isEnabled = false
-                    }
-                    UpdateTaskState.Loading -> {
-                        btnEditCompleted.isEnabled = false
-                    }
-                    UpdateTaskState.Success -> {
-                        btnEditCompleted.isEnabled = false
-                        Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_success_update, Toast.LENGTH_SHORT).show()
-                    }
-                    is UpdateTaskState.Error -> {
-                        btnEditCompleted.isEnabled = true
-                        Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_fail_update, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
 
         if (!viewModel.editUiState.value.isInit) {
             dogData?.let {
@@ -187,6 +167,7 @@ class EditPetActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@EditPetActivity, event.msg)
                     DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
+                        ToastMaker.make(this@EditPetActivity, R.string.mypage_edit_msg_success_update)
                         finish()
                     }
                 }
