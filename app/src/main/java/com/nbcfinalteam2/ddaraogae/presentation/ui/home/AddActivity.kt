@@ -87,9 +87,6 @@ class AddActivity : AppCompatActivity() {
                         btnEditCompleted.isEnabled = false
                         Toast.makeText(this@AddActivity, R.string.home_add_msg_success_insert, Toast.LENGTH_SHORT).show()
                     }
-                    DefaultEvent.Loading -> {
-                        btnEditCompleted.isEnabled = false
-                    }
                     is DefaultEvent.Failure -> {
                         btnEditCompleted.isEnabled = true
                         Toast.makeText(this@AddActivity, R.string.home_add_msg_fail_insert, Toast.LENGTH_SHORT).show()
