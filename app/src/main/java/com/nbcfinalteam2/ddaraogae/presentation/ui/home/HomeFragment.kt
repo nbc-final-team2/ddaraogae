@@ -215,6 +215,11 @@ class HomeFragment : Fragment() {
         binding.ivDogAdd.setOnClickListener {
             moveToAdd()
         }
+
+        binding.tvMoveToAllStamp.setOnClickListener {
+            val intent = Intent(context, AllStampActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun weatherRefreshClickListener() {

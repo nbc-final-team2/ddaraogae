@@ -125,12 +125,12 @@
                 android:text="금주 산책 도장 달성율"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/appCompatTextView"
+                app:layout_constraintEnd_toStartOf="@+id/tv_moveToAllStamp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cv_graph" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView"
+                android:id="@+id/tv_moveToAllStamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
