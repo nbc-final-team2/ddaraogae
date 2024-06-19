@@ -23,6 +23,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -110,8 +111,17 @@ class DetailPetActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.deleteEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when(event) {
-                    is DefaultEvent.Failure -> {}
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
                     DefaultEvent.Success -> itemChangedEventBus.notifyItemChanged()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.loadEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
+                    DefaultEvent.Success -> {}
                 }
             }
         }

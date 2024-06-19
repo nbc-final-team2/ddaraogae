@@ -51,7 +51,7 @@ class EditPetViewModel @Inject constructor(
         }.onSuccess {
             _updateEvent.emit(DefaultEvent.Success)
         }.onFailure { e ->
-            _updateEvent.emit(DefaultEvent.Failure(R.string.msg_edit__fail))
+            _updateEvent.emit(DefaultEvent.Failure(R.string.msg_edit_fail))
         }
     }
 
