@@ -69,7 +69,9 @@ class WalkViewModel @Inject constructor(
 
     fun setWalking() {
         _walkUiState.update {
-            WalkUiState(true)
+            it.copy(
+                isWalking = true
+            )
         }
     }
 
@@ -134,7 +136,7 @@ class WalkViewModel @Inject constructor(
             )
         } else {
             _walkUiState.update {
-                WalkUiState(isWalking = true)
+                it.copy(isWalking = true)
             }
             _walkEvent.emit(
                 WalkEvent.StartWalking
@@ -144,7 +146,7 @@ class WalkViewModel @Inject constructor(
 
     private fun walkStop() = viewModelScope.launch {
         _walkUiState.update {
-            WalkUiState(isWalking = false)
+            it.copy(isWalking = false)
         }
         _walkEvent.emit(
             WalkEvent.StopWalking
@@ -162,6 +164,22 @@ class WalkViewModel @Inject constructor(
                         dogInfo
                     }
                 }
+            )
+        }
+    }
+
+    fun setLoading() {
+        _walkUiState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+    }
+
+    fun releaseLoading() {
+        _walkUiState.update {
+            it.copy(
+                isLoading = false
             )
         }
     }
