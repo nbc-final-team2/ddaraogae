@@ -31,9 +31,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:civ_border_width="4dp"
         app:civ_border_color="@color/very_soft_orange"
         tools:src="@drawable/ic_dog_default_thumbnail" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_dog_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="해피초코예삐쫑이모찌흰둥이구름이"
+        android:textAlignment="center"
+        android:textSize="@dimen/text_mini"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/margin_extra_smaller"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/civ_walk_dogs_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>
