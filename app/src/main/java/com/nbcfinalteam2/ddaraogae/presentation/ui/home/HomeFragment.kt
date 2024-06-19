@@ -30,10 +30,12 @@ import com.google.android.gms.location.LocationServices
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
@@ -52,9 +54,7 @@ class HomeFragment : Fragment() {
     }
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
-
-    @Inject
-    lateinit var itemChangedEventBus: ItemChangedEventBus
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -90,29 +90,30 @@ class HomeFragment : Fragment() {
         setupWalkGraphForEmptyData()
         setupListener()
         setupAdapter()
-        checkLocationPermissions()
         initViewModels()
+        checkLocationPermissions()
     }
 
-    private fun initViewModels() {
-        lifecycleScope.launch {
-            homeViewModel.dogListState.flowWithLifecycle(lifecycle).collectLatest { dogList ->
+    private fun initViewModels(){
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogList ->
                 dogProfileAdapter.submitList(dogList)
                 changeDogPortrait(dogList)
             }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.selectDogState.flowWithLifecycle(lifecycle).collectLatest { dogData ->
-                if (dogData != null) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogData ->
+                if(dogData!=null) {
                     binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
                     homeViewModel.loadSelectedDogWalkGraph()
                 }
             }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.walkListState.flowWithLifecycle(lifecycle).collectLatest { walkData ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { walkData ->
                 if (walkData.isEmpty()) {
                     setupWalkGraphForEmptyData()
                     binding.tvWalkData.visibility = View.VISIBLE
@@ -123,18 +124,54 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.weatherInfoState.flowWithLifecycle(lifecycle)
-                .collectLatest { weatherInfo ->
-                    updateWeatherUI(weatherInfo)
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { weatherInfo ->
+                updateWeatherUI(weatherInfo)
+            }
         }
 
-        lifecycleScope.launch {
-            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 homeViewModel.refreshDogList()
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.updateDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadWalkDataEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
 
         lifecycleScope.launch {
             homeViewModel.stampProgressState.collectLatest { progress ->
@@ -172,7 +209,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun weatherRefreshClickListener() {
         binding.tvTodayWeatherTime.setOnClickListener {
             getLastLocation()
@@ -187,7 +223,7 @@ class HomeFragment : Fragment() {
 
     private fun updateWeatherUI(weatherInfo: WeatherInfo?) {
         with(binding) {
-            if (weatherInfo != null) {
+            if(weatherInfo != null) {
                 val weatherCondition = weatherInfo.condition
                 ivWeatherIcon.setImageResource(getWeatherIconResource(getString(weatherCondition)))
                 tvLocation.text = weatherInfo.city
@@ -317,11 +353,7 @@ class HomeFragment : Fragment() {
                 }
         } catch (e: SecurityException) {
             e.printStackTrace()
-            Toast.makeText(
-                context,
-                getString(R.string.home_toast_location_no_permission),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(context, getString(R.string.home_toast_location_no_permission), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -338,11 +370,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("DOG_INFO", dogInfo)
                 startActivity(intent)
             } else {
-                Toast.makeText(
-                    context,
-                    getString(R.string.home_no_selected_dog),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, getString(R.string.home_no_selected_dog), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -24,7 +24,7 @@ class MypageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -36,11 +36,10 @@ class MypageFragment : Fragment() {
         clickAboutPetBtn()
         clickPrivacyBtn()
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.restartEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 when(it) {
                     is DefaultEvent.Failure -> {}
-                    DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
                         startActivity(Intent.makeRestartActivityTask(requireContext().packageManager.getLaunchIntentForPackage(requireContext().packageName)?.component).apply {
                             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
