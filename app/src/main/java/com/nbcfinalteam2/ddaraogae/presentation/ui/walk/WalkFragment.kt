@@ -37,6 +37,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.LOCATIONLIST
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGDOGS
@@ -45,6 +46,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubl
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
