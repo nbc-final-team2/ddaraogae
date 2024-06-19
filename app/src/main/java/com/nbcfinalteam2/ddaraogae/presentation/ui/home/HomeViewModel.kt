@@ -1,21 +1,22 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,6 +41,17 @@ class HomeViewModel @Inject constructor(
     private val _weatherInfoState = MutableStateFlow<WeatherInfo?>(null)
     val weatherInfoState = _weatherInfoState.asStateFlow()
 
+    private val _loadDogEvent = MutableSharedFlow<DefaultEvent>()
+    val loadDogEvent: SharedFlow<DefaultEvent> = _loadDogEvent.asSharedFlow()
+
+    private val _updateDogEvent = MutableSharedFlow<DefaultEvent>()
+    val updateDogEvent: SharedFlow<DefaultEvent> = _updateDogEvent.asSharedFlow()
+
+    private val _loadWeatherEvent = MutableSharedFlow<DefaultEvent>()
+    val loadWeatherEvent: SharedFlow<DefaultEvent> = _loadWeatherEvent.asSharedFlow()
+
+    private val _loadWalkDataEvent = MutableSharedFlow<DefaultEvent>()
+    val loadWalkDataEvent: SharedFlow<DefaultEvent> = _loadWalkDataEvent.asSharedFlow()
 
     init {
         loadDogs()
@@ -68,12 +80,13 @@ class HomeViewModel @Inject constructor(
                     _dogListState.value.firstOrNull()
                 }
 
+                _loadDogEvent.emit(DefaultEvent.Success)
             } catch (exception: Exception) {
                 exception.printStackTrace()
+                _loadDogEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
             }
         }
     }
-
 
     fun refreshDogList() = viewModelScope.launch {
         runCatching {
@@ -109,6 +122,10 @@ class HomeViewModel @Inject constructor(
                     dogList[it]
                 }?: dogList.firstOrNull()
             }
+        }.onSuccess {
+            _updateDogEvent.emit(DefaultEvent.Success)
+        }.onFailure {
+            _updateDogEvent.emit(DefaultEvent.Failure(R.string.msg_load_changes_fail))
         }
     }
 
@@ -131,9 +148,11 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                     _walkListState.value = walkInfo
+                    _loadWalkDataEvent.emit(DefaultEvent.Success)
                 }
             } catch (exception: Exception) {
                 exception.printStackTrace()
+                _loadWalkDataEvent.emit(DefaultEvent.Failure(R.string.msg_load_walking_data_fail))
             }
         }
     }
@@ -161,9 +180,13 @@ class HomeViewModel @Inject constructor(
                     ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25),
                     ultraFineDustStatus = getUltraFineDustStatus(weatherEntity.pm25)
                 )
+
                 _weatherInfoState.value = weatherInfo
+                _loadWeatherEvent.emit(DefaultEvent.Success)
+
             } catch (e: Exception) {
                 e.printStackTrace()
+                _loadWeatherEvent.emit(DefaultEvent.Failure(R.string.msg_load_weather_fail))
             }
         }
     }
