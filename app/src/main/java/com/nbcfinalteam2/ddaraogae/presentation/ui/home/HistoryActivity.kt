@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -23,6 +25,8 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -51,7 +55,8 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         setupWalkGraph()
         setupAdapter()
         setupListener()
-        setupObserve()
+        setupViewModels()
+        getDogInfo()
     }
 
     private fun uiSetting() {
@@ -114,31 +119,34 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
     }
 
-    private fun setupObserve() {
-        historyViewModel.selectedDate.observe(this) { date ->
-            binding.tvSelectedCalendar.text = date
+    private fun setupViewModels() {
+        lifecycleScope.launch {
+            historyViewModel.selectedDateState.flowWithLifecycle(lifecycle).collectLatest { date ->
+                binding.tvSelectedCalendar.text = date
+            }
         }
-
-        historyViewModel.dogInfo.observe(this) { dog ->
-            binding.tvWalkGraphDogName.text = "${dog.name}의 산책 그래프"
-
+        lifecycleScope.launch {
+            historyViewModel.selectDogState.flowWithLifecycle(lifecycle).collectLatest { dog ->
+                binding.tvWalkGraphDogName.text = "${dog?.name}의 산책 그래프"
+            }
         }
+        lifecycleScope.launch {
+            historyViewModel.walkListState.flowWithLifecycle(lifecycle).collectLatest { walkData ->
+                val (year, month) = historyViewModel.getSelectedYearMonth()
 
-        historyViewModel.walkData.observe(this) { walkData ->
-            val (year, month) = historyViewModel.getSelectedYearMonth()
+                if (walkData.isEmpty()) {
+                    setupWalkGraphForEmptyData(year, month)
+                    binding.tvWalkData.visibility = View.VISIBLE
+                    binding.tvWalkHistoryData.visibility = View.VISIBLE
+                    binding.rvWalkHistoryArea.visibility = View.GONE
 
-            if (walkData.isEmpty()) {
-                setupWalkGraphForEmptyData(year, month)
-                binding.tvWalkData.visibility = View.VISIBLE
-                binding.tvWalkHistoryData.visibility = View.VISIBLE
-                binding.rvWalkHistoryArea.visibility = View.GONE
-
-            } else {
-                setupWalkGraphForHaveData(walkData, year, month)
-                binding.tvWalkData.visibility = View.GONE
-                walkHistoryAdapter.submitList(walkData.sortedByDescending { it.startDateTime })
-                binding.tvWalkHistoryData.visibility = View.GONE
-                binding.rvWalkHistoryArea.visibility = View.VISIBLE
+                } else {
+                    setupWalkGraphForHaveData(walkData, year, month)
+                    binding.tvWalkData.visibility = View.GONE
+                    walkHistoryAdapter.submitList(walkData.sortedByDescending { it.startDateTime })
+                    binding.tvWalkHistoryData.visibility = View.GONE
+                    binding.rvWalkHistoryArea.visibility = View.VISIBLE
+                }
             }
         }
     }
