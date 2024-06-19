@@ -23,9 +23,6 @@ class EditPetViewModel @Inject constructor(
     private val updateDogUseCase: UpdateDogUseCase
 ) : ViewModel() {
 
-    private val _taskState = MutableStateFlow<UpdateTaskState>(UpdateTaskState.Idle)
-    val taskState: StateFlow<UpdateTaskState> = _taskState.asStateFlow()
-
     private val _updateEvent = MutableSharedFlow<DefaultEvent>()
     val updateEvent: SharedFlow<DefaultEvent> = _updateEvent.asSharedFlow()
 
@@ -36,7 +33,6 @@ class EditPetViewModel @Inject constructor(
 
     fun updateDog(getDogData: DogInfo) = viewModelScope.launch {
         runCatching {
-            _taskState.value = UpdateTaskState.Loading
             val dogData = getDogData.let {
                 DogEntity(
                     it.id,
