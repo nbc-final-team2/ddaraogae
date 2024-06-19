@@ -4,8 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
@@ -23,6 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ddaraogae"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.ui.home.AllStampActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="@string/ddaraogae_client_id" />
@@ -47,14 +51,14 @@
             android:exported="false" />
         <activity
             android:name=".presentation.ui.login.SignUpActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".presentation.ui.mypage.MypagePrivacyActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".presentation.ui.login.LoginActivity"
-            android:theme="@style/Theme.App.Starting"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,8 +68,8 @@
 
         <service
             android:name=".presentation.service.LocationService"
-            android:foregroundServiceType="location"
-            android:exported="false" />
-
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
+
 </manifest>
