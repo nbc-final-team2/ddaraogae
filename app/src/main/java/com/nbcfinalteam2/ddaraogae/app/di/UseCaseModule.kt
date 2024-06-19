@@ -48,117 +48,140 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
 abstract class UseCaseModule {
 
     @Binds
+    @ViewModelScoped
     abstract fun bindDeleteDogUseCase(
         deleteDogUseCaseImpl: DeleteDogUseCaseImpl
     ): DeleteDogUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetCurrentUserUseCase(
         getCurrentUserUseCaseImpl: GetCurrentUserUseCaseImpl
     ): GetCurrentUserUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetDogByIdUseCase(
         getDogByIdUseCaseImpl: GetDogByIdUseCaseImpl
     ): GetDogByIdUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetDogListUseCase(
         getDogListUseCaseImpl: GetDogListUseCaseImpl
     ): GetDogListUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetStampNumByPeriodUseCase(
         getStampNumByPeriodUseCaseImpl: GetStampNumByPeriodUseCaseImpl
     ): GetStampNumByPeriodUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetStampListByPeriodUseCase(
         getStampListByPeriodUseCaseImpl: GetStampListByPeriodUseCaseImpl
     ): GetStampListByPeriodUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetWalkingByIdUseCase(
         getWalkingByIdUseCaseImpl: GetWalkingByIdUseCaseImpl
     ): GetWalkingByIdUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetWalkingListByDogIdAndPeriodUseCase(
         getWalkingListByDogIdAndPeriodUseCaseImpl: GetWalkingListByDogIdAndPeriodUseCaseImpl
     ): GetWalkingListByDogIdAndPeriodUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetWeatherDataUseCase(
         getWeatherDataUseCaseImpl: GetWeatherDataUseCaseImpl
     ): GetWeatherDataUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindInsertDogUseCase(
         insertDogUseCaseImpl: InsertDogUseCaseImpl
     ): InsertDogUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindInsertStampUseCase(
         insertStampUseCaseImpl: InsertStampUseCaseImpl
     ): InsertStampUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindInsertWalkingDataUseCase(
         insertWalkingDataUseCaseImpl: InsertWalkingDataUseCaseImpl
     ): InsertWalkingDataUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindSignInWithEmailUseCase(
         signInWithEmailUseCaseImpl: SignInWithEmailUseCaseImpl
     ): SignInWithEmailUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindSignInWithGoogleUseCase(
         signInWithGoogleUseCaseImpl: SignInWithGoogleUseCaseImpl
     ): SignInWithGoogleUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindSignOutUseCase(
         signOutUseCaseImpl: SignOutUseCaseImpl
     ): SignOutUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindSignUpWithEmailUseCase(
         signUpWithEmailUseCaseImpl: SignUpWithEmailUseCaseImpl
     ): SignUpWithEmailUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindUpdateDogUseCase(
         updateDogUseCaseImpl: UpdateDogUseCaseImpl
     ): UpdateDogUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindGetStoreDataUseCase(
         getStoreDataUseCaseImpl: GetStoreDataUseCaseImpl
     ): GetStoreDataUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindIsCurrentUserEmailVerifiedUseCase(
         isCurrentUserEmailVerifiedUseCaseImpl: IsCurrentUserEmailVerifiedUseCaseImpl
     ): IsCurrentUserEmailVerifiedUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindDeleteAccountUseCase(
         deleteAccountUseCaseImpl: DeleteAccountUseCaseImpl
     ): DeleteAccountUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindSendVerificationEmailUseCase(
         sendVerificationEmailUseCaseImpl: SendVerificationEmailUseCaseImpl
     ): SendVerificationEmailUseCase
 
     @Binds
+    @ViewModelScoped
     abstract fun bindCheckStampConditionUseCase(
         checkStampConditionUseCaseImpl: CheckStampConditionUseCaseImpl
     ): CheckStampConditionUseCase

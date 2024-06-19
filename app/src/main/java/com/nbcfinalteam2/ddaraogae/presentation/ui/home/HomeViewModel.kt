@@ -13,35 +13,40 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-
 class HomeViewModel @Inject constructor(
     private val getDogListUseCase: GetDogListUseCase,
     private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
     private val getWeatherDataUseCase: GetWeatherDataUseCase
 ) : ViewModel() {
 
-    private val _dogList = MutableLiveData<List<DogInfo>>()
-    val dogList: LiveData<List<DogInfo>> get() = _dogList
+    private val _dogListState = MutableStateFlow<List<DogInfo>>(emptyList())
+    val dogListState : StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
 
-    private val _selectedDogInfo = MutableLiveData<DogInfo>()
-    val selectedDogInfo: LiveData<DogInfo> get() = _selectedDogInfo
+    private val _selectDogState = MutableStateFlow<DogInfo?>(null)
+    val selectDogState = _selectDogState.asStateFlow()
 
-    private val _walkData = MutableLiveData<List<WalkingInfo>>()
-    val walkData: LiveData<List<WalkingInfo>> get() = _walkData
+    private val _walkListState = MutableStateFlow<List<WalkingInfo>>(emptyList())
+    val walkListState = _walkListState.asStateFlow()
 
-    private val _weatherInfo = MutableLiveData<WeatherInfo>()
-    val weatherInfo: LiveData<WeatherInfo> get() = _weatherInfo
+    private val _weatherInfoState = MutableStateFlow<WeatherInfo?>(null)
+    val weatherInfoState = _weatherInfoState.asStateFlow()
+
 
     init {
         loadDogs()
     }
 
-    private fun loadDogs() {
-        viewModelScope.launch {
+    private fun loadDogs() = viewModelScope.launch {
+        runCatching {
             try {
                 val dogEntities = getDogListUseCase()
                 val dogInfo = dogEntities.mapIndexed { ind, dogEntity ->
@@ -53,38 +58,56 @@ class HomeViewModel @Inject constructor(
                         lineage = dogEntity.lineage,
                         memo = dogEntity.memo,
                         thumbnailUrl = dogEntity.thumbnailUrl,
-                        isSelected = ind==0
+                        isSelected = ind == 0
                     )
                 }
+                _dogListState.update{
+                    dogInfo
+                }
+                _selectDogState.update {
+                    _dogListState.value.firstOrNull()
+                }
 
-                _dogList.value = dogInfo
-                _selectedDogInfo.value = _dogList.value.orEmpty().firstOrNull()
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
         }
     }
 
-    fun refreshDogList() {
-        viewModelScope.launch {
-            try {
-                val newDogInfoList = getDogListUseCase().map {
-                    DogInfo(
-                        id = it.id ?: "",
-                        name = it.name ?: "",
-                        gender = it.gender ?: 0,
-                        age = it.age,
-                        lineage = it.lineage,
-                        memo = it.memo,
-                        thumbnailUrl = it.thumbnailUrl,
-                        isSelected = if (selectedDogInfo.isInitialized) {
-                            it.id == selectedDogInfo.value?.id
-                        } else false
-                    )
-                }
-                _dogList.value = newDogInfoList
-            } catch (exception: Exception) {
-                exception.printStackTrace()
+
+    fun refreshDogList() = viewModelScope.launch {
+        runCatching {
+            var selectedDogInd: Int? = null
+
+            val dogList = getDogListUseCase().mapIndexed { ind, dogEntity ->
+                DogInfo(
+                    id = dogEntity.id,
+                    name = dogEntity.name,
+                    gender = dogEntity.gender,
+                    age = dogEntity.age,
+                    lineage = dogEntity.lineage,
+                    memo = dogEntity.memo,
+                    thumbnailUrl = dogEntity.thumbnailUrl,
+                    isSelected = selectDogState.value?.let {
+                        if(it.id == dogEntity.id) {
+                            selectedDogInd = ind
+                            true
+                        } else {
+                            false
+                        }
+                    }?:false
+                )
+            }.toMutableList()
+
+            _dogListState.update {
+                selectedDogInd?.let {
+                    dogList
+                }?:dogList.apply { if(this.isNotEmpty()) this[0].isSelected=true }
+            }
+            _selectDogState.update {
+                selectedDogInd?.let {
+                    dogList[it]
+                }?: dogList.firstOrNull()
             }
         }
     }
@@ -92,7 +115,7 @@ class HomeViewModel @Inject constructor(
     fun loadSelectedDogWalkGraph() {
         viewModelScope.launch {
             try {
-                selectedDogInfo.value?.id?.let { dogId ->
+                selectDogState.value?.id?.let { dogId ->
                     val startDate = DateFormatter.getStartDateForWeek()
                     val endDate = DateFormatter.getEndDateForWeek()
                     val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
@@ -107,7 +130,7 @@ class HomeViewModel @Inject constructor(
                             walkingImage = it.walkingImage
                         )
                     }
-                    _walkData.value = walkInfo
+                    _walkListState.value = walkInfo
                 }
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -116,8 +139,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun selectDog(dogInfo: DogInfo) {
-        _selectedDogInfo.value = dogInfo
-        _dogList.value = dogList.value.orEmpty().map {
+        _selectDogState.value = dogInfo
+        _dogListState.value = dogListState.value.orEmpty().map {
             it.copy(
                 isSelected = dogInfo.id == it.id
             )
@@ -138,7 +161,7 @@ class HomeViewModel @Inject constructor(
                     ultraFineDustStatusIcon = getUltraFineDustIcon(weatherEntity.pm25),
                     ultraFineDustStatus = getUltraFineDustStatus(weatherEntity.pm25)
                 )
-                _weatherInfo.value = weatherInfo
+                _weatherInfoState.value = weatherInfo
             } catch (e: Exception) {
                 e.printStackTrace()
             }

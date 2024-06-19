@@ -16,6 +16,7 @@ import retrofit2.Retrofit.Builder
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -43,17 +44,20 @@ object NetworkModule {
     }
 
     @Provides
+    @Singleton
     fun provideWeatherInterceptor(): WeatherInterceptor {
         return WeatherInterceptor
     }
 
     @Provides
+    @Singleton
     fun provideKakaoInterceptor(): KakaoInterceptor {
         return KakaoInterceptor
     }
 
     @WeatherInterceptorOkHttpClient
     @Provides
+    @Singleton
     fun provideWeatherInterceptorOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         weatherInterceptor: WeatherInterceptor
@@ -69,6 +73,7 @@ object NetworkModule {
 
     @KakaoInterceptorOkHttpClient
     @Provides
+    @Singleton
     fun provideKakaoInterceptorOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         kakaoInterceptor: KakaoInterceptor
@@ -83,12 +88,14 @@ object NetworkModule {
     }
 
     @Provides
+    @Singleton
     fun provideRetrofitBuilder(): Builder {
         return Builder()
             .addConverterFactory(GsonConverterFactory.create())
     }
 
     @Provides
+    @Singleton
     fun provideWeatherService(
         retrofitBuilder: Builder,
         @WeatherInterceptorOkHttpClient okHttpClient: OkHttpClient
@@ -101,6 +108,7 @@ object NetworkModule {
     }
 
     @Provides
+    @Singleton
     fun provideKakaoService(
         retrofitBuilder: Builder,
         @KakaoInterceptorOkHttpClient okHttpClient: OkHttpClient
@@ -113,6 +121,7 @@ object NetworkModule {
     }
 
     @Provides
+    @Singleton
     fun provideCityService(
         retrofitBuilder: Builder
     ): CityApiService {
