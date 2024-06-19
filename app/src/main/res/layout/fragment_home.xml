@@ -179,12 +179,13 @@
                         android:layout_marginTop="@dimen/margin_extra_small"
                         android:layout_marginEnd="@dimen/margin_small"
                         android:layout_marginBottom="@dimen/margin_small"
+                        android:max="14"
                         android:progressDrawable="@drawable/progress_bar_stamp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_walkStampRate"
-                        tools:progress="50" />
+                        tools:progress="7" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

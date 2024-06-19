@@ -1,11 +1,10 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
@@ -13,7 +12,6 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,11 +23,12 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getDogListUseCase: GetDogListUseCase,
     private val getWalkingListByDogIdAndPeriodUseCase: GetWalkingListByDogIdAndPeriodUseCase,
-    private val getWeatherDataUseCase: GetWeatherDataUseCase
+    private val getWeatherDataUseCase: GetWeatherDataUseCase,
+    private val getStampNumByPeriodUseCase: GetStampNumByPeriodUseCase
 ) : ViewModel() {
 
     private val _dogListState = MutableStateFlow<List<DogInfo>>(emptyList())
-    val dogListState : StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
+    val dogListState: StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
 
     private val _selectDogState = MutableStateFlow<DogInfo?>(null)
     val selectDogState = _selectDogState.asStateFlow()
@@ -40,9 +39,12 @@ class HomeViewModel @Inject constructor(
     private val _weatherInfoState = MutableStateFlow<WeatherInfo?>(null)
     val weatherInfoState = _weatherInfoState.asStateFlow()
 
+    private val _stampProgressState = MutableStateFlow(0)
+    val stampProgressState = _stampProgressState.asStateFlow()
 
     init {
         loadDogs()
+        loadStampProgress()
     }
 
     private fun loadDogs() = viewModelScope.launch {
@@ -61,7 +63,7 @@ class HomeViewModel @Inject constructor(
                         isSelected = ind == 0
                     )
                 }
-                _dogListState.update{
+                _dogListState.update {
                     dogInfo
                 }
                 _selectDogState.update {
@@ -89,25 +91,25 @@ class HomeViewModel @Inject constructor(
                     memo = dogEntity.memo,
                     thumbnailUrl = dogEntity.thumbnailUrl,
                     isSelected = selectDogState.value?.let {
-                        if(it.id == dogEntity.id) {
+                        if (it.id == dogEntity.id) {
                             selectedDogInd = ind
                             true
                         } else {
                             false
                         }
-                    }?:false
+                    } ?: false
                 )
             }.toMutableList()
 
             _dogListState.update {
                 selectedDogInd?.let {
                     dogList
-                }?:dogList.apply { if(this.isNotEmpty()) this[0].isSelected=true }
+                } ?: dogList.apply { if (this.isNotEmpty()) this[0].isSelected = true }
             }
             _selectDogState.update {
                 selectedDogInd?.let {
                     dogList[it]
-                }?: dogList.firstOrNull()
+                } ?: dogList.firstOrNull()
             }
         }
     }
@@ -118,7 +120,8 @@ class HomeViewModel @Inject constructor(
                 selectDogState.value?.id?.let { dogId ->
                     val startDate = DateFormatter.getStartDateForWeek()
                     val endDate = DateFormatter.getEndDateForWeek()
-                    val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
+                    val walkEntities =
+                        getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
                     val walkInfo = walkEntities.map {
                         WalkingInfo(
                             id = it.id,
@@ -211,7 +214,7 @@ class HomeViewModel @Inject constructor(
             pm10 <= 30 -> R.string.fine_dust_status_good
             pm10 <= 80 -> R.string.fine_dust_status_general
             pm10 <= 150 -> R.string.fine_dust_status_bad
-            else ->  R.string.fine_dust_status_very_bad
+            else -> R.string.fine_dust_status_very_bad
         }
     }
 
@@ -222,6 +225,17 @@ class HomeViewModel @Inject constructor(
             pm25 <= 80 -> R.string.fine_dust_status_general
             pm25 <= 150 -> R.string.fine_dust_status_bad
             else -> R.string.fine_dust_status_very_bad
+        }
+    }
+
+    private fun loadStampProgress() = viewModelScope.launch {
+        runCatching {
+            val startDate = DateFormatter.getStartDateForWeek()
+            val endDate = DateFormatter.getEndDateForWeek()
+            val stampNum = getStampNumByPeriodUseCase(startDate, endDate)
+            _stampProgressState.value = stampNum
+        }.onFailure {
+            it.printStackTrace()
         }
     }
 }
