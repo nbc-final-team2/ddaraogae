@@ -61,7 +61,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
