@@ -63,8 +63,11 @@ class FirebaseDataSourceImpl @Inject constructor(
                     convertImageUrl(byteImage, dogId)
                 }
                 dogDto.copy(thumbnailUrl = convertedUrl.toString())
-            } else {
+            } else if (dogDto.thumbnailUrl == null) {
+                deleteDogThumbnail(dogId)
                 dogDto.copy(thumbnailUrl = null)
+            } else {
+                dogDto
             }
 
             db.set(updateDogDto).await()

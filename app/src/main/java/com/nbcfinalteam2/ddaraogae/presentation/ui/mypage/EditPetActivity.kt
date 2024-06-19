@@ -110,13 +110,7 @@ class EditPetActivity : AppCompatActivity() {
             etAge.setText(it.age?.toString())
             etBreed.setText(it.lineage)
             etMemo.setText(it.memo)
-            Glide.with(this@EditPetActivity)
-                .load(
-                    if (viewModel.editUiState.value.imageUri == null) it.thumbnailUrl else viewModel.editUiState.value.imageUri
-                )
-                .error(R.drawable.ic_dog_default_thumbnail)
-                .fallback(R.drawable.ic_dog_default_thumbnail)
-                .into(ivDogThumbnail)
+            viewModel.setImageUrl(it.thumbnailUrl)
         }
 
         btBack.setOnClickListener { finish() }
@@ -132,10 +126,7 @@ class EditPetActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this@EditPetActivity)
             builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
             builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-
-                ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
                 viewModel.setImageUri(null, null)
-                ivRemoveThumbnail.visibility = View.GONE
             }
             builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
             builder.show()
@@ -152,28 +143,37 @@ class EditPetActivity : AppCompatActivity() {
                 val age = if (etAge.text.toString().isEmpty()) null else etAge.text.toString().toInt()
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
-                val image = dogData?.thumbnailUrl.toString()
+                val image = viewModel.editUiState.value.imageSource?.let {
+                    when(it) {
+                        is ImageSource.ImageUri -> null
+                        is ImageSource.ImageUrl -> it.value
+                    }
+                }
 
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
-
                 viewModel.updateDog(changedDog)
             }
         }
     }
 
+
+
     private fun initViewModel() {
         lifecycleScope.launch {
             viewModel.editUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
-                state.imageUri?.let { uri ->
-                    Glide.with(binding.ivDogThumbnail)
-                        .load(uri)
-                        .error(R.drawable.ic_dog_default_thumbnail)
-                        .fallback(R.drawable.ic_dog_default_thumbnail)
-                        .fitCenter()
-                        .into(binding.ivDogThumbnail)
+                val uri = when (state.imageSource) {
+                    is ImageSource.ImageUri -> state.imageSource.value
+                    is ImageSource.ImageUrl -> state.imageSource.value
+                    else -> null
                 }
+                Glide.with(binding.ivDogThumbnail)
+                    .load(uri ?: R.drawable.ic_dog_default_thumbnail)
+                    .error(R.drawable.ic_dog_default_thumbnail)
+                    .fallback(R.drawable.ic_dog_default_thumbnail)
+                    .fitCenter()
+                    .into(binding.ivDogThumbnail)
 
-                binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible || dogData?.thumbnailUrl != null) View.VISIBLE else View.GONE
+                binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible) View.VISIBLE else View.GONE
             }
         }
 
