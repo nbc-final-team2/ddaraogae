@@ -73,8 +73,8 @@ class AddActivity : AppCompatActivity() {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
