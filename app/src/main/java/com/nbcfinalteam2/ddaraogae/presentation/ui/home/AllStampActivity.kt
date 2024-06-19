@@ -7,8 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAllStampBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -27,7 +30,7 @@ class AllStampActivity : AppCompatActivity() {
         setContentView(binding.root)
         uiSetting()
         setupAdapter()
-        observeViewModel()
+        setupViewModel()
         setupListener()
     }
 
@@ -44,10 +47,19 @@ class AllStampActivity : AppCompatActivity() {
         binding.rvStampArea.adapter = allStampAdapter
     }
 
-    private fun observeViewModel() {
+    private fun setupViewModel() {
         lifecycleScope.launch {
             allStampViewModel.stampListState.collectLatest { stampList ->
                 allStampAdapter.submitList(stampList)
+            }
+        }
+
+        lifecycleScope.launch {
+            allStampViewModel.loadStampEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when (event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@AllStampActivity, event.msg)
+                    DefaultEvent.Success -> {}
+                }
             }
         }
     }

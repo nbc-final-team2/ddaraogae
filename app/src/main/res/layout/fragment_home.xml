@@ -274,13 +274,14 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_location"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_smaller"
                         android:text="@string/home_weather_location"
                         android:textSize="@dimen/text_caption"
                         android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_weatherIcon"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_fineDust"
                         app:layout_constraintStart_toEndOf="@+id/iv_weatherIcon"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -310,7 +311,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_locationTemperature"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/home_weather_location_temperature"
                         android:textSize="@dimen/text_mini"
@@ -322,7 +323,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_locationConditions"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_extra_smaller"
                         android:text="@string/home_weather_location_conditions"
