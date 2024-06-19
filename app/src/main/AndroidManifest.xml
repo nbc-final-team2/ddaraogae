@@ -55,6 +55,12 @@
             android:name=".presentation.ui.mypage.MypagePrivacyActivity"
             android:exported="true"/>
         <activity
+            android:name=".presentation.ui.mypage.MypageTermsActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".presentation.ui.mypage.MypageAgreementPrivacy"
+            android:exported="true"/>
+        <activity
             android:name=".presentation.ui.login.LoginActivity"
             android:theme="@style/Theme.App.Starting"
             android:exported="true">

@@ -2,24 +2,21 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.view.WindowInsets
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivitySignUpBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageAgreementPrivacy
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypagePrivacyActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageTermsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -38,6 +35,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private var checkTerms = false
     private var checkPrivateTerms = false
+    private var checkPrivateAgreeTerms = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +91,7 @@ class SignUpActivity : AppCompatActivity() {
                 R.string.signup_account_warning,
                 Toast.LENGTH_SHORT
             ).show()
-            else if (!checkTerms || !checkPrivateTerms)Toast.makeText(
+            else if (!checkTerms || !checkPrivateTerms || !checkPrivateAgreeTerms)Toast.makeText(
                 this,
                 R.string.signup_check_terms,
                 Toast.LENGTH_SHORT
@@ -157,20 +155,25 @@ private fun checkPasswordAgain(): Boolean {
     }
 }
     private fun clickTerms(){
+
         binding.cbSignupTerms.setOnCheckedChangeListener { _, isChecked ->
             checkTerms = isChecked
         }
         binding.cbSignupPersonalTerms.setOnCheckedChangeListener { _, isChecked ->
-            checkTerms = isChecked
+            checkPrivateTerms = isChecked
         }
-        binding.tvSignupTerms.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.signup_terms)
-                .setMessage("")
-            /** 이용 약관 채워 넣기 **/
+        binding.cbSignupPersonalAgreeTerms.setOnCheckedChangeListener { _, isChecked ->
+            checkPrivateAgreeTerms = isChecked
         }
-        binding.tvSignupPersonalTerms.setOnClickListener {
-            /** 이용 약관 채워 넣기 **/
+        binding.ibSignupTerms.setOnClickListener {
+            startActivity(Intent(this, MypageTermsActivity::class.java))
+
+        }
+        binding.ibSignupPersonalTerms.setOnClickListener {
+            startActivity(Intent(this, MypagePrivacyActivity::class.java))
+        }
+        binding.ibSignupPersonalAgreeTerms.setOnClickListener {
+            startActivity(Intent(this, MypageAgreementPrivacy::class.java))
         }
     }
 }

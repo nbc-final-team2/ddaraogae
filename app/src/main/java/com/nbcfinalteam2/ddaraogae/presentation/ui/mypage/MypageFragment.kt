@@ -72,8 +72,14 @@ class MypageFragment : Fragment() {
         }
     }
     private fun clickPrivacyBtn(){
+        binding.tvUseTerms.setOnClickListener {
+            startActivity(Intent(requireActivity(), MypageTermsActivity::class.java))
+        }
         binding.tvPrivacyPolicy.setOnClickListener {
             startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java))
+        }
+        binding.tvAgreementPrivacyPolicy.setOnClickListener {
+            startActivity(Intent(requireActivity(), MypageAgreementPrivacy::class.java))
         }
     }
 
