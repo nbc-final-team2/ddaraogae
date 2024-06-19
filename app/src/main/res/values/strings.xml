@@ -29,6 +29,9 @@
     <string name="home_toast_location_no_permission">위치 권한이 없습니다.</string>
     <string name="home_no_selected_dog">반려견을 선택해 주세요.</string>
 
+    <string name="msg_load_walking_data_fail">산책 데이터 불러오기에 실패했습니다</string>
+    <string name="msg_load_weather_fail">날씨 데이터를 불러오지 못했습니다</string>
+
     <!-- home - detail-->
     <string name="home_detail_title">산책 이력</string>
     <string name="home_detail_walking_time">산책 시간</string>
