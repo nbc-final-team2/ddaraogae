@@ -102,15 +102,17 @@ class EditPetActivity : AppCompatActivity() {
             }
         }
 
-        dogData?.let {
-            if (it.gender == 1) rbFemale.isChecked = true
-            else rbMale.isChecked = true
+        if (!viewModel.editUiState.value.isInit) {
+            dogData?.let {
+                if (it.gender == 1) rbFemale.isChecked = true
+                else rbMale.isChecked = true
 
-            etName.setText(it.name)
-            etAge.setText(it.age?.toString())
-            etBreed.setText(it.lineage)
-            etMemo.setText(it.memo)
-            viewModel.setImageUrl(it.thumbnailUrl)
+                etName.setText(it.name)
+                etAge.setText(it.age?.toString())
+                etBreed.setText(it.lineage)
+                etMemo.setText(it.memo)
+                viewModel.setImageUrl(it.thumbnailUrl)
+            }
         }
 
         btBack.setOnClickListener { finish() }

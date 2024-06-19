@@ -50,14 +50,16 @@ class EditPetViewModel @Inject constructor(
         _editUiState.value = EditUiState(
             imageSource = imageUri?.let { ImageSource.ImageUri(imageUri) },
             byteArray = byteArray,
-            isThumbnailVisible = imageUri != null
+            isThumbnailVisible = imageUri != null,
+            isInit = true
         )
     }
 
     fun setImageUrl(imageUrl: String?) {
         _editUiState.value = EditUiState(
             imageSource = imageUrl?.let { ImageSource.ImageUrl(imageUrl) },
-            isThumbnailVisible = imageUrl != null
+            isThumbnailVisible = imageUrl != null,
+            isInit = true
         )
     }
 }
