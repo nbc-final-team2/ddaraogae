@@ -109,7 +109,6 @@ class AddActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this@AddActivity)
             builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
             builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-                ivDogThumbnail.setImageResource(R.drawable.ic_dog_default_thumbnail)
                 viewModel.setImageUri(null, null)
             }
             builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
@@ -137,7 +136,6 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
-
     private fun initViewModel() {
         lifecycleScope.launch {
             viewModel.addUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
@@ -146,15 +144,14 @@ class AddActivity : AppCompatActivity() {
                         uri,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
-
-                    Glide.with(binding.ivDogThumbnail)
-                        .load(uri)
-                        .error(R.drawable.ic_dog_default_thumbnail)
-                        .fallback(R.drawable.ic_dog_default_thumbnail)
-                        .fitCenter()
-                        .into(binding.ivDogThumbnail)
-
                 }
+
+                Glide.with(binding.ivDogThumbnail)
+                    .load(viewModel.addUiState.value.imageUri)
+                    .error(R.drawable.ic_dog_default_thumbnail)
+                    .fallback(R.drawable.ic_dog_default_thumbnail)
+                    .fitCenter()
+                    .into(binding.ivDogThumbnail)
 
                 binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible) View.VISIBLE else View.GONE
             }
