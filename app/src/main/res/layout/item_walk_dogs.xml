@@ -42,6 +42,7 @@
         tools:text="해피초코예삐쫑이모찌흰둥이구름이"
         android:textAlignment="center"
         android:textSize="@dimen/text_mini"
+        android:textStyle="bold"
         android:background="@color/white"
         android:layout_marginTop="@dimen/margin_extra_smaller"
         app:layout_constraintStart_toStartOf="parent"
