@@ -43,7 +43,7 @@
         android:textAlignment="center"
         android:textSize="@dimen/text_mini"
         android:textStyle="bold"
-        android:background="@color/white"
+        android:textColor="@color/black"
         android:layout_marginTop="@dimen/margin_extra_smaller"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
