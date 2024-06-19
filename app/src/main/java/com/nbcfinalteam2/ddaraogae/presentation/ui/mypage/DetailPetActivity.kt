@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ScrollView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +24,8 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.EditPetActivity.Companion.DOGDATA
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -64,16 +67,23 @@ class DetailPetActivity : AppCompatActivity() {
     private fun initView() {
         binding.btBack.setOnClickListener { finish() }
 
-        binding.btDelete.setOnClickListener { viewModel.deleteSelectedDogData() }
+        binding.btDelete.setOnClickListener {
+            val builder = AlertDialog.Builder(this@DetailPetActivity)
+            builder.setMessage(R.string.detail_pet_delete_message)
+            builder.setPositiveButton(R.string.detail_pet_delete_positive) { _, _ ->
+                viewModel.deleteSelectedDogData()
+            }
+            builder.setNegativeButton(R.string.detail_pet_delete_negative) { _, _ -> }
+            builder.show()
+        }
 
         binding.tvEdit.setOnClickListener {
             viewModel.selectedDogState.value?.let {
                 val intent = Intent(this@DetailPetActivity, EditPetActivity::class.java)
-                intent.putExtra("dogData", it)
+                intent.putExtra(DOGDATA, it)
                 startActivity(intent)
             }
         }
-
         setAdapter()
     }
 
@@ -110,9 +120,21 @@ class DetailPetActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.deleteEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when(event) {
-                    is DefaultEvent.Failure -> {}
-                    DefaultEvent.Loading -> {}
-                    DefaultEvent.Success -> itemChangedEventBus.notifyItemChanged()
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
+                    DefaultEvent.Success -> {
+                        itemChangedEventBus.notifyItemChanged()
+                        ToastMaker.make(this@DetailPetActivity, R.string.detail_pet_delete_complete)
+                        binding.scDetailPet.fullScroll(ScrollView.FOCUS_UP)
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.loadEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
+                    DefaultEvent.Success -> {}
                 }
             }
         }

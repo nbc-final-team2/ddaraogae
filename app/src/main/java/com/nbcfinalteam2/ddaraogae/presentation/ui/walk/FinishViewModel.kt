@@ -1,20 +1,18 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.WalkingEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.CheckStampConditionUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertWalkingDataUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -25,11 +23,11 @@ class FinishViewModel @Inject constructor(
     private val checkStampConditionUseCase: CheckStampConditionUseCase
 ) : ViewModel() {
 
-    private val _taskState = MutableStateFlow<InsertTaskState>(InsertTaskState.Idle)
-    val taskState: StateFlow<InsertTaskState> = _taskState.asStateFlow()
+    private val _insertEvent = MutableSharedFlow<DefaultEvent>()
+    val insertEvent: SharedFlow<DefaultEvent> = _insertEvent.asSharedFlow()
 
-    private val _stampState = MutableStateFlow<StampTaskState>(StampTaskState.Idle)
-    val stampState: StateFlow<StampTaskState> = _stampState.asStateFlow()
+    private val _stampEvent = MutableSharedFlow<DefaultEvent>()
+    val stampEvent: SharedFlow<DefaultEvent> = _stampEvent.asSharedFlow()
 
     private val _stampList = MutableSharedFlow<List<StampEntity>>()
     val stampList: SharedFlow<List<StampEntity>> = _stampList.asSharedFlow()
@@ -51,9 +49,9 @@ class FinishViewModel @Inject constructor(
 
             try {
                 insertWalkingDataUseCase.invoke(walkingData, image)
-                _taskState.value = InsertTaskState.Success
+                _insertEvent.emit(DefaultEvent.Success)
             } catch (e: Exception) {
-                _taskState.value = InsertTaskState.Error(e)
+                _insertEvent.emit(DefaultEvent.Failure(R.string.msg_walk_upload_fail))
             }
         }
     }
@@ -62,12 +60,10 @@ class FinishViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val result = checkStampConditionUseCase(date)
-                Log.d("viewmodel", result.toString())
-                _stampState.value = StampTaskState.Success
+                _stampEvent.emit(DefaultEvent.Success)
                 _stampList.emit(result)
             } catch (e: Exception) {
-                _stampState.value = StampTaskState.Error(e)
-                e.printStackTrace()
+                _stampEvent.emit(DefaultEvent.Failure(R.string.msg_check_stamp_fail))
             }
         }
     }

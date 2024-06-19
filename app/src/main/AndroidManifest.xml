@@ -37,9 +37,6 @@
             android:name=".presentation.ui.walk.FinishActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.home.DetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.ui.mypage.EditPetActivity"
             android:exported="false" />
         <activity

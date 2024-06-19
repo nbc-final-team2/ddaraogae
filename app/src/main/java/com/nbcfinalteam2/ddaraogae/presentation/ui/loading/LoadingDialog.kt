@@ -16,7 +16,7 @@ class LoadingDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DialogLoadingBinding.inflate(inflater, container, false)
         return binding.root
     }

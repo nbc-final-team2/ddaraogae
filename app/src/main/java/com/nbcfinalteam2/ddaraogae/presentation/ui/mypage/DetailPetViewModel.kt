@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
@@ -32,6 +33,9 @@ class DetailPetViewModel @Inject constructor(
     private val _deleteEvent = MutableSharedFlow<DefaultEvent>()
     val deleteEvent: SharedFlow<DefaultEvent> = _deleteEvent.asSharedFlow()
 
+    private val _loadEvent = MutableSharedFlow<DefaultEvent>()
+    val loadEvent: SharedFlow<DefaultEvent> = _loadEvent.asSharedFlow()
+
     init {
         getDogList()
     }
@@ -56,6 +60,10 @@ class DetailPetViewModel @Inject constructor(
             _selectedDogState.update {
                 _dogListState.value.firstOrNull()
             }
+        }.onSuccess {
+            _loadEvent.emit(DefaultEvent.Success)
+        }.onFailure {
+            _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
         }
     }
 
@@ -93,6 +101,10 @@ class DetailPetViewModel @Inject constructor(
                     dogList[it]
                 }?: dogList.firstOrNull()
             }
+        }.onSuccess {
+            _loadEvent.emit(DefaultEvent.Success)
+        }.onFailure {
+            _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_changes_fail))
         }
     }
 
@@ -104,7 +116,7 @@ class DetailPetViewModel @Inject constructor(
         }.onSuccess {
             _deleteEvent.emit(DefaultEvent.Success)
         }.onFailure {
-
+            _deleteEvent.emit(DefaultEvent.Failure(R.string.msg_delete_dog_fail))
         }
     }
 
