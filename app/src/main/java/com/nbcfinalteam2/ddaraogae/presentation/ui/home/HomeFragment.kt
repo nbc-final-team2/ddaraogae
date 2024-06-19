@@ -137,6 +137,13 @@ class HomeFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.stampProgressState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { progress ->
+                binding.progressbarWalkStampRate.progress = progress
+                binding.tvWalkStampRate.text = "14개 중 ${progress}개 흭득"
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
@@ -172,11 +179,12 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-        lifecycleScope.launch {
-            homeViewModel.stampProgressState.collectLatest { progress ->
-                binding.progressbarWalkStampRate.progress = progress
-                binding.tvWalkStampRate.text = "14개 중 ${progress}개 흭득"
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadStampEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
             }
         }
     }

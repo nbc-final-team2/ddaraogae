@@ -57,6 +57,9 @@ class HomeViewModel @Inject constructor(
     private val _loadWalkDataEvent = MutableSharedFlow<DefaultEvent>()
     val loadWalkDataEvent: SharedFlow<DefaultEvent> = _loadWalkDataEvent.asSharedFlow()
 
+    private val _loadStampEvent = MutableSharedFlow<DefaultEvent>()
+    val loadStampEvent: SharedFlow<DefaultEvent> = _loadStampEvent.asSharedFlow()
+
     init {
         loadDogs()
         loadStampProgress()
@@ -260,8 +263,10 @@ class HomeViewModel @Inject constructor(
             val endDate = DateFormatter.getEndDateForWeek()
             val stampNum = getStampNumByPeriodUseCase(startDate, endDate)
             _stampProgressState.value = stampNum
+        }.onSuccess {
+            _loadStampEvent.emit(DefaultEvent.Success)
         }.onFailure {
-            it.printStackTrace()
+            _loadStampEvent.emit(DefaultEvent.Failure(R.string.msg_load_walk_stamp_data_fail))
         }
     }
 }

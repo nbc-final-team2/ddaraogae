@@ -31,6 +31,7 @@
 
     <string name="msg_load_walking_data_fail">산책 데이터 불러오기에 실패했습니다</string>
     <string name="msg_load_weather_fail">날씨 데이터를 불러오지 못했습니다</string>
+    <string name="msg_load_walk_stamp_data_fail">도장 데이터 불러오기에 실패했습니다</string>
 
     <!-- home - detail-->
     <string name="home_detail_title">산책 이력</string>
