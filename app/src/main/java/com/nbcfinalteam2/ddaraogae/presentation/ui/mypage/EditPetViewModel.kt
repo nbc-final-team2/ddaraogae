@@ -36,6 +36,7 @@ class EditPetViewModel @Inject constructor(
 
     fun updateDog(getDogData: DogInfo) = viewModelScope.launch {
         runCatching {
+            _taskState.value = UpdateTaskState.Loading
             val dogData = getDogData.let {
                 DogEntity(
                     it.id,
@@ -51,14 +52,24 @@ class EditPetViewModel @Inject constructor(
         }.onSuccess {
             _updateEvent.emit(DefaultEvent.Success)
         }.onFailure { e ->
-            _updateEvent.emit(DefaultEvent.Failure(R.string.msg_edit__fail))
+            _updateEvent.emit(DefaultEvent.Failure(R.string.msg_edit_fail))
         }
     }
 
     fun setImageUri(imageUri: Uri?, byteArray: ByteArray?) {
         _editUiState.value = EditUiState(
-            imageUri = imageUri,
+            imageSource = imageUri?.let { ImageSource.ImageUri(imageUri) },
+            byteArray = byteArray,
+            isThumbnailVisible = imageUri != null,
+            isInit = true
         )
-        imgByteArray = byteArray
+    }
+
+    fun setImageUrl(imageUrl: String?) {
+        _editUiState.value = EditUiState(
+            imageSource = imageUrl?.let { ImageSource.ImageUrl(imageUrl) },
+            isThumbnailVisible = imageUrl != null,
+            isInit = true
+        )
     }
 }

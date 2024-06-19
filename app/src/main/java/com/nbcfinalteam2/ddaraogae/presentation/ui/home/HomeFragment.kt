@@ -30,10 +30,12 @@ import com.google.android.gms.location.LocationServices
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentHomeBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
@@ -88,26 +90,30 @@ class HomeFragment : Fragment() {
         setupWalkGraphForEmptyData()
         setupListener()
         setupAdapter()
-        checkLocationPermissions()
         initViewModels()
+        checkLocationPermissions()
     }
+
     private fun initViewModels(){
-        lifecycleScope.launch {
-            homeViewModel.dogListState.flowWithLifecycle(lifecycle).collectLatest { dogList ->
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogList ->
                 dogProfileAdapter.submitList(dogList)
                 changeDogPortrait(dogList)
             }
         }
-        lifecycleScope.launch {
-            homeViewModel.selectDogState.flowWithLifecycle(lifecycle).collectLatest { dogData ->
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogData ->
                 if(dogData!=null) {
                     binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
                     homeViewModel.loadSelectedDogWalkGraph()
                 }
             }
         }
-        lifecycleScope.launch {
-            homeViewModel.walkListState.flowWithLifecycle(lifecycle).collectLatest { walkData ->
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { walkData ->
                 if (walkData.isEmpty()) {
                     setupWalkGraphForEmptyData()
                     binding.tvWalkData.visibility = View.VISIBLE
@@ -117,16 +123,55 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        lifecycleScope.launch {
-            homeViewModel.weatherInfoState.flowWithLifecycle(lifecycle).collectLatest { weatherInfo ->
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { weatherInfo ->
                 updateWeatherUI(weatherInfo)
             }
         }
-        lifecycleScope.launch {
-            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 homeViewModel.refreshDogList()
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.updateDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadWalkDataEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
     }
 
     private fun changeDogPortrait(dogList: List<DogInfo>){
@@ -155,7 +200,6 @@ class HomeFragment : Fragment() {
             moveToAdd()
         }
     }
-
 
     private fun weatherRefreshClickListener() {
         binding.tvTodayWeatherTime.setOnClickListener {

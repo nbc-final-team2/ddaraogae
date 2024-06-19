@@ -36,7 +36,7 @@ class MypageFragment : Fragment() {
         clickAboutPetBtn()
         clickPrivacyBtn()
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.restartEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 when(it) {
                     is DefaultEvent.Failure -> {}

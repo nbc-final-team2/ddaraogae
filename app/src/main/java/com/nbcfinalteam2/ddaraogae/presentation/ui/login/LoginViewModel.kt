@@ -77,7 +77,7 @@ class LoginViewModel @Inject constructor(
     fun sendEmail() = viewModelScope.launch {
         try {
             sendVerificationEmailUseCase()
-            signOut()
+            signOutUseCase()
         }catch (e:Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
@@ -93,10 +93,6 @@ class LoginViewModel @Inject constructor(
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
-    }
-
-    private fun signOut() = viewModelScope.launch{
-        signOutUseCase()
     }
 
     fun deleteAccount() = viewModelScope.launch{
