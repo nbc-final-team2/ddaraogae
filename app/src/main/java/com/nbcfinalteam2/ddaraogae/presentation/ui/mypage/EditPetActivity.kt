@@ -5,10 +5,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -60,7 +62,6 @@ class EditPetActivity : AppCompatActivity() {
         setContentView(binding.root)
         getDataFromIntent()
         uiSetting()
-
         initView()
         initViewModel()
     }
@@ -75,28 +76,45 @@ class EditPetActivity : AppCompatActivity() {
 
     private fun getDataFromIntent() {
         dogData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("dogData", DogInfo::class.java)
+            intent.getParcelableExtra(DOGDATA, DogInfo::class.java)
         } else {
-            intent.getParcelableExtra("dogData") as DogInfo?
+            intent.getParcelableExtra(DOGDATA) as DogInfo?
         }
     }
 
     private fun initView() = with(binding) {
-        dogData?.let {
-            if (it.gender == 1) rbFemale.isChecked = true
-            else rbMale.isChecked = true
+        lifecycleScope.launch {
+            viewModel.taskState.collectLatest { state ->
+                when (state) {
+                    UpdateTaskState.Idle -> {
+                        btnEditCompleted.isEnabled = false
+                    }
+                    UpdateTaskState.Loading -> {
+                        btnEditCompleted.isEnabled = false
+                    }
+                    UpdateTaskState.Success -> {
+                        btnEditCompleted.isEnabled = false
+                        Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_success_update, Toast.LENGTH_SHORT).show()
+                    }
+                    is UpdateTaskState.Error -> {
+                        btnEditCompleted.isEnabled = true
+                        Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_fail_update, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
 
-            etName.setText(it.name)
-            etAge.setText(it.age?.toString())
-            etBreed.setText(it.lineage)
-            etMemo.setText(it.memo)
-            Glide.with(this@EditPetActivity)
-                .load(
-                    if (viewModel.editUiState.value.imageUri == null) it.thumbnailUrl else viewModel.editUiState.value.imageUri
-                )
-                .error(R.drawable.ic_dog_default_thumbnail)
-                .fallback(R.drawable.ic_dog_default_thumbnail)
-                .into(ivDogThumbnail)
+        if (!viewModel.editUiState.value.isInit) {
+            dogData?.let {
+                if (it.gender == 1) rbFemale.isChecked = true
+                else rbMale.isChecked = true
+
+                etName.setText(it.name)
+                etAge.setText(it.age?.toString())
+                etBreed.setText(it.lineage)
+                etMemo.setText(it.memo)
+                viewModel.setImageUrl(it.thumbnailUrl)
+            }
         }
 
         btBack.setOnClickListener { finish() }
@@ -108,12 +126,20 @@ class EditPetActivity : AppCompatActivity() {
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
+        ivRemoveThumbnail.setOnClickListener {
+            val builder = AlertDialog.Builder(this@EditPetActivity)
+            builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                viewModel.setImageUri(null, null)
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
+        }
+
         btnEditCompleted.setOnClickListener {
-            if (etName.text!!.isEmpty()) Toast.makeText(
-                this@EditPetActivity,
-                R.string.please_add_name,
-                Toast.LENGTH_SHORT
-            ).show()
+            if (etName.text.toString().isEmpty()) {
+                Toast.makeText(this@EditPetActivity, R.string.home_add_please_add_name, Toast.LENGTH_SHORT).show()
+            }
             else {
                 val dogId = dogData?.id
                 val name = etName.text.toString()
@@ -121,26 +147,37 @@ class EditPetActivity : AppCompatActivity() {
                 val age = if (etAge.text.toString().isEmpty()) null else etAge.text.toString().toInt()
                 val breed = etBreed.text.toString()
                 val memo = etMemo.text.toString()
-                val image = dogData?.thumbnailUrl.toString()
+                val image = viewModel.editUiState.value.imageSource?.let {
+                    when(it) {
+                        is ImageSource.ImageUri -> null
+                        is ImageSource.ImageUrl -> it.value
+                    }
+                }
 
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
-
                 viewModel.updateDog(changedDog)
             }
         }
     }
 
+
+
     private fun initViewModel() {
         lifecycleScope.launch {
-            viewModel.editUiState.flowWithLifecycle(lifecycle).collectLatest {
-                it.imageUri?.let { uri ->
-                    Glide.with(binding.ivDogThumbnail)
-                        .load(uri)
-                        .error(R.drawable.ic_dog_default_thumbnail)
-                        .fallback(R.drawable.ic_dog_default_thumbnail)
-                        .fitCenter()
-                        .into(binding.ivDogThumbnail)
+            viewModel.editUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                val uri = when (state.imageSource) {
+                    is ImageSource.ImageUri -> state.imageSource.value
+                    is ImageSource.ImageUrl -> state.imageSource.value
+                    else -> null
                 }
+                Glide.with(binding.ivDogThumbnail)
+                    .load(uri ?: R.drawable.ic_dog_default_thumbnail)
+                    .error(R.drawable.ic_dog_default_thumbnail)
+                    .fallback(R.drawable.ic_dog_default_thumbnail)
+                    .fitCenter()
+                    .into(binding.ivDogThumbnail)
+
+                binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible) View.VISIBLE else View.GONE
             }
         }
 
@@ -155,5 +192,9 @@ class EditPetActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val DOGDATA = "DOGDATA"
     }
 }
