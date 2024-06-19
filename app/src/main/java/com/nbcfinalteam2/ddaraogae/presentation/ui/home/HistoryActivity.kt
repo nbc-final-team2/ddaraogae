@@ -54,7 +54,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         setupWalkGraph()
         setupAdapter()
         setupListener()
-        setupObserve()
+        setupViewModels()
         getDogInfo()
     }
 
@@ -104,30 +104,34 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
     }
 
-    private fun setupObserve() {
-        historyViewModel.selectedDate.observe(this) { date ->
-            binding.tvSelectedCalendar.text = date
+    private fun setupViewModels() {
+        lifecycleScope.launch {
+            historyViewModel.selectedDateState.flowWithLifecycle(lifecycle).collectLatest { date ->
+                binding.tvSelectedCalendar.text = date
+            }
         }
-
-        historyViewModel.dogInfo.observe(this) { dog ->
-            binding.tvWalkGraphDogName.text = "${dog.name}의 산책 그래프"
+        lifecycleScope.launch {
+            historyViewModel.selectDogState.flowWithLifecycle(lifecycle).collectLatest { dog ->
+                binding.tvWalkGraphDogName.text = "${dog?.name}의 산책 그래프"
+            }
         }
+        lifecycleScope.launch {
+            historyViewModel.walkListState.flowWithLifecycle(lifecycle).collectLatest { walkData ->
+                val (year, month) = historyViewModel.getSelectedYearMonth()
 
-        historyViewModel.walkData.observe(this) { walkData ->
-            val (year, month) = historyViewModel.getSelectedYearMonth()
+                if (walkData.isEmpty()) {
+                    setupWalkGraphForEmptyData(year, month)
+                    binding.tvWalkData.visibility = View.VISIBLE
+                    binding.tvWalkHistoryData.visibility = View.VISIBLE
+                    binding.rvWalkHistoryArea.visibility = View.GONE
 
-            if (walkData.isEmpty()) {
-                setupWalkGraphForEmptyData(year, month)
-                binding.tvWalkData.visibility = View.VISIBLE
-                binding.tvWalkHistoryData.visibility = View.VISIBLE
-                binding.rvWalkHistoryArea.visibility = View.GONE
-
-            } else {
-                setupWalkGraphForHaveData(walkData, year, month)
-                binding.tvWalkData.visibility = View.GONE
-                walkHistoryAdapter.submitList(walkData.sortedByDescending { it.startDateTime })
-                binding.tvWalkHistoryData.visibility = View.GONE
-                binding.rvWalkHistoryArea.visibility = View.VISIBLE
+                } else {
+                    setupWalkGraphForHaveData(walkData, year, month)
+                    binding.tvWalkData.visibility = View.GONE
+                    walkHistoryAdapter.submitList(walkData.sortedByDescending { it.startDateTime })
+                    binding.tvWalkHistoryData.visibility = View.GONE
+                    binding.rvWalkHistoryArea.visibility = View.VISIBLE
+                }
             }
         }
 

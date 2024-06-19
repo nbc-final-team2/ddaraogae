@@ -90,62 +90,44 @@ class HomeFragment : Fragment() {
         setupWalkGraphForEmptyData()
         setupListener()
         setupAdapter()
-        observeViewModel()
+        initViewModels()
         checkLocationPermissions()
     }
 
-    private fun changeDogPortrait(dogList: List<DogInfo>){
-        if(dogList.isEmpty()) {
-            binding.ivDogAdd.visibility = CircleImageView.VISIBLE
-            binding.rvDogArea.visibility = RecyclerView.INVISIBLE
-        } else {
-            binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
-            binding.rvDogArea.visibility = RecyclerView.VISIBLE
-        }
-    }
+    private fun initViewModels(){
 
-    private fun setupAdapter() {
-        binding.rvDogArea.adapter = dogProfileAdapter
-    }
-    private fun onItemClick(dogData: DogInfo) {
-        homeViewModel.selectDog(dogData)
-    }
-
-    private fun setupListener() {
-        moveToHistory()
-        checkForMoveToLocationSettingsDialog()
-        weatherRefreshClickListener()
-
-        binding.ivDogAdd.setOnClickListener {
-            moveToAdd()
-        }
-    }
-
-    private fun observeViewModel() {
-        homeViewModel.dogList.observe(viewLifecycleOwner) { dogs ->
-            dogProfileAdapter.submitList(dogs)
-            changeDogPortrait(dogs)
-        }
-
-        homeViewModel.selectedDogInfo.observe(viewLifecycleOwner) { dogInfo ->
-            if(dogInfo!=null) {
-                binding.tvDogGraph.text = "${dogInfo.name}의 산책 그래프"
-                homeViewModel.loadSelectedDogWalkGraph()
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogList ->
+                dogProfileAdapter.submitList(dogList)
+                changeDogPortrait(dogList)
             }
         }
 
-        homeViewModel.walkData.observe(viewLifecycleOwner) { walkData ->
-            if (walkData.isEmpty()) {
-                setupWalkGraphForEmptyData()
-                binding.tvWalkData.visibility = View.VISIBLE
-            } else {
-                setupWalkGraphForHaveData(walkData)
-                binding.tvWalkData.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogData ->
+                if(dogData!=null) {
+                    binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
+                    homeViewModel.loadSelectedDogWalkGraph()
+                }
             }
         }
 
-        homeViewModel.weatherInfo.observe(viewLifecycleOwner) { weatherInfo ->
-            updateWeatherUI(weatherInfo)
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { walkData ->
+                if (walkData.isEmpty()) {
+                    setupWalkGraphForEmptyData()
+                    binding.tvWalkData.visibility = View.VISIBLE
+                } else {
+                    setupWalkGraphForHaveData(walkData)
+                    binding.tvWalkData.visibility = View.GONE
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { weatherInfo ->
+                updateWeatherUI(weatherInfo)
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -189,6 +171,34 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
+    }
+
+    private fun changeDogPortrait(dogList: List<DogInfo>){
+        if(dogList.isEmpty()) {
+            binding.ivDogAdd.visibility = CircleImageView.VISIBLE
+            binding.rvDogArea.visibility = RecyclerView.INVISIBLE
+        } else {
+            binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
+            binding.rvDogArea.visibility = RecyclerView.VISIBLE
+        }
+    }
+
+    private fun setupAdapter() {
+        binding.rvDogArea.adapter = dogProfileAdapter
+    }
+    private fun onItemClick(dogData: DogInfo) {
+        homeViewModel.selectDog(dogData)
+    }
+
+    private fun setupListener() {
+        moveToHistory()
+        checkForMoveToLocationSettingsDialog()
+        weatherRefreshClickListener()
+
+        binding.ivDogAdd.setOnClickListener {
+            moveToAdd()
+        }
     }
 
     private fun weatherRefreshClickListener() {
@@ -203,17 +213,19 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateWeatherUI(weatherInfo: WeatherInfo) {
+    private fun updateWeatherUI(weatherInfo: WeatherInfo?) {
         with(binding) {
-            val weatherCondition = weatherInfo.condition
-            ivWeatherIcon.setImageResource(getWeatherIconResource(weatherCondition))
-            tvLocation.text = weatherInfo.city
-            tvLocationTemperature.text = weatherInfo.temperature
-            tvLocationConditions.text = weatherInfo.condition
-            ivFineDustIcon.setImageResource(weatherInfo.fineDustStatusIcon)
-            ivUltraFineDustIcon.setImageResource(weatherInfo.ultraFineDustStatusIcon)
-            tvFineDustConditions.text = weatherInfo.fineDustStatus
-            tvUltraFineDustConditions.text = weatherInfo.ultraFineDustStatus
+            if(weatherInfo != null) {
+                val weatherCondition = weatherInfo.condition
+                ivWeatherIcon.setImageResource(getWeatherIconResource(weatherCondition))
+                tvLocation.text = weatherInfo.city
+                tvLocationTemperature.text = weatherInfo.temperature
+                tvLocationConditions.text = weatherInfo.condition
+                ivFineDustIcon.setImageResource(weatherInfo.fineDustStatusIcon)
+                ivUltraFineDustIcon.setImageResource(weatherInfo.ultraFineDustStatusIcon)
+                tvFineDustConditions.text = weatherInfo.fineDustStatus
+                tvUltraFineDustConditions.text = weatherInfo.ultraFineDustStatus
+            }
         }
     }
 
@@ -342,7 +354,7 @@ class HomeFragment : Fragment() {
 
     private fun moveToHistory() {
         binding.cvGraph.setOnClickListener {
-            val dogInfo = homeViewModel.selectedDogInfo.value
+            val dogInfo = homeViewModel.selectDogState.value
             if (dogInfo != null) {
                 val intent = Intent(context, HistoryActivity::class.java)
                 intent.putExtra("DOG_INFO", dogInfo)
