@@ -18,7 +18,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_main"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="50dp"
@@ -59,10 +59,11 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_dogGraph"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="160dp"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_walk_graph_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
@@ -121,7 +122,8 @@
                 android:id="@+id/tv_stampTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_extra_lager"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:text="금주 산책 도장 달성율"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
@@ -131,7 +133,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_moveToAllStamp"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="전체 보기"
@@ -194,7 +196,9 @@
                 android:id="@+id/tv_todayWeather"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_extra_lager"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_weather_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
@@ -209,9 +213,11 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:cardElevation="@dimen/margin_extra_small"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_todayWeather">
