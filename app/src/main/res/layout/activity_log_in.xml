@@ -120,12 +120,11 @@
         android:background="@color/grey"
         app:layout_constraintBottom_toBottomOf="@+id/tv_login_sns"
         app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_login_sns" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/ibt_login_google"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="@dimen/margin_extra_lager"
         android:background="@drawable/login_box"
@@ -134,7 +133,6 @@
         android:paddingRight="@dimen/padding_medium"
         android:text="@string/login_google"
         app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
-        app:layout_constraintLeft_toLeftOf="@id/guideLineStart"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideLineStart"
         app:layout_constraintTop_toBottomOf="@+id/tv_login_sns" />
 </androidx.constraintlayout.widget.ConstraintLayout>

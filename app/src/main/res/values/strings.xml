@@ -79,8 +79,9 @@
     <string name="home_add_dog_memo_title">메모</string>
     <string name="home_add_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="home_add_edit_completed_button">완료</string>
-    <string name="please_add_name">이름은 필수 작성 항목입니다!</string>
-    <string name="msg_fail_insert">반려견 정보 업로드에 실패했습니다</string>
+    <string name="home_add_please_add_name">이름은 필수 작성 항목입니다!</string>
+    <string name="home_add_msg_fail_insert">반려견 정보 업로드에 실패했습니다.</string>
+    <string name="home_add_msg_success_insert">반려견 정보가 추가되었습니다.</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>
@@ -147,8 +148,20 @@
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
     <string name="mypage_delete_dog">삭제 하기</string>
+    <string name="mypage_delete_dog_thumbnail_message">기본 이미지로 변경하시겠습니까?</string>
+    <string name="mypage_delete_dog_thumbnail_positive">확인</string>
+    <string name="mypage_delete_dog_thumbnail_negative">취소</string>
+    <string name="mypage_edit_msg_fail_update">반려견 정보 업데이트에 실패했습니다.</string>
+    <string name="mypage_edit_msg_success_update">반려견 정보가 업데이트되었습니다.</string>
+    <string name="mypage_edit_msg_there_are_not_changed">업데이트 할 정보가 없습니다.</string>
+
     <!-- mypage - detail - pet -->
     <string name="detail_pet_empty_list">반려견 정보가 없습니다.</string>
+    <string name="detail_pet_delete_message">정말 삭제하시겠습니까?</string>
+    <string name="detail_pet_delete_positive">확인</string>
+    <string name="detail_pet_delete_negative">취소</string>
+    <string name="detail_pet_delete_complete">삭제되었습니다.</string>
+
     <!-- item - home - history -->
     <string name="item_home_history_date">2024.05.28 17:38</string>
     <string name="item_home_history_location">광진구 화양동</string>

@@ -2,12 +2,15 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.Manifest
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -17,9 +20,9 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +35,7 @@ class AddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBinding
 
     private val viewModel: AddPetViewModel by viewModels()
-    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -77,6 +80,24 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
+        lifecycleScope.launch {
+            viewModel.insertEvent.collectLatest { state ->
+                when (state) {
+                    DefaultEvent.Success -> {
+                        btnEditCompleted.isEnabled = false
+                        Toast.makeText(this@AddActivity, R.string.home_add_msg_success_insert, Toast.LENGTH_SHORT).show()
+                    }
+                    DefaultEvent.Loading -> {
+                        btnEditCompleted.isEnabled = false
+                    }
+                    is DefaultEvent.Failure -> {
+                        btnEditCompleted.isEnabled = true
+                        Toast.makeText(this@AddActivity, R.string.home_add_msg_fail_insert, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
@@ -84,13 +105,21 @@ class AddActivity : AppCompatActivity() {
                 galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
+        ivRemoveThumbnail.setOnClickListener {
+            val builder = AlertDialog.Builder(this@AddActivity)
+            builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                viewModel.setImageUri(null, null)
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
+        }
+
         //완료 버튼 클릭 시 데이터 추가
         btnEditCompleted.setOnClickListener {
-            if (etName.text!!.isBlank()) Toast.makeText(
-                this@AddActivity,
-                R.string.please_add_name,
-                Toast.LENGTH_SHORT
-            ).show()
+            if (etName.text.toString().isBlank()) {
+                Toast.makeText(this@AddActivity, R.string.home_add_please_add_name, Toast.LENGTH_SHORT).show()
+            }
             else {
                 val name = etName.text.toString()
                 val gender = if(rgGenderGroup.checkedRadioButtonId==rbFemale.id) 1 else 0
@@ -115,15 +144,16 @@ class AddActivity : AppCompatActivity() {
                         uri,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
-
-                    Glide.with(binding.ivDogThumbnail)
-                        .load(uri)
-                        .error(R.drawable.ic_dog_default_thumbnail)
-                        .fallback(R.drawable.ic_dog_default_thumbnail)
-                        .fitCenter()
-                        .into(binding.ivDogThumbnail)
-
                 }
+
+                Glide.with(binding.ivDogThumbnail)
+                    .load(viewModel.addUiState.value.imageUri)
+                    .error(R.drawable.ic_dog_default_thumbnail)
+                    .fallback(R.drawable.ic_dog_default_thumbnail)
+                    .fitCenter()
+                    .into(binding.ivDogThumbnail)
+
+                binding.ivRemoveThumbnail.visibility = if (state.isThumbnailVisible) View.VISIBLE else View.GONE
             }
         }
 
@@ -133,7 +163,7 @@ class AddActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
                     DefaultEvent.Loading -> {}
                     DefaultEvent.Success -> {
-                        sharedEventViewModel.notifyDogRefreshEvent()
+                        itemChangedEventBus.notifyItemChanged()
                         finish()
                     }
                 }
