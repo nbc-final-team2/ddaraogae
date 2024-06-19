@@ -26,6 +26,7 @@ class FirebaseDataSourceImpl @Inject constructor(
 
         return firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS)
+            .orderBy(FIELD_DOG_NAME)
             .get().await()
             .map {
                 it.id to it.toObject(DogDto::class.java)
@@ -346,6 +347,7 @@ class FirebaseDataSourceImpl @Inject constructor(
         private const val FIELD_DOG_ID = "dogId"
         private const val FIELD_GET_DATETIME = "getDateTime"
         private const val FIELD_START_DATETIME = "startDateTime"
+        private const val FIELD_DOG_NAME = "name"
 
         private const val STORAGE_FILE_EXTENSION = "jpg"
     }
