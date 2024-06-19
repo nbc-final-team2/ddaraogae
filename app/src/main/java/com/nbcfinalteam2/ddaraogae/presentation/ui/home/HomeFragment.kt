@@ -148,14 +148,14 @@ class HomeFragment : Fragment() {
             updateWeatherUI(weatherInfo)
         }
 
-        lifecycleScope.launch {
-            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 homeViewModel.refreshDogList()
             }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.loadDogEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
                     DefaultEvent.Success -> {}
@@ -163,8 +163,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.updateDogEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.updateDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
                     DefaultEvent.Success -> {}
@@ -172,8 +172,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.loadWalkDataEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadWalkDataEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
                     DefaultEvent.Success -> {}
@@ -181,8 +181,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.loadWeatherEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
                     DefaultEvent.Success -> {}
