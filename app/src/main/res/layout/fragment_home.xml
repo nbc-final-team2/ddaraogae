@@ -159,31 +159,31 @@
                     android:layout_height="match_parent">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView2"
+                        android:id="@+id/tv_walkStampRate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
                         android:text="7개중 5개흭득"
                         android:textSize="@dimen/text_caption"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@+id/progressBar2"
-                        app:layout_constraintStart_toStartOf="@+id/progressBar2"
+                        app:layout_constraintEnd_toEndOf="@+id/progressbar_walkStampRate"
+                        app:layout_constraintStart_toStartOf="@+id/progressbar_walkStampRate"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ProgressBar
-                        android:id="@+id/progressBar2"
+                        android:id="@+id/progressbar_walkStampRate"
                         style="@android:style/Widget.ProgressBar.Horizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:progressDrawable="@drawable/progress_bar_stamp"
                         android:layout_marginStart="@dimen/margin_small"
                         android:layout_marginTop="@dimen/margin_extra_small"
                         android:layout_marginEnd="@dimen/margin_small"
                         android:layout_marginBottom="@dimen/margin_small"
+                        android:progressDrawable="@drawable/progress_bar_stamp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_walkStampRate"
                         tools:progress="50" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
