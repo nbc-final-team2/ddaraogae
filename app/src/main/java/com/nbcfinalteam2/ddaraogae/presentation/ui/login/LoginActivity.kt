@@ -30,9 +30,6 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private val viewModel: LoginViewModel by viewModels()
-    private var loginState = -1
-
-    //private var isPossible = -1
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private val activityResultLauncher =
@@ -76,12 +73,11 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
                 .collect { state ->
-                    loginState = state
-                    if (loginState == 0) successLogIn()
-                    if (loginState == 1) viewModel.checkVerified()
-                    if (loginState == 2) Toast.makeText(this@LoginActivity, R.string.login_fail, Toast.LENGTH_SHORT).show()
-                    if (loginState == 3) sendEmail()
-                    if (loginState > 10) Toast.makeText(
+                    if (state == 0) successLogIn()
+                    if (state == 1) viewModel.checkVerified()
+                    if (state == 2) Toast.makeText(this@LoginActivity, R.string.login_fail, Toast.LENGTH_SHORT).show()
+                    if (state == 3) sendEmail()
+                    if (state > 10) Toast.makeText(
                         this@LoginActivity, R.string.login_unknown_error, Toast.LENGTH_SHORT).show()
                 }
         }
@@ -94,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
             .setPositiveButton(R.string.login_dialog_ok, DialogInterface.OnClickListener { _, _ ->
                 viewModel.sendEmail()
                 Toast.makeText(this@LoginActivity, R.string.login_send_email, Toast.LENGTH_SHORT).show()
-                loginState = -1
+                viewModel.initState()
             })
             .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _, _ ->
                 viewModel.deleteAccount()
