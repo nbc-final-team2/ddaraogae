@@ -2,10 +2,6 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.view.WindowInsets
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -13,12 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivitySignUpBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageAgreementPrivacy
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypagePrivacyActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageTermsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -34,6 +32,11 @@ class SignUpActivity : AppCompatActivity() {
     private var correctEmail = false
     private var correctPassword = false
     private var correctPasswordCheck = false
+
+    private var checkTerms = false
+    private var checkPrivateTerms = false
+    private var checkPrivateAgreeTerms = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -44,6 +47,7 @@ class SignUpActivity : AppCompatActivity() {
         checkSignUpState()
         checkAuthentication()
         clickSignupButton()
+        clickTerms()
 
         binding.ibtBack.setOnClickListener {
             startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
@@ -85,6 +89,11 @@ class SignUpActivity : AppCompatActivity() {
             if (!correctEmail || !correctPassword || !correctPasswordCheck) Toast.makeText(
                 this,
                 R.string.signup_account_warning,
+                Toast.LENGTH_SHORT
+            ).show()
+            else if (!checkTerms || !checkPrivateTerms || !checkPrivateAgreeTerms)Toast.makeText(
+                this,
+                R.string.signup_check_terms,
                 Toast.LENGTH_SHORT
             ).show()
             else {
@@ -145,4 +154,26 @@ private fun checkPasswordAgain(): Boolean {
         return false
     }
 }
+    private fun clickTerms(){
+
+        binding.cbSignupTerms.setOnCheckedChangeListener { _, isChecked ->
+            checkTerms = isChecked
+        }
+        binding.cbSignupPersonalTerms.setOnCheckedChangeListener { _, isChecked ->
+            checkPrivateTerms = isChecked
+        }
+        binding.cbSignupPersonalAgreeTerms.setOnCheckedChangeListener { _, isChecked ->
+            checkPrivateAgreeTerms = isChecked
+        }
+        binding.ibSignupTerms.setOnClickListener {
+            startActivity(Intent(this, MypageTermsActivity::class.java))
+
+        }
+        binding.ibSignupPersonalTerms.setOnClickListener {
+            startActivity(Intent(this, MypagePrivacyActivity::class.java))
+        }
+        binding.ibSignupPersonalAgreeTerms.setOnClickListener {
+            startActivity(Intent(this, MypageAgreementPrivacy::class.java))
+        }
+    }
 }

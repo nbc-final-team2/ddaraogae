@@ -32,8 +32,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private val viewModel: LoginViewModel by viewModels()
 
-    //private var isPossible = -1
-
     private lateinit var googleSignInClient: GoogleSignInClient
     private val activityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -97,6 +95,7 @@ class LoginActivity : AppCompatActivity() {
             .setPositiveButton(R.string.login_dialog_ok, DialogInterface.OnClickListener { _, _ ->
                 viewModel.sendEmail()
                 Toast.makeText(this@LoginActivity, R.string.login_send_email, Toast.LENGTH_SHORT).show()
+                viewModel.initState()
             })
             .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _, _ ->
                 viewModel.deleteAccount()
