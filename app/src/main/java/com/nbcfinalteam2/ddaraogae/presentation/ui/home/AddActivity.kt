@@ -80,20 +80,6 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
-        lifecycleScope.launch {
-            viewModel.insertEvent.collectLatest { state ->
-                when (state) {
-                    DefaultEvent.Success -> {
-                        btnEditCompleted.isEnabled = false
-                        Toast.makeText(this@AddActivity, R.string.home_add_msg_success_insert, Toast.LENGTH_SHORT).show()
-                    }
-                    is DefaultEvent.Failure -> {
-                        btnEditCompleted.isEnabled = true
-                        Toast.makeText(this@AddActivity, R.string.home_add_msg_fail_insert, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
 
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -160,6 +146,7 @@ class AddActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
                     DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
+                        Toast.makeText(this@AddActivity, R.string.home_add_msg_success_insert, Toast.LENGTH_SHORT).show()
                         finish()
                     }
                 }
