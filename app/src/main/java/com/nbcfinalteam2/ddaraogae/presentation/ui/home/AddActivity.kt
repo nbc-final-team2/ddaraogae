@@ -23,6 +23,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +37,8 @@ class AddActivity : AppCompatActivity() {
 
     private val viewModel: AddPetViewModel by viewModels()
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
+    private var loadingDialog: LoadingDialog? = null
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -80,20 +83,6 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
-        lifecycleScope.launch {
-            viewModel.insertEvent.collectLatest { state ->
-                when (state) {
-                    DefaultEvent.Success -> {
-                        btnEditCompleted.isEnabled = false
-                        Toast.makeText(this@AddActivity, R.string.home_add_msg_success_insert, Toast.LENGTH_SHORT).show()
-                    }
-                    is DefaultEvent.Failure -> {
-                        btnEditCompleted.isEnabled = true
-                        Toast.makeText(this@AddActivity, R.string.home_add_msg_fail_insert, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
 
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -136,6 +125,14 @@ class AddActivity : AppCompatActivity() {
     private fun initViewModel() {
         lifecycleScope.launch {
             viewModel.addUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                if (state.isLoading) {
+                    loadingDialog = LoadingDialog()
+                    loadingDialog?.show(supportFragmentManager, null)
+                } else {
+                    loadingDialog?.dismiss()
+                    loadingDialog = null
+                }
+
                 state.imageUri?.let { uri ->
                     contentResolver.takePersistableUriPermission(
                         uri,
@@ -160,6 +157,7 @@ class AddActivity : AppCompatActivity() {
                     is DefaultEvent.Failure -> ToastMaker.make(this@AddActivity, event.msg)
                     DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
+                        Toast.makeText(this@AddActivity, R.string.home_add_msg_success_insert, Toast.LENGTH_SHORT).show()
                         finish()
                     }
                 }
