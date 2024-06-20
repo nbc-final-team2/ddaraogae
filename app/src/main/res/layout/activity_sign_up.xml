@@ -1,179 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideLineStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideLineEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="20dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideLineStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/ibt_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:background="@null"
-        android:src="@drawable/ic_back"
-        app:layout_constraintLeft_toLeftOf="@id/guideLineStart"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideLineEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_signup_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:text="@string/signup_title"
-        android:textSize="@dimen/text_content"
-        app:layout_constraintLeft_toLeftOf="@id/guideLineStart"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@null"
+            android:src="@drawable/ic_back"
+            app:layout_constraintLeft_toLeftOf="@id/guideLineStart"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/et_signup_email"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:background="@drawable/login_box"
-        android:hint="@string/signup_email"
-        android:maxLength="30"
-        android:paddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
-        app:layout_constraintStart_toStartOf="@id/guideLineStart"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signup_title" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_signup_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="@string/signup_title"
+            android:textSize="@dimen/text_content"
+            app:layout_constraintLeft_toLeftOf="@id/guideLineStart"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_signup_email_warning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:text="@string/signup_email_warning"
-        android:textColor="@color/red"
-        android:textSize="@dimen/text_mini"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/et_signup_email"
-        app:layout_constraintTop_toBottomOf="@+id/et_signup_email" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_signup_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:background="@drawable/login_box"
+            android:hint="@string/signup_email"
+            android:maxLength="30"
+            android:paddingLeft="20dp"
+            app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
+            app:layout_constraintStart_toStartOf="@id/guideLineStart"
+            app:layout_constraintTop_toBottomOf="@+id/tv_signup_title" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/et_signup_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_larger"
-        android:background="@drawable/login_box"
-        android:hint="@string/signup_password"
-        android:inputType="textPassword"
-        android:maxLength="16"
-        android:paddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
-        app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
-        app:layout_constraintTop_toBottomOf="@+id/et_signup_email" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_signup_email_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/signup_email_warning"
+            android:textColor="@color/red"
+            android:textSize="@dimen/text_mini"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/et_signup_email"
+            app:layout_constraintTop_toBottomOf="@+id/et_signup_email" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_signup_password_warning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:text="@string/signup_password_warning"
-        android:textColor="@color/red"
-        android:textSize="@dimen/text_mini"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/et_signup_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_signup_password" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_signup_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_larger"
+            android:background="@drawable/login_box"
+            android:hint="@string/signup_password"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:paddingLeft="20dp"
+            app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
+            app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
+            app:layout_constraintTop_toBottomOf="@+id/et_signup_email" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/et_signup_password_check"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_larger"
-        android:background="@drawable/login_box"
-        android:hint="@string/signup_password_check"
-        android:inputType="textPassword"
-        android:maxLength="16"
-        android:paddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
-        app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
-        app:layout_constraintTop_toBottomOf="@+id/et_signup_password" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_signup_password_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/signup_password_warning"
+            android:textColor="@color/red"
+            android:textSize="@dimen/text_mini"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/et_signup_password"
+            app:layout_constraintTop_toBottomOf="@+id/et_signup_password" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_signup_password_check_warning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:text="@string/signup_password_check_warning"
-        android:textColor="@color/red"
-        android:textSize="@dimen/text_mini"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
-        app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check" />
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/cb_signup_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup_terms"
-        app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signup_password_check_warning"/>
-    <ImageButton
-        android:id="@+id/ib_signup_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_chevron_right"
-        android:background="@null"
-        app:layout_constraintTop_toTopOf="@+id/cb_signup_terms"
-        app:layout_constraintBottom_toBottomOf="@+id/cb_signup_terms"
-        app:layout_constraintLeft_toRightOf="@+id/cb_signup_terms"/>
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/cb_signup_personal_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup_personal_terms"
-        app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
-        app:layout_constraintTop_toBottomOf="@+id/cb_signup_terms"/>
-    <ImageButton
-        android:id="@+id/ib_signup_personal_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_chevron_right"
-        android:background="@null"
-        app:layout_constraintTop_toTopOf="@+id/cb_signup_personal_terms"
-        app:layout_constraintBottom_toBottomOf="@+id/cb_signup_personal_terms"
-        app:layout_constraintLeft_toRightOf="@+id/cb_signup_personal_terms"/>
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/cb_signup_personal_agree_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup_personal_agree_terms"
-        app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
-        app:layout_constraintTop_toBottomOf="@+id/cb_signup_personal_terms"/>
-    <ImageButton
-        android:id="@+id/ib_signup_personal_agree_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_chevron_right"
-        android:background="@null"
-        app:layout_constraintTop_toTopOf="@+id/cb_signup_personal_agree_terms"
-        app:layout_constraintBottom_toBottomOf="@+id/cb_signup_personal_agree_terms"
-        app:layout_constraintLeft_toRightOf="@+id/cb_signup_personal_agree_terms"/>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_signup_password_check"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_larger"
+            android:background="@drawable/login_box"
+            android:hint="@string/signup_password_check"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:paddingLeft="20dp"
+            app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
+            app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
+            app:layout_constraintTop_toBottomOf="@+id/et_signup_password" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_signup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:background="@drawable/rec_finish_done"
-        android:text="@string/signup_complete"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_body"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
-        app:layout_constraintStart_toStartOf="@+id/tv_signup_title" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_signup_password_check_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/signup_password_check_warning"
+            android:textColor="@color/red"
+            android:textSize="@dimen/text_mini"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+            app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_signup_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_terms"
+            app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+            app:layout_constraintTop_toBottomOf="@+id/tv_signup_password_check_warning" />
+
+        <ImageButton
+            android:id="@+id/ib_signup_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_signup_terms"
+            app:layout_constraintLeft_toRightOf="@+id/cb_signup_terms"
+            app:layout_constraintTop_toTopOf="@+id/cb_signup_terms" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_signup_personal_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_personal_terms"
+            app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+            app:layout_constraintTop_toBottomOf="@+id/cb_signup_terms" />
+
+        <ImageButton
+            android:id="@+id/ib_signup_personal_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_signup_personal_terms"
+            app:layout_constraintLeft_toRightOf="@+id/cb_signup_personal_terms"
+            app:layout_constraintTop_toTopOf="@+id/cb_signup_personal_terms" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_signup_personal_agree_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_personal_agree_terms"
+            app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+            app:layout_constraintTop_toBottomOf="@+id/cb_signup_personal_terms" />
+
+        <ImageButton
+            android:id="@+id/ib_signup_personal_agree_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_signup_personal_agree_terms"
+            app:layout_constraintLeft_toRightOf="@+id/cb_signup_personal_agree_terms"
+            app:layout_constraintTop_toTopOf="@+id/cb_signup_personal_agree_terms" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_signup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_lager"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:background="@drawable/rec_finish_done"
+            android:text="@string/signup_complete"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_body"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
+            app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
+            app:layout_constraintTop_toBottomOf="@+id/cb_signup_personal_agree_terms" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

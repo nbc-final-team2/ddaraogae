@@ -54,7 +54,8 @@ class HomeFragment : Fragment() {
     }
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
-    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+    @Inject
+    lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -300,8 +301,10 @@ class HomeFragment : Fragment() {
             tvLocationConditions.visibility = View.VISIBLE
             tvFineDust.visibility = View.VISIBLE
             ivFineDustIcon.visibility = View.VISIBLE
+            tvFineDust.text = getString(R.string.home_weather_fine_dust)
             tvFineDustConditions.visibility = View.VISIBLE
             tvUltraFineDust.visibility = View.VISIBLE
+            tvUltraFineDust.text = getString(R.string.home_weather_ultra_fine_dust)
             ivUltraFineDustIcon.visibility = View.VISIBLE
             tvUltraFineDustConditions.visibility = View.VISIBLE
             ivWeatherRenewal.visibility = View.VISIBLE

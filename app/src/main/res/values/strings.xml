@@ -90,6 +90,10 @@
     <!-- home - All - Stamp -->
     <string name="home_all_stamp_msg_data_fail">도장 데이터를 불러오기에 실패했습니다.</string>
     <string name="home_all_stamp_msg_load_changes_fail">변경된 도장 데이터를 정상적으로 불러오지 못했습니다.</string>
+    <string name="home_all_stamp_title">내 산책 도장 목록</string>
+    <string name="home_all_stamp_item_stamp_title">다다익선</string>
+    <string name="home_all_stamp_item_stamp_sum">총 얻은 도장 갯수</string>
+    <string name="home_all_stamp_item_stamp_num">5</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>

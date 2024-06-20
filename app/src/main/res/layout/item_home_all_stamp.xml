@@ -36,7 +36,7 @@
                 android:id="@+id/tv_stampName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="다다익선"
+                tools:text="@string/home_all_stamp_item_stamp_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/iv_stamp"
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_extra_small"
-                android:text="총 얻은 도장 갯수"
+                android:text="@string/home_all_stamp_item_stamp_sum"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="@+id/tv_stampName"
                 app:layout_constraintStart_toStartOf="@+id/tv_stampName"
@@ -59,16 +59,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_extra_small"
-                android:text="5"
+                tools:text="@string/home_all_stamp_item_stamp_num"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/tv_stampNumTitle"
                 app:layout_constraintStart_toStartOf="@+id/tv_stampNumTitle"
                 app:layout_constraintTop_toBottomOf="@+id/tv_stampNumTitle" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
