@@ -23,6 +23,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +37,8 @@ class AddActivity : AppCompatActivity() {
 
     private val viewModel: AddPetViewModel by viewModels()
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
+    private var loadingDialog: LoadingDialog? = null
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -122,6 +125,14 @@ class AddActivity : AppCompatActivity() {
     private fun initViewModel() {
         lifecycleScope.launch {
             viewModel.addUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                if (state.isLoading) {
+                    loadingDialog = LoadingDialog()
+                    loadingDialog?.show(supportFragmentManager, null)
+                } else {
+                    loadingDialog?.dismiss()
+                    loadingDialog = null
+                }
+
                 state.imageUri?.let { uri ->
                     contentResolver.takePersistableUriPermission(
                         uri,

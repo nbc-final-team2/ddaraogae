@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,6 +33,11 @@ class AddPetViewModel @Inject constructor(
     private var imgByteArray: ByteArray? = null
 
     fun insertDog(getDogData: DogInfo) = viewModelScope.launch {
+        _addUiState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
         runCatching {
             val dogData = getDogData.let {
                 DogEntity(
@@ -46,8 +52,18 @@ class AddPetViewModel @Inject constructor(
             }
             insertDogUseCase(dogData, imgByteArray)
         }.onSuccess {
+            _addUiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
             _insertEvent.emit(DefaultEvent.Success)
         }.onFailure {
+            _addUiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
             _insertEvent.emit(DefaultEvent.Failure(R.string.home_add_msg_fail_insert))
         }
     }
