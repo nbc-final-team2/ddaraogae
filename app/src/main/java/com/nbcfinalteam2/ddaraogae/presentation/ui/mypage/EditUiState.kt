@@ -4,12 +4,12 @@ import android.net.Uri
 
 data class EditUiState(
     val imageSource: ImageSource? = null,
-    val byteArray: ByteArray? = null,
     val isThumbnailVisible: Boolean = false,
     val isInit: Boolean = false,
+    val isLoading: Boolean = false
 ) {
     companion object {
-        fun init() = EditUiState(imageSource = null, byteArray = null,  isThumbnailVisible = false, isInit = false)
+        fun init() = EditUiState(imageSource = null, isThumbnailVisible = false, isInit = false, isLoading = false)
     }
 }
 

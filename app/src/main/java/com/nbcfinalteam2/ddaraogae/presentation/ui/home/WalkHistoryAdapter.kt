@@ -33,8 +33,8 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.startDateTime ?: return)
 
                 val distance = item.distance ?: 0.0
-                tvDistance.text = if (distance >= 1000) {
-                    String.format("%.1f km", distance / 1000)
+                tvDistance.text = if (distance >= 1) {
+                    String.format("%.1f km", distance / 1)
                 } else {
                     String.format("%d m", distance.toInt())
                 } // "home_history_walk_adapter_km"

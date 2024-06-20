@@ -23,6 +23,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +38,7 @@ class EditPetActivity : AppCompatActivity() {
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private var dogData: DogInfo? = null
+    private var loadingDialog: LoadingDialog? = null
 
     private val galleryPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -145,6 +147,14 @@ class EditPetActivity : AppCompatActivity() {
     private fun initViewModel() {
         lifecycleScope.launch {
             viewModel.editUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                if (state.isLoading) {
+                    loadingDialog = LoadingDialog()
+                    loadingDialog?.show(supportFragmentManager, null)
+                } else {
+                    loadingDialog?.dismiss()
+                    loadingDialog = null
+                }
+
                 val uri = when (state.imageSource) {
                     is ImageSource.ImageUri -> state.imageSource.value
                     is ImageSource.ImageUrl -> state.imageSource.value

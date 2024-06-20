@@ -11,8 +11,11 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -32,8 +35,12 @@ class FinishViewModel @Inject constructor(
     private val _stampList = MutableSharedFlow<List<StampEntity>>()
     val stampList: SharedFlow<List<StampEntity>> = _stampList.asSharedFlow()
 
+    private val _finishUiState = MutableStateFlow(FinishUiState.init())
+    val finishUiState: StateFlow<FinishUiState> = _finishUiState.asStateFlow()
+
 
     fun insertWalkingData(walk: WalkingInfo, image: ByteArray) {
+        _finishUiState.value = FinishUiState(true)
         viewModelScope.launch {
             val walkingData = walk.let {
                 WalkingEntity(
@@ -52,11 +59,14 @@ class FinishViewModel @Inject constructor(
                 _insertEvent.emit(DefaultEvent.Success)
             } catch (e: Exception) {
                 _insertEvent.emit(DefaultEvent.Failure(R.string.msg_walk_upload_fail))
+            } finally {
+                _finishUiState.value = FinishUiState(false)
             }
         }
     }
 
     fun checkStampCondition(date: Date) {
+        _finishUiState.value = FinishUiState(true)
         viewModelScope.launch {
             try {
                 val result = checkStampConditionUseCase(date)
@@ -64,6 +74,8 @@ class FinishViewModel @Inject constructor(
                 _stampList.emit(result)
             } catch (e: Exception) {
                 _stampEvent.emit(DefaultEvent.Failure(R.string.msg_check_stamp_fail))
+            } finally {
+                _finishUiState.value = FinishUiState(false)
             }
         }
     }

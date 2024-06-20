@@ -104,4 +104,7 @@ class LoginViewModel @Inject constructor(
         }
 
     }
+    fun initState() = viewModelScope.launch{
+        _isPossible.emit(-1)
+    }
 }

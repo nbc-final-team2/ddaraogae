@@ -28,6 +28,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.StampDialogFragment.Companion.ARG_STAMP_LIST
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
@@ -53,6 +54,8 @@ class FinishActivity : FragmentActivity() {
     private lateinit var naverMap: NaverMap
     private var polyline = PolylineOverlay()
     private lateinit var locationList: List<LatLng>
+
+    private var loadingDialog: LoadingDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,6 +130,18 @@ class FinishActivity : FragmentActivity() {
                 } else {
                     // 받을 스탬프가 없을 때
                     finish()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.finishUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                if (state.isLoading) {
+                    loadingDialog = LoadingDialog()
+                    loadingDialog?.show(supportFragmentManager, null)
+                } else {
+                    loadingDialog?.dismiss()
+                    loadingDialog = null
                 }
             }
         }

@@ -24,6 +24,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.EditPetActivity.Companion.DOGDATA
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +44,8 @@ class DetailPetActivity : AppCompatActivity() {
     private var dogData = DogInfo("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
+    private var loadingDialog: LoadingDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,6 +145,18 @@ class DetailPetActivity : AppCompatActivity() {
         lifecycleScope.launch {
             itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
                 viewModel.refreshDogList()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.detailUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                if (state.isLoading) {
+                    loadingDialog = LoadingDialog()
+                    loadingDialog?.show(supportFragmentManager, null)
+                } else {
+                    loadingDialog?.dismiss()
+                    loadingDialog = null
+                }
             }
         }
     }
