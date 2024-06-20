@@ -82,7 +82,9 @@ class LoginActivity : AppCompatActivity() {
                     if (state == 1) viewModel.checkVerified()
                     if (state == 2) Toast.makeText(this@LoginActivity, R.string.login_fail, Toast.LENGTH_SHORT).show()
                     if (state == 3) sendEmail()
-                    if (state > 10) Toast.makeText(
+                    if (state == 98) Toast.makeText(
+                        this@LoginActivity, R.string.login_ioexception, Toast.LENGTH_SHORT).show()
+                    if (state == 99) Toast.makeText(
                         this@LoginActivity, R.string.login_unknown_error, Toast.LENGTH_SHORT).show()
                 }
         }
