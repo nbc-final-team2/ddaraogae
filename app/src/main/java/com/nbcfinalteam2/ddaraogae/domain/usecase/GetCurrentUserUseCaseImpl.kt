@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetCurrentUserUseCaseImpl @Inject constructor(
     private val authRepository: AuthRepository
 ): GetCurrentUserUseCase {
-    override suspend fun invoke(): UserEntity? = authRepository.getCurrentUser()
+    override fun invoke(): UserEntity? = authRepository.getCurrentUser()
 }

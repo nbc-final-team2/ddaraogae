@@ -37,12 +37,12 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.service.LocationService
 import com.nbcfinalteam2.ddaraogae.presentation.service.ServiceInfoState
-import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.LOCATIONLIST
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGDOGS
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.FinishActivity.Companion.WALKINGUIMODEL
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
@@ -91,7 +91,6 @@ class WalkFragment : Fragment() {
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
     private lateinit var cameraPosition: CameraPosition
-    private lateinit var cameraUpdate: CameraUpdate /*TODO: 나중에 animate을 위해 남김*/
 
     private var locationService: LocationService? = null
     private var bound = false
@@ -185,7 +184,9 @@ class WalkFragment : Fragment() {
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 나침반 비활성화
             naverMap.uiSettings.isCompassEnabled = false
-
+            // 현재 위치 버튼 비활성화
+            naverMap.uiSettings.isLocationButtonEnabled = false
+            
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
 //            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
@@ -218,6 +219,12 @@ class WalkFragment : Fragment() {
             walkViewModel.walkToggle()
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
+        binding.ibWalkLocation.setOnClickListener {
+            if(::naverMap.isInitialized && ::cameraPosition.isInitialized) {
+                naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
+            }
+        }
+
     }
 
     private fun checkServicePermission() {
@@ -292,9 +299,15 @@ class WalkFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
+                    if(it.isLoading) {
+                        binding.btnWalkStart.isEnabled = false
+                    } else {
+                        binding.btnWalkStart.isEnabled = true
+                    }
+
                     if (it.isWalking) {
                         binding.grWalkPrev.isVisible = false
                         binding.grWalkUi.isVisible = true
@@ -305,14 +318,14 @@ class WalkFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.dogSelectionState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     walkDogAdapter.submitList(it.dogList)
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when(event) {
@@ -321,7 +334,9 @@ class WalkFragment : Fragment() {
                             startServiceAndWalk()
                         }
                         is WalkEvent.StopWalking -> {
+                            walkViewModel.setLoading()
                             stopServiceAndWalk()
+                            walkViewModel.releaseLoading()
                         }
                     }
                 }

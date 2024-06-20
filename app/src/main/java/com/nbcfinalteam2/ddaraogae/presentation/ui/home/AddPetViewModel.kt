@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +30,14 @@ class AddPetViewModel @Inject constructor(
     private val _insertEvent = MutableSharedFlow<DefaultEvent>()
     val insertEvent: SharedFlow<DefaultEvent> = _insertEvent.asSharedFlow()
 
+    private var imgByteArray: ByteArray? = null
+
     fun insertDog(getDogData: DogInfo) = viewModelScope.launch {
+        _addUiState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
         runCatching {
             val dogData = getDogData.let {
                 DogEntity(
@@ -42,18 +50,29 @@ class AddPetViewModel @Inject constructor(
                     it.thumbnailUrl
                 )
             }
-            insertDogUseCase(dogData, addUiState.value.byteArray)
+            insertDogUseCase(dogData, imgByteArray)
         }.onSuccess {
+            _addUiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
             _insertEvent.emit(DefaultEvent.Success)
         }.onFailure {
-            _insertEvent.emit(DefaultEvent.Failure(R.string.msg_fail_insert))
+            _addUiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
+            _insertEvent.emit(DefaultEvent.Failure(R.string.home_add_msg_fail_insert))
         }
     }
 
     fun setImageUri(imageUri: Uri?, byteArray: ByteArray?) {
         _addUiState.value = AddUiState(
             imageUri = imageUri,
-            byteArray = byteArray
+            isThumbnailVisible = imageUri != null
         )
+        imgByteArray = byteArray
     }
 }

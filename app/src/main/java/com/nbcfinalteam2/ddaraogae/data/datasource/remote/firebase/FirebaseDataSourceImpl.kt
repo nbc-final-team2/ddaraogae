@@ -26,6 +26,7 @@ class FirebaseDataSourceImpl @Inject constructor(
 
         return firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS)
+            .orderBy(FIELD_DOG_NAME)
             .get().await()
             .map {
                 it.id to it.toObject(DogDto::class.java)
@@ -58,14 +59,31 @@ class FirebaseDataSourceImpl @Inject constructor(
             val db = firebaseFs.collection(PATH_USERDATA).document(uid)
                 .collection(PATH_DOGS).document(dogId)
 
-            val updateDogDto = byteImage?.let {
+            val updateDogDto = if (byteImage != null) {
                 val convertedUrl = withContext(Dispatchers.IO + NonCancellable) {
-                    convertImageUrl(it, dogId)
+                    convertImageUrl(byteImage, dogId)
                 }
                 dogDto.copy(thumbnailUrl = convertedUrl.toString())
-            } ?: dogDto
+            } else if (dogDto.thumbnailUrl == null) {
+                deleteDogThumbnail(dogId)
+                dogDto.copy(thumbnailUrl = null)
+            } else {
+                dogDto
+            }
 
             db.set(updateDogDto).await()
+        }
+    }
+
+    private suspend fun deleteDogThumbnail(dogId: String) {
+        val storageRef = fbStorage.reference
+        val uid = getUserUid()
+
+        try {
+            val deleteDogThumbnailRef = storageRef.child("$PATH_USERDATA/$uid/$PATH_DOGS/$dogId.$STORAGE_FILE_EXTENSION")
+            deleteDogThumbnailRef.delete().await()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -83,8 +101,6 @@ class FirebaseDataSourceImpl @Inject constructor(
         firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_DOGS).document(dogId)
             .delete().await()
-
-
     }
 
     override suspend fun getStampNumByPeriod(start: Date, end: Date): Int {
@@ -331,6 +347,7 @@ class FirebaseDataSourceImpl @Inject constructor(
         private const val FIELD_DOG_ID = "dogId"
         private const val FIELD_GET_DATETIME = "getDateTime"
         private const val FIELD_START_DATETIME = "startDateTime"
+        private const val FIELD_DOG_NAME = "name"
 
         private const val STORAGE_FILE_EXTENSION = "jpg"
     }

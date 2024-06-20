@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ScrollView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,10 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityDetailPetBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEvent
-import com.nbcfinalteam2.ddaraogae.presentation.shared.SharedEventViewModel
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.EditPetActivity.Companion.DOGDATA
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,7 +43,9 @@ class DetailPetActivity : AppCompatActivity() {
 
     private var dogData = DogInfo("", "", 0)
     private val viewModel: DetailPetViewModel by viewModels()
-    @Inject lateinit var sharedEventViewModel: SharedEventViewModel
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
+    private var loadingDialog: LoadingDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +61,8 @@ class DetailPetActivity : AppCompatActivity() {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
@@ -65,16 +70,23 @@ class DetailPetActivity : AppCompatActivity() {
     private fun initView() {
         binding.btBack.setOnClickListener { finish() }
 
-        binding.btDelete.setOnClickListener { viewModel.deleteSelectedDogData() }
+        binding.btDelete.setOnClickListener {
+            val builder = AlertDialog.Builder(this@DetailPetActivity)
+            builder.setMessage(R.string.detail_pet_delete_message)
+            builder.setPositiveButton(R.string.detail_pet_delete_positive) { _, _ ->
+                viewModel.deleteSelectedDogData()
+            }
+            builder.setNegativeButton(R.string.detail_pet_delete_negative) { _, _ -> }
+            builder.show()
+        }
 
         binding.tvEdit.setOnClickListener {
             viewModel.selectedDogState.value?.let {
                 val intent = Intent(this@DetailPetActivity, EditPetActivity::class.java)
-                intent.putExtra("dogData", it)
+                intent.putExtra(DOGDATA, it)
                 startActivity(intent)
             }
         }
-
         setAdapter()
     }
 
@@ -111,17 +123,39 @@ class DetailPetActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.deleteEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when(event) {
-                    is DefaultEvent.Failure -> {}
-                    DefaultEvent.Loading -> {}
-                    DefaultEvent.Success -> sharedEventViewModel.notifyDogRefreshEvent()
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
+                    DefaultEvent.Success -> {
+                        itemChangedEventBus.notifyItemChanged()
+                        ToastMaker.make(this@DetailPetActivity, R.string.detail_pet_delete_complete)
+                        binding.scDetailPet.fullScroll(ScrollView.FOCUS_UP)
+                    }
                 }
             }
         }
 
         lifecycleScope.launch {
-            sharedEventViewModel.dogRefreshEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+            viewModel.loadEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when(event) {
-                    SharedEvent.Occur -> viewModel.refreshDogList()
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
+                    DefaultEvent.Success -> {}
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(lifecycle).collectLatest {
+                viewModel.refreshDogList()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.detailUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                if (state.isLoading) {
+                    loadingDialog = LoadingDialog()
+                    loadingDialog?.show(supportFragmentManager, null)
+                } else {
+                    loadingDialog?.dismiss()
+                    loadingDialog = null
                 }
             }
         }

@@ -10,8 +10,8 @@ import androidx.core.view.updatePadding
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityPrivacyBinding
 
-class MypagePrivacyActivity : AppCompatActivity(){
-    private lateinit var binding :ActivityPrivacyBinding
+class MypagePrivacyActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityPrivacyBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,8 +25,8 @@ class MypagePrivacyActivity : AppCompatActivity(){
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }

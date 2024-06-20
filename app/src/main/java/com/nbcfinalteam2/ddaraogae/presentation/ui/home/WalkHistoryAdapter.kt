@@ -12,18 +12,6 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WalkingInfo>() {
-            override fun areItemsTheSame(oldItem: WalkingInfo, newItem: WalkingInfo): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: WalkingInfo, newItem: WalkingInfo): Boolean {
-                return oldItem == newItem
-            }
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(
             ItemHomeHistoryWalkBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -45,8 +33,8 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.startDateTime ?: return)
 
                 val distance = item.distance ?: 0.0
-                tvDistance.text = if (distance >= 1000) {
-                    String.format("%.1f km", distance / 1000)
+                tvDistance.text = if (distance >= 1) {
+                    String.format("%.1f km", distance / 1)
                 } else {
                     String.format("%d m", distance.toInt())
                 } // "home_history_walk_adapter_km"
@@ -65,6 +53,18 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
                 ivWalkMap.setOnClickListener {
                     onMapClick(item.walkingImage ?: "")
                 }
+            }
+        }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WalkingInfo>() {
+            override fun areItemsTheSame(oldItem: WalkingInfo, newItem: WalkingInfo): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: WalkingInfo, newItem: WalkingInfo): Boolean {
+                return oldItem == newItem
             }
         }
     }

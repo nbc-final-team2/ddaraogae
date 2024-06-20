@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +31,7 @@ class LoginViewModel @Inject constructor(
     private val deleteAccountUseCase: DeleteAccountUseCase,
     private val signOutUseCase: SignOutUseCase,
 ) : ViewModel() {
-    //0 : 로그인 성공 / 1: 계정 존재 / 2: 로그인 실패 / 3:인증 메일 보내기  / 99: 그 외
+    //0 : 로그인 성공 / 1: 계정 존재 / 2: 로그인 실패 / 3:인증 메일 보내기 /98: IOException/ 99: 그 외
     private val _isPossible = MutableSharedFlow<Int>(replay = 1)
     val userState = _isPossible.asSharedFlow()
 
@@ -47,8 +48,19 @@ class LoginViewModel @Inject constructor(
     }
 
     fun getCurrentUser() = viewModelScope.launch {
-        val getCurrentUser = getCurrentUserUseCase()
-        if(getCurrentUser != null) {_isPossible.emit(0)}
+        try{
+            val getCurrentUser = getCurrentUserUseCase()
+            if (getCurrentUser != null) {
+                val isVerified = isCurrentUserEmailVerifiedUseCase()
+                if (isVerified) _isPossible.emit(0)
+            }
+        }catch (e:IOException){
+            _isPossible.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
+        } catch (e : Exception){
+            _isPossible.emit(99)
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
+        }
     }
 
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
@@ -57,6 +69,9 @@ class LoginViewModel @Inject constructor(
             if(isSuccess)_isPossible.emit(1)
             else _isPossible.emit(2)
 
+        }catch (e:IOException){
+            _isPossible.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
         }
         catch (e : Exception){
             _isPossible.emit(99)
@@ -69,6 +84,9 @@ class LoginViewModel @Inject constructor(
             if(isVerified) _isPossible.emit(0)
             else _isPossible.emit(3)
 
+        }catch (e:IOException){
+            _isPossible.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
         }catch (e:Exception){
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
@@ -77,7 +95,10 @@ class LoginViewModel @Inject constructor(
     fun sendEmail() = viewModelScope.launch {
         try {
             sendVerificationEmailUseCase()
-            signOut()
+            signOutUseCase()
+        }catch (e:IOException){
+            _isPossible.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
         }catch (e:Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
@@ -89,23 +110,28 @@ class LoginViewModel @Inject constructor(
             val isSuccess = signInWithGoogleUseCase(idToken)
             if(isSuccess)_isPossible.emit(0)
             else _isPossible.emit(2)
-        } catch (e : Exception){
+        } catch (e:IOException){
+            _isPossible.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
+        }catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
-    }
-
-    private fun signOut() = viewModelScope.launch{
-        signOutUseCase()
     }
 
     fun deleteAccount() = viewModelScope.launch{
         try {
             deleteAccountUseCase()
+        }catch (e:IOException){
+            _isPossible.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
         }catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
 
+    }
+    fun initState() = viewModelScope.launch{
+        _isPossible.emit(-1)
     }
 }

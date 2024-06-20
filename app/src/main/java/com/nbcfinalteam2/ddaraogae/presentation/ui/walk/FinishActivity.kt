@@ -15,6 +15,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
@@ -24,17 +25,22 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.ui.walk.StampDialogFragment.Companion.ARG_STAMP_LIST
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FinishActivity : FragmentActivity() {
@@ -51,6 +57,10 @@ class FinishActivity : FragmentActivity() {
     private var polyline = PolylineOverlay()
     private lateinit var locationList: List<LatLng>
 
+    private var loadingDialog: LoadingDialog? = null
+
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -61,8 +71,8 @@ class FinishActivity : FragmentActivity() {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
@@ -91,28 +101,19 @@ class FinishActivity : FragmentActivity() {
         initView(walkingUiModel, walkingDogs)
 
         lifecycleScope.launch {
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    InsertTaskState.Idle -> binding.btnFinishDone.isEnabled = true
-                    InsertTaskState.Loading -> binding.btnFinishDone.isEnabled = false
-                    InsertTaskState.Success -> {
-                        viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
-                    }
-
-                    is InsertTaskState.Error -> binding.btnFinishDone.isEnabled = true
+            viewModel.insertEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@FinishActivity, event.msg)
+                    DefaultEvent.Success -> viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.stampState.collectLatest { state ->
-                when (state) {
-                    StampTaskState.Idle -> binding.btnFinishDone.isEnabled = true
-                    StampTaskState.Loading -> binding.btnFinishDone.isEnabled = false
-                    StampTaskState.Success -> {
-                    }
-
-                    is StampTaskState.Error -> binding.btnFinishDone.isEnabled = true
+            viewModel.stampEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@FinishActivity, event.msg)
+                    DefaultEvent.Success -> {}
                 }
             }
         }
@@ -121,6 +122,7 @@ class FinishActivity : FragmentActivity() {
             viewModel.stampList.collectLatest { list ->
                 if (list.isNotEmpty()) {
                     // 받을 스탬프가 있을 때
+                    itemChangedEventBus.notifyStampChanged()
                     val dialogFragment = StampDialogFragment.newInstance(ArrayList(list))
                     dialogFragment.isCancelable = false
                     dialogFragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
@@ -133,6 +135,18 @@ class FinishActivity : FragmentActivity() {
                 } else {
                     // 받을 스탬프가 없을 때
                     finish()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.finishUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                if (state.isLoading) {
+                    loadingDialog = LoadingDialog()
+                    loadingDialog?.show(supportFragmentManager, null)
+                } else {
+                    loadingDialog?.dismiss()
+                    loadingDialog = null
                 }
             }
         }
@@ -256,14 +270,13 @@ class FinishActivity : FragmentActivity() {
         if (::naverMap.isInitialized) {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)
-                for(dog in walkingDogs) {
-                    viewModel.insertWalkingData(
-                        walk = walkingUiModel.copy(
+                viewModel.insertWalkingData(
+                    walkingDogs.map { dog ->
+                        walkingUiModel.copy(
                             dogId = dog.id
-                        ),
-                        image = mapImage!!
-                    )
-                }
+                        )
+                    } to mapImage!!
+                )
             }
         }
     }

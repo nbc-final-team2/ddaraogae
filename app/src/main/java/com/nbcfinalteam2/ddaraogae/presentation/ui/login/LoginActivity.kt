@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,8 +31,6 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private val viewModel: LoginViewModel by viewModels()
-
-    //private var isPossible = -1
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private val activityResultLauncher =
@@ -44,8 +43,12 @@ class LoginActivity : AppCompatActivity() {
                     firebaseAuthWithGoogle(account.idToken!!)
                 } catch (e: ApiException) {
                     Log.w(TAG, "구글 로그인에 실패했습니다.", e)
+                    ToastMaker.make(this, getString(R.string.login_google_sign_in_fail))
                 }
-            } else Log.e(TAG, "Google Result Error ${result}")
+            } else {
+                Log.e(TAG, "Google Result Error ${result}")
+                ToastMaker.make(this, getString(R.string.login_google_sign_in_fail))
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +82,9 @@ class LoginActivity : AppCompatActivity() {
                     if (state == 1) viewModel.checkVerified()
                     if (state == 2) Toast.makeText(this@LoginActivity, R.string.login_fail, Toast.LENGTH_SHORT).show()
                     if (state == 3) sendEmail()
-                    if (state > 10) Toast.makeText(
+                    if (state == 98) Toast.makeText(
+                        this@LoginActivity, R.string.login_ioexception, Toast.LENGTH_SHORT).show()
+                    if (state == 99) Toast.makeText(
                         this@LoginActivity, R.string.login_unknown_error, Toast.LENGTH_SHORT).show()
                 }
         }
@@ -92,6 +97,7 @@ class LoginActivity : AppCompatActivity() {
             .setPositiveButton(R.string.login_dialog_ok, DialogInterface.OnClickListener { _, _ ->
                 viewModel.sendEmail()
                 Toast.makeText(this@LoginActivity, R.string.login_send_email, Toast.LENGTH_SHORT).show()
+                viewModel.initState()
             })
             .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _, _ ->
                 viewModel.deleteAccount()

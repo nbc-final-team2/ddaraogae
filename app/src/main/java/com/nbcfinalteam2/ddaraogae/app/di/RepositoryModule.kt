@@ -16,37 +16,44 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
     @Binds
+    @Singleton
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
 
     @Binds
+    @Singleton
     abstract fun bindDogRepository(
         dogRepositoryImpl: DogRepositoryImpl
     ): DogRepository
 
     @Binds
+    @Singleton
     abstract fun bindStampRepository(
         stampRepositoryImpl: StampRepositoryImpl
     ): StampRepository
 
     @Binds
+    @Singleton
     abstract fun bindWalkingRepository(
         walkingRepositoryImpl: WalkingRepositoryImpl
     ): WalkingRepository
 
     @Binds
+    @Singleton
     abstract fun weatherRepository(
         weatherRepositoryImpl: WeatherRepositoryImpl
     ): WeatherRepository
 
     @Binds
+    @Singleton
     abstract fun storeRepository(
         storeRepositoryImpl: StoreRepositoryImpl
     ): StoreRepository

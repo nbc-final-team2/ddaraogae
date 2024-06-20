@@ -20,7 +20,7 @@
     <string name="home_walk_graph_no_data">최근 산책 데이터가 없어요.</string>
     <string name="home_weather_real_time_data">2024.05.28 17:38</string>
     <string name="item_home_dog_selection_name">{dogname}</string>
-    <string name="home_weather_no_data">위치 권한 필요합니다.</string>
+    <string name="home_weather_no_data">위치 권한 설정 또는 인터넷 연결을 해야합니다.</string>
     <string name="home_dialog_location_title">위치 권한 설정</string>
     <string name="home_dialog_location_message">오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용 해야 합니다. 위치 권한 설정 화면으로 이동하시겠습니까?</string>
     <string name="home_dialog_location_positive_button">네</string>
@@ -28,6 +28,11 @@
     <string name="home_dialog_location_neutral_button">나중에</string>
     <string name="home_toast_location_no_permission">위치 권한이 없습니다.</string>
     <string name="home_no_selected_dog">반려견을 선택해 주세요.</string>
+    <string name="home_progressbar_rate">7개중 5개흭득</string>
+
+    <string name="msg_load_walking_data_fail">산책 데이터 불러오기에 실패했습니다.</string>
+    <string name="msg_load_weather_fail">날씨 데이터를 불러오지 못했습니다.</string>
+    <string name="msg_load_walk_stamp_data_fail">도장 데이터 불러오기에 실패했습니다.</string>
 
     <!-- home - detail-->
     <string name="home_detail_title">산책 이력</string>
@@ -79,8 +84,17 @@
     <string name="home_add_dog_memo_title">메모</string>
     <string name="home_add_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="home_add_edit_completed_button">완료</string>
-    <string name="please_add_name">이름은 필수 작성 항목입니다!</string>
-    <string name="msg_fail_insert">반려견 정보 업로드에 실패했습니다</string>
+    <string name="home_add_please_add_name">이름은 필수 작성 항목입니다!</string>
+    <string name="home_add_msg_fail_insert">반려견 정보 업로드에 실패했습니다.</string>
+    <string name="home_add_msg_success_insert">반려견 정보가 추가되었습니다.</string>
+
+    <!-- home - All - Stamp -->
+    <string name="home_all_stamp_msg_data_fail">도장 데이터를 불러오기에 실패했습니다.</string>
+    <string name="home_all_stamp_msg_load_changes_fail">변경된 도장 데이터를 정상적으로 불러오지 못했습니다.</string>
+    <string name="home_all_stamp_title">내 산책 도장 목록</string>
+    <string name="home_all_stamp_item_stamp_title">다다익선</string>
+    <string name="home_all_stamp_item_stamp_sum">총 얻은 도장 갯수</string>
+    <string name="home_all_stamp_item_stamp_num">5</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>
@@ -96,8 +110,8 @@
     <string name="walk_finish_stamp_done">확인했어요!</string>
     <string name="walk_finish_stamp1">오늘의 산책 완료</string>
     <string name="walk_finish_stamp2">3일 연속 산책</string>
-    <string name="walk_finish_stamp3">오늘의 산책 완료</string>
-    <string name="walk_finish_stamp4">오늘의 산책 완료</string>
+    <string name="walk_finish_stamp3">5일 연속 산책</string>
+    <string name="walk_finish_stamp4">7일 연속 산책</string>
     <string name="walk_finish_stamp5">다다익선</string>
     <string name="walk_finish_stamp6">단거리 마라토너</string>
     <string name="walk_finish_stamp7">중거리 마라토너</string>
@@ -113,6 +127,9 @@
     <string name="msg_no_gps_connection">산책 정보를 트래킹 하기 위해 GPS를 켜주세요</string>
     <string name="msg_short_walking_time">산책 시간이 너무 짧아 기록되지 않았습니다</string>
 
+    <string name="msg_walk_upload_fail">산책 결과 업로드에 실패했습니다</string>
+    <string name="msg_check_stamp_fail">스탬프 확인에 실패했습니다</string>
+
     <!-- mypage -->
     <string name="mypage_title">마이페이지</string>
     <string name="mypage_information_edit_title">정보 수정</string>
@@ -124,6 +141,10 @@
     <string name="mypage_membership_management_sign_out">로그아웃</string>
     <string name="mypage_membership_management_delete">회원탈퇴</string>
     <string name="mypage_privacy_policy">개인정보처리방침</string>
+    <string name="mypage_use_terms">서비스 이용약관</string>
+    <string name="mypage_agree_privacy_policy">개인정보처리방침 동의</string>
+    <string name="msg_sign_out_fail">로그아웃에 실패했습니다</string>
+    <string name="msg_delete_user_fail">회원 탈퇴에 실패했습니다</string>
 
     <!-- mypage - privacy -->
     <string name="mypage_privacy_title">개인정보처리방침</string>
@@ -145,8 +166,22 @@
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
     <string name="mypage_delete_dog">삭제 하기</string>
+    <string name="mypage_delete_dog_thumbnail_message">기본 이미지로 변경하시겠습니까?</string>
+    <string name="mypage_delete_dog_thumbnail_positive">확인</string>
+    <string name="mypage_delete_dog_thumbnail_negative">취소</string>
+    <string name="mypage_edit_msg_fail_update">반려견 정보 업데이트에 실패했습니다.</string>
+    <string name="mypage_edit_msg_success_update">반려견 정보가 업데이트되었습니다.</string>
+    <string name="mypage_edit_msg_there_are_not_changed">업데이트 할 정보가 없습니다.</string>
+
     <!-- mypage - detail - pet -->
     <string name="detail_pet_empty_list">반려견 정보가 없습니다.</string>
+    <string name="detail_pet_delete_message">정말 삭제하시겠습니까?</string>
+    <string name="detail_pet_delete_positive">확인</string>
+    <string name="detail_pet_delete_negative">취소</string>
+    <string name="detail_pet_delete_complete">삭제되었습니다.</string>
+    <string name="msg_load_changes_fail">변경된 반려견 데이터를 정상적으로 불러오지 못했습니다.</string>
+    <string name="msg_delete_dog_fail">반려견 삭제가 실패했습니다</string>
+
     <!-- item - home - history -->
     <string name="item_home_history_date">2024.05.28 17:38</string>
     <string name="item_home_history_location">광진구 화양동</string>
@@ -177,9 +212,11 @@
     <string name="login_dialog_ok">인증 하기</string>
     <string name="login_dialog_no">회원 탈퇴</string>
     <string name="login_send_email">이메일이 발송 되었습니다.</string>
-    <string name="login_unknown_error">실패했습니다.</string>
+    <string name="login_unknown_error">알 수 없는 오류로 실패했습니다.</string>
     <string name="login_account_delete">계정이 삭제되었습니다.</string>
     <string name="login_input_account">계정을 입력해주세요.</string>
+    <string name="login_google_sign_in_fail">구글 로그인에 실패했습니다</string>
+    <string name="login_ioexception">네트워크 연결을 확인해 주세요.</string>
 
     <!-- signup -->
     <string name="signup_title">환영합니다!\n이메일과 비밀번호를\n입력해주세요.</string>
@@ -194,11 +231,13 @@
     <string name="signup_fail">회원가입에 실패하셨습니다.</string>
     <string name="signup_email_check">"존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요."</string>
     <string name="signup_account_warning">계정이 유효하지 않습니다.</string>
-
+    <string name="signup_terms">이용약관 동의(필수)</string>
+    <string name="signup_personal_terms">개인정보 처리방침(필수)</string>
+    <string name="signup_personal_agree_terms">개인정보 처리 동의(필수)</string>
+    <string name="signup_check_terms">약관 동의를 해주세요.</string>
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>
-
 
     <!-- weather - status -->
     <string name="weather_status_thunder">천둥번개</string>
@@ -219,6 +258,6 @@
     <string name="fine_dust_status_general">보통</string>
     <string name="fine_dust_status_bad">나쁨</string>
     <string name="fine_dust_status_very_bad">매우나쁨</string>
-
+    <string name="msg_edit_fail">수정사항 업데이트에 실패했습니다</string>
 
 </resources>

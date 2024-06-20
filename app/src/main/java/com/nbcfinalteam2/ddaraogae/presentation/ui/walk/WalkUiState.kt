@@ -5,10 +5,12 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.StoreUiModel
 
 data class WalkUiState(
     val isWalking: Boolean,
+    val isLoading: Boolean
 ) {
     companion object {
         fun init() = WalkUiState(
             isWalking = false,
+            isLoading = false
         )
     }
 }
