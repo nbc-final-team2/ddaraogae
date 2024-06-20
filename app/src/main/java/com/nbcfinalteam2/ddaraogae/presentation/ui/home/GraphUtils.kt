@@ -20,7 +20,7 @@ object GraphUtils {
             legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)
-            setGridBackgroundColor(context.getColor(R.color.grey))
+            setGridBackgroundColor(context.getColor(R.color.white))
             setTouchEnabled(false)
             setPinchZoom(false)
             setScaleEnabled(false)

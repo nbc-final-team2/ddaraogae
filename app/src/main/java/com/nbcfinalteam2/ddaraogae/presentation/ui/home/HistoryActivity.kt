@@ -220,7 +220,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)
-            setGridBackgroundColor(resources.getColor(R.color.grey, null))
+            setGridBackgroundColor(resources.getColor(R.color.white, null))
             setTouchEnabled(true)
             setPinchZoom(false)
             setScaleEnabled(false)
