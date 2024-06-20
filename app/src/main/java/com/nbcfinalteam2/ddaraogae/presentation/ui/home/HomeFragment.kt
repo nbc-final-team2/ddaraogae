@@ -465,7 +465,7 @@ class HomeFragment : Fragment() {
             legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)
-            setGridBackgroundColor(resources.getColor(R.color.grey, null))
+            setGridBackgroundColor(resources.getColor(R.color.white, null))
             setTouchEnabled(false)
             setPinchZoom(false)
             setScaleEnabled(false)
