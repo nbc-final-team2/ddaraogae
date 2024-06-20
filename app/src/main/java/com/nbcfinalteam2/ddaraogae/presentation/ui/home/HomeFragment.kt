@@ -2,9 +2,12 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.home
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -173,8 +176,12 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when(event) {
-                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
-                    DefaultEvent.Success -> {}
+                    is DefaultEvent.Failure -> {
+                        ToastMaker.make(requireContext(), event.msg)
+                        toggleWeatherInvisible()
+                    }
+
+                    DefaultEvent.Success -> {toggleWeatherVisible()}
                 }
             }
         }
@@ -209,7 +216,8 @@ class HomeFragment : Fragment() {
 
     private fun setupListener() {
         moveToHistory()
-        checkForMoveToLocationSettingsDialog()
+        /** 위치 권한 설정 이동 다이얼로그 */
+        //checkForMoveToLocationSettingsDialog()
         weatherRefreshClickListener()
 
         binding.ivDogAdd.setOnClickListener {

@@ -20,7 +20,7 @@
     <string name="home_walk_graph_no_data">최근 산책 데이터가 없어요.</string>
     <string name="home_weather_real_time_data">2024.05.28 17:38</string>
     <string name="item_home_dog_selection_name">{dogname}</string>
-    <string name="home_weather_no_data">위치 권한 필요합니다.</string>
+    <string name="home_weather_no_data">위치 권한 설정 또는 인터넷 연결을 해야합니다.</string>
     <string name="home_dialog_location_title">위치 권한 설정</string>
     <string name="home_dialog_location_message">오늘의 날씨 정보를 확인 하기 위해서 위치 권한을 허용 해야 합니다. 위치 권한 설정 화면으로 이동하시겠습니까?</string>
     <string name="home_dialog_location_positive_button">네</string>
