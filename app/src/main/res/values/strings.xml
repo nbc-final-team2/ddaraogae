@@ -131,6 +131,8 @@
     <string name="mypage_membership_management_sign_out">로그아웃</string>
     <string name="mypage_membership_management_delete">회원탈퇴</string>
     <string name="mypage_privacy_policy">개인정보처리방침</string>
+    <string name="mypage_use_terms">서비스 이용약관</string>
+    <string name="mypage_agree_privacy_policy">개인정보처리방침 동의</string>
 
     <!-- mypage - privacy -->
     <string name="mypage_privacy_title">개인정보처리방침</string>
@@ -216,6 +218,10 @@
     <string name="signup_fail">회원가입에 실패하셨습니다.</string>
     <string name="signup_email_check">"존재하는 이메일입니다.\n 다른 이메일을 입력해 주세요."</string>
     <string name="signup_account_warning">계정이 유효하지 않습니다.</string>
+    <string name="signup_terms">이용약관 동의(필수)</string>
+    <string name="signup_personal_terms">개인정보 처리방침(필수)</string>
+    <string name="signup_personal_agree_terms">개인정보 처리 동의(필수)</string>
+    <string name="signup_check_terms">약관 동의를 해주세요.</string>
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>

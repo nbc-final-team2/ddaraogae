@@ -134,6 +134,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_signDelete" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_useTerms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        android:text="@string/mypage_use_terms"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_withdrawal" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_useTerms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:src="@drawable/ic_chevron_right"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_useTerms"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_useTerms" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_privacyPolicy"
@@ -143,7 +162,7 @@
         android:text="@string/mypage_privacy_policy"
         android:textSize="@dimen/text_caption"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_withdrawal" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_useTerms" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_privacyPolicy"
@@ -154,4 +173,24 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_privacyPolicy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_privacyPolicy" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_agreementPrivacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        android:text="@string/mypage_agree_privacy_policy"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_privacyPolicy" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_agreementPrivacyPolicy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:src="@drawable/ic_chevron_right"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_agreementPrivacyPolicy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_agreementPrivacyPolicy" />
 </androidx.constraintlayout.widget.ConstraintLayout>
