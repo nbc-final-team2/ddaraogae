@@ -47,10 +47,15 @@ class LoginViewModel @Inject constructor(
     }
 
     fun getCurrentUser() = viewModelScope.launch {
-        val getCurrentUser = getCurrentUserUseCase()
-        if(getCurrentUser != null) {
-            val isVerified = isCurrentUserEmailVerifiedUseCase()
-            if(isVerified) _isPossible.emit(0)
+        try{
+            val getCurrentUser = getCurrentUserUseCase()
+            if (getCurrentUser != null) {
+                val isVerified = isCurrentUserEmailVerifiedUseCase()
+                if (isVerified) _isPossible.emit(0)
+            }
+        } catch (e : Exception){
+            _isPossible.emit(99)
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
     }
 
