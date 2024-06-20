@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,13 +23,16 @@ class SignUpViewModel @Inject constructor(
     private val _userState = MutableSharedFlow<Int>()
     val userState = _userState.asSharedFlow()
 
-    //0 : success 1: fail 2: 이메일 중복 99: 그 외
+    //0 : success 1: fail 2: 이메일 중복 98 : IOException 99: 그 외
     fun signUp(email:String, password:String) = viewModelScope.launch{
         try {
             val isSuccess = signUpWithEmailUseCase(EmailAuthEntity(email, password))
             if(isSuccess) logOut()
             else _userState.emit(1)
-        } catch (e : FirebaseAuthUserCollisionException) {
+        } catch (e: IOException){
+            _userState.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
+        }catch (e : FirebaseAuthUserCollisionException) {
             //이메일 중복 체크
             _userState.emit(2)
         } catch (e : Exception){
@@ -40,7 +44,10 @@ class SignUpViewModel @Inject constructor(
         try {
             signOutUseCase()
             _userState.emit(0)
-        } catch (e:Exception){
+        } catch (e: IOException){
+            _userState.emit(98)
+            Log.e("[signUpPage]IOException!", "$e")
+        }catch (e:Exception){
             _userState.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }

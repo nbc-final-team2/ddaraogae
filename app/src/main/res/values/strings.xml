@@ -204,6 +204,7 @@
     <string name="login_account_delete">계정이 삭제되었습니다.</string>
     <string name="login_input_account">계정을 입력해주세요.</string>
     <string name="login_google_sign_in_fail">구글 로그인에 실패했습니다</string>
+    <string name="login_ioexception">네트워크 연결을 확인해 주세요.</string>
 
     <!-- signup -->
     <string name="signup_title">환영합니다!\n이메일과 비밀번호를\n입력해주세요.</string>

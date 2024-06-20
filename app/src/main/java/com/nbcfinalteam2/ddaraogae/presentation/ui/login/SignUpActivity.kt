@@ -71,7 +71,9 @@ class SignUpActivity : AppCompatActivity() {
                     if (state == 0) logIn()
                     if (state == 1)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
                     if (state == 2) Toast.makeText(this@SignUpActivity, R.string.signup_email_check, Toast.LENGTH_SHORT).show()
-                    if (state > 10)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
+                    if(state == 98) Toast.makeText(
+                        this@SignUpActivity, R.string.login_ioexception, Toast.LENGTH_SHORT).show()
+                    if (state == 99)Toast.makeText(this@SignUpActivity, R.string.signup_fail, Toast.LENGTH_SHORT).show()
                 }
         }
     }
