@@ -257,7 +257,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadStampProgress() = viewModelScope.launch {
+    fun loadStampProgress() = viewModelScope.launch {
         runCatching {
             val startDate = DateFormatter.getStartDateForWeek()
             val endDate = DateFormatter.getEndDateForWeek()

@@ -54,8 +54,7 @@ class HomeFragment : Fragment() {
     }
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
-    @Inject
-    lateinit var itemChangedEventBus: ItemChangedEventBus
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -203,6 +202,13 @@ class HomeFragment : Fragment() {
                         is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
                         DefaultEvent.Success -> {}
                     }
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemChangedEventBus.stampChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest {
+                    homeViewModel.loadStampProgress()
                 }
         }
     }

@@ -25,6 +25,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
@@ -39,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FinishActivity : FragmentActivity() {
@@ -56,6 +58,8 @@ class FinishActivity : FragmentActivity() {
     private lateinit var locationList: List<LatLng>
 
     private var loadingDialog: LoadingDialog? = null
+
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,6 +122,7 @@ class FinishActivity : FragmentActivity() {
             viewModel.stampList.collectLatest { list ->
                 if (list.isNotEmpty()) {
                     // 받을 스탬프가 있을 때
+                    itemChangedEventBus.notifyStampChanged()
                     val dialogFragment = StampDialogFragment.newInstance(ArrayList(list))
                     dialogFragment.isCancelable = false
                     dialogFragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
