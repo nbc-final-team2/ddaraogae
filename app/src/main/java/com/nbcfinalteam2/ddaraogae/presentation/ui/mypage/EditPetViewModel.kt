@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,6 +33,11 @@ class EditPetViewModel @Inject constructor(
     private var imgByteArray: ByteArray? = null
 
     fun updateDog(getDogData: DogInfo) = viewModelScope.launch {
+        _editUiState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
         runCatching {
             val dogData = getDogData.let {
                 DogEntity(
@@ -47,18 +53,28 @@ class EditPetViewModel @Inject constructor(
             updateDogUseCase(dogData, imgByteArray)
         }.onSuccess {
             _updateEvent.emit(DefaultEvent.Success)
+            _editUiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
         }.onFailure { e ->
             _updateEvent.emit(DefaultEvent.Failure(R.string.msg_edit_fail))
+            _editUiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
         }
     }
 
     fun setImageUri(imageUri: Uri?, byteArray: ByteArray?) {
         _editUiState.value = EditUiState(
             imageSource = imageUri?.let { ImageSource.ImageUri(imageUri) },
-            byteArray = byteArray,
             isThumbnailVisible = imageUri != null,
             isInit = true
         )
+        imgByteArray = byteArray
     }
 
     fun setImageUrl(imageUrl: String?) {
