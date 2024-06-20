@@ -220,7 +220,9 @@ class WalkFragment : Fragment() {
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
         binding.ibWalkLocation.setOnClickListener {
-            naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
+            if(::naverMap.isInitialized && ::cameraPosition.isInitialized) {
+                naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
+            }
         }
 
     }
