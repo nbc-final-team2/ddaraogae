@@ -48,7 +48,10 @@ class LoginViewModel @Inject constructor(
 
     fun getCurrentUser() = viewModelScope.launch {
         val getCurrentUser = getCurrentUserUseCase()
-        if(getCurrentUser != null) {_isPossible.emit(0)}
+        if(getCurrentUser != null) {
+            val isVerified = isCurrentUserEmailVerifiedUseCase()
+            if(isVerified) _isPossible.emit(0)
+        }
     }
 
     fun signInEmail(email:String, password:String) = viewModelScope.launch{
