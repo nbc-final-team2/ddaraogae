@@ -165,7 +165,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:text="7개중 5개흭득"
+                        tools:text="@string/home_progressbar_rate"
                         android:textSize="@dimen/text_caption"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/progressbar_walkStampRate"
