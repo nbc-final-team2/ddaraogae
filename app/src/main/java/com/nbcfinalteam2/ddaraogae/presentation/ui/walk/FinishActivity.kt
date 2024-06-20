@@ -270,14 +270,13 @@ class FinishActivity : FragmentActivity() {
         if (::naverMap.isInitialized) {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)
-                for(dog in walkingDogs) {
-                    viewModel.insertWalkingData(
-                        walk = walkingUiModel.copy(
+                viewModel.insertWalkingData(
+                    walkingDogs.map { dog ->
+                        walkingUiModel.copy(
                             dogId = dog.id
-                        ),
-                        image = mapImage!!
-                    )
-                }
+                        )
+                    } to mapImage!!
+                )
             }
         }
     }

@@ -39,10 +39,10 @@ class FinishViewModel @Inject constructor(
     val finishUiState: StateFlow<FinishUiState> = _finishUiState.asStateFlow()
 
 
-    fun insertWalkingData(walk: WalkingInfo, image: ByteArray) {
+    fun insertWalkingData(walkDataSet: Pair<List<WalkingInfo>, ByteArray>) {
         _finishUiState.value = FinishUiState(true)
         viewModelScope.launch {
-            val walkingData = walk.let {
+            val walkingDataList = walkDataSet.first.map {
                 WalkingEntity(
                     it.id,
                     it.dogId,
@@ -53,9 +53,12 @@ class FinishViewModel @Inject constructor(
                     it.walkingImage
                 )
             }
+            val image = walkDataSet.second
 
             try {
-                insertWalkingDataUseCase.invoke(walkingData, image)
+                for(walkingData in walkingDataList) {
+                    insertWalkingDataUseCase.invoke(walkingData, image)
+                }
                 _insertEvent.emit(DefaultEvent.Success)
             } catch (e: Exception) {
                 _insertEvent.emit(DefaultEvent.Failure(R.string.msg_walk_upload_fail))
