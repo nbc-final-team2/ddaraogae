@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class ItemChangedEventBusImpl @Inject constructor(
     dispatcher: CoroutineDispatcher
-): ItemChangedEventBus {
+) : ItemChangedEventBus {
     private val _itemChangedEvent = MutableSharedFlow<Unit>(replay = 1)
     override val itemChangedEvent: SharedFlow<Unit> = _itemChangedEvent.asSharedFlow()
 
@@ -27,9 +27,8 @@ class ItemChangedEventBusImpl @Inject constructor(
     }
 
     override fun notifyStampChanged() {
-       scope.launch {
-           _stampChangedEvent.emit(Unit)
-       }
+        scope.launch {
+            _stampChangedEvent.emit(Unit)
+        }
     }
-
 }
