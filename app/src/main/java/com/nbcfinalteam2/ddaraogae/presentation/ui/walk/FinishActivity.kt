@@ -25,6 +25,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityFinishBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
@@ -39,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FinishActivity : FragmentActivity() {
@@ -57,6 +59,8 @@ class FinishActivity : FragmentActivity() {
 
     private var loadingDialog: LoadingDialog? = null
 
+    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -67,8 +71,8 @@ class FinishActivity : FragmentActivity() {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
@@ -118,6 +122,7 @@ class FinishActivity : FragmentActivity() {
             viewModel.stampList.collectLatest { list ->
                 if (list.isNotEmpty()) {
                     // 받을 스탬프가 있을 때
+                    itemChangedEventBus.notifyStampChanged()
                     val dialogFragment = StampDialogFragment.newInstance(ArrayList(list))
                     dialogFragment.isCancelable = false
                     dialogFragment.lifecycle.addObserver(object : DefaultLifecycleObserver {

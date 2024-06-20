@@ -5,4 +5,7 @@ import kotlinx.coroutines.flow.SharedFlow
 interface ItemChangedEventBus {
     val itemChangedEvent: SharedFlow<Unit>
     fun notifyItemChanged()
+
+    val stampChangedEvent: SharedFlow<Unit>
+    fun notifyStampChanged()
 }
