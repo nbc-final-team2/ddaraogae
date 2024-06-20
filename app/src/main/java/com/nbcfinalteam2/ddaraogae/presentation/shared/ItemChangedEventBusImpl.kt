@@ -14,12 +14,22 @@ class ItemChangedEventBusImpl @Inject constructor(
 ): ItemChangedEventBus {
     private val _itemChangedEvent = MutableSharedFlow<Unit>(replay = 1)
     override val itemChangedEvent: SharedFlow<Unit> = _itemChangedEvent.asSharedFlow()
+
+    private val _stampChangedEvent = MutableSharedFlow<Unit>(replay = 1)
+    override val stampChangedEvent: SharedFlow<Unit> = _itemChangedEvent.asSharedFlow()
+
     private val scope = CoroutineScope(dispatcher)
 
     override fun notifyItemChanged() {
         scope.launch {
             _itemChangedEvent.emit(Unit)
         }
+    }
+
+    override fun notifyStampChanged() {
+       scope.launch {
+           _stampChangedEvent.emit(Unit)
+       }
     }
 
 }
