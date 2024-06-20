@@ -115,6 +115,54 @@
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
         app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check" />
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cb_signup_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_terms"
+        app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signup_password_check_warning"/>
+    <ImageButton
+        android:id="@+id/ib_signup_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right"
+        android:background="@null"
+        app:layout_constraintTop_toTopOf="@+id/cb_signup_terms"
+        app:layout_constraintBottom_toBottomOf="@+id/cb_signup_terms"
+        app:layout_constraintLeft_toRightOf="@+id/cb_signup_terms"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cb_signup_personal_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_personal_terms"
+        app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+        app:layout_constraintTop_toBottomOf="@+id/cb_signup_terms"/>
+    <ImageButton
+        android:id="@+id/ib_signup_personal_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right"
+        android:background="@null"
+        app:layout_constraintTop_toTopOf="@+id/cb_signup_personal_terms"
+        app:layout_constraintBottom_toBottomOf="@+id/cb_signup_personal_terms"
+        app:layout_constraintLeft_toRightOf="@+id/cb_signup_personal_terms"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cb_signup_personal_agree_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_personal_agree_terms"
+        app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+        app:layout_constraintTop_toBottomOf="@+id/cb_signup_personal_terms"/>
+    <ImageButton
+        android:id="@+id/ib_signup_personal_agree_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right"
+        android:background="@null"
+        app:layout_constraintTop_toTopOf="@+id/cb_signup_personal_agree_terms"
+        app:layout_constraintBottom_toBottomOf="@+id/cb_signup_personal_agree_terms"
+        app:layout_constraintLeft_toRightOf="@+id/cb_signup_personal_agree_terms"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_signup"
