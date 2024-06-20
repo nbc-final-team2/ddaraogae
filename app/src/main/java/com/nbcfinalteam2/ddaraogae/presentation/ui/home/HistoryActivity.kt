@@ -21,9 +21,11 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityHistoryBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,7 +42,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     override fun onMonthClick(year: Int, monthNumber: Int) {
         Toast.makeText(this, "선택한 연도: $year, 월: $monthNumber", Toast.LENGTH_SHORT).show()
         historyViewModel.setSelectedDate(year, monthNumber)
-        setupWalkGraphForEmptyData(year, monthNumber)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,10 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiSetting()
+        getDogInfo()
+        if (savedInstanceState == null) {
+            initData()
+        }
         setupWalkGraph()
         setupAdapter()
         setupListener()
@@ -58,10 +63,31 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures())
-            view.updatePadding(0, insets.top, 0, insets.bottom)
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
+    }
+
+    private fun getDogInfo() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("DOG_INFO", DogInfo::class.java)?.let {
+                dogInfo = it
+                historyViewModel.setDogInfo(dogInfo)
+            }
+        } else {
+            intent.getParcelableExtra<DogInfo>("DOG_INFO")?.let {
+                dogInfo = it
+                historyViewModel.setDogInfo(dogInfo)
+            }
+        }
+    }
+
+    private fun initData() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1
+        historyViewModel.setSelectedDate(year, month)
     }
 
     private fun setupWalkGraph() {
@@ -69,13 +95,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH) + 1
         setupWalkGraphForEmptyData(year, month)
-    }
-
-    private fun setupWalkGraphForEmptyData(year: Int, month: Int) {
-        val lineChart = binding.lcArea
-        GraphUtils.historySetupWalkGraphSettingsForEmptyData(lineChart, this)
-        GraphUtils.historySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
-        GraphUtils.historySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     private fun setupAdapter() {
@@ -132,18 +151,13 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 }
             }
         }
-    }
 
-    private fun getDogInfo() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("DOG_INFO", DogInfo::class.java)?.let {
-                dogInfo = it
-                historyViewModel.setDogInfo(dogInfo)
-            }
-        } else {
-            intent.getParcelableExtra<DogInfo>("DOG_INFO")?.let {
-                dogInfo = it
-                historyViewModel.setDogInfo(dogInfo)
+        lifecycleScope.launch {
+            historyViewModel.loadWalkEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@HistoryActivity, event.msg)
+                    DefaultEvent.Success -> {}
+                }
             }
         }
     }
@@ -152,6 +166,13 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         binding.ivBack.setOnClickListener {
             finish()
         }
+    }
+
+    private fun setupWalkGraphForEmptyData(year: Int, month: Int) {
+        val lineChart = binding.lcArea
+        GraphUtils.historySetupWalkGraphSettingsForEmptyData(lineChart, this)
+        GraphUtils.historySetupWalkGraphXAxisForEmptyData(lineChart.xAxis, year, month)
+        GraphUtils.historySetupWalkGraphYAxisForEmptyData(lineChart.axisLeft)
     }
 
     private fun setupWalkGraphForHaveData(walkData: List<WalkingInfo>, year: Int, month: Int) {

@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -42,8 +43,12 @@ class LoginActivity : AppCompatActivity() {
                     firebaseAuthWithGoogle(account.idToken!!)
                 } catch (e: ApiException) {
                     Log.w(TAG, "구글 로그인에 실패했습니다.", e)
+                    ToastMaker.make(this, getString(R.string.login_google_sign_in_fail))
                 }
-            } else Log.e(TAG, "Google Result Error ${result}")
+            } else {
+                Log.e(TAG, "Google Result Error ${result}")
+                ToastMaker.make(this, getString(R.string.login_google_sign_in_fail))
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {

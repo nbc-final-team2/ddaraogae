@@ -21,8 +21,10 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -81,26 +83,6 @@ class EditPetActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
-        lifecycleScope.launch {
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    UpdateTaskState.Idle -> {
-                        btnEditCompleted.isEnabled = false
-                    }
-                    UpdateTaskState.Loading -> {
-                        btnEditCompleted.isEnabled = false
-                    }
-                    UpdateTaskState.Success -> {
-                        btnEditCompleted.isEnabled = false
-                        Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_success_update, Toast.LENGTH_SHORT).show()
-                    }
-                    is UpdateTaskState.Error -> {
-                        btnEditCompleted.isEnabled = true
-                        Toast.makeText(this@EditPetActivity, R.string.mypage_edit_msg_fail_update, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
 
         if (!viewModel.editUiState.value.isInit) {
             dogData?.let {
@@ -180,15 +162,14 @@ class EditPetActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            viewModel.taskState.collectLatest { state ->
-                when (state) {
-                    UpdateTaskState.Idle -> binding.btnEditCompleted.isEnabled = true
-                    UpdateTaskState.Loading -> binding.btnEditCompleted.isEnabled = false
-                    UpdateTaskState.Success -> {
+            viewModel.updateEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@EditPetActivity, event.msg)
+                    DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
+                        ToastMaker.make(this@EditPetActivity, R.string.mypage_edit_msg_success_update)
                         finish()
                     }
-                    is UpdateTaskState.Error -> binding.btnEditCompleted.isEnabled = true
                 }
             }
         }

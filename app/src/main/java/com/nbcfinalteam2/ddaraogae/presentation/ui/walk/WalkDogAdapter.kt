@@ -46,6 +46,9 @@ class WalkDogAdapter(
                     if (item.isSelected) R.color.very_soft_orange else R.color.dark_grey
                 )
             }
+
+            binding.tvDogName.text = item.name
+
             binding.root.setOnClickListener {
                 onClick(item.id ?: "")
             }

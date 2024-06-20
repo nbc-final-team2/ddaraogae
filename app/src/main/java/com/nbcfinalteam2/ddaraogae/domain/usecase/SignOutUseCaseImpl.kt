@@ -6,5 +6,5 @@ import javax.inject.Inject
 class SignOutUseCaseImpl @Inject constructor(
     private val authRepository: AuthRepository
 ): SignOutUseCase {
-    override suspend fun invoke() = authRepository.signOut()
+    override fun invoke() = authRepository.signOut()
 }

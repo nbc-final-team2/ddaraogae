@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -26,6 +25,7 @@ import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.EditPetActivity.Companion.DOGDATA
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -120,13 +120,21 @@ class DetailPetActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.deleteEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when(event) {
-                    is DefaultEvent.Failure -> {}
-                    DefaultEvent.Loading -> {}
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
                     DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
-                        Toast.makeText(this@DetailPetActivity, R.string.detail_pet_delete_complete, Toast.LENGTH_SHORT).show()
+                        ToastMaker.make(this@DetailPetActivity, R.string.detail_pet_delete_complete)
                         binding.scDetailPet.fullScroll(ScrollView.FOCUS_UP)
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.loadEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@DetailPetActivity, event.msg)
+                    DefaultEvent.Success -> {}
                 }
             }
         }
