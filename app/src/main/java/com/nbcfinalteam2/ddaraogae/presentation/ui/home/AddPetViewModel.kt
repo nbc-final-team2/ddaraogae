@@ -29,6 +29,8 @@ class AddPetViewModel @Inject constructor(
     private val _insertEvent = MutableSharedFlow<DefaultEvent>()
     val insertEvent: SharedFlow<DefaultEvent> = _insertEvent.asSharedFlow()
 
+    private var imgByteArray: ByteArray? = null
+
     fun insertDog(getDogData: DogInfo) = viewModelScope.launch {
         runCatching {
             val dogData = getDogData.let {
@@ -42,7 +44,7 @@ class AddPetViewModel @Inject constructor(
                     it.thumbnailUrl
                 )
             }
-            insertDogUseCase(dogData, addUiState.value.byteArray)
+            insertDogUseCase(dogData, imgByteArray)
         }.onSuccess {
             _insertEvent.emit(DefaultEvent.Success)
         }.onFailure {
@@ -53,8 +55,8 @@ class AddPetViewModel @Inject constructor(
     fun setImageUri(imageUri: Uri?, byteArray: ByteArray?) {
         _addUiState.value = AddUiState(
             imageUri = imageUri,
-            byteArray = byteArray,
             isThumbnailVisible = imageUri != null
         )
+        imgByteArray = byteArray
     }
 }
