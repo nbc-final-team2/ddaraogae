@@ -63,13 +63,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="160dp"
-                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_walk_graph_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_moveToHistoryGraph"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_main" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_moveToHistoryGraph"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/home_walk_graph_move_to_history"
+                android:textSize="@dimen/text_caption"
+                android:layout_marginEnd="@dimen/margin_medium"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_dogGraph"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_dogGraph" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_graph"
