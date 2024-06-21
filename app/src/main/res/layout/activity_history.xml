@@ -66,8 +66,19 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_medium"
                         android:text="@string/home_history_walk_graph_select_calendar"
+                        android:textSize="@dimen/text_caption"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_selectedCalendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:rotation="90"
+                        android:src="@drawable/ic_calendar_select"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_selectedCalendar"
+                        app:layout_constraintStart_toEndOf="@+id/tv_selectedCalendar"
+                        app:layout_constraintTop_toTopOf="@+id/tv_selectedCalendar" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_walkGraphDogName"
