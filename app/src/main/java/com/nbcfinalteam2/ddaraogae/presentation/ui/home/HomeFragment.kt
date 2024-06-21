@@ -412,7 +412,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun moveToHistory() {
-        binding.cvGraph.setOnClickListener {
+        binding.tvMoveToHistoryGraph.setOnClickListener {
             val dogInfo = homeViewModel.selectDogState.value
             if (dogInfo != null) {
                 val intent = Intent(context, HistoryActivity::class.java)
