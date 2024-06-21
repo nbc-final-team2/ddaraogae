@@ -285,7 +285,7 @@ class HomeFragment : Fragment() {
         return when (condition) {
             getString(R.string.weather_status_thunder) -> R.drawable.ic_weather_thunder
             getString(R.string.weather_status_rain) -> R.drawable.ic_weather_rain
-            getString(R.string.weather_status_slight_rain) -> R.drawable.ic_weather_slight_rain
+            getString(R.string.weather_status_slight_rain) -> R.drawable.ic_weather_rain
             getString(R.string.weather_status_snow) -> R.drawable.ic_weather_snow
             getString(R.string.weather_status_typoon) -> R.drawable.ic_weather_typoon_dust_fog
             getString(R.string.weather_status_dust) -> R.drawable.ic_weather_typoon_dust_fog
