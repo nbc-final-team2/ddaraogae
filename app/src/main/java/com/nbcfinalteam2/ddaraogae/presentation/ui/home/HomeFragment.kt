@@ -114,16 +114,7 @@ class HomeFragment : Fragment() {
             homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogData ->
                     if (dogData != null) {
-                        val dogName = dogData.name
-                        val suffix = "의 산책 그래프"
-                        val maxLength = 20
-                        val finalText = if (dogName?.length!! + suffix.length > maxLength) {
-                            val ellipsizeEndText = maxLength - suffix.length - 3
-                            "${dogName.substring(0, ellipsizeEndText)}... $suffix"
-                        } else {
-                            "$dogName$suffix"
-                        }
-                        binding.tvDogGraph.text = finalText
+                        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
                         homeViewModel.loadSelectedDogWalkGraph()
                     }
                 }
