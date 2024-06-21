@@ -98,12 +98,11 @@
         android:id="@+id/ib_walk_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:layout_marginEnd="21dp"
         android:layout_marginBottom="138dp"
+        android:background="@null"
         android:src="@drawable/locationbutton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/rv_walk_dogs" />
 
 
 
