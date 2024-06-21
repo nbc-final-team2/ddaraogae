@@ -120,6 +120,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             dialog.setOnMonthClickListener(this)
             dialog.show(supportFragmentManager, "")
         }
+
+        binding.ivSelectedCalendar.setOnClickListener {
+            val dialog = CalendarDialog()
+            dialog.setOnMonthClickListener(this)
+            dialog.show(supportFragmentManager, "")
+        }
     }
 
     private fun setupViewModels() {
