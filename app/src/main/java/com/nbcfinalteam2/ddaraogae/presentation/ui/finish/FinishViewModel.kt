@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
+package com.nbcfinalteam2.ddaraogae.presentation.ui.finish
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

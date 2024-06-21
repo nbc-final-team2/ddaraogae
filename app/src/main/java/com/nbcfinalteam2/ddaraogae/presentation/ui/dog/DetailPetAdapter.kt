@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
+package com.nbcfinalteam2.ddaraogae.presentation.ui.dog
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
 class DetailPetAdapter(
     private val onItemClick:(DogInfo) -> Unit
-) : ListAdapter<DogInfo,DetailPetAdapter.ItemViewHolder>(
+) : ListAdapter<DogInfo, DetailPetAdapter.ItemViewHolder>(
     object :DiffUtil.ItemCallback<DogInfo>(){
 
         override fun areItemsTheSame(oldItem: DogInfo, newItem: DogInfo): Boolean {
@@ -50,7 +50,7 @@ class DetailPetAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): DetailPetAdapter.ItemViewHolder {
+    ): ItemViewHolder {
         return ItemViewHolder(
             ItemEditPetDogSelectionBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
@@ -58,7 +58,7 @@ class DetailPetAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: DetailPetAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }

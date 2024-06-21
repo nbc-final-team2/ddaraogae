@@ -11,7 +11,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
-import com.nbcfinalteam2.ddaraogae.presentation.ui.home.AddActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.DetailPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint

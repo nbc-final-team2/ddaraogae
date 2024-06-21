@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.walk
+package com.nbcfinalteam2.ddaraogae.presentation.ui.finish
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
