@@ -63,6 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="160dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@string/home_walk_graph_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
@@ -74,9 +76,9 @@
                 android:id="@+id/tv_moveToHistoryGraph"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_walk_graph_move_to_history"
                 android:textSize="@dimen/text_caption"
-                android:layout_marginEnd="@dimen/margin_medium"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_dogGraph"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_dogGraph" />
@@ -175,12 +177,12 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
-                        tools:text="@string/home_progressbar_rate"
                         android:textSize="@dimen/text_caption"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/progressbar_walkStampRate"
                         app:layout_constraintStart_toStartOf="@+id/progressbar_walkStampRate"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="@string/home_progressbar_rate" />
 
                     <ProgressBar
                         android:id="@+id/progressbar_walkStampRate"

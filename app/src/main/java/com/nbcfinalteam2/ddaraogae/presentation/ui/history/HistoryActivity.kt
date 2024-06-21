@@ -130,7 +130,18 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
         lifecycleScope.launch {
             historyViewModel.selectDogState.flowWithLifecycle(lifecycle).collectLatest { dog ->
-                binding.tvWalkGraphDogName.text = "${dog?.name}의 산책 그래프"
+                if (dog != null) {
+                    val dogName = dog.name
+                    val suffix = "의 산책 그래프"
+                    val maxLength = 20
+                    val finalText = if (dogName?.length!! + suffix.length > maxLength) {
+                        val ellipsizeEndText = maxLength - suffix.length - 3
+                        "${dogName.substring(0, ellipsizeEndText)}... $suffix"
+                    } else {
+                        "$dogName$suffix"
+                    }
+                    binding.tvWalkGraphDogName.text = finalText
+                }
             }
         }
         lifecycleScope.launch {
@@ -155,7 +166,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         lifecycleScope.launch {
             historyViewModel.loadWalkEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@HistoryActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
