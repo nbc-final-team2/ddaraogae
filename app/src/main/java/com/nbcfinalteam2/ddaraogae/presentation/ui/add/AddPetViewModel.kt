@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.home
+package com.nbcfinalteam2.ddaraogae.presentation.ui.add
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.home
+package com.nbcfinalteam2.ddaraogae.presentation.ui.history
 
 import android.os.Bundle
 import android.view.LayoutInflater

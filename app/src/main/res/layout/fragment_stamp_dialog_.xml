@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/margin_medium"
-    tools:context=".presentation.ui.walk.StampDialogFragment">
+    tools:context=".presentation.ui.finish.StampDialogFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="300dp"

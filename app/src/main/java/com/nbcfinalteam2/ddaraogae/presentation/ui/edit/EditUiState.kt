@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
+package com.nbcfinalteam2.ddaraogae.presentation.ui.edit
 
 import android.net.Uri
 

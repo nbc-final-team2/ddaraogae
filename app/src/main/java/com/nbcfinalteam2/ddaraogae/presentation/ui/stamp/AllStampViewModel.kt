@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.ui.home
+package com.nbcfinalteam2.ddaraogae.presentation.ui.stamp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

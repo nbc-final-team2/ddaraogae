@@ -34,7 +34,11 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.history.HistoryActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.stamp.AllStampActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import com.nbcfinalteam2.ddaraogae.presentation.util.GraphUtils
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
