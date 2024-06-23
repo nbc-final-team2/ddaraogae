@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -50,6 +51,7 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private var window: Window? = null
 
     private val dogProfileAdapter: DogProfileAdapter by lazy {
         DogProfileAdapter { item ->
@@ -87,12 +89,14 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        window = activity?.window
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        changeForAppStatusBar()
         setupWalkGraphForEmptyData()
         setupListener()
         setupAdapter()
@@ -100,8 +104,11 @@ class HomeFragment : Fragment() {
         checkLocationPermissions()
     }
 
-    private fun initViewModels() {
+    private fun changeForAppStatusBar() {
+        window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.bg_grey)
+    }
 
+    private fun initViewModels() {
         viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogList ->
@@ -529,6 +536,8 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
+        window = null
         _binding = null
     }
 }
