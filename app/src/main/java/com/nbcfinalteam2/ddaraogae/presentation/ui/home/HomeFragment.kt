@@ -478,11 +478,12 @@ class HomeFragment : Fragment() {
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
-            setTouchEnabled(false)
-            setPinchZoom(false)
-            setScaleEnabled(false)
-            isDragXEnabled = false
-            isDragYEnabled = false
+            setTouchEnabled(true)
+            setPinchZoom(true)
+            setScaleEnabled(true)
+            isDoubleTapToZoomEnabled = true
+            isDragXEnabled = true
+            isDragYEnabled = true
         }
         lineChart.invalidate()
     }
@@ -497,9 +498,10 @@ class HomeFragment : Fragment() {
 
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
-            setLabelCount(7, true)
+            setLabelCount(dates.size, false)
             axisMinimum = 0f
             axisMaximum = 6f
+            granularity = 1f
             valueFormatter = formatter
         }
     }
@@ -515,7 +517,7 @@ class HomeFragment : Fragment() {
 
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return "${value}km"
+                    return String.format("%.1fkm", value)
                 }
             }
         }

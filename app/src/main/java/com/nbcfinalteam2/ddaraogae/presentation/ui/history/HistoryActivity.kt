@@ -231,11 +231,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
             setTouchEnabled(true)
-            setPinchZoom(false)
-            setScaleEnabled(false)
+            setPinchZoom(true)
+            setScaleEnabled(true)
+            isDoubleTapToZoomEnabled = true
             isDragXEnabled = true
-            isDragYEnabled = false
-            setVisibleXRange(0f, 7f)
+            isDragYEnabled = true
+            setVisibleXRangeMaximum(7f)
         }
         lineChart.invalidate()
     }
@@ -255,7 +256,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             axisMinimum = 0f
             axisMaximum = (dates.size - 1).toFloat()
             valueFormatter = formatter
-            isGranularityEnabled = true
+            granularity = 1f
         }
     }
 
@@ -270,7 +271,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return "${value}km"
+                    return String.format("%.1fkm", value)
                 }
             }
         }
