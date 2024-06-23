@@ -220,6 +220,10 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
+        val calendar = Calendar.getInstance()
+        val today = calendar.get(Calendar.DAY_OF_MONTH) - 1
+        lineChart.moveViewToX(today - 3.toFloat())
+
         lineChart.invalidate()
     }
 
