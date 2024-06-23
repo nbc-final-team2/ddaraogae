@@ -203,7 +203,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
 
-        val dataSet = LineDataSet(entries, "").apply {
+        val dataSet = LineDataSet(entries, "선택한 날짜에 대한 한달 그래프").apply {
             axisDependency = YAxis.AxisDependency.LEFT
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
@@ -230,7 +230,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.isEnabled = false
+            legend.isEnabled = true
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))

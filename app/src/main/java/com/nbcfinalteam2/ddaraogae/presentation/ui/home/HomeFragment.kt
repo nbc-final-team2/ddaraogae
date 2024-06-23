@@ -20,6 +20,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -454,7 +455,7 @@ class HomeFragment : Fragment() {
         val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
-        val dataSet = LineDataSet(entries, "").apply {
+        val dataSet = LineDataSet(entries, "최근 1주일 산책 그래프").apply {
             axisDependency = YAxis.AxisDependency.LEFT
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
@@ -474,7 +475,7 @@ class HomeFragment : Fragment() {
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.isEnabled = false
+            legend.isEnabled = true
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
