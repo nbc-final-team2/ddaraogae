@@ -33,10 +33,14 @@ import com.naver.maps.map.clustering.ClusterMarkerUpdater
 import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.clustering.ClusteringKey
 import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
+import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
+import com.naver.maps.map.clustering.LeafMarkerInfo
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MapConstants
 import com.naver.maps.map.util.MarkerIcons
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
@@ -105,7 +109,7 @@ class WalkFragment : Fragment() {
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
-//    private var clusterer: Clusterer<ItemKey>? = null
+    private var clusterer: Clusterer<ItemKey>? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -362,13 +366,13 @@ class WalkFragment : Fragment() {
         *   클릭시 정보창 띄우기로 변경, 마커 사이즈 줄이기, bound는 어떻게 */
         storeListState.storeList.forEach { store ->
             val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
-            val marker = Marker()
-            val cluster: ClusteringKey
-            marker.icon = OverlayImage.fromResource(R.drawable.spotmarker)
-            marker.width = Marker.SIZE_AUTO
-            marker.height = Marker.SIZE_AUTO
-            marker.position = latLng
-            marker.map = naverMap
+            val marker = Marker().apply {
+                icon = OverlayImage.fromResource(R.drawable.spotmarker)
+                width = Marker.SIZE_AUTO
+                height = Marker.SIZE_AUTO
+                position = latLng
+                map = naverMap
+            }
             markerList.add(marker)
 
             val contentString = """
@@ -393,14 +397,39 @@ class WalkFragment : Fragment() {
                 }
                 true
             }
-
         }
+        clustering()
     }
 
-    private fun cluster() {
+    private fun clustering() {
+        // Clear map of existing markers before clustering
+        markerList.forEach { it.map = null }
+        clusterer = Clusterer.Builder<ItemKey>()
+            .leafMarkerUpdater(object : DefaultLeafMarkerUpdater() {
+                override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
+                    super.updateLeafMarker(info, marker)
+                    marker.icon = ICONS[info.tag as Int]
+                    marker.onClickListener = Overlay.OnClickListener {
+                        clusterer?.remove(info.key as ItemKey)
+                        true
+                    }
+                }
+            })
+            .build()
+            .apply {
+                val keyTagMap = markerList.mapIndexed { index, marker ->
+                    ItemKey(index, marker.position) to index % ICONS.size
+                }.toMap()
 
 
+                addAll(keyTagMap)
+                map = naverMap
+            }
+        // Re-apply markers to the map managed by the clusterer
+        markerList.forEach { it.map = naverMap }
     }
+
+
 
     private fun startLocationService() {
         if (!LocationService.isRunning) {
@@ -488,4 +517,21 @@ class WalkFragment : Fragment() {
     private fun updateTimerText(time: Int) {
         binding.tvWalkTime.text = timeIntToString(time)
     }
+    private class ItemKey(val id: Int, private val position: LatLng) : ClusteringKey {
+        override fun getPosition() = position
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other == null || javaClass != other.javaClass) return false
+            val itemKey = other as ItemKey
+            return id == itemKey.id
+        }
+
+        override fun hashCode() = id
+    }
+
+    companion object {
+        private val ICONS = arrayOf(Marker.DEFAULT_ICON, MarkerIcons.BLUE, MarkerIcons.RED, MarkerIcons.YELLOW)
+    }
 }
+
