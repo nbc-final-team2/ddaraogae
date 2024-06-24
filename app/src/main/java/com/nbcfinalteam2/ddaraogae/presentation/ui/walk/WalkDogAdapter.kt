@@ -34,18 +34,15 @@ class WalkDogAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(item: DogInfo) {
-            with(binding.civWalkDogsItem) {
-                Glide.with(this.context)
-                    .load(item.thumbnailUrl)
-                    .error(R.drawable.ic_dog_default_thumbnail)
-                    .fallback(R.drawable.ic_dog_default_thumbnail)
-                    .into(this)
+            Glide.with(binding.civWalkDogsItem)
+                .load(item.thumbnailUrl)
+                .error(R.drawable.ic_dog_default_thumbnail)
+                .fallback(R.drawable.ic_dog_default_thumbnail)
+                .into(binding.civWalkDogsItem)
 
-                borderColor = ContextCompat.getColor(
-                    this.context,
-                    if (item.isSelected) R.color.very_soft_orange else R.color.dark_grey
-                )
-            }
+            binding.ivCheckBox.setImageResource(
+                if(item.isSelected) R.drawable.ic_check_box_24 else R.drawable.ic_check_box_blank_24
+            )
 
             binding.tvDogName.text = item.name
 
