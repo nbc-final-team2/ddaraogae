@@ -61,7 +61,6 @@ class WalkHistoryMapDialog : DialogFragment() {
                     resource: Drawable, model: Any, target: Target<Drawable>?,
                     dataSource: DataSource, isFirstResource: Boolean
                 ): Boolean {
-                    //Noting to do
                     return false
                 }
 
