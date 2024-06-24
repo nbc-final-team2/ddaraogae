@@ -27,10 +27,17 @@ import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.clustering.Cluster
+import com.naver.maps.map.clustering.ClusterMarkerInfo
+import com.naver.maps.map.clustering.ClusterMarkerUpdater
+import com.naver.maps.map.clustering.Clusterer
+import com.naver.maps.map.clustering.ClusteringKey
+import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
@@ -98,6 +105,7 @@ class WalkFragment : Fragment() {
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
+//    private var clusterer: Clusterer<ItemKey>? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -355,6 +363,7 @@ class WalkFragment : Fragment() {
         storeListState.storeList.forEach { store ->
             val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
             val marker = Marker()
+            val cluster: ClusteringKey
             marker.icon = OverlayImage.fromResource(R.drawable.spotmarker)
             marker.width = Marker.SIZE_AUTO
             marker.height = Marker.SIZE_AUTO
@@ -384,7 +393,13 @@ class WalkFragment : Fragment() {
                 }
                 true
             }
+
         }
+    }
+
+    private fun cluster() {
+
+
     }
 
     private fun startLocationService() {
