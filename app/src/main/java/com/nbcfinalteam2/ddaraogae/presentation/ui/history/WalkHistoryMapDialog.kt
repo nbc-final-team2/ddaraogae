@@ -11,8 +11,12 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.DialogWalkHistoryMapBinding
@@ -44,6 +48,24 @@ class WalkHistoryMapDialog : DialogFragment() {
             .load(walkHistoryMap)
             .error(R.drawable.img_map_default)
             .fallback(R.drawable.img_map_default)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?, model: Any?,
+                    target: Target<Drawable>, isFirstResource: Boolean
+                ): Boolean {
+                    binding.ivShareBtn.visibility = View.GONE
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable, model: Any, target: Target<Drawable>?,
+                    dataSource: DataSource, isFirstResource: Boolean
+                ): Boolean {
+                    //Noting to do
+                    return false
+                }
+
+            })
             .into(binding.ivMap)
     }
 
