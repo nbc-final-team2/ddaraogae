@@ -11,6 +11,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,12 +28,8 @@ import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.clustering.Cluster
-import com.naver.maps.map.clustering.ClusterMarkerInfo
-import com.naver.maps.map.clustering.ClusterMarkerUpdater
 import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.clustering.ClusteringKey
-import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
 import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
 import com.naver.maps.map.clustering.LeafMarkerInfo
 import com.naver.maps.map.overlay.InfoWindow
@@ -40,7 +37,6 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-import com.naver.maps.map.util.MapConstants
 import com.naver.maps.map.util.MarkerIcons
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
@@ -398,35 +394,67 @@ class WalkFragment : Fragment() {
                 true
             }
         }
-        clustering()
+        clustering(markerList)
     }
 
-    private fun clustering() {
+    private val set = mutableSetOf<LeafMarkerInfo>() // 같은것은 추가하지 않기 위함
+    private fun clustering(markerList: MutableList<Marker>) {
         // Clear map of existing markers before clustering
         markerList.forEach { it.map = null }
-        clusterer = Clusterer.Builder<ItemKey>()
-            .leafMarkerUpdater(object : DefaultLeafMarkerUpdater() {
-                override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
-                    super.updateLeafMarker(info, marker)
-                    marker.icon = ICONS[info.tag as Int]
-                    marker.onClickListener = Overlay.OnClickListener {
-                        clusterer?.remove(info.key as ItemKey)
-                        true
+        if (clusterer == null) {
+            clusterer = Clusterer.Builder<ItemKey>()
+//                .clusterMarkerUpdater { clusterMarkerInfo, marker -> // 사라졌을때!!!
+//                    Log.d("clusterMarkerupdater", "clusterMarkerupdater, ${marker.position}")
+//                    set.removeIf { it.position == clusterMarkerInfo.position }
+////                    markerList.filterNot {
+//////                        it.position in set.map { s -> s.position }
+//////                    }.forEach { it.map = naverMap }
+//                    markerList.forEach { it.map = naverMap }
+//                }
+                .leafMarkerUpdater(object : DefaultLeafMarkerUpdater() {
+                    override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) { // info를 제공하니까 정보를 넣어라
+                        super.updateLeafMarker(info, marker)
+                        Log.d("updateLeafMArk", "updateLeafMArk ${info.position}, ${info.minZoom}, ${info.maxZoom}") // 이때 클러스터마커가 생성됨, 기존 마커리스트를 제거해줘야
+                        marker.icon = ICONS[info.tag as Int]
+                        marker.position = info.position
+                        marker.onClickListener = Overlay.OnClickListener {
+//                            clusterer?.remove(info.key as ItemKey)
+                            true
+                        }
+                        set.add(info)
+                        markerList.forEach { it.map = null }
+//                        markerList.filterNot {
+//                            Log.d("filternot", "filternot ${it.position}, markertag ${marker.position}")
+//                            it.position == info.position
+//                        }
+//                            .forEach {it.map = naverMap}
+                        markerList.filterNot {
+                            it.position in set.map { s -> s.position }
+                        }.forEach { it.map = naverMap }
                     }
-                }
-            })
-            .build()
-            .apply {
-                val keyTagMap = markerList.mapIndexed { index, marker ->
-                    ItemKey(index, marker.position) to index % ICONS.size
-                }.toMap()
+                })
+                .build()
+        }
+        // 총 2개
+        // 클러스터된 마커리스트를 따로 만들어라.
+        // 노란색 마커를 클러스터된 마커리스트에 넣어야됨, 확대 처리 축소 처리
+        // 확대되었을땐 갈색을 없애고, 축소했을때 클러스터 마커가 보여져야함
 
+        //
+        clusterer?.clear()
 
-                addAll(keyTagMap)
-                map = naverMap
-            }
+        val keyTagMap = this.markerList.mapIndexed { index, marker ->
+            ItemKey(index, marker.position) to index % ICONS.size
+        }.toMap()
+        Log.d("keyTagMap", keyTagMap.size.toString())
+        clusterer?.addAll(keyTagMap)
+        clusterer?.map = naverMap
+
         // Re-apply markers to the map managed by the clusterer
-        markerList.forEach { it.map = naverMap }
+//        markerList.forEach { it.map = naverMap }
+//        markerList.forEach {
+
+//        }
     }
 
 
