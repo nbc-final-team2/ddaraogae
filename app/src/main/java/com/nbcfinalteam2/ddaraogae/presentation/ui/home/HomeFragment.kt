@@ -51,7 +51,6 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private var window: Window? = null
 
     private val dogProfileAdapter: DogProfileAdapter by lazy {
         DogProfileAdapter { item ->
@@ -89,23 +88,17 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        window = activity?.window
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        changeForAppStatusBar()
         setupWalkGraphForEmptyData()
         setupListener()
         setupAdapter()
         initViewModels()
         checkLocationPermissions()
-    }
-
-    private fun changeForAppStatusBar() {
-        window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.bg_grey)
     }
 
     private fun initViewModels() {
@@ -538,8 +531,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
-        window = null
         _binding = null
     }
 }
