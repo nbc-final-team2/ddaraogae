@@ -21,7 +21,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.DialogWalkHistoryMapBinding
 import java.io.File
-import java.util.UUID
 
 class WalkHistoryMapDialog : DialogFragment() {
     private var _binding: DialogWalkHistoryMapBinding? = null
