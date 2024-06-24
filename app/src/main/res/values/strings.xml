@@ -66,6 +66,12 @@
     <string name="home_history_dialog_month_11">11월</string>
     <string name="home_history_dialog_month_12">12월</string>
 
+    <!-- home - history - dialog -->
+    <string name="home_history_dialog_map_content">따라오개에서 산책 이력을 공유해요!</string>
+    <string name="home_history_dialog_map_chooser">공유하기</string>
+    <string name="home_history_dialog_map_fail_message">공유하기에 실패했어요.</string>
+
+
     <!-- home - history - walk - adapter-->
     <string name="home_history_walk_adapter_km">km</string>
     <string name="home_history_walk_adapter_minute">분</string>
