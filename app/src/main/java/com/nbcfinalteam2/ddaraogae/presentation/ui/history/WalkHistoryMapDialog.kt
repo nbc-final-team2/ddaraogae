@@ -31,8 +31,8 @@ class WalkHistoryMapDialog : DialogFragment() {
     private fun setupView() {
         Glide.with(this)
             .load(walkHistoryMap)
-            .error(R.drawable.login_google)
-            .fallback(R.drawable.img_sample_mini_map)
+            .error(R.drawable.img_map_default)
+            .fallback(R.drawable.img_map_default)
             .into(binding.ivMap)
     }
 
