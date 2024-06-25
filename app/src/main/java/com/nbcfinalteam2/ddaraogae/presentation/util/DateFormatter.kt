@@ -95,11 +95,11 @@ object DateFormatter {
         val hours = minutes / 60
 
         return when {
-//            hours < 1 -> {
-//                "$minutes 분 전"
-//            }
-            else -> {
+            hours < 1 -> {
                 "$hours 시간 전"
+            }
+            else -> {
+                "에러"
             }
         }
     }
