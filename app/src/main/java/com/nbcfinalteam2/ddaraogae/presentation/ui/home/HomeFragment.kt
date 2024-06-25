@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
 
     private fun initViewModels() {
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogList ->
                     dogProfileAdapter.submitList(dogList)
@@ -109,7 +109,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogData ->
                     if (dogData != null) {
@@ -119,7 +119,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { walkData ->
                     if (walkData.isEmpty()) {
@@ -132,21 +132,21 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { weatherInfo ->
                     updateWeatherUI(weatherInfo)
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.refreshDogList()
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.stampProgressState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { progress ->
                     binding.progressbarWalkStampRate.progress = progress
@@ -154,7 +154,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -164,7 +164,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.updateDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -174,7 +174,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadWalkDataEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -184,7 +184,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -200,7 +200,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadStampEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -210,7 +210,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             itemChangedEventBus.stampChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.loadStampProgress()
