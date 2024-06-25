@@ -59,7 +59,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         setupAdapter()
         setupListener()
         setupViewModels()
-        getDogInfo()
     }
 
     private fun uiSetting() {
