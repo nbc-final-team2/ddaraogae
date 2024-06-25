@@ -125,12 +125,6 @@ class FinishActivity : FragmentActivity() {
                     itemChangedEventBus.notifyStampChanged()
                     val dialogFragment = StampDialogFragment.newInstance(ArrayList(list))
                     dialogFragment.isCancelable = false
-                    dialogFragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
-                        override fun onDestroy(owner: LifecycleOwner) {
-                            super.onDestroy(owner)
-                            finish()
-                        }
-                    })
                     dialogFragment.show(supportFragmentManager, ARG_STAMP_LIST)
                 } else {
                     // 받을 스탬프가 없을 때
