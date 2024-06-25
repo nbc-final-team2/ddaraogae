@@ -260,4 +260,8 @@
     <string name="fine_dust_status_very_bad">매우나쁨</string>
     <string name="msg_edit_fail">수정사항 업데이트에 실패했습니다</string>
 
+    <!-- finish  -->
+    <string name="finish_dialog_msg">이대로 나가면 산책 결과가 저장되지 않습니다.\n그래도 나가시겠습니까?</string>
+    <string name="finish_dialog_confirm">확인</string>
+    <string name="finish_dialog_cancel">취소</string>
 </resources>

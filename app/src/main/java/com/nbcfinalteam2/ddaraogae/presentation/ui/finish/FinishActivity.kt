@@ -66,10 +66,10 @@ class FinishActivity : FragmentActivity() {
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             AlertDialog.Builder(this@FinishActivity)
-                .setMessage("이대로 나가면 산책 결과가 저장되지 않습니다.\n그래도 나가시겠습니까?")
-                .setPositiveButton("확인") { _, _ ->
+                .setMessage(getString(R.string.finish_dialog_msg))
+                .setPositiveButton(getString(R.string.finish_dialog_confirm)) { _, _ ->
                     finish()
-                }.setNegativeButton("취소") { _, _ -> }
+                }.setNegativeButton(getString(R.string.finish_dialog_cancel)) { _, _ -> }
                 .show()
         }
 
