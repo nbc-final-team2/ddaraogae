@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -265,5 +266,16 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 }
             }
         }
+    }
+
+    private fun setupWalkHistoryEndless() {
+        binding.rvWalkHistoryArea.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!binding.rvWalkHistoryArea.canScrollVertically(1)) {
+                    // 뷰모델
+                }
+            }
+        })
     }
 }
