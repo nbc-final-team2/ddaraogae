@@ -4,4 +4,5 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     alias(libs.plugins.googleGmsGoogleService) apply false
     alias(libs.plugins.googleDaggerHiltAndroid) apply false
+    alias(libs.plugins.firebaseCrachlytics) apply false
 }
