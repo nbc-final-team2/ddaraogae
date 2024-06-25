@@ -108,6 +108,10 @@ dependencies {
     // FusedLocationSource
     implementation(libs.play.services.location)
 
+    //viewPager2 & indicator
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.dotsindicator)
+
     //Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -130,8 +134,6 @@ dependencies {
     implementation("com.google.gms:google-services:4.4.2")
     //splash
     implementation("androidx.core:core-splashscreen:1.0.1")
-
-
 }
 
 kapt {
