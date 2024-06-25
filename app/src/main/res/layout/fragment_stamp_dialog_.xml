@@ -5,14 +5,15 @@
     android:id="@+id/cl_walk_finish_stamp_outer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/rec_dialog"
     android:padding="@dimen/margin_medium"
     tools:context=".presentation.ui.finish.StampDialogFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_walk_finish_stamp_inner"
-        android:layout_width="300dp"
-        android:layout_height="340dp"
-        android:padding="@dimen/margin_small"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,8 +21,9 @@
 
         <TextView
             android:id="@+id/tv_walk_finish_stamp_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/walk_finish_stamp"
             android:textSize="@dimen/text_text"
             android:textStyle="bold"
@@ -53,7 +55,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_stamp_done"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
             android:background="@drawable/bg_btn_edit"
@@ -63,9 +65,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/di_walk_finish_stamp_list" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/di_walk_finish_stamp_list"
+            tools:ignore="VisualLintButtonSize" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
