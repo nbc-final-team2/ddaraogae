@@ -98,6 +98,7 @@ class WalkFragment : Fragment() {
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
+    var infoWindowBackup : InfoWindow? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -379,10 +380,17 @@ class WalkFragment : Fragment() {
             marker.setOnClickListener {
                 if (infoWindow.isAdded) {
                     infoWindow.close()
+                    true
                 } else {
                     infoWindow.open(marker)
+                    if (infoWindowBackup == null) {
+                        infoWindowBackup = infoWindow
+                    } else {
+                        infoWindowBackup!!.close()
+                        infoWindowBackup = infoWindow
+                    }
+                    true
                 }
-                true
             }
         }
     }
