@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/iv_item_stamp"
-        android:layout_width="150sp"
-        android:layout_height="150sp"
+        android:layout_width="120sp"
+        android:layout_height="120sp"
         android:src="@drawable/ic_stamp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +18,7 @@
         android:id="@+id/tv_item_stamp_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginTop="@dimen/margin_extra_smaller"
         android:text="@string/walk_finish_stamp1"
         app:layout_constraintEnd_toEndOf="@+id/iv_item_stamp"
         app:layout_constraintStart_toStartOf="@+id/iv_item_stamp"
