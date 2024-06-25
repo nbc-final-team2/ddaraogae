@@ -85,8 +85,10 @@ object DateFormatter {
     }
 
     fun getCurrentTimeAgo(): String {
-        val currentTime = Date().time
-        val timeDifference = currentTime - Date().time
+        val now: Long = System.currentTimeMillis()
+        // 현재 시간을 Date 타입으로 변환
+        val date = Date(now)
+        val timeDifference = now - date.time
 
         val seconds = timeDifference / 1000
         val minutes = seconds / 60
