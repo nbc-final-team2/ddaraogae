@@ -300,7 +300,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     if(it.isLoading) {
@@ -319,14 +319,14 @@ class WalkFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             walkViewModel.dogSelectionState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     walkDogAdapter.submitList(it.dogList)
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             walkViewModel.walkEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when(event) {
