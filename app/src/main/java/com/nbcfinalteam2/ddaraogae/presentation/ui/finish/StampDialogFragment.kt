@@ -38,8 +38,9 @@ class StampDialogFragment : DialogFragment() {
 
         val stampList: ArrayList<StampEntity>? = arguments?.getParcelableArrayList(ARG_STAMP_LIST)
 
-        val adapter = stampList?.let { FinishStampAdapter(it) }
-        binding.rvWalkFinishStampList.adapter = adapter
+        val adapter = stampList?.let { FinishStampViewPagerAdapter(it) }
+        binding.vpWalkFinishStampList.adapter = adapter
+        binding.diWalkFinishStampList.attachTo(binding.vpWalkFinishStampList)
 
         binding.btnStampDone.setOnClickListener {
             dismiss()
