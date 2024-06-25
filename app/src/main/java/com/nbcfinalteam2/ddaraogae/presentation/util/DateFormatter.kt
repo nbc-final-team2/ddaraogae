@@ -83,4 +83,22 @@ object DateFormatter {
         val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
         return format.format(walkEndTime)
     }
+
+    fun getCurrentTimeAgo(): String {
+        val currentTime = Date().time
+        val timeDifference = currentTime - Date().time
+
+        val seconds = timeDifference / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+
+        return when {
+//            hours < 1 -> {
+//                "$minutes 분 전"
+//            }
+            else -> {
+                "$hours 시간 전"
+            }
+        }
+    }
 }

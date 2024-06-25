@@ -8,6 +8,7 @@
 
     <!-- home -->
     <string name="home_title">반가워요!</string>
+    <string name="home_before_time">몇시간전</string>
     <string name="home_walk_graph_title">금주 산책 이력</string>
     <string name="home_weather_title">오늘의 날씨</string>
     <string name="home_weather_location">홍성군</string>

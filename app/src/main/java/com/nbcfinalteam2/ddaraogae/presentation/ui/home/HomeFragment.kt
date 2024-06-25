@@ -315,6 +315,7 @@ class HomeFragment : Fragment() {
             tvTodayWeatherTime.visibility = View.VISIBLE
             tvWeatherData.visibility = View.GONE
             tvTodayWeatherTime.text = DateFormatter.getTodayDate()
+            tvBeforetime.text = DateFormatter.getCurrentTimeAgo()
         }
     }
 
