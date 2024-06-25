@@ -22,6 +22,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -191,6 +193,8 @@ class WalkFragment : Fragment() {
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
 //            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
+            naverMap.minZoom = 7.0
+            naverMap.maxZoom = 18.0
 
             // 카메라 설정
             lifecycleScope.launch {
