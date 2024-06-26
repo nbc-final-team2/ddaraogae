@@ -10,7 +10,9 @@ import android.graphics.Typeface
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
+import com.nbcfinalteam2.ddaraogae.R
 import jp.wasabeef.glide.transformations.BitmapTransformation
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -32,7 +34,7 @@ class WalkingImageTransformation(private val timeTaken: String, private val dist
         val textPaint = TextPaint(paint)
         textPaint.textSize = 40f
         textPaint.typeface = Typeface.DEFAULT_BOLD
-        textPaint.color = Color.BLACK
+        textPaint.color = Color.WHITE
         textPaint.textAlign = Paint.Align.RIGHT
 
         // 위치 설정
@@ -52,7 +54,7 @@ class WalkingImageTransformation(private val timeTaken: String, private val dist
 
         //텍스트 배경 그리기
         val backgroundPaint = Paint()
-        backgroundPaint.color = Color.WHITE
+        backgroundPaint.color = ContextCompat.getColor(context, R.color.light_brown)
         backgroundPaint.alpha = 255
 
         val timeTakenRect = RectF(
