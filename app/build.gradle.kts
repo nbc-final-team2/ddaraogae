@@ -69,7 +69,7 @@ dependencies {
 
     // Glide
     implementation (libs.glide)
-    implementation("jp.wasabeef:glide-transformations:4.3.0")
+    implementation(libs.glide.transformations)
     annotationProcessor(libs.glide.compiler)
 
     // MPAndroidChart
