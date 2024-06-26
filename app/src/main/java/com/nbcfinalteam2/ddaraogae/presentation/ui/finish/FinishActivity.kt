@@ -34,7 +34,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.StampDialogFragment.Co
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
-import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -170,7 +170,7 @@ class FinishActivity : FragmentActivity() {
 
             //산책 시간
             tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
-                timeIntToString(it)
+                timeIntToStringForWalk(it)
             }
 
             //산책 거리

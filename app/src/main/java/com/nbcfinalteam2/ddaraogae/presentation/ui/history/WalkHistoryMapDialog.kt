@@ -20,12 +20,18 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.DialogWalkHistoryMapBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForHistory
 import java.io.File
 
 class WalkHistoryMapDialog : DialogFragment() {
     private var _binding: DialogWalkHistoryMapBinding? = null
     private val binding get() = _binding!!
+    private var walkInfo: WalkingInfo? = null
     private var walkHistoryMap: String? = null
+    private var timeTaken = ""
+    private var distance = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +51,7 @@ class WalkHistoryMapDialog : DialogFragment() {
     private fun setupView() {
         Glide.with(this)
             .load(walkHistoryMap)
+            .transform(TextOverlayTransformation(timeTaken, distance))
             .error(R.drawable.img_map_default)
             .fallback(R.drawable.img_map_default)
             .listener(object : RequestListener<Drawable> {
@@ -79,9 +86,11 @@ class WalkHistoryMapDialog : DialogFragment() {
 
         val imageFile = File(sharedImagesDir, "history_image.jpg")
 
+
         Glide.with(this)
             .asBitmap()
             .load(walkHistoryMap)
+            .transform(TextOverlayTransformation(timeTaken, distance))
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
             .into(object : CustomTarget<Bitmap>() {
@@ -100,7 +109,6 @@ class WalkHistoryMapDialog : DialogFragment() {
                         val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
                             type = "image/jpeg"
                             putParcelableArrayListExtra(Intent.EXTRA_STREAM, arrayListOf(imageUri))
-                            putExtra(Intent.EXTRA_TEXT, getString(R.string.home_history_dialog_map_content))
                             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         }
 
@@ -116,8 +124,11 @@ class WalkHistoryMapDialog : DialogFragment() {
             })
     }
 
-    fun setEnlargementOfImage(image: String) {
-        walkHistoryMap = image
+    fun setInfo(walk: WalkingInfo) {
+        walkInfo = walk
+        walkHistoryMap = walk.walkingImage
+        timeTaken = timeIntToStringForHistory(walkInfo?.timeTaken ?: 0)
+        distance = distanceDoubleToString(walkInfo?.distance ?: 0.0)
     }
 
     override fun onDestroyView() {
