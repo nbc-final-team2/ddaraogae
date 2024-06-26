@@ -73,6 +73,7 @@ class HistoryViewModel @Inject constructor(
                         walkingImage = it.walkingImage
                     )
                 }.sortedByDescending { it.startDateTime }
+                // 초기데이터를 한번만 가져오고 loadMore를 따로 함수로 뺼것 ( usecase호출 )
 
                 if (reset) {
                     _walkListState.value = walkInfo.take(pageSize)
