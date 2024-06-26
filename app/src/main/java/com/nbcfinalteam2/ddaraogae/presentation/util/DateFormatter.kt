@@ -87,7 +87,7 @@ object DateFormatter {
 
     fun getCurrentTimeAgo(date: Date?): String {
         if (date == null) {
-            return "" // 시간에 대한 정보가 없을때는 아무것도 보여주지 않기 위함.
+            return "최근에 산책한 기록이 없어요!" // 시간에 대한 정보가 없을때는 아무것도 보여주지 않기 위함.
         }
         val now: Long = System.currentTimeMillis()
         val nowDate = Date(now) // 현재 시간을 Date 타입으로 변환
@@ -104,7 +104,7 @@ object DateFormatter {
                 "$hours 시간 전"
             }
             else -> {
-                "에러"
+                ""
             }
         }
     }
