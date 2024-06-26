@@ -43,16 +43,30 @@
                 app:layout_constraintStart_toEndOf="@id/tv_time"
                 android:layout_marginStart="@dimen/margin_small" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/sc_on_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                app:thumbTint="@color/orange"
+<!--            <androidx.appcompat.widget.SwitchCompat-->
+<!--                android:id="@+id/sc_on_off"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:checked="false"-->
+<!--                app:thumbTint="@color/orange"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                android:layout_marginEnd="@dimen/margin_small" />-->
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_delete_button"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1"
+                app:srcCompat="@drawable/ic_delete_24"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="@dimen/margin_small" />
+                android:padding="@dimen/padding_small"
+                android:background="@color/red"
+                android:layout_margin="@dimen/margin_medium" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
