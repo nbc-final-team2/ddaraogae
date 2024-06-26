@@ -54,12 +54,14 @@
         app:layout_constraintBottom_toTopOf="@id/vw_app_bar_line" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_alarm_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/vw_app_bar_line"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_alarm"/>
 
 

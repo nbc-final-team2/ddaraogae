@@ -17,7 +17,7 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun insertAlarm(alarmEntity: AlarmEntity) {
         alarmDataSource.insertAlarm(
-            stringPreferencesKey(alarmEntity.id.toString()),
+            stringPreferencesKey(alarmEntity.id),
             gson.toJson(alarmEntity.toPreference())
         )
     }
@@ -32,14 +32,14 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun updateAlarm(alarmEntity: AlarmEntity) {
         alarmDataSource.updateAlarm(
-            stringPreferencesKey(alarmEntity.id.toString()),
+            stringPreferencesKey(alarmEntity.id),
             gson.toJson(alarmEntity.toPreference())
         )
     }
 
-    override suspend fun deleteAlarm(alarmId: Long) {
+    override suspend fun deleteAlarm(alarmId: String) {
         alarmDataSource.deleteAlarm(
-            stringPreferencesKey(alarmId.toString())
+            stringPreferencesKey(alarmId)
         )
     }
 }

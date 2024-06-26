@@ -4,5 +4,10 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.AlarmModel
 
 data class AlarmUiState(
     val alarmList: List<AlarmModel>
-    val
-)
+) {
+    companion object {
+        fun init() = AlarmUiState(
+            alarmList = emptyList()
+        )
+    }
+}

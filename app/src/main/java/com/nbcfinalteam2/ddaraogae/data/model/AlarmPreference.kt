@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class AlarmPreference(
-    val id: Long,
+    val id: String,
     val setTime: Int
 ): Parcelable

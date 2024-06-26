@@ -260,4 +260,9 @@
     <string name="fine_dust_status_very_bad">매우나쁨</string>
     <string name="msg_edit_fail">수정사항 업데이트에 실패했습니다</string>
 
+    <!-- alarm -->
+    <string name="alarm_am">오전</string>
+    <string name="alarm_pm">오후</string>
+    <string name="alarm_time_text">%2d:%2d</string>
+
 </resources>
