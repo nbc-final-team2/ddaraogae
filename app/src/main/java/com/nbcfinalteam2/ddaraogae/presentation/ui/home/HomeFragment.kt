@@ -120,7 +120,8 @@ class HomeFragment : Fragment() {
                     }
                 }
         }
-
+        
+        lifecycleScope.launch {
             homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogData ->
                     if (dogData != null) {
