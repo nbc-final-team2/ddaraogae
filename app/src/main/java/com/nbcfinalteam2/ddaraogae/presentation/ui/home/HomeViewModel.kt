@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +37,9 @@ class HomeViewModel @Inject constructor(
 
     private val _selectDogState = MutableStateFlow<DogInfo?>(null)
     val selectDogState = _selectDogState.asStateFlow()
+
+    private val _selectDogWithTimeState = MutableStateFlow<String?>(null)
+    val selectDogWithTimeState = _selectDogWithTimeState.asStateFlow()
 
     private val _walkListState = MutableStateFlow<List<WalkingInfo>>(emptyList())
     val walkListState = _walkListState.asStateFlow()
@@ -156,6 +160,7 @@ class HomeViewModel @Inject constructor(
                             walkingImage = it.walkingImage
                         )
                     }
+                    _selectDogWithTimeState.value = DateFormatter.getCurrentTimeAgo(walkInfo.lastOrNull()?.endDateTime) // last일 경우 위에 if문을 넣어서 리스트에 아무것도 없을 경우 대비 or lastOrNull 넣기
                     _walkListState.value = walkInfo
                     _loadWalkDataEvent.emit(DefaultEvent.Success)
                 }
