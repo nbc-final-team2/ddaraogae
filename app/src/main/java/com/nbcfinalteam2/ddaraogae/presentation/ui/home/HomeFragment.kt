@@ -115,7 +115,7 @@ class HomeFragment : Fragment() {
             homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { endDateTime ->
                     if (endDateTime != null) { // if문이 이래서 lastOrNull 쓰는게 좋다.
-                        binding.tvBeforetime.text = "${endDateTime}"
+                        binding.tvBeforetime.text = "$endDateTime"
                         homeViewModel.loadSelectedDogWalkGraph()
                     }
                 }
