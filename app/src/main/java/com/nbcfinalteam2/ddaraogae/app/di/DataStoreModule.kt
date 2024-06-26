@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
@@ -20,7 +19,7 @@ private const val ALARM_PREFERENCE_NAME = "alarm_preferences"
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
 
-    private val Context.alarmDataStore by preferencesDataStore(name = ALARM_PREFERENCE_NAME)
+//    private val Context.alarmDataStore by preferencesDataStore(name = ALARM_PREFERENCE_NAME)
 
     @Provides
     @Singleton
