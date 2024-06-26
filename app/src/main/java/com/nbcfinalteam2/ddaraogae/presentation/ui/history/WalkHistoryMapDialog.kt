@@ -32,6 +32,7 @@ class WalkHistoryMapDialog : DialogFragment() {
     private var walkHistoryMap: String? = null
     private var timeTaken = ""
     private var distance = ""
+    private var dogName = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +52,7 @@ class WalkHistoryMapDialog : DialogFragment() {
     private fun setupView() {
         Glide.with(this)
             .load(walkHistoryMap)
-            .transform(TextOverlayTransformation(timeTaken, distance))
+            .transform(WalkingImageTransformation(timeTaken, distance, dogName))
             .error(R.drawable.img_map_default)
             .fallback(R.drawable.img_map_default)
             .listener(object : RequestListener<Drawable> {
@@ -90,7 +91,7 @@ class WalkHistoryMapDialog : DialogFragment() {
         Glide.with(this)
             .asBitmap()
             .load(walkHistoryMap)
-            .transform(TextOverlayTransformation(timeTaken, distance))
+            .transform(WalkingImageTransformation(timeTaken, distance, dogName))
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
             .into(object : CustomTarget<Bitmap>() {
@@ -124,11 +125,12 @@ class WalkHistoryMapDialog : DialogFragment() {
             })
     }
 
-    fun setInfo(walk: WalkingInfo) {
+    fun setInfo(walk: WalkingInfo, name: String) {
         walkInfo = walk
         walkHistoryMap = walk.walkingImage
         timeTaken = timeIntToStringForHistory(walkInfo?.timeTaken ?: 0)
         distance = distanceDoubleToString(walkInfo?.distance ?: 0.0)
+        dogName = name
     }
 
     override fun onDestroyView() {

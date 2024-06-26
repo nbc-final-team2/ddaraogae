@@ -102,7 +102,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         walkHistoryAdapter = WalkHistoryAdapter(
             onMapClick = { walkingInfo ->
                 val dialog = WalkHistoryMapDialog()
-                dialog.setInfo(walkingInfo)
+                dialog.setInfo(walkingInfo, dogInfo.name ?: "")
                 dialog.show(supportFragmentManager, "")
             }
         )

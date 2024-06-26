@@ -15,7 +15,7 @@ import jp.wasabeef.glide.transformations.BitmapTransformation
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
-class TextOverlayTransformation(private val timeTaken: String, private val distance: String) : BitmapTransformation() {
+class WalkingImageTransformation(private val timeTaken: String, private val distance: String, private val dogName: String) : BitmapTransformation() {
     override fun transform(
         context: Context,
         pool: BitmapPool,
@@ -38,11 +38,14 @@ class TextOverlayTransformation(private val timeTaken: String, private val dista
         // 위치 설정
         val timeTakenWidth = getTextWidth(timeTaken, textPaint)
         val distanceWidth = getTextWidth(distance, textPaint)
+        val dogNameWidth = getTextWidth(dogName, textPaint)
 
         val timeTakenX = result.width - 50f // 오른쪽 여백
         val timeTakenY = textPaint.textSize + 30f // 상단 여백
         val distanceX = result.width - 50f
         val distanceY = timeTakenY + textPaint.textSize + 30f
+        val dogNameX = result.width - 50f
+        val dogNameY = distanceY + textPaint.textSize + 30f
 
         //이미지 그리기
         canvas.drawBitmap(toTransform, 0f, 0f, null)
@@ -68,9 +71,18 @@ class TextOverlayTransformation(private val timeTaken: String, private val dista
         )
         canvas.drawRect(distanceRect, backgroundPaint)
 
+        val nameRect = RectF(
+            dogNameX - dogNameWidth - 10f,
+            dogNameY - textPaint.textSize - 5f,
+            dogNameX + 10f,
+            dogNameY + 10f
+        )
+        canvas.drawRect(nameRect, backgroundPaint)
+
         //텍스트 그리기
         canvas.drawText(timeTaken, timeTakenX, timeTakenY, textPaint)
         canvas.drawText(distance, distanceX, distanceY, textPaint)
+        canvas.drawText(dogName, dogNameX, dogNameY, textPaint)
 
         return result
     }
@@ -95,7 +107,7 @@ class TextOverlayTransformation(private val timeTaken: String, private val dista
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as TextOverlayTransformation
+        other as WalkingImageTransformation
 
         if (distance != other.distance) return false
         if (timeTaken != other.timeTaken) return false
