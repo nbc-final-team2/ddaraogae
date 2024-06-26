@@ -44,6 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.DateFormat
 import java.util.Date
 import javax.inject.Inject
 
@@ -107,6 +108,16 @@ class HomeFragment : Fragment() {
                 .collectLatest { dogList ->
                     dogProfileAdapter.submitList(dogList)
                     changeDogPortrait(dogList)
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { endDateTime ->
+                    if (endDateTime != null) { // if문이 이래서 lastOrNull 쓰는게 좋을것같다
+                        binding.tvBeforetime.text = "${endDateTime}"
+                        homeViewModel.loadSelectedDogWalkGraph()
+                    }
                 }
         }
 
@@ -316,7 +327,7 @@ class HomeFragment : Fragment() {
             tvTodayWeatherTime.visibility = View.VISIBLE
             tvWeatherData.visibility = View.GONE
             tvTodayWeatherTime.text = DateFormatter.getTodayDate()
-            tvBeforetime.text = DateFormatter.getCurrentTimeAgo()
+
         }
     }
 
