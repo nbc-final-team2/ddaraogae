@@ -1,10 +1,13 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.history
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
@@ -14,7 +17,8 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(
-            ItemHomeHistoryWalkBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemHomeHistoryWalkBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            parent.context
         )
     }
 
@@ -26,7 +30,10 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
         return currentList.size
     }
 
-    class ViewHolder(private val binding: ItemHomeHistoryWalkBinding) :
+    class ViewHolder(
+        private val binding: ItemHomeHistoryWalkBinding,
+        private val context: Context
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
             with(binding) {
@@ -49,6 +56,12 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
                     minutes > 0 -> String.format("%d분 %d초", minutes, seconds)
                     else -> String.format("%d초", seconds)
                 } // "home_history_walk_adapter_minute"
+
+                Glide.with(context)
+                    .load(item.walkingImage)
+                    .error(R.drawable.ic_x)
+                    .fallback(R.drawable.ic_x)
+                    .into(ivWalkMap)
 
                 ivWalkMap.setOnClickListener {
                     onMapClick(item.walkingImage ?: "")
