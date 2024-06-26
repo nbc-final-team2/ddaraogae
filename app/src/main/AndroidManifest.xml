@@ -73,7 +73,7 @@
         </activity>
         <activity
             android:name=".presentation.ui.alarm.AlarmActivity"
-            android:exported="false"/>
+            android:exported="true"/>
 
         <service
             android:name=".presentation.service.LocationService"

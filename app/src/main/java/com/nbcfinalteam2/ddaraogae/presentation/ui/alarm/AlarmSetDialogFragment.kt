@@ -12,7 +12,9 @@ import com.nbcfinalteam2.ddaraogae.databinding.FragmentAlarmSetDialogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AlarmSetDialogFragment(): DialogFragment() {
+class AlarmSetDialogFragment(
+    private val alarmDialogButtonListener: AlarmDialogButtonListener
+): DialogFragment() {
 
     private var _binding: FragmentAlarmSetDialogBinding? = null
     private val binding: FragmentAlarmSetDialogBinding get() = _binding!!
@@ -30,11 +32,26 @@ class AlarmSetDialogFragment(): DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.btnConfirm.setOnClickListener {
+            alarmDialogButtonListener.onPositiveButtonClicked(
+                binding.tpAlarm.hour*60 + binding.tpAlarm.minute
+            )
+            dismiss()
+        }
+        binding.btnCancel.setOnClickListener {
+            alarmDialogButtonListener.onNegativeButtonClicked()
+            dismiss()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    interface AlarmDialogButtonListener {
+        fun onPositiveButtonClicked(time: Int)
+        fun onNegativeButtonClicked()
+    }
+
 }

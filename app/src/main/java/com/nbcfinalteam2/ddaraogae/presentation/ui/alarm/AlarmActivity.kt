@@ -24,7 +24,16 @@ class AlarmActivity: AppCompatActivity() {
         uiSetting()
 
         binding.tvAddAlarm.setOnClickListener {
-            val alarmDialog = AlarmSetDialogFragment()
+            val alarmDialog = AlarmSetDialogFragment(object : AlarmSetDialogFragment.AlarmDialogButtonListener {
+                override fun onPositiveButtonClicked(time: Int) {
+                    println(time)
+                }
+
+                override fun onNegativeButtonClicked() {
+                }
+
+            })
+
             alarmDialog.show(
                 supportFragmentManager, "Dialog"
             )
