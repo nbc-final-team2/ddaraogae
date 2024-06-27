@@ -12,6 +12,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByPeriodUseCase
@@ -185,4 +187,10 @@ abstract class UseCaseModule {
     abstract fun bindCheckStampConditionUseCase(
         checkStampConditionUseCaseImpl: CheckStampConditionUseCaseImpl
     ): CheckStampConditionUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGetStampInfoListUseCase(
+        getStampInfoListUseCaseImpl: GetStampInfoListUseCaseImpl
+    ): GetStampInfoListUseCase
 }
