@@ -7,6 +7,7 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAlarmUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetAlarmListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertAlarmUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateAlarmUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmController
 import com.nbcfinalteam2.ddaraogae.presentation.model.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,8 @@ class AlarmViewModel @Inject constructor(
     private val insertAlarmUseCase: InsertAlarmUseCase,
     private val getAlarmListUseCase: GetAlarmListUseCase,
     private val updateAlarmUseCase: UpdateAlarmUseCase,
-    private val deleteAlarmUseCase: DeleteAlarmUseCase
+    private val deleteAlarmUseCase: DeleteAlarmUseCase,
+    private val alarmController: AlarmController
 ): ViewModel() {
 
     private val _alarmUiState = MutableStateFlow(AlarmUiState.init())
@@ -49,9 +51,11 @@ class AlarmViewModel @Inject constructor(
 
     fun insertAlarm(setTime: Int) = viewModelScope.launch {
         runCatching {
-            insertAlarmUseCase(
+            val id = insertAlarmUseCase(
                 AlarmEntity(-1, setTime)
             )
+
+            alarmController.setAlarm(id, setTime)
         }
     }
 

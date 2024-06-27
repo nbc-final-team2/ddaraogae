@@ -13,14 +13,16 @@ import kotlin.random.Random
 class AlarmDataSourceImpl @Inject constructor(
     private val alarmPreferencesStore: DataStore<Preferences>
 ): AlarmDataSource {
-    override suspend fun insertAlarm(alarmEntity: AlarmEntity) {
+    override suspend fun insertAlarm(alarmEntity: AlarmEntity): Int {
+        var key = Random.nextInt(100000)
         alarmPreferencesStore.edit { preferences ->
-            var key = Random.nextInt(100000)
             while(preferences.contains(stringPreferencesKey(key.toString()))) {
                 key = Random.nextInt(100000)
             }
             preferences[stringPreferencesKey(key.toString())] = AlarmMapper.entityToJson(alarmEntity.copy(id = key))
         }
+
+        return key
     }
 
     override fun getAlarmList(): Flow<Preferences> {

@@ -4,7 +4,7 @@ import com.nbcfinalteam2.ddaraogae.domain.entity.AlarmEntity
 import kotlinx.coroutines.flow.Flow
 
 interface AlarmRepository {
-    suspend fun insertAlarm(alarmEntity: AlarmEntity)
+    suspend fun insertAlarm(alarmEntity: AlarmEntity): Int
     fun getAlarmList(): Flow<List<AlarmEntity>>
     suspend fun updateAlarm(alarmEntity: AlarmEntity)
     suspend fun deleteAlarm(alarmId: Int)

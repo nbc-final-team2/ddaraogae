@@ -13,11 +13,10 @@ class AlarmRepositoryImpl @Inject constructor(
     private val alarmDataSource: AlarmDataSource
 ): AlarmRepository {
 
-    override suspend fun insertAlarm(alarmEntity: AlarmEntity) {
+    override suspend fun insertAlarm(alarmEntity: AlarmEntity): Int =
         alarmDataSource.insertAlarm(
             alarmEntity
         )
-    }
 
     override fun getAlarmList(): Flow<List<AlarmEntity>> {
         return alarmDataSource.getAlarmList().map { preferences ->
