@@ -45,6 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.floor
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -448,14 +449,17 @@ class HomeFragment : Fragment() {
 
         val dataSet = LineDataSet(entries, "최근 1주일 산책 그래프").apply {
             axisDependency = YAxis.AxisDependency.LEFT
+
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
+            setColor(resources.getColor(R.color.brown, null))
+
             lineWidth = 2f
             setDrawCircles(true)
             setCircleColor(R.color.light_blue)
             setDrawCircleHole(true)
             setDrawValues(true)
-            mode = LineDataSet.Mode.LINEAR
+            mode = LineDataSet.Mode.CUBIC_BEZIER
         }
         val lineData = LineData(dataSet)
         lineChart.data = lineData
@@ -467,6 +471,7 @@ class HomeFragment : Fragment() {
         lineChart.apply {
             axisRight.isEnabled = false
             legend.isEnabled = true
+            legend.textColor = resources.getColor(R.color.black, null)
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
@@ -495,16 +500,21 @@ class HomeFragment : Fragment() {
             axisMaximum = 6f
             granularity = 1f
             valueFormatter = formatter
+            textColor = resources.getColor(R.color.black, null)
         }
     }
 
     private fun walkGraphYAxisForHaveData(yAxis: YAxis, maxDistance: Float) {
         yAxis.apply {
             axisMinimum = 0f
-            axisMaximum = when {
-                maxDistance >= 3 -> (maxDistance / 1).toInt() * 1 + 1f
-                maxDistance >= 1 -> (maxDistance / 0.5).toInt() * 0.5f + 0.5f
-                else -> (maxDistance / 0.1).toInt() * 0.1f + 0.1f
+
+            val adjustedMax = (floor(maxDistance + 10).toInt() / 10) * 10 // 10을 더하고 1의 자리 버림
+            val unit = adjustedMax / 5f // 5개 범위로 나눔
+
+            axisMaximum = if (adjustedMax > 0) {
+                adjustedMax.toFloat()
+            } else {
+                unit
             }
 
             valueFormatter = object : ValueFormatter() {
@@ -512,6 +522,8 @@ class HomeFragment : Fragment() {
                     return String.format("%.1fkm", value)
                 }
             }
+
+            textColor = resources.getColor(R.color.black, null)
         }
     }
 
