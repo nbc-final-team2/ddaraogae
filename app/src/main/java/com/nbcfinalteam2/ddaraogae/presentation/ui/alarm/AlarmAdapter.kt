@@ -10,7 +10,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemAlarmBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.AlarmModel
 
 class AlarmAdapter(
-    private val onDeleteClick: (String) -> Unit
+    private val onDeleteClick: (Int) -> Unit
 ) : ListAdapter<AlarmModel, AlarmAdapter.AlarmViewHolder>(DIFF_UTIL) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {

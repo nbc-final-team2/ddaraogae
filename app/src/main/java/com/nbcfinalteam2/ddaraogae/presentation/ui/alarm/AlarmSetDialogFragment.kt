@@ -21,10 +21,6 @@ class AlarmSetDialogFragment(
     private var _binding: FragmentAlarmSetDialogBinding? = null
     private val binding: FragmentAlarmSetDialogBinding get() = _binding!!
 
-    private val alarmManger: AlarmManager by lazy {
-        requireActivity().applicationContext.getSystemService(ALARM_SERVICE) as AlarmManager
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

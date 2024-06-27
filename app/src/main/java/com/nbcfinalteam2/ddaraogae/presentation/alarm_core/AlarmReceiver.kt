@@ -31,7 +31,7 @@ class AlarmReceiver @Inject constructor(
                 }
             }
         } else if (intent.action == AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED) {
-            
+
         } else {
             val manager = getSystemService(context, NotificationManager::class.java)
             createNotificationChannel(notificationManager = manager)
