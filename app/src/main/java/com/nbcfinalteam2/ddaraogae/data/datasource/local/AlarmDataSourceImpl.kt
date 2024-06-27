@@ -16,7 +16,7 @@ class AlarmDataSourceImpl @Inject constructor(
     override suspend fun insertAlarm(alarmEntity: AlarmEntity) {
         alarmPreferencesStore.edit { preferences ->
             var key = Random.nextInt(100000)
-            while(!preferences.contains(stringPreferencesKey(key.toString()))) {
+            while(preferences.contains(stringPreferencesKey(key.toString()))) {
                 key = Random.nextInt(100000)
             }
             preferences[stringPreferencesKey(key.toString())] = AlarmMapper.entityToJson(alarmEntity.copy(id = key))

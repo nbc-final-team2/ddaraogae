@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_ID
+import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_SET_TIME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Calendar
 import javax.inject.Inject
@@ -33,7 +35,8 @@ class AlarmController @Inject constructor(
         }
 
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
-        alarmIntent.putExtra("alarm_id", id)
+        alarmIntent.putExtra(EXTRA_ALARM_ID, id)
+        alarmIntent.putExtra(EXTRA_ALARM_SET_TIME, setTime)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             id,
@@ -53,7 +56,7 @@ class AlarmController @Inject constructor(
 
     fun deleteAlarm(id: Int) {
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
-        alarmIntent.putExtra("alarm_id", id)
+        alarmIntent.putExtra(EXTRA_ALARM_ID, id)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             id,
