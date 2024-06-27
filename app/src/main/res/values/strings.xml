@@ -28,8 +28,8 @@
     <string name="home_dialog_location_neutral_button">나중에</string>
     <string name="home_toast_location_no_permission">위치 권한이 없습니다.</string>
     <string name="home_no_selected_dog">반려견을 선택해 주세요.</string>
-    <string name="home_progressbar_rate">7개중 5개흭득</string>
-    <string name="home_stamp_title">금주 산책 도장 달성율</string>
+    <string name="home_progressbar_rate">7개 중 5개 흭득</string>
+    <string name="home_stamp_title">금주 산책 도장 달성률</string>
     <string name="home_stamp_see_more">전체 보기</string>
     <string name="home_walk_graph_move_to_history">상세 보기</string>
 
