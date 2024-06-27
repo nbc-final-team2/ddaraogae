@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+import android.util.Log
+import androidx.core.content.ContextCompat
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_ID
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_SET_TIME
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,9 +20,9 @@ class AlarmController @Inject constructor(
 ) {
 
     fun setAlarm(id: Int, setTime: Int) {
-
-        if(checkExactAlarmPermission()) return
-
+        Log.d("AlarmController", "setAlarm()")
+        if(!checkExactAlarmPermission()) return
+        Log.d("AlarmController", "퍼미션 체크 통과")
         val hour = setTime/60
         val minute = setTime%60
 
@@ -37,11 +39,12 @@ class AlarmController @Inject constructor(
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
         alarmIntent.putExtra(EXTRA_ALARM_ID, id)
         alarmIntent.putExtra(EXTRA_ALARM_SET_TIME, setTime)
+
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             id,
             alarmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.setAlarmClock(
@@ -61,7 +64,7 @@ class AlarmController @Inject constructor(
             context,
             id,
             alarmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent)
