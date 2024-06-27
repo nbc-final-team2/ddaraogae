@@ -79,6 +79,10 @@
             android:name=".presentation.service.LocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
+
+        <receiver
+            android:name=".presentation.receiver.AlarmReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>
