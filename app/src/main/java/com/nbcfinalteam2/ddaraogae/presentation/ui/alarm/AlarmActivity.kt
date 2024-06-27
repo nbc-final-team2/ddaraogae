@@ -1,6 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.alarm
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,11 +9,9 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAlarmBinding
-import com.nbcfinalteam2.ddaraogae.presentation.receiver.AlarmReceiver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 @AndroidEntryPoint
 class AlarmActivity: AppCompatActivity() {
@@ -43,16 +40,6 @@ class AlarmActivity: AppCompatActivity() {
                 override fun onPositiveButtonClicked(time: Int) {
                     println(time)
                     alarmViewModel.insertAlarm(time)
-                    val hour = binding.tpAlarm.hour
-                    val minute = binding.tpAlarm.minute
-
-                    val intent = Intent(requireContext().applicationContext, AlarmReceiver::class.java)
-                    intent.putExtra("set_time", binding.tpAlarm.hour*60 + binding.tpAlarm.minute)
-                    val calendar = Calendar.getInstance().apply {
-                        timeInMillis = System.currentTimeMillis()
-                        set(Calendar.HOUR_OF_DAY, hour)
-                        set(Calendar.MINUTE, minute)
-                    }
                 }
 
                 override fun onNegativeButtonClicked() {

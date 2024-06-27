@@ -1,4 +1,4 @@
-package com.nbcfinalteam2.ddaraogae.presentation.receiver
+package com.nbcfinalteam2.ddaraogae.presentation.alarm_core
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
