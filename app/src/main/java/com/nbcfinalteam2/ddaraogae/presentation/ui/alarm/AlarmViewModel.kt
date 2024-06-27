@@ -55,7 +55,7 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
-    fun deleteAlarm(alarmId: String) = viewModelScope.launch {
+    fun deleteAlarm(alarmId: Int) = viewModelScope.launch {
         runCatching {
             deleteAlarmUseCase(alarmId = alarmId)
         }

@@ -34,9 +34,9 @@ class AlarmRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteAlarm(alarmId: String) {
+    override suspend fun deleteAlarm(alarmId: Int) {
         alarmDataSource.deleteAlarm(
-            stringPreferencesKey(alarmId)
+            stringPreferencesKey(alarmId.toString())
         )
     }
 }
