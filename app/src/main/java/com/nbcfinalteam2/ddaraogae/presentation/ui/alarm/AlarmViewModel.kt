@@ -50,7 +50,7 @@ class AlarmViewModel @Inject constructor(
     fun insertAlarm(setTime: Int) = viewModelScope.launch {
         runCatching {
             insertAlarmUseCase(
-                AlarmEntity(UUID.randomUUID().toString(), setTime)
+                AlarmEntity(-1, setTime)
             )
         }
     }
