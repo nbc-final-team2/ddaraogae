@@ -3,7 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.model
 import com.nbcfinalteam2.ddaraogae.domain.entity.AlarmEntity
 
 data class AlarmModel(
-    val id: String,
+    val id: Int,
     val setHour: Int,
     val setMinute: Int,
     val isPm: Boolean

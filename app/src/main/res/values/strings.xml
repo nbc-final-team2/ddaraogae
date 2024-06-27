@@ -264,5 +264,6 @@
     <string name="alarm_am">오전</string>
     <string name="alarm_pm">오후</string>
     <string name="alarm_time_text">%2d:%2d</string>
+    <string name="alarm_notification_content">등록하신 산책 시간이에요!</string>
 
 </resources>

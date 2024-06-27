@@ -1,9 +1,8 @@
 package com.nbcfinalteam2.ddaraogae.data.repository
 
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.google.gson.Gson
 import com.nbcfinalteam2.ddaraogae.data.datasource.local.AlarmDataSource
-import com.nbcfinalteam2.ddaraogae.data.mapper.AlarmMapper.toPreference
+import com.nbcfinalteam2.ddaraogae.data.mapper.AlarmMapper
 import com.nbcfinalteam2.ddaraogae.domain.entity.AlarmEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.AlarmRepository
 import kotlinx.coroutines.flow.Flow
@@ -13,27 +12,25 @@ import javax.inject.Inject
 class AlarmRepositoryImpl @Inject constructor(
     private val alarmDataSource: AlarmDataSource
 ): AlarmRepository {
-    private val gson = Gson()
 
     override suspend fun insertAlarm(alarmEntity: AlarmEntity) {
         alarmDataSource.insertAlarm(
-            stringPreferencesKey(alarmEntity.id),
-            gson.toJson(alarmEntity.toPreference())
+            alarmEntity
         )
     }
 
     override fun getAlarmList(): Flow<List<AlarmEntity>> {
         return alarmDataSource.getAlarmList().map { preferences ->
             preferences.asMap().values.map { value ->
-                gson.fromJson(value as String, AlarmEntity::class.java)
+                AlarmMapper.jsonToEntity(value as String)
             }
         }
     }
 
     override suspend fun updateAlarm(alarmEntity: AlarmEntity) {
         alarmDataSource.updateAlarm(
-            stringPreferencesKey(alarmEntity.id),
-            gson.toJson(alarmEntity.toPreference())
+            stringPreferencesKey(alarmEntity.id.toString()),
+            AlarmMapper.entityToJson(alarmEntity)
         )
     }
 
