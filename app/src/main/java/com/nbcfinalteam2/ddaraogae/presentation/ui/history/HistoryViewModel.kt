@@ -39,21 +39,22 @@ class HistoryViewModel @Inject constructor(
 
     var isLoading = false
     private var currentPage = 0
-    private val pageSize = 25
+    private val pageSize = 5
+    private var allWalkData = listOf<WalkingInfo>()
 
     fun setSelectedDate(year: Int, month: Int) {
         selectedYear = year
         selectedMonth = month
         _selectedDateState.value = "${year}년 ${month}월"
         currentPage = 0
-        loadWalkData(year, month, reset = true)
+        fetchWalkData(year, month)
     }
 
     fun setDogInfo(dog: DogInfo) {
         _selectDogState.value = dog
     }
 
-    private fun loadWalkData(year: Int, month: Int, reset: Boolean = false) {
+    private fun fetchWalkData(year: Int, month: Int) {
         viewModelScope.launch {
             try {
                 isLoading = true
@@ -62,7 +63,7 @@ class HistoryViewModel @Inject constructor(
 
                 val dogId = _selectDogState.value?.id ?: return@launch
                 val walkEntities = getWalkingListByDogIdAndPeriodUseCase(dogId, startDate, endDate)
-                val walkInfo = walkEntities.map {
+                allWalkData = walkEntities.map {
                     WalkingInfo(
                         id = it.id,
                         dogId = it.dogId,
@@ -73,19 +74,8 @@ class HistoryViewModel @Inject constructor(
                         walkingImage = it.walkingImage
                     )
                 }.sortedByDescending { it.startDateTime }
-                // 초기데이터를 한번만 가져오고 loadMore를 따로 함수로 뺼것 ( usecase호출 )
-
-                if (reset) {
-                    _walkListState.value = walkInfo.take(pageSize)
-                    currentPage = 1
-                } else {
-                    val updatedList = _walkListState.value.toMutableList()
-                    updatedList.addAll(walkInfo.drop(currentPage * pageSize).take(pageSize))
-                    _walkListState.value = updatedList
-                    currentPage++
-                }
+                loadWalkData(reset = true)
                 _loadWalkEvent.emit(DefaultEvent.Success)
-
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 _loadWalkEvent.emit(DefaultEvent.Failure(R.string.msg_load_walking_data_fail))
@@ -95,8 +85,24 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
+    private fun loadWalkData(reset: Boolean = false) {
+        if (reset) {
+            _walkListState.value = allWalkData.take(pageSize)
+            currentPage = 1
+        } else {
+            val updatedList = _walkListState.value.toMutableList()
+            updatedList.addAll(allWalkData.drop(currentPage * pageSize).take(pageSize))
+            _walkListState.value = updatedList
+            currentPage++
+        }
+    }
+
     fun loadMoreWalkData() {
-        loadWalkData(selectedYear, selectedMonth)
+        if (!isLoading) {
+            isLoading = true
+            loadWalkData(reset = false)
+            isLoading = false
+        }
     }
 
     fun getSelectedYearMonth(): Pair<Int, Int> {
