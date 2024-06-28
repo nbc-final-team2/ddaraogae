@@ -48,7 +48,7 @@ class AlarmActivity: AppCompatActivity() {
             })
 
             alarmDialog.show(
-                supportFragmentManager, "Dialog"
+                supportFragmentManager, null
             )
         }
 

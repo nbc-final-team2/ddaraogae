@@ -265,5 +265,8 @@
     <string name="alarm_pm">오후</string>
     <string name="alarm_time_text">%02d:%02d</string>
     <string name="alarm_notification_content">등록하신 산책 시간이에요!</string>
+    <string name="alarm_dialog_set_time">알림 시간 설정</string>
+    <string name="alarm_dialog_cancel">취소</string>
+    <string name="alarm_dialog_confirm">확인</string>
 
 </resources>

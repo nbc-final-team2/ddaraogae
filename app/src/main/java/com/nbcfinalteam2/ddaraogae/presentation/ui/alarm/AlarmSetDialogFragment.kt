@@ -1,7 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.alarm
 
-import android.app.AlarmManager
-import android.content.Context.ALARM_SERVICE
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
