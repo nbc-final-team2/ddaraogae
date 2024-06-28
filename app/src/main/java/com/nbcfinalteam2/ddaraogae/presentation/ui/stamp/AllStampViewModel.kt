@@ -3,8 +3,10 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.stamp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
+import com.nbcfinalteam2.ddaraogae.presentation.model.StampListModel
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,11 +22,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllStampViewModel @Inject constructor(
-    private val getStampListByPeriodUseCase: GetStampListByPeriodUseCase
+    private val getStampInfoListUseCase: GetStampInfoListUseCase
 ) : ViewModel() {
 
-    private val _stampListState = MutableStateFlow<List<StampModel>>(emptyList())
-    val stampListState: StateFlow<List<StampModel>> = _stampListState.asStateFlow()
+    private val _stampListState = MutableStateFlow<List<StampListModel>>(emptyList())
+    val stampListState: StateFlow<List<StampListModel>> = _stampListState.asStateFlow()
 
     private val _loadStampEvent = MutableSharedFlow<DefaultEvent>()
     val loadStampEvent: SharedFlow<DefaultEvent> = _loadStampEvent.asSharedFlow()
@@ -37,24 +39,13 @@ class AllStampViewModel @Inject constructor(
     }
 
     fun loadStampList() = viewModelScope.launch {
-        val startDate = Calendar.getInstance().apply {
-            set(2024, Calendar.JUNE, 1) // 2024년 6월 1일부터 도장이 기록이됩니다.
-        }.time
-
-        val endDate = Date()
-
         runCatching {
-            val stampEntities = getStampListByPeriodUseCase(startDate, endDate)
+            val stampEntities = getStampInfoListUseCase()
 
-            val stampCountMap = stampEntities.groupingBy { it.stampNum }.eachCount()
-
-            val stampModels = stampCountMap.map { (stampNum, count) ->
-                val firstEntity = stampEntities.first { it.stampNum == stampNum }
-                StampModel(
-                    id = firstEntity.id,
-                    stampNum = count,
-                    getDateTime = firstEntity.getDateTime,
-                    name = firstEntity.name
+            val stampModels = stampEntities.filter { it.num != 0 && it.num <= 8 }.map { entity ->
+                StampListModel(
+                    num = entity.num,
+                    title = entity.title
                 )
             }
 
