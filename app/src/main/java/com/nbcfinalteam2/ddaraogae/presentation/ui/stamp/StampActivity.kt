@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AllStampActivity : AppCompatActivity() {
+class StampActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAllStampBinding
     private val allStampViewModel: AllStampViewModel by viewModels()
@@ -60,7 +60,7 @@ class AllStampActivity : AppCompatActivity() {
         lifecycleScope.launch {
             allStampViewModel.loadStampEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
                 when (event) {
-                    is DefaultEvent.Failure -> ToastMaker.make(this@AllStampActivity, event.msg)
+                    is DefaultEvent.Failure -> ToastMaker.make(this@StampActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
             }

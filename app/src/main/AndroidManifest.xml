@@ -39,7 +39,7 @@
         </provider>
 
         <activity
-            android:name=".presentation.ui.stamp.AllStampActivity"
+            android:name=".presentation.ui.stamp.StampActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.add.AddActivity"
