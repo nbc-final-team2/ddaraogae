@@ -12,14 +12,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 private const val ALARM_PREFERENCE_NAME = "alarm_preferences"
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
-
-//    private val Context.alarmDataStore by preferencesDataStore(name = ALARM_PREFERENCE_NAME)
 
     @Provides
     @Singleton
