@@ -62,6 +62,7 @@
                 android:layout_margin="@dimen/margin_extra_small"
                 android:background="@drawable/bg_btn_my_stamp"
                 android:text="@string/home_all_stamp_item_stamp_click_button"
+                android:textSize="@dimen/text_mini"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
