@@ -50,9 +50,6 @@
             android:name=".presentation.ui.main.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.login.SignUpActivity"
-            android:exported="true" />
-        <activity
             android:name=".presentation.ui.mypage.MypagePrivacyActivity"
             android:exported="true" />
         <activity
