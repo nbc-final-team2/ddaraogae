@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -75,6 +76,8 @@ class AlarmActivity: AppCompatActivity() {
         lifecycleScope.launch {
             alarmViewModel.alarmUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
                 alarmAdapter.submitList(state.alarmList)
+                binding.rvAlarmList.isVisible = state.alarmList.isNotEmpty()
+                binding.tvEmptyList.isVisible = state.alarmList.isEmpty()
             }
         }
     }
