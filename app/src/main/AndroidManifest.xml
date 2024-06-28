@@ -23,14 +23,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ddaraogae"
         tools:targetApi="31">
-        <activity
-            android:name=".presentation.ui.stamp.AllStampActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="@string/ddaraogae_client_id" />
 
+        <provider
+            android:authorities="com.nbcfinalteam2.ddaraogae.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".presentation.ui.stamp.AllStampActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.ui.add.AddActivity"
             android:exported="false" />

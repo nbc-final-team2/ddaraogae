@@ -12,7 +12,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
-class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
+class WalkHistoryAdapter(private val onMapClick: (WalkingInfo) -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -35,7 +35,7 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
         private val context: Context
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
+        fun bind(item: WalkingInfo, onMapClick: (WalkingInfo) -> Unit) {
             with(binding) {
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.startDateTime ?: return)
 
@@ -59,12 +59,12 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
 
                 Glide.with(context)
                     .load(item.walkingImage)
-                    .error(R.drawable.ic_x)
-                    .fallback(R.drawable.ic_x)
+                    .error(R.drawable.img_map_default)
+                    .fallback(R.drawable.img_map_default)
                     .into(ivWalkMap)
 
                 ivWalkMap.setOnClickListener {
-                    onMapClick(item.walkingImage ?: "")
+                    onMapClick(item)
                 }
             }
         }
