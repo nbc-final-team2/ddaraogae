@@ -44,6 +44,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.DateFormat
+import java.util.Date
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -106,6 +108,22 @@ class HomeFragment : Fragment() {
                 .collectLatest { dogList ->
                     dogProfileAdapter.submitList(dogList)
                     changeDogPortrait(dogList)
+                }
+        }
+
+        lifecycleScope.launch {
+            homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { endDateTime ->
+                    if (endDateTime == null) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_none)
+                    } else if (endDateTime == 0) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_just_now)
+                    } else if (endDateTime < 24) {
+                        binding.tvBeforetime.text =
+                            "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
+                    } else if (endDateTime > 24) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
+                    }
                 }
         }
 
@@ -315,6 +333,7 @@ class HomeFragment : Fragment() {
             tvTodayWeatherTime.visibility = View.VISIBLE
             tvWeatherData.visibility = View.GONE
             tvTodayWeatherTime.text = DateFormatter.getTodayDate()
+
         }
     }
 
