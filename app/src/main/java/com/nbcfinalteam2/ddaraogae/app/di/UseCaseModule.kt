@@ -34,6 +34,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertWalkingDataUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertWalkingDataUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.IsCurrentUserEmailVerifiedUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.IsGoogleUserUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.IsGoogleUserUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
@@ -193,4 +195,10 @@ abstract class UseCaseModule {
     abstract fun bindGetStampInfoListUseCase(
         getStampInfoListUseCaseImpl: GetStampInfoListUseCaseImpl
     ): GetStampInfoListUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindIsGoogleUserUseCase(
+        isGoogleUserUseCaseImpl: IsGoogleUserUseCaseImpl
+    ): IsGoogleUserUseCase
 }
