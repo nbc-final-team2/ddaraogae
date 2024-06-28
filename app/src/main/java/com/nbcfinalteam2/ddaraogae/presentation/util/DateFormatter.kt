@@ -1,5 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
+import android.content.Context
+import android.provider.Settings.Global.getString
+import android.util.Log
+import com.nbcfinalteam2.ddaraogae.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -82,5 +86,19 @@ object DateFormatter {
     fun getHistoryDate(walkEndTime: Date): String {
         val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
         return format.format(walkEndTime)
+    }
+
+    fun getAFewHoursAgo(date: Date?): Int? {
+        if (date == null) return null
+
+        val now: Long = System.currentTimeMillis()
+        val nowDate = Date(now)
+        val timeDifference = nowDate.time - date.time
+
+        val seconds = timeDifference / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+
+        return hours.toInt()
     }
 }
