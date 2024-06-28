@@ -58,6 +58,16 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
+    fun updateAlarm(alarmId: Int, setTime: Int) = viewModelScope.launch {
+        runCatching {
+            updateAlarmUseCase(
+                AlarmEntity(alarmId, setTime)
+            )
+
+            alarmController.setAlarm(alarmId, setTime)
+        }
+    }
+
     fun deleteAlarm(alarmId: Int) = viewModelScope.launch {
         runCatching {
             deleteAlarmUseCase(alarmId = alarmId)

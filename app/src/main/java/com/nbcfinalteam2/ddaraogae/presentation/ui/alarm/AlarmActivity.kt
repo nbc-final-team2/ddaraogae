@@ -9,6 +9,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAlarmBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.AlarmModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -23,9 +24,28 @@ class AlarmActivity: AppCompatActivity() {
     private val alarmViewModel: AlarmViewModel by viewModels()
 
     private val alarmAdapter: AlarmAdapter by lazy {
-        AlarmAdapter {
-            alarmViewModel.deleteAlarm(it)
-        }
+        AlarmAdapter(object : AlarmAdapter.AlarmItemListener {
+            override fun onItemClicked(item: AlarmModel) {
+                val alarmDialog = AlarmSetDialogFragment(object : AlarmSetDialogFragment.AlarmDialogButtonListener {
+                    override fun onPositiveButtonClicked(time: Int) {
+                        alarmViewModel.updateAlarm(item.id, time)
+                    }
+
+                    override fun onNegativeButtonClicked() {
+                    }
+
+                }, item.setHour*60 + item.setMinute + if(item.isPm) 720 else 0)
+
+                alarmDialog.show(
+                    supportFragmentManager, null
+                )
+            }
+
+            override fun onDeleteClicked(id: Int) {
+                alarmViewModel.deleteAlarm(id)
+            }
+
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

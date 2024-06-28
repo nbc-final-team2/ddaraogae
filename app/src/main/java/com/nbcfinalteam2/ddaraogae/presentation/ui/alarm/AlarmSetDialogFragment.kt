@@ -13,7 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AlarmSetDialogFragment(
-    private val alarmDialogButtonListener: AlarmDialogButtonListener
+    private val alarmDialogButtonListener: AlarmDialogButtonListener,
+    private val setTime: Int = -1
 ): DialogFragment() {
 
     private var _binding: FragmentAlarmSetDialogBinding? = null
@@ -41,6 +42,10 @@ class AlarmSetDialogFragment(
         binding.btnCancel.setOnClickListener {
             alarmDialogButtonListener.onNegativeButtonClicked()
             dismiss()
+        }
+        if(setTime!=-1) {
+            binding.tpAlarm.hour = setTime/60
+            binding.tpAlarm.minute = setTime%60
         }
     }
 

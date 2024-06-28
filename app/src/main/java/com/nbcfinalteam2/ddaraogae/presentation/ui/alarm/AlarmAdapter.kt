@@ -10,7 +10,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemAlarmBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.AlarmModel
 
 class AlarmAdapter(
-    private val onDeleteClick: (Int) -> Unit
+    private val alarmItemListener: AlarmItemListener
 ) : ListAdapter<AlarmModel, AlarmAdapter.AlarmViewHolder>(DIFF_UTIL) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {
@@ -39,7 +39,10 @@ class AlarmAdapter(
                 R.string.alarm_time_text, item.setHour, item.setMinute
             )
             binding.ivDeleteButton.setOnClickListener {
-                onDeleteClick(item.id)
+                alarmItemListener.onDeleteClicked(item.id)
+            }
+            binding.root.setOnClickListener {
+                alarmItemListener.onItemClicked(item)
             }
         }
     }
@@ -54,5 +57,10 @@ class AlarmAdapter(
                 return oldItem == newItem
             }
         }
+    }
+
+    interface AlarmItemListener {
+        fun onItemClicked(item: AlarmModel)
+        fun onDeleteClicked(id: Int)
     }
 }
