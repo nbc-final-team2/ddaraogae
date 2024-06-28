@@ -100,9 +100,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupAdapter() {
         walkHistoryAdapter = WalkHistoryAdapter(
-            onMapClick = { walkMap ->
+            onMapClick = { walkingInfo ->
                 val dialog = WalkHistoryMapDialog()
-                dialog.setEnlargementOfImage(walkMap)
+                dialog.setInfo(walkingInfo, dogInfo.name ?: "")
                 dialog.show(supportFragmentManager, "")
             }
         )
@@ -120,6 +120,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             dialog.setOnMonthClickListener(this)
             dialog.show(supportFragmentManager, "")
         }
+
+        binding.ivSelectedCalendar.setOnClickListener {
+            val dialog = CalendarDialog()
+            dialog.setOnMonthClickListener(this)
+            dialog.show(supportFragmentManager, "")
+        }
     }
 
     private fun setupViewModels() {
@@ -130,7 +136,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
         lifecycleScope.launch {
             historyViewModel.selectDogState.flowWithLifecycle(lifecycle).collectLatest { dog ->
-                binding.tvWalkGraphDogName.text = "${dog?.name}의 산책 그래프"
+                if (dog != null) {
+                    binding.tvWalkGraphDogName.text = "${dog.name}의 산책 그래프"
+                }
             }
         }
         lifecycleScope.launch {
@@ -155,7 +163,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         lifecycleScope.launch {
             historyViewModel.loadWalkEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@HistoryActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
@@ -195,7 +203,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
 
-        val dataSet = LineDataSet(entries, "").apply {
+        val dataSet = LineDataSet(entries, "선택한 날짜에 대한 한달 그래프").apply {
             axisDependency = YAxis.AxisDependency.LEFT
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
@@ -212,22 +220,27 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
+        val calendar = Calendar.getInstance()
+        val today = calendar.get(Calendar.DAY_OF_MONTH) - 1
+        lineChart.moveViewToX(today - 3.toFloat())
+
         lineChart.invalidate()
     }
 
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.isEnabled = false
+            legend.isEnabled = true
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
             setTouchEnabled(true)
-            setPinchZoom(false)
-            setScaleEnabled(false)
+            setPinchZoom(true)
+            setScaleEnabled(true)
+            isDoubleTapToZoomEnabled = true
             isDragXEnabled = true
-            isDragYEnabled = false
-            setVisibleXRange(0f, 7f)
+            isDragYEnabled = true
+            setVisibleXRangeMaximum(7f)
         }
         lineChart.invalidate()
     }
@@ -247,7 +260,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             axisMinimum = 0f
             axisMaximum = (dates.size - 1).toFloat()
             valueFormatter = formatter
-            isGranularityEnabled = true
+            granularity = 1f
         }
     }
 
@@ -262,7 +275,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return "${value}km"
+                    return String.format("%.1fkm", value)
                 }
             }
         }

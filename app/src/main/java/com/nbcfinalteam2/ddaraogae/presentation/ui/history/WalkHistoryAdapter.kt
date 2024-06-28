@@ -1,20 +1,24 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.history
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
-class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
+class WalkHistoryAdapter(private val onMapClick: (WalkingInfo) -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder(
-            ItemHomeHistoryWalkBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemHomeHistoryWalkBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            parent.context
         )
     }
 
@@ -26,9 +30,12 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
         return currentList.size
     }
 
-    class ViewHolder(private val binding: ItemHomeHistoryWalkBinding) :
+    class ViewHolder(
+        private val binding: ItemHomeHistoryWalkBinding,
+        private val context: Context
+    ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: WalkingInfo, onMapClick: (String) -> Unit) {
+        fun bind(item: WalkingInfo, onMapClick: (WalkingInfo) -> Unit) {
             with(binding) {
                 tvWalkHistoryDate.text = DateFormatter.getHistoryDate(item.startDateTime ?: return)
 
@@ -50,8 +57,14 @@ class WalkHistoryAdapter(private val onMapClick: (String) -> Unit) :
                     else -> String.format("%d초", seconds)
                 } // "home_history_walk_adapter_minute"
 
+                Glide.with(context)
+                    .load(item.walkingImage)
+                    .error(R.drawable.img_map_default)
+                    .fallback(R.drawable.img_map_default)
+                    .into(ivWalkMap)
+
                 ivWalkMap.setOnClickListener {
-                    onMapClick(item.walkingImage ?: "")
+                    onMapClick(item)
                 }
             }
         }
