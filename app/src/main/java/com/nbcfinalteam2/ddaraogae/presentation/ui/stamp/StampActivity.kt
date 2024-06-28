@@ -9,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.nbcfinalteam2.ddaraogae.databinding.ActivityAllStampBinding
+import com.nbcfinalteam2.ddaraogae.databinding.ActivityStampBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class StampActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAllStampBinding
+    private lateinit var binding: ActivityStampBinding
     private val allStampViewModel: AllStampViewModel by viewModels()
     private lateinit var allStampAdapter: AllStampAdapter
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
@@ -29,7 +29,7 @@ class StampActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityAllStampBinding.inflate(layoutInflater)
+        binding = ActivityStampBinding.inflate(layoutInflater)
         setContentView(binding.root)
         uiSetting()
         setupAdapter()
