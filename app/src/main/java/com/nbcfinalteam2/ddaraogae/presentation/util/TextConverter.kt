@@ -10,7 +10,7 @@ object TextConverter {
         return format.format(date)
     }
 
-    fun timeIntToString(time: Int) : String {
+    fun timeIntToStringForWalk(time: Int) : String {
         //시간 구하기
         val hour = time / 3600
         val min = (time / 60) % 60
@@ -28,6 +28,22 @@ object TextConverter {
     }
 
     fun distanceDoubleToString(distance: Double) : String {
-        return String.format("%.1f km", distance)
+        return if (distance >= 1.0) {
+            String.format("%.1f km", distance / 1.0)
+        } else {
+            String.format("%d m", distance.toInt())
+        }
+    }
+
+    fun timeIntToStringForHistory(timeTaken: Int) : String {
+        val hours = timeTaken / 3600
+        val minutes = (timeTaken % 3600) / 60
+        val seconds = timeTaken % 60
+
+        return when {
+            hours > 0 -> String.format("%d시간 %d분 %d초", hours, minutes, seconds)
+            minutes > 0 -> String.format("%d분 %d초", minutes, seconds)
+            else -> String.format("%d초", seconds)
+        }
     }
 }
