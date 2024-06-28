@@ -43,7 +43,11 @@ class AllStampFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        allStampAdapter = AllStampAdapter()
+        allStampAdapter = AllStampAdapter(
+            onClick = { event ->
+
+            }
+        )
         binding.rvStampArea.adapter = allStampAdapter
     }
 

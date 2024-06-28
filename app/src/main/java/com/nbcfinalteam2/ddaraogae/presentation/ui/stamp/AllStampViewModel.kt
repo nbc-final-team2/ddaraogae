@@ -25,8 +25,8 @@ class AllStampViewModel @Inject constructor(
     private val getStampInfoListUseCase: GetStampInfoListUseCase
 ) : ViewModel() {
 
-    private val _stampListState = MutableStateFlow<List<StampListModel>>(emptyList())
-    val stampListState: StateFlow<List<StampListModel>> = _stampListState.asStateFlow()
+    private val _stampListState = MutableStateFlow<List<StampModel>>(emptyList())
+    val stampListState: StateFlow<List<StampModel>> = _stampListState.asStateFlow()
 
     private val _loadStampEvent = MutableSharedFlow<DefaultEvent>()
     val loadStampEvent: SharedFlow<DefaultEvent> = _loadStampEvent.asSharedFlow()
@@ -43,7 +43,11 @@ class AllStampViewModel @Inject constructor(
             val stampEntities = getStampInfoListUseCase()
 
             val stampModels = stampEntities.filter { it.num != 0 && it.num <= 8 }.map { entity ->
-                StampListModel(
+                StampModel(
+                    id = null,
+                    stampNum = null,
+                    getDateTime = null,
+                    name = null,
                     num = entity.num,
                     title = entity.title
                 )
