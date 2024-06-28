@@ -191,6 +191,8 @@ class WalkFragment : Fragment() {
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
 //            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
+            naverMap.uiSettings.isLocationButtonEnabled = true
+            naverMap.setContentPadding(0, 0, 0, 200)
 
             // 카메라 설정
             lifecycleScope.launch {
@@ -220,12 +222,6 @@ class WalkFragment : Fragment() {
             walkViewModel.walkToggle()
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
-        binding.ibWalkLocation.setOnClickListener {
-            if(::naverMap.isInitialized && ::cameraPosition.isInitialized) {
-                naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
-            }
-        }
-
     }
 
     private fun checkServicePermission() {
