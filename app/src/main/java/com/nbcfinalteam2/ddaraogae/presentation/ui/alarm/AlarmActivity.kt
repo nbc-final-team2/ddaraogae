@@ -69,7 +69,7 @@ class AlarmActivity: AppCompatActivity() {
 
         }
         else {
-            ToastMaker.make(this, "알람 노출을 위한 알림 권한 부여가 필요합니다.")
+            ToastMaker.make(this, getString(R.string.alarm_need_permission_msg))
         }
     }
 
@@ -122,7 +122,7 @@ class AlarmActivity: AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms().not()) {
             AlertDialog.Builder(this)
-                .setMessage("정확한 알람을 위한 알람&리마인더 설정 허용이 필요합니다.")
+                .setMessage(getString(R.string.alarm_request_exact_alarm_permission))
                 .setPositiveButton(getString(R.string.alarm_dialog_move)) { _, _ ->
                     startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
                 }.setNegativeButton(R.string.alarm_dialog_cancel) { _, _ -> }
