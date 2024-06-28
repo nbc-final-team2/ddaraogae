@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentAllStampBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
@@ -44,8 +45,16 @@ class AllStampFragment : Fragment() {
 
     private fun setupAdapter() {
         allStampAdapter = AllStampAdapter(
-            onClick = { event ->
-
+            onClick = { stamp ->
+                val fragment = StampDetailFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt("stampId", stamp.num)
+                    }
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         )
         binding.rvStampArea.adapter = allStampAdapter
