@@ -114,13 +114,19 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { endDateTime ->
-                    if (endDateTime != null) { // if문이 이래서 lastOrNull 쓰는게 좋다.
-                        binding.tvBeforetime.text = "$endDateTime"
-                        homeViewModel.loadSelectedDogWalkGraph()
+                    if (endDateTime == null) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_none)
+                    } else if (endDateTime == 0) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_just_now)
+                    } else if (endDateTime < 24) {
+                        binding.tvBeforetime.text =
+                            "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
+                    } else if (endDateTime > 24) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
                     }
                 }
         }
-        
+
         lifecycleScope.launch {
             homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogData ->
