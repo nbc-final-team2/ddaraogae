@@ -271,5 +271,6 @@
     <string name="alarm_empty_list">등록된 알람이 없습니다.</string>
     <string name="alarm_add">추가</string>
     <string name="alarm_app_bar_title">산책 리마인더</string>
+    <string name="alarm_dialog_move">이동</string>
 
 </resources>

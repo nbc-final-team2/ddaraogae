@@ -64,7 +64,7 @@ class AlarmController @Inject constructor(
             context,
             id,
             alarmIntent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent)
