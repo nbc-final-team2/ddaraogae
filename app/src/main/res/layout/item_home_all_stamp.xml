@@ -36,35 +36,36 @@
                 android:id="@+id/tv_stampName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="@string/home_all_stamp_item_stamp_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/iv_stamp"
                 app:layout_constraintStart_toStartOf="@+id/iv_stamp"
-                app:layout_constraintTop_toBottomOf="@+id/iv_stamp" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_stamp"
+                tools:text="@string/home_all_stamp_item_stamp_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_stampNumTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_extra_small"
-                android:text="@string/home_all_stamp_item_stamp_sum"
-                android:textSize="@dimen/text_caption"
+                android:layout_marginTop="@dimen/margin_extra_small"
+                android:text="내가 얻은 도장 보러가기"
+                android:textColor="@color/light_brown"
+                android:textSize="@dimen/text_mini"
                 app:layout_constraintEnd_toEndOf="@+id/tv_stampName"
                 app:layout_constraintStart_toStartOf="@+id/tv_stampName"
                 app:layout_constraintTop_toBottomOf="@+id/tv_stampName" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_stampNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_stampClick"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_margin="@dimen/margin_extra_small"
-                tools:text="@string/home_all_stamp_item_stamp_num"
-                android:textSize="@dimen/text_text"
+                android:background="@drawable/bg_btn_my_stamp"
+                android:text="Click"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/tv_stampNumTitle"
-                app:layout_constraintStart_toStartOf="@+id/tv_stampNumTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_stampNumTitle" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
