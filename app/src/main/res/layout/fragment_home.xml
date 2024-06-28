@@ -37,7 +37,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_larger_60"
                 android:layout_marginEnd="@dimen/margin_medium"
-                android:text="@string/home_before_time"
+                android:text="@string/home_a_few_hours_ago"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"

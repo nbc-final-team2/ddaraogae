@@ -88,7 +88,7 @@ object DateFormatter {
         return format.format(walkEndTime)
     }
 
-    fun getCurrentTimeAgo(date: Date?): Int? {
+    fun getAFewHoursAgo(date: Date?): Int? {
         if (date == null) return null
 
         val now: Long = System.currentTimeMillis()
