@@ -196,6 +196,8 @@ abstract class UseCaseModule {
         checkStampConditionUseCaseImpl: CheckStampConditionUseCaseImpl
     ): CheckStampConditionUseCase
 
+    @Binds
+    @ViewModelScoped
     abstract fun bindGetStampInfoListUseCase(
         getStampInfoListUseCaseImpl: GetStampInfoListUseCaseImpl
     ): GetStampInfoListUseCase

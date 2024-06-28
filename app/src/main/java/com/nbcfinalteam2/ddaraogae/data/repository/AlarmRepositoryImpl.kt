@@ -22,7 +22,7 @@ class AlarmRepositoryImpl @Inject constructor(
         return alarmDataSource.getAlarmList().map { preferences ->
             preferences.asMap().values.map { value ->
                 AlarmMapper.jsonToEntity(value as String)
-            }
+            }.sortedBy { it.setTime }
         }
     }
 
