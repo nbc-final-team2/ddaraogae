@@ -1,6 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
+import android.content.Context
+import android.provider.Settings.Global.getString
 import android.util.Log
+import com.nbcfinalteam2.ddaraogae.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -98,11 +101,14 @@ object DateFormatter {
         val hours = minutes / 60
 
         return when {
+            hours < 1 -> {
+                "금방 산책을 다녀왔어요!"
+            }
             hours < 24 -> {
                 "$hours 시간 전"
             }
             else -> {
-                ""
+                "산책한지 24시간이 넘었습니다"
             }
         }
     }
