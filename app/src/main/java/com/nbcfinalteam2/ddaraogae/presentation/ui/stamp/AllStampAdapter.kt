@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeAllStampBinding
-import com.nbcfinalteam2.ddaraogae.presentation.model.StampListModel
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
 
 class AllStampAdapter(private val onClick: (StampModel) -> Unit) : ListAdapter<StampModel, AllStampAdapter.ViewHolder>(DIFF_CALLBACK) {

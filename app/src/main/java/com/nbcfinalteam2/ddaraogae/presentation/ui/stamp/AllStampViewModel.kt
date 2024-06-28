@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCase
-import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
-import com.nbcfinalteam2.ddaraogae.presentation.model.StampListModel
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,8 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
