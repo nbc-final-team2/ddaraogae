@@ -28,9 +28,6 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="@string/ddaraogae_client_id" />
 
-        <activity
-            android:name=".presentation.ui.stamp.AllStampActivity"
-            android:exported="false" />
         <provider
             android:authorities="com.nbcfinalteam2.ddaraogae.fileprovider"
             android:name="androidx.core.content.FileProvider"
