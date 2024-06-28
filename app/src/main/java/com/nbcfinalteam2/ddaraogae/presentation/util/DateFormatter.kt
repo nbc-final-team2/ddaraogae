@@ -96,9 +96,7 @@ object DateFormatter {
         val seconds = timeDifference / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
-        Log.d("seconds", seconds.toString())
-        Log.d("minutes", minutes.toString())
-        Log.d("hours", hours.toString())
+
         return when {
             hours < 24 -> {
                 "$hours 시간 전"
