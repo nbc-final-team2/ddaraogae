@@ -114,10 +114,16 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { endDateTime ->
-                    if (endDateTime != null) { // if문이 이래서 lastOrNull 쓰는게 좋다.
-                        binding.tvBeforetime.text = "$endDateTime"
-                        homeViewModel.loadSelectedDogWalkGraph()
+                    if (endDateTime == null) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_none)
+                    } else if (endDateTime > 24) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_one_day)
                     }
+                    else {
+                        binding.tvBeforetime.text = "$endDateTime ${getString(R.string.home_before_time)}"
+                    }
+
+                    homeViewModel.loadSelectedDogWalkGraph() //이걸 불러오는 이유가 뭘까요?
                 }
         }
         

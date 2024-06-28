@@ -85,27 +85,17 @@ object DateFormatter {
         return format.format(walkEndTime)
     }
 
-    fun getCurrentTimeAgo(date: Date?): String {
-        if (date == null) {
-            return "최근에 산책한 기록이 없어요!" // 시간에 대한 정보가 없을때는 아무것도 보여주지 않기 위함.
-        }
+    fun getCurrentTimeAgo(date: Date?): Int? {
+        if (date == null) return null
+
         val now: Long = System.currentTimeMillis()
-        val nowDate = Date(now) // 현재 시간을 Date 타입으로 변환
-        val timeDifference = nowDate.time - date.time // 현재 시간 - 특정 시간
+        val nowDate = Date(now)
+        val timeDifference = nowDate.time - date.time
 
         val seconds = timeDifference / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
-        Log.d("seconds", seconds.toString())
-        Log.d("minutes", minutes.toString())
-        Log.d("hours", hours.toString())
-        return when {
-            hours < 24 -> {
-                "$hours 시간 전"
-            }
-            else -> {
-                ""
-            }
-        }
+
+        return hours.toInt()
     }
 }

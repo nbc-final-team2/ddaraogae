@@ -12,6 +12,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter.getCurrentTimeAgo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +39,7 @@ class HomeViewModel @Inject constructor(
     private val _selectDogState = MutableStateFlow<DogInfo?>(null)
     val selectDogState = _selectDogState.asStateFlow()
 
-    private val _selectDogWithTimeState = MutableStateFlow<String?>(null)
+    private val _selectDogWithTimeState = MutableStateFlow<Int?>(null)
     val selectDogWithTimeState = _selectDogWithTimeState.asStateFlow()
 
     private val _walkListState = MutableStateFlow<List<WalkingInfo>>(emptyList())
@@ -160,7 +161,7 @@ class HomeViewModel @Inject constructor(
                             walkingImage = it.walkingImage
                         )
                     }
-                    _selectDogWithTimeState.value = DateFormatter.getCurrentTimeAgo(walkInfo.lastOrNull()?.endDateTime) // last일 경우 위에 if문을 넣어서 리스트에 아무것도 없을 경우 대비 or lastOrNull 넣기
+                    _selectDogWithTimeState.value = getCurrentTimeAgo(walkInfo.lastOrNull()?.endDateTime)
                     _walkListState.value = walkInfo
                     _loadWalkDataEvent.emit(DefaultEvent.Success)
                 }
