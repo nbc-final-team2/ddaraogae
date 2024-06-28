@@ -8,6 +8,10 @@
 
     <!-- home -->
     <string name="home_title">반가워요!</string>
+    <string name="home_a_few_hours_ago">시간 전</string>
+    <string name="home_time_none">최근에 산책한 기록이 없어요!</string>
+    <string name="home_time_more_than_a_day">산책을 안한지 하루가 넘었어요!</string>
+    <string name="home_time_just_now">금방 산책을 다녀왔어요!</string>
     <string name="home_walk_graph_title">금주 산책 이력</string>
     <string name="home_weather_title">오늘의 날씨</string>
     <string name="home_weather_location">홍성군</string>
@@ -68,6 +72,12 @@
     <string name="home_history_dialog_month_10">10월</string>
     <string name="home_history_dialog_month_11">11월</string>
     <string name="home_history_dialog_month_12">12월</string>
+
+    <!-- home - history - dialog -->
+    <string name="home_history_dialog_map_content">따라오개에서 산책 이력을 공유해요!</string>
+    <string name="home_history_dialog_map_chooser">공유하기</string>
+    <string name="home_history_dialog_map_fail_message">공유하기에 실패했어요.</string>
+
 
     <!-- home - history - walk - adapter-->
     <string name="home_history_walk_adapter_km">km</string>
@@ -263,4 +273,8 @@
     <string name="fine_dust_status_very_bad">매우나쁨</string>
     <string name="msg_edit_fail">수정사항 업데이트에 실패했습니다</string>
 
+    <!-- finish  -->
+    <string name="finish_dialog_msg">이대로 나가면 산책 결과가 저장되지 않습니다.\n그래도 나가시겠습니까?</string>
+    <string name="finish_dialog_confirm">확인</string>
+    <string name="finish_dialog_cancel">취소</string>
 </resources>

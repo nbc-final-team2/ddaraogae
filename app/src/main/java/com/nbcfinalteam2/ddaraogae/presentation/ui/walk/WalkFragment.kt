@@ -42,7 +42,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.FinishActivity.Compani
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.FinishActivity.Companion.WALKINGDOGS
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.FinishActivity.Companion.WALKINGUIMODEL
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
-import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -475,6 +475,6 @@ class WalkFragment : Fragment() {
     }
 
     private fun updateTimerText(time: Int) {
-        binding.tvWalkTime.text = timeIntToString(time)
+        binding.tvWalkTime.text = timeIntToStringForWalk(time)
     }
 }

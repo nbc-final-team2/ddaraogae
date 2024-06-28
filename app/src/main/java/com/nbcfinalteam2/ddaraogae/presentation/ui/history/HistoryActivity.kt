@@ -101,9 +101,9 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupAdapter() {
         walkHistoryAdapter = WalkHistoryAdapter(
-            onMapClick = { walkMap ->
+            onMapClick = { walkingInfo ->
                 val dialog = WalkHistoryMapDialog()
-                dialog.setEnlargementOfImage(walkMap)
+                dialog.setInfo(walkingInfo, dogInfo.name ?: "")
                 dialog.show(supportFragmentManager, "")
             }
         )
