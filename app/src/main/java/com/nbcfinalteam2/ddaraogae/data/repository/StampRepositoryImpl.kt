@@ -1,9 +1,11 @@
 package com.nbcfinalteam2.ddaraogae.data.repository
 
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.FirebaseDataSource
+import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.StampInfo
 import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toDto
 import com.nbcfinalteam2.ddaraogae.data.mapper.FirebaseMapper.toEntity
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
+import com.nbcfinalteam2.ddaraogae.domain.entity.StampInfoEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.StampRepository
 import java.util.Date
 import javax.inject.Inject
@@ -29,5 +31,9 @@ class StampRepositoryImpl @Inject constructor(
         return firebaseDateSource.checkStampCondition(date).map {
             it.second.toEntity(it.first)
         }
+    }
+
+    override fun getStampInfoList(): List<StampInfoEntity> {
+        return StampInfo.stampInfoList.map { it.toEntity() }
     }
 }
