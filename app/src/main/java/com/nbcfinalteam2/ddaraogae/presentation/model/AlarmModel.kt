@@ -9,12 +9,6 @@ data class AlarmModel(
     val isPm: Boolean
 )
 
-
-fun AlarmModel.toEntity() = AlarmEntity(
-    id = id,
-    setTime = if(setHour==12) 0 else setHour*60 + setMinute + if(isPm) 720 else 0
-)
-
 fun AlarmEntity.toModel(): AlarmModel {
     var setHour = 12
     var setMinute = 0

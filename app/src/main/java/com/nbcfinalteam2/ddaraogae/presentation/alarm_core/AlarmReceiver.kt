@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.nbcfinalteam2.ddaraogae.R
@@ -29,7 +28,6 @@ class AlarmReceiver: BroadcastReceiver() {
     @Inject lateinit var alarmController: AlarmController
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("BroadCast Receiver", "onReceive()")
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             CoroutineScope(Dispatchers.IO).launch {
                 alarmRepository.getAlarmList().single().onEach {
@@ -43,7 +41,6 @@ class AlarmReceiver: BroadcastReceiver() {
                 }
             }
         } else {
-            Log.d("BroadCast Receiver", "정상 캐치")
             val manager = getSystemService(context, NotificationManager::class.java)
             createNotificationChannel(notificationManager = manager)
             postNotification(context = context, notificationManager = manager)
