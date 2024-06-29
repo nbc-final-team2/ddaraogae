@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +23,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.floatingactionbutton.FloatingActionButton.SIZE_AUTO
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.geometry.LatLngBounds
-import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -225,7 +226,7 @@ class WalkFragment : Fragment() {
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
         binding.ibWalkLocation.setOnClickListener {
-            if(::naverMap.isInitialized && ::cameraPosition.isInitialized) {
+            if (::naverMap.isInitialized && ::cameraPosition.isInitialized) {
                 naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
             }
         }
@@ -295,7 +296,7 @@ class WalkFragment : Fragment() {
 
         endLocationService()
 
-        if(locationList.size<2) {
+        if (locationList.size < 2) {
             ToastMaker.make(requireContext(), getString(R.string.msg_short_walking_time))
             return
         }
@@ -307,7 +308,7 @@ class WalkFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
-                    if(it.isLoading) {
+                    if (it.isLoading) {
                         binding.btnWalkStart.isEnabled = false
                     } else {
                         binding.btnWalkStart.isEnabled = true
@@ -333,11 +334,12 @@ class WalkFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
-                    when(event) {
+                    when (event) {
                         is WalkEvent.Error -> ToastMaker.make(requireContext(), event.strResId)
                         is WalkEvent.StartWalking -> {
                             startServiceAndWalk()
                         }
+
                         is WalkEvent.StopWalking -> {
                             walkViewModel.setLoading()
                             stopServiceAndWalk()
