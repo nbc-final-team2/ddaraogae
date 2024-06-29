@@ -58,14 +58,13 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_walkMap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_extra_small"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_history_map" />
+                tools:srcCompat="@drawable/ic_history_map" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_distanceLabel"

@@ -8,6 +8,7 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.firebaseCrachlytics)
 }
 
 android {
@@ -18,8 +19,8 @@ android {
         applicationId = "com.nbcfinalteam2.ddaraogae"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,8 +41,8 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
-            isDebuggable = true
+            isMinifyEnabled = true //릴리즈용으로 번들을 추출할 때에는 false로 변경해야함
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -68,6 +69,7 @@ dependencies {
 
     // Glide
     implementation (libs.glide)
+    implementation(libs.glide.transformations)
     annotationProcessor(libs.glide.compiler)
 
     // MPAndroidChart
@@ -96,6 +98,7 @@ dependencies {
     //firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
@@ -107,6 +110,10 @@ dependencies {
 
     // FusedLocationSource
     implementation(libs.play.services.location)
+
+    //viewPager2 & indicator
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.dotsindicator)
 
     //Hilt
     implementation(libs.hilt.android)
@@ -130,8 +137,6 @@ dependencies {
     implementation("com.google.gms:google-services:4.4.2")
     //splash
     implementation("androidx.core:core-splashscreen:1.0.1")
-
-
 }
 
 kapt {

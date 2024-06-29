@@ -44,6 +44,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.DateFormat
+import java.util.Date
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -101,7 +103,7 @@ class HomeFragment : Fragment() {
 
     private fun initViewModels() {
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogList ->
                     dogProfileAdapter.submitList(dogList)
@@ -109,7 +111,23 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
+            homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { endDateTime ->
+                    if (endDateTime == null) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_none)
+                    } else if (endDateTime == 0) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_just_now)
+                    } else if (endDateTime < 24) {
+                        binding.tvBeforetime.text =
+                            "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
+                    } else if (endDateTime > 24) {
+                        binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
+                    }
+                }
+        }
+
+        lifecycleScope.launch {
             homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogData ->
                     if (dogData != null) {
@@ -119,7 +137,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { walkData ->
                     if (walkData.isEmpty()) {
@@ -132,21 +150,21 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { weatherInfo ->
                     updateWeatherUI(weatherInfo)
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.refreshDogList()
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.stampProgressState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { progress ->
                     binding.progressbarWalkStampRate.progress = progress
@@ -154,7 +172,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -164,7 +182,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.updateDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -174,7 +192,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadWalkDataEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -184,7 +202,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -200,7 +218,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             homeViewModel.loadStampEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -210,7 +228,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             itemChangedEventBus.stampChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.loadStampProgress()
@@ -284,7 +302,7 @@ class HomeFragment : Fragment() {
         return when (condition) {
             getString(R.string.weather_status_thunder) -> R.drawable.ic_weather_thunder
             getString(R.string.weather_status_rain) -> R.drawable.ic_weather_rain
-            getString(R.string.weather_status_slight_rain) -> R.drawable.ic_weather_slight_rain
+            getString(R.string.weather_status_slight_rain) -> R.drawable.ic_weather_rain
             getString(R.string.weather_status_snow) -> R.drawable.ic_weather_snow
             getString(R.string.weather_status_typoon) -> R.drawable.ic_weather_typoon_dust_fog
             getString(R.string.weather_status_dust) -> R.drawable.ic_weather_typoon_dust_fog
@@ -315,6 +333,7 @@ class HomeFragment : Fragment() {
             tvTodayWeatherTime.visibility = View.VISIBLE
             tvWeatherData.visibility = View.GONE
             tvTodayWeatherTime.text = DateFormatter.getTodayDate()
+
         }
     }
 
@@ -412,7 +431,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun moveToHistory() {
-        binding.cvGraph.setOnClickListener {
+        binding.tvMoveToHistoryGraph.setOnClickListener {
             val dogInfo = homeViewModel.selectDogState.value
             if (dogInfo != null) {
                 val intent = Intent(context, HistoryActivity::class.java)
@@ -446,7 +465,7 @@ class HomeFragment : Fragment() {
         val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
-        val dataSet = LineDataSet(entries, "").apply {
+        val dataSet = LineDataSet(entries, "최근 1주일 산책 그래프").apply {
             axisDependency = YAxis.AxisDependency.LEFT
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
@@ -466,15 +485,16 @@ class HomeFragment : Fragment() {
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.isEnabled = false
+            legend.isEnabled = true
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
-            setTouchEnabled(false)
-            setPinchZoom(false)
-            setScaleEnabled(false)
-            isDragXEnabled = false
-            isDragYEnabled = false
+            setTouchEnabled(true)
+            setPinchZoom(true)
+            setScaleEnabled(true)
+            isDoubleTapToZoomEnabled = true
+            isDragXEnabled = true
+            isDragYEnabled = true
         }
         lineChart.invalidate()
     }
@@ -489,9 +509,10 @@ class HomeFragment : Fragment() {
 
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
-            setLabelCount(7, true)
+            setLabelCount(dates.size, false)
             axisMinimum = 0f
             axisMaximum = 6f
+            granularity = 1f
             valueFormatter = formatter
         }
     }
@@ -507,7 +528,7 @@ class HomeFragment : Fragment() {
 
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return "${value}km"
+                    return String.format("%.1fkm", value)
                 }
             }
         }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/bg_grey"
     tools:context=".presentation.ui.home.HomeFragment">
 
     <ScrollView
@@ -30,6 +30,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_beforetime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_larger_60"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:text="@string/home_a_few_hours_ago"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_main" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_dogArea"
                 android:layout_width="match_parent"
@@ -40,14 +54,14 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_main"
+                app:layout_constraintTop_toBottomOf="@+id/tv_beforetime"
                 tools:listitem="@layout/item_home_dog_selection" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_dogAdd"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_medium"
                 android:padding="@dimen/padding_small"
                 android:src="@drawable/ic_dog_add"
                 app:civ_border_color="@color/very_soft_orange"
@@ -62,14 +76,25 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="160dp"
-                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginTop="200dp"
+                android:layout_marginEnd="@dimen/margin_extra_lager"
                 android:text="@string/home_walk_graph_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_moveToHistoryGraph"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_main" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_moveToHistoryGraph"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:text="@string/home_walk_graph_move_to_history"
+                android:textSize="@dimen/text_caption"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_dogGraph"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_dogGraph" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_graph"
@@ -104,7 +129,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_empty_data"
-                        android:elevation="20dp"
+                        android:elevation="8dp"
                         android:padding="@dimen/padding_small"
                         android:text="@string/home_walk_graph_no_data"
                         android:textSize="@dimen/text_mini"
@@ -124,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_lager"
-                android:text="금주 산책 도장 달성율"
+                android:text="@string/home_stamp_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/tv_moveToAllStamp"
@@ -136,7 +161,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
-                android:text="전체 보기"
+                android:text="@string/home_stamp_see_more"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_stampTitle"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -165,12 +190,12 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
-                        tools:text="@string/home_progressbar_rate"
                         android:textSize="@dimen/text_caption"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="@+id/progressbar_walkStampRate"
                         app:layout_constraintStart_toStartOf="@+id/progressbar_walkStampRate"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="@string/home_progressbar_rate" />
 
                     <ProgressBar
                         android:id="@+id/progressbar_walkStampRate"
@@ -231,7 +256,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_empty_data"
-                        android:elevation="20dp"
+                        android:elevation="8dp"
                         android:padding="@dimen/padding_small"
                         android:text="@string/home_weather_no_data"
                         android:textSize="@dimen/text_mini"

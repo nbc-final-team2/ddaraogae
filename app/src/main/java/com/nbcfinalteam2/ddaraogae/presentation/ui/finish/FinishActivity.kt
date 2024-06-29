@@ -5,8 +5,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -29,12 +31,12 @@ import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
-import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.StampDialogFragment.Companion.ARG_STAMP_LIST
+import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
-import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -61,6 +63,18 @@ class FinishActivity : FragmentActivity() {
 
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            AlertDialog.Builder(this@FinishActivity)
+                .setMessage(getString(R.string.finish_dialog_msg))
+                .setPositiveButton(getString(R.string.finish_dialog_confirm)) { _, _ ->
+                    finish()
+                }.setNegativeButton(getString(R.string.finish_dialog_cancel)) { _, _ -> }
+                .show()
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -75,6 +89,8 @@ class FinishActivity : FragmentActivity() {
             view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
+
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun getDataForInitView() {
@@ -125,12 +141,6 @@ class FinishActivity : FragmentActivity() {
                     itemChangedEventBus.notifyStampChanged()
                     val dialogFragment = StampDialogFragment.newInstance(ArrayList(list))
                     dialogFragment.isCancelable = false
-                    dialogFragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
-                        override fun onDestroy(owner: LifecycleOwner) {
-                            super.onDestroy(owner)
-                            finish()
-                        }
-                    })
                     dialogFragment.show(supportFragmentManager, ARG_STAMP_LIST)
                 } else {
                     // 받을 스탬프가 없을 때
@@ -170,7 +180,7 @@ class FinishActivity : FragmentActivity() {
 
             //산책 시간
             tvFinishWalkingTime.text = walkingUiModel?.timeTaken?.let {
-                timeIntToString(it)
+                timeIntToStringForWalk(it)
             }
 
             //산책 거리
