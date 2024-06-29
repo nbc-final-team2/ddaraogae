@@ -264,12 +264,6 @@ class WalkFragment : Fragment() {
             walkViewModel.walkToggle()
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
-        binding.ibWalkLocation.setOnClickListener {
-            if (::naverMap.isInitialized && ::cameraPosition.isInitialized) {
-                naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
-            }
-        }
-
     }
 
     private fun checkServicePermission() {
