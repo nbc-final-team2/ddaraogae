@@ -185,32 +185,20 @@ class WalkFragment : Fragment() {
         // fragment의 getMapAsync() 메서드로 OnMapReadyCallback 콜백을 등록하면 비동기로 NaverMap 객체를 얻을 수 있다.
         mapFragment.getMapAsync { map ->
             naverMap = map
-            // 현재 위치 활성화
             naverMap.locationSource = locationSource
+            // 위치 추적, 이게 없으면 현재 위치 감지를 못한다.
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
-            // 위치를 추적하면서 카메라도 따라 움직인다.
-            naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 나침반 비활성화
             naverMap.uiSettings.isCompassEnabled = false
-            // 현재 위치 버튼 비활성화
-            naverMap.uiSettings.isLocationButtonEnabled = false
-
-//            naverMap.locationOverlay.circleRadius = 20
-//            naverMap.locationOverlay.circleColor = Color.RED
-//            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
-            naverMap.uiSettings.isLocationButtonEnabled = true
+            // 하단에 padding으로 현재 위치랑 로고 가리는 문제 해결
             naverMap.setContentPadding(0, 0, 0, 200)
             naverMap.minZoom = 7.0
             naverMap.maxZoom = 18.0
-
-            // 반투명 원(위치 정확도 UX) 크기 ZoomLevel에 따라 유동적이지 않음
+            // 반투명 원(위치 정확도 UX) 크기, ZoomLevel에 따라 유동적이지 않게 하기
             naverMap.locationOverlay.circleRadius = SIZE_AUTO
             naverMap.locationOverlay.iconHeight = SIZE_AUTO
-
-
-            naverMap.uiSettings.isLocationButtonEnabled = true
-            naverMap.setContentPadding(0, 0, 0, 200)
 
             // 카메라 설정
             lifecycleScope.launch {
