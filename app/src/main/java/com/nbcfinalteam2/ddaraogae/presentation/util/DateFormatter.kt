@@ -83,7 +83,7 @@ object DateFormatter {
         return todayDateFormat.format(Date())
     }
 
-    fun getHistoryDate(walkEndTime: Date): String {
+    fun getDateFormatter(walkEndTime: Date): String {
         val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
         return format.format(walkEndTime)
     }

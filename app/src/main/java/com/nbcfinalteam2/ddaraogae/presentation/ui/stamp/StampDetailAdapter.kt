@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nbcfinalteam2.ddaraogae.databinding.ItemStampDetailBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
 class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,7 +22,7 @@ class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder
     class ViewHolder(private val binding: ItemStampDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: StampModel) {
             with(binding) {
-                tvStampDetailDate.text = item.getDateTime?.toString()
+                tvStampDetailDate.text = item.getDateTime?.let { DateFormatter.getDateFormatter(it) }
             }
         }
     }
