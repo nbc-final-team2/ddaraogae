@@ -1,10 +1,14 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.finish
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.fragment.app.DialogFragment
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentStampDialogBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +34,8 @@ class StampDialogFragment : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentStampDialogBinding.inflate(inflater, container, false)
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         return binding.root
     }
 
@@ -38,8 +44,9 @@ class StampDialogFragment : DialogFragment() {
 
         val stampList: ArrayList<StampEntity>? = arguments?.getParcelableArrayList(ARG_STAMP_LIST)
 
-        val adapter = stampList?.let { FinishStampAdapter(it) }
-        binding.rvWalkFinishStampList.adapter = adapter
+        val adapter = stampList?.let { FinishStampViewPagerAdapter(it) }
+        binding.vpWalkFinishStampList.adapter = adapter
+        binding.diWalkFinishStampList.attachTo(binding.vpWalkFinishStampList)
 
         binding.btnStampDone.setOnClickListener {
             dismiss()
