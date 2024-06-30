@@ -361,8 +361,8 @@ class WalkFragment : Fragment() {
 
             val contentString = """
                 ${store.placeName} | ${store.categoryGroupName}
-                    ${store.address}
-                    ${store.phone} 
+                ${store.address}
+                ${store.phone} 
                 """.trimIndent()
 
             val infoWindow = InfoWindow().apply {
