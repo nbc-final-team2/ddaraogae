@@ -59,8 +59,8 @@ import java.util.Date
 class WalkFragment : Fragment() {
 
     // Handler와 Runnable 선언
-    val handler = Handler(Looper.getMainLooper())
-    var followModeRunnable: Runnable? = null
+    private val handler = Handler(Looper.getMainLooper())
+    private var followModeRunnable: Runnable? = null
 
     private val walkViewModel: WalkViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
@@ -105,7 +105,7 @@ class WalkFragment : Fragment() {
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
-    var infoWindowBackup : InfoWindow? = null
+    private var infoWindowBackup: InfoWindow? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -389,8 +389,6 @@ class WalkFragment : Fragment() {
     }
 
     private fun addMarkers(storeListState: StoreListState) {
-        /* TODO:
-        *   클릭시 정보창 띄우기로 변경, 마커 사이즈 줄이기, bound는 어떻게 */
         storeListState.storeList.forEach { store ->
             val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
             val marker = Marker()
