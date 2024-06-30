@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemStampDetailBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
 
@@ -22,8 +21,6 @@ class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder
     class ViewHolder(private val binding: ItemStampDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: StampModel) {
             with(binding) {
-                // 이미지와 날짜를 설정합니다.
-                ivStamp.setImageResource(R.drawable.ic_stamp_detail) // 이 부분은 실제 이미지로 교체 필요
                 tvStampDetailDate.text = item.getDateTime?.toString()
             }
         }
@@ -41,4 +38,3 @@ class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder
         }
     }
 }
-

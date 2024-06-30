@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
-import com.nbcfinalteam2.ddaraogae.domain.entity.StampInfoEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
@@ -49,13 +47,14 @@ class StampDetailViewModel @Inject constructor(
                 }.time
 
                 val stampEntities = getStampListByPeriodUseCase(startDate, currentDate)
-                val stampModels = stampEntities.map { entity ->
+                val filteredEntities = stampEntities.filter { it.name == stampInfo.title }
+                val stampModels = filteredEntities.map { entity ->
                     StampModel(
                         id = entity.id,
-                        stampNum = entity.stampNum,
+                        stampNum = filteredEntities.size,
                         getDateTime = entity.getDateTime,
                         name = entity.name,
-                        num = stampId, // 여기서 stampId를 사용하여 StampModel을 생성
+                        num = stampInfo.num,
                         title = stampInfo.title,
                         description = stampInfo.description
                     )
@@ -65,5 +64,3 @@ class StampDetailViewModel @Inject constructor(
         }
     }
 }
-
-
