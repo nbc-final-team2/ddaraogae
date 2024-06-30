@@ -6,7 +6,7 @@
     android:padding="@dimen/padding_small">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView2"
+        android:id="@+id/iv_stamp"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/ic_stamp_detail"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/stamp_detail_item_stamp_date"
         android:textSize="@dimen/text_mini"
-        app:layout_constraintEnd_toEndOf="@+id/circleImageView2"
-        app:layout_constraintStart_toStartOf="@+id/circleImageView2"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageView2" />
+        app:layout_constraintEnd_toEndOf="@+id/iv_stamp"
+        app:layout_constraintStart_toStartOf="@+id/iv_stamp"
+        app:layout_constraintTop_toBottomOf="@+id/iv_stamp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
