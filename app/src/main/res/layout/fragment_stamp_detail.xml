@@ -64,6 +64,10 @@
         android:id="@+id/tv_stampDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_extra_smaller"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_extra_smaller"
         android:text="@string/stamp_detail_stamp_description"
         android:textSize="@dimen/text_caption"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,9 +77,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_extra_lager"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:background="@color/light_brown"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_stampDescription" />
-
+        app:layout_constraintTop_toBottomOf="@+id/tv_stampDescription"
+        app:spanCount="3"
+        tools:listitem="@layout/item_stamp_detail" />
 </androidx.constraintlayout.widget.ConstraintLayout>
