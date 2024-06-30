@@ -28,8 +28,8 @@ class StampDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupAdapter()
         setupViewModel()
-        val stampId = arguments?.getInt("stampId") ?: 0
-        stampDetailViewModel.loadStampDetail(stampId)
+        getStampInfo()
+        setupListener()
     }
 
     private fun setupAdapter() {
@@ -45,6 +45,17 @@ class StampDetailFragment : Fragment() {
 
         stampDetailViewModel.stampList.observe(viewLifecycleOwner) { stampList ->
             stampDetailAdapter.submitList(stampList)
+        }
+    }
+
+    private fun getStampInfo() {
+        val stampId = arguments?.getInt("stampId") ?: 0
+        stampDetailViewModel.loadStampDetail(stampId)
+    }
+
+    private fun setupListener() {
+        binding.btnBack.setOnClickListener {
+            requireActivity().onBackPressed()
         }
     }
 
