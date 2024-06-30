@@ -20,7 +20,9 @@ class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder
 
     class ViewHolder(private val binding:ItemStampDetailBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: StampModel) {
-            with(binding) {}
+            with(binding) {
+
+            }
         }
     }
 
