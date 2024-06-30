@@ -109,6 +109,11 @@
     <string name="home_all_stamp_item_stamp_num_title">내가 얻은 도장 보러가기</string>
     <string name="home_all_stamp_item_stamp_click_button">Click</string>
 
+    <!-- stamp - detail -->
+    <string name="stamp_detail_title">산책 도장 정보</string>
+    <string name="stamp_detail_stamp_title">다다익선</string>
+    <string name="stamp_detail_stamp_description">다다익선은 어쩌구..저쩌구..</string>
+
     <!-- walk -->
     <string name="walk_start">산책하기</string>
     <string name="walk_walking_distance">거리</string>
