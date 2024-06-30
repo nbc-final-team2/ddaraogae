@@ -223,32 +223,23 @@ class WalkFragment : Fragment() {
             naverMap.addOnLocationChangeListener {
                 setCamera(it)
                 walkViewModel.fetchStoreData(it.latitude, it.longitude) // 위치 데이터 가져오기(꼭 있어야함)
-                Log.d("tracking", LocationTrackingMode.Follow.toString())
             }
 
             naverMap.addOnCameraChangeListener { reason, animated ->
-                // 사용자의 제스쳐로 인해 Camera가 변경된 경우, 바텀시트를 최대 확장에서 절반 확장으로 변경해주는 예시
+                // 사용자의 제스쳐로 인해 Camera가 변경된 경우
                 if (reason == CameraUpdate.REASON_GESTURE) {
                     // 기존 타이머 취소
                     followModeRunnable?.let { handler.removeCallbacks(it) }
 
                     // 새로운 Runnable 생성 및 10초 타이머 시작
                     followModeRunnable = Runnable {
-                        // Follow Mode로 전환하는 로직을 여기에 작성
-                        startFollowMode()
+                        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+
                     }
                     handler.postDelayed(followModeRunnable!!, 10000) // 10초 후 실행
-                    Log.d("post", handler.postDelayed(followModeRunnable!!, 10000).toString())
                 }
             }
         }
-    }
-
-    // Follow Mode 전환 함수 예시
-    fun startFollowMode() {
-        // Follow Mode 전환 로직
-        // 예: naverMap.locationTrackingMode = LocationTrackingMode.Follow
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     private fun setCamera(lastLocation: Location) {
