@@ -45,7 +45,8 @@ class AllStampViewModel @Inject constructor(
                     getDateTime = null,
                     name = null,
                     num = entity.num,
-                    title = entity.title
+                    title = entity.title,
+                    description = entity.description
                 )
             }
 
