@@ -45,6 +45,11 @@ class StampDetailFragment : Fragment() {
 
         stampDetailViewModel.stampList.observe(viewLifecycleOwner) { stampList ->
             stampDetailAdapter.submitList(stampList)
+            if (stampList.isEmpty()) {
+                binding.cvEmptyData.visibility = View.VISIBLE
+            } else {
+                binding.cvEmptyData.visibility = View.GONE
+            }
         }
     }
 
