@@ -48,7 +48,10 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubl
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -58,9 +61,9 @@ import java.util.Date
 @AndroidEntryPoint
 class WalkFragment : Fragment() {
 
-    // Handler와 Runnable 선언
-    private val handler = Handler(Looper.getMainLooper())
-    private var followModeRunnable: Runnable? = null
+    val scope = CoroutineScope(Dispatchers.Main) // UI 스레드에서 실행될 코루틴 스코프
+    private var trackingModeJob: Job? = null
+
 
     private val walkViewModel: WalkViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
@@ -216,15 +219,14 @@ class WalkFragment : Fragment() {
             naverMap.addOnCameraChangeListener { reason, animated ->
                 // 사용자의 제스쳐로 인해 Camera가 변경된 경우
                 if (reason == CameraUpdate.REASON_GESTURE) {
-                    // 기존 타이머 취소
-                    followModeRunnable?.let { handler.removeCallbacks(it) }
+                    // 기존 코루틴 취소
+                    trackingModeJob?.cancel()
 
-                    // 새로운 Runnable 생성 및 10초 타이머 시작
-                    followModeRunnable = Runnable {
+                    // 새로운 코루틴 생성 및 10초 타이머 시작
+                    trackingModeeJob = scope.launch {
+                        delay(10000) // 10초 지연
                         naverMap.locationTrackingMode = LocationTrackingMode.Follow
-
                     }
-                    handler.postDelayed(followModeRunnable!!, 10000) // 10초 후 실행
                 }
             }
         }
