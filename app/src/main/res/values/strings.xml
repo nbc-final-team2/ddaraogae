@@ -114,6 +114,7 @@
     <string name="stamp_detail_stamp_title">다다익선</string>
     <string name="stamp_detail_stamp_description">다다익선은 어쩌구..저쩌구..</string>
     <string name="stamp_detail_item_stamp_date">2024.06.18 23:22</string>
+    <string name="stamp_detail_empty_data">흭득한 산책 도장이 없습니다.</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>
