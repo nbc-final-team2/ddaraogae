@@ -482,7 +482,6 @@ class WalkFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
-//        trackingModeJob = null
     }
 
     private fun updateDistanceText(dist: Double) {
