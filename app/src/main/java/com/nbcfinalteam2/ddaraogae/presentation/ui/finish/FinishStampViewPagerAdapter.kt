@@ -7,8 +7,8 @@ import com.nbcfinalteam2.ddaraogae.databinding.ItemWalkFinishStampBinding
 import com.nbcfinalteam2.ddaraogae.domain.entity.StampEntity
 
 
-class FinishStampAdapter(private val items: List<StampEntity>) :
-    RecyclerView.Adapter<FinishStampAdapter.FinishStampViewHolder>() {
+class FinishStampViewPagerAdapter(private val items: List<StampEntity>) :
+    RecyclerView.Adapter<FinishStampViewPagerAdapter.FinishStampViewHolder>() {
 
     class FinishStampViewHolder(private val binding: ItemWalkFinishStampBinding) :
         RecyclerView.ViewHolder(binding.root) {
