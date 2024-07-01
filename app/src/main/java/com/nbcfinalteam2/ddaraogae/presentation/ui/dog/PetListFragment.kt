@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -17,7 +19,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentPetListBinding
+import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
+import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,6 +35,7 @@ class PetListFragment:Fragment() {
     private val adapter:PetListAdapter by lazy {
         PetListAdapter{ item ->
             viewModel.selectDog(item)
+            viewModel.saveDisplayState("detailPet")
             parentFragmentManager.beginTransaction()
                 .add(R.id.fl_my_pet, DetailPetFragment())
                 .commit()
@@ -74,6 +79,21 @@ class PetListFragment:Fragment() {
         lifecycleScope.launch {
             viewModel.dogListState.flowWithLifecycle(lifecycle).collectLatest { dogList ->
                 adapter.submitList(dogList)
+                if (dogList.isEmpty()) {
+                    binding.tvEmptyList.visibility = AppCompatTextView.VISIBLE
+                    binding.svPetList.visibility = ScrollView.INVISIBLE
+                } else{
+                    binding.svPetList.visibility = ScrollView.VISIBLE
+                    binding.tvEmptyList.visibility = AppCompatTextView.INVISIBLE
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.loadEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
+                    DefaultEvent.Success -> {}
+                }
             }
         }
     }

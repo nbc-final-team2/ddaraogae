@@ -67,9 +67,11 @@ class DetailPetFragment : Fragment() {
         }
         binding.tvEdit.setOnClickListener {
             viewModel.selectedDogState.value?.let {
+                viewModel.saveDisplayState("detailPet")
                 val intent = Intent(requireActivity(), EditPetActivity::class.java)
                 intent.putExtra(DOGDATA, it)
                 startActivity(intent)
+                requireActivity().finish()
             }
         }
     }
@@ -78,14 +80,6 @@ class DetailPetFragment : Fragment() {
             viewModel.selectedDogState.flowWithLifecycle(lifecycle).collectLatest { dogInfo ->
                 dogInfo?.let {
                     setView(dogInfo)
-                }
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.loadEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
-                    is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
-                    DefaultEvent.Success -> {}
                 }
             }
         }
@@ -103,27 +97,11 @@ class DetailPetFragment : Fragment() {
         tvPetBreed.text = dogData.lineage
         tvPetMemo.text = dogData.memo
         if (dogData.gender == 1) {
-            tvFemale.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    this.root.context,
-                    R.color.soft_orange
-                )
-            )
-            tvMale.backgroundTintList =
-                ColorStateList.valueOf(ContextCompat.getColor(this.root.context, R.color.white))
+            tvFemale.setBackgroundDrawable(requireActivity().resources.getDrawable(R.drawable.radio_button_selected))
+            tvMale.setBackgroundDrawable(requireActivity().resources.getDrawable(R.drawable.radio_button_unselected))
         } else {
-            tvMale.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    this.root.context,
-                    R.color.soft_orange
-                )
-            )
-            tvFemale.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    this.root.context,
-                    R.color.white
-                )
-            )
+            tvFemale.setBackgroundDrawable(requireActivity().resources.getDrawable(R.drawable.radio_button_unselected))
+            tvMale.setBackgroundDrawable(requireActivity().resources.getDrawable(R.drawable.radio_button_selected))
         }
     }
 

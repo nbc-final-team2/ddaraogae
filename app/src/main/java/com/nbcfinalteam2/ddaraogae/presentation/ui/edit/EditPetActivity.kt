@@ -101,7 +101,9 @@ class EditPetActivity : AppCompatActivity() {
             }
         }
 
-        btBack.setOnClickListener { finish() }
+        btBack.setOnClickListener {
+            startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
+        }
 
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -140,6 +142,7 @@ class EditPetActivity : AppCompatActivity() {
 
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
                 viewModel.updateDog(changedDog)
+                startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
             }
         }
         tvDelete.setOnClickListener {
@@ -147,8 +150,6 @@ class EditPetActivity : AppCompatActivity() {
             builder.setMessage(R.string.detail_pet_delete_message)
             builder.setPositiveButton(R.string.detail_pet_delete_positive) { _, _ ->
                 viewModel.deleteSelectedDogData(dogData?.id)
-                startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
-                finish()
             }
             builder.setNegativeButton(R.string.detail_pet_delete_negative) { _, _ -> }
             builder.show()
@@ -204,6 +205,8 @@ class EditPetActivity : AppCompatActivity() {
                         itemChangedEventBus.notifyItemChanged()
                         ToastMaker.make(this@EditPetActivity, R.string.detail_pet_delete_complete)
                         binding.svEditPet.fullScroll(ScrollView.FOCUS_UP)
+                        startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
+                        finish()
                     }
                 }
             }
