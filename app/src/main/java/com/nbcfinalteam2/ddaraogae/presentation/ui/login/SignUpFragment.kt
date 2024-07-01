@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -124,10 +125,11 @@ class SignUpFragment : Fragment() {
         }
     }
     private fun buttonState(){
+        var bgShape = binding.btSignup.background as GradientDrawable
         if (correctEmail && correctPassword && correctPasswordCheck) {
-            if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.btSignup.setBackgroundResource(R.color.brown)
-            else binding.btSignup.setBackgroundResource(R.color.grey)
-        } else binding.btSignup.setBackgroundResource(R.color.grey)
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) bgShape.setColor(resources.getColor(R.color.brown))
+            else bgShape.setColor(resources.getColor(R.color.grey))
+        } else bgShape.setColor(resources.getColor(R.color.grey))
     }
 
     //email, password 유효성 검사
