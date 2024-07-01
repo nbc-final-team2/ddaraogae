@@ -133,6 +133,8 @@ class HomeFragment : Fragment() {
                     if (dogData != null) {
                         binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
                         homeViewModel.loadSelectedDogWalkGraph()
+                    } else {
+                        binding.tvDogGraph.text = getString(R.string.home_walk_graph_title)
                     }
                 }
         }
