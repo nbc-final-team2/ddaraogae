@@ -223,7 +223,7 @@ class WalkFragment : Fragment() {
                     trackingModeJob?.cancel()
 
                     // 새로운 코루틴 생성 및 10초 타이머 시작
-                    trackingModeeJob = scope.launch {
+                    trackingModeJob = scope.launch {
                         delay(10000) // 10초 지연
                         naverMap.locationTrackingMode = LocationTrackingMode.Follow
                     }
