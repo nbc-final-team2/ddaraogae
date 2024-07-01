@@ -79,35 +79,9 @@ class AlarmActivity: AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
         uiSetting()
-
         checkPermission()
-
-        binding.rvAlarmList.adapter = alarmAdapter
-
-        binding.tvAddAlarm.setOnClickListener {
-            val alarmDialog = AlarmSetDialogFragment(object : AlarmSetDialogFragment.AlarmDialogButtonListener {
-                override fun onPositiveButtonClicked(time: Int) {
-                    println(time)
-                    alarmViewModel.insertAlarm(time)
-                }
-
-                override fun onNegativeButtonClicked() {
-                }
-
-            })
-
-            alarmDialog.show(
-                supportFragmentManager, null
-            )
-        }
-
-        lifecycleScope.launch {
-            alarmViewModel.alarmUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
-                alarmAdapter.submitList(state.alarmList)
-                binding.rvAlarmList.isVisible = state.alarmList.isNotEmpty()
-                binding.tvEmptyList.isVisible = state.alarmList.isEmpty()
-            }
-        }
+        initView()
+        initViewModel()
     }
 
     private fun checkPermission() {
@@ -140,5 +114,42 @@ class AlarmActivity: AppCompatActivity() {
             WindowInsetsCompat.CONSUMED
         }
     }
+
+    private fun initView() {
+        binding.rvAlarmList.adapter = alarmAdapter
+
+        binding.tvAddAlarm.setOnClickListener {
+            val alarmDialog =
+                AlarmSetDialogFragment(object : AlarmSetDialogFragment.AlarmDialogButtonListener {
+                    override fun onPositiveButtonClicked(time: Int) {
+                        println(time)
+                        alarmViewModel.insertAlarm(time)
+                    }
+
+                    override fun onNegativeButtonClicked() {
+                    }
+
+                })
+
+            alarmDialog.show(
+                supportFragmentManager, null
+            )
+        }
+
+        binding.ivBackButton.setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun initViewModel() {
+        lifecycleScope.launch {
+            alarmViewModel.alarmUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+                alarmAdapter.submitList(state.alarmList)
+                binding.rvAlarmList.isVisible = state.alarmList.isNotEmpty()
+                binding.tvEmptyList.isVisible = state.alarmList.isEmpty()
+            }
+        }
+    }
+
 
 }
