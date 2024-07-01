@@ -41,8 +41,8 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = true //릴리즈용으로 번들을 추출할 때에는 false로 변경해야함
-            isDebuggable = false
+            isMinifyEnabled = true
+            isDebuggable = true //릴리즈용으로 번들을 추출할 때에는 false로 변경해야함
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
