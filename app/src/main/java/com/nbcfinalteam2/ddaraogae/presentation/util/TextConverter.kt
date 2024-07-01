@@ -29,9 +29,9 @@ object TextConverter {
 
     fun distanceDoubleToString(distance: Double) : String {
         return if (distance >= 1.0) {
-            String.format("%.1f km", distance / 1.0)
+            String.format("%.1f km", distance)
         } else {
-            String.format("%d m", distance.toInt())
+            String.format("%d m", (distance * 1000).toInt())
         }
     }
 
