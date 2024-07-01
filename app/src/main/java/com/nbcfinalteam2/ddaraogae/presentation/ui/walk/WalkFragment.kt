@@ -9,10 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,8 +45,6 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubl
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
@@ -60,10 +55,6 @@ import java.util.Date
 
 @AndroidEntryPoint
 class WalkFragment : Fragment() {
-
-    val scope = CoroutineScope(Dispatchers.Main) // UI 스레드에서 실행될 코루틴 스코프
-    private var trackingModeJob: Job? = null
-
 
     private val walkViewModel: WalkViewModel by viewModels()
     private var _binding: FragmentWalkBinding? = null
@@ -109,6 +100,7 @@ class WalkFragment : Fragment() {
 
     private var markerList = mutableListOf<Marker>()
     private var infoWindowBackup: InfoWindow? = null
+    private var trackingModeJob: Job? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -223,7 +215,7 @@ class WalkFragment : Fragment() {
                     trackingModeJob?.cancel()
 
                     // 새로운 코루틴 생성 및 10초 타이머 시작
-                    trackingModeJob = scope.launch {
+                    trackingModeJob = viewLifecycleOwner.lifecycleScope.launch {
                         delay(10000) // 10초 지연
                         naverMap.locationTrackingMode = LocationTrackingMode.Follow
                     }
@@ -484,11 +476,13 @@ class WalkFragment : Fragment() {
             stopCollectingServiceFlow()
             unbindFromService()
         }
+        trackingModeJob?.cancel()
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+//        trackingModeJob = null
     }
 
     private fun updateDistanceText(dist: Double) {
