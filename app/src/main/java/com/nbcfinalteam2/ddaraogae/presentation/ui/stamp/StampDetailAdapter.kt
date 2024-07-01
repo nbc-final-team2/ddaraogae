@@ -11,7 +11,8 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
 class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemStampDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemStampDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -19,10 +20,12 @@ class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemStampDetailBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemStampDetailBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: StampModel) {
             with(binding) {
-                tvStampDetailDate.text = item.getDateTime?.let { DateFormatter.getDateFormatter(it) }
+                tvStampDetailDate.text =
+                    item.getDateTime?.let { DateFormatter.getDateFormatter(it) }
             }
         }
     }

@@ -69,4 +69,3 @@ class StampDetailFragment : Fragment() {
         _binding = null
     }
 }
-
