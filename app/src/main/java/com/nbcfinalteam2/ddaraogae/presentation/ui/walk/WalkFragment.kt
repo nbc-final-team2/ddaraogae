@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.floatingactionbutton.FloatingActionButton.SIZE_AUTO
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationTrackingMode
@@ -47,6 +47,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStri
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -99,7 +100,8 @@ class WalkFragment : Fragment() {
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
-    var infoWindowBackup: InfoWindow? = null
+    private var infoWindowBackup: InfoWindow? = null
+    private var trackingModeJob: Job? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -179,22 +181,20 @@ class WalkFragment : Fragment() {
         // fragment의 getMapAsync() 메서드로 OnMapReadyCallback 콜백을 등록하면 비동기로 NaverMap 객체를 얻을 수 있다.
         mapFragment.getMapAsync { map ->
             naverMap = map
-            // 현재 위치 활성화
             naverMap.locationSource = locationSource
+            // 위치 추적, 이게 없으면 현재 위치 감지를 못한다.
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
-            // 위치를 추적하면서 카메라도 따라 움직인다.
-            naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 나침반 비활성화
             naverMap.uiSettings.isCompassEnabled = false
-            // 현재 위치 버튼 비활성화
-            naverMap.uiSettings.isLocationButtonEnabled = false
-
-            naverMap.locationOverlay.circleRadius = 20
-            naverMap.locationOverlay.circleColor = Color.RED
-//            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
-            naverMap.uiSettings.isLocationButtonEnabled = true
+            // 하단에 padding으로 현재 위치랑 로고 가리는 문제 해결
             naverMap.setContentPadding(0, 0, 0, 200)
+            naverMap.minZoom = 7.0
+            naverMap.maxZoom = 18.0
+            // 반투명 원(위치 정확도 UX) 크기, ZoomLevel에 따라 유동적이지 않게 하기
+            naverMap.locationOverlay.circleRadius = SIZE_AUTO
+            naverMap.locationOverlay.iconHeight = SIZE_AUTO
 
             // 카메라 설정
             lifecycleScope.launch {
@@ -207,6 +207,20 @@ class WalkFragment : Fragment() {
             naverMap.addOnLocationChangeListener {
                 setCamera(it)
                 walkViewModel.fetchStoreData(it.latitude, it.longitude) // 위치 데이터 가져오기(꼭 있어야함)
+            }
+
+            naverMap.addOnCameraChangeListener { reason, animated ->
+                // 사용자의 제스쳐로 인해 Camera가 변경된 경우
+                if (reason == CameraUpdate.REASON_GESTURE) {
+                    // 기존 코루틴 취소
+                    trackingModeJob?.cancel()
+
+                    // 새로운 코루틴 생성 및 10초 타이머 시작
+                    trackingModeJob = viewLifecycleOwner.lifecycleScope.launch {
+                        delay(10000) // 10초 지연
+                        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                    }
+                }
             }
         }
     }
@@ -349,8 +363,6 @@ class WalkFragment : Fragment() {
     }
 
     private fun addMarkers(storeListState: StoreListState) {
-        /* TODO:
-        *   클릭시 정보창 띄우기로 변경, 마커 사이즈 줄이기, bound는 어떻게 */
         storeListState.storeList.forEach { store ->
             val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
             val marker = Marker()
@@ -465,11 +477,13 @@ class WalkFragment : Fragment() {
             stopCollectingServiceFlow()
             unbindFromService()
         }
+        trackingModeJob?.cancel()
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+//        trackingModeJob = null
     }
 
     private fun updateDistanceText(dist: Double) {
