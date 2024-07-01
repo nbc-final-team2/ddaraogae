@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
@@ -47,11 +49,25 @@ class MypageFragment : Fragment() {
 
     private fun clickAboutAccountBtn(){
         binding.tvSignOut.setOnClickListener {
-            viewModel.logOut()
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setMessage(R.string.msg_logout)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                viewModel.logOut()
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
         }
 
         binding.tvSignDelete.setOnClickListener {
-            viewModel.deleteUser()
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(R.string.msg_delete_account)
+            builder.setMessage(R.string.msg_delete_account_context)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                viewModel.deleteUser()
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
+
         }
     }
     private fun clickAboutPetBtn(){

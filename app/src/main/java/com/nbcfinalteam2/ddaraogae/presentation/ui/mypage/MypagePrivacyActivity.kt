@@ -15,9 +15,8 @@ class MypagePrivacyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityPrivacyBinding.inflate(layoutInflater)
 
-        binding.tvPrivacy.text = Html.fromHtml(getString(R.string.privacy_html))
+        binding = ActivityPrivacyBinding.inflate(layoutInflater)
         binding.btBack.setOnClickListener { finish() }
         setContentView(binding.root)
         uiSetting()
