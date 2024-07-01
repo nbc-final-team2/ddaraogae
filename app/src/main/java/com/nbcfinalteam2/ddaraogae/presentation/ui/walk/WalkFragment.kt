@@ -23,14 +23,15 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MapConstants
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
@@ -98,7 +99,7 @@ class WalkFragment : Fragment() {
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
-    var infoWindowBackup : InfoWindow? = null
+    var infoWindowBackup: InfoWindow? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -170,7 +171,7 @@ class WalkFragment : Fragment() {
     private fun initMapView() {
         val fm = childFragmentManager
         val mapFragment = fm.findFragmentById(R.id.fragment_walk) as MapFragment?
-            ?: MapFragment.newInstance().also {
+            ?: MapFragment.newInstance(NaverMapOptions().extent(MapConstants.EXTENT_KOREA)).also {
                 fm.beginTransaction().add(R.id.fragment_walk, it).commit()
             }
 
@@ -188,7 +189,7 @@ class WalkFragment : Fragment() {
             naverMap.uiSettings.isCompassEnabled = false
             // 현재 위치 버튼 비활성화
             naverMap.uiSettings.isLocationButtonEnabled = false
-            
+
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
 //            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
@@ -288,7 +289,7 @@ class WalkFragment : Fragment() {
 
         endLocationService()
 
-        if(locationList.size<2) {
+        if (locationList.size < 2) {
             ToastMaker.make(requireContext(), getString(R.string.msg_short_walking_time))
             return
         }
@@ -300,7 +301,7 @@ class WalkFragment : Fragment() {
         lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
-                    if(it.isLoading) {
+                    if (it.isLoading) {
                         binding.btnWalkStart.isEnabled = false
                     } else {
                         binding.btnWalkStart.isEnabled = true
@@ -326,11 +327,12 @@ class WalkFragment : Fragment() {
         lifecycleScope.launch {
             walkViewModel.walkEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
-                    when(event) {
+                    when (event) {
                         is WalkEvent.Error -> ToastMaker.make(requireContext(), event.strResId)
                         is WalkEvent.StartWalking -> {
                             startServiceAndWalk()
                         }
+
                         is WalkEvent.StopWalking -> {
                             walkViewModel.setLoading()
                             stopServiceAndWalk()
