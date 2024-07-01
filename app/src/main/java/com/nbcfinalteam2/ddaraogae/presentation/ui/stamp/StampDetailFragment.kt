@@ -48,7 +48,7 @@ class StampDetailFragment : Fragment() {
             if (stampList.isEmpty()) {
                 binding.cvEmptyData.visibility = View.VISIBLE
             } else {
-                binding.cvEmptyData.visibility = View.GONE
+                binding.cvEmptyData.visibility = View.INVISIBLE
             }
         }
     }
