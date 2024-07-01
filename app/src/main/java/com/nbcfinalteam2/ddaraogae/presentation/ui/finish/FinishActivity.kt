@@ -15,8 +15,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
@@ -276,16 +274,14 @@ class FinishActivity : FragmentActivity() {
         }
     }
 
-    private fun finishWalking(walkingUiModel: WalkingInfo, walkingDogs: List<DogInfo>) {
+    private fun finishWalking(walkingInfo: WalkingInfo, walkingDogs: List<DogInfo>) {
         if (::naverMap.isInitialized) {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)
                 viewModel.insertWalkingData(
-                    walkingDogs.map { dog ->
-                        walkingUiModel.copy(
-                            dogId = dog.id
-                        )
-                    } to mapImage!!
+                    walkingInfo = walkingInfo,
+                    dogIdList = walkingDogs.map { dog -> dog.id?:"" },
+                    imageByteArray = mapImage!!
                 )
             }
         }
