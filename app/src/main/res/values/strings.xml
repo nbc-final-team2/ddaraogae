@@ -159,6 +159,8 @@
     <string name="mypage_agree_privacy_policy">개인정보처리방침 동의</string>
     <string name="msg_sign_out_fail">로그아웃에 실패했습니다</string>
     <string name="msg_delete_user_fail">회원 탈퇴에 실패했습니다</string>
+    <string name="mypage_function_set_title">기능 설정</string>
+    <string name="mypage_set_alarm">산책 리마인더 설정</string>
 
     <string name="msg_logout">로그아웃 하시겠습니까?</string>
     <string name="msg_delete_account">계정을 삭제하시겠습니까?</string>
@@ -282,4 +284,19 @@
     <string name="finish_dialog_msg">이대로 나가면 산책 결과가 저장되지 않습니다.\n그래도 나가시겠습니까?</string>
     <string name="finish_dialog_confirm">확인</string>
     <string name="finish_dialog_cancel">취소</string>
+
+    <!-- alarm -->
+    <string name="alarm_am">오전</string>
+    <string name="alarm_pm">오후</string>
+    <string name="alarm_time_text">%02d:%02d</string>
+    <string name="alarm_notification_content">등록하신 산책 시간이에요!</string>
+    <string name="alarm_dialog_set_time">알림 시간 설정</string>
+    <string name="alarm_dialog_cancel">취소</string>
+    <string name="alarm_dialog_confirm">확인</string>
+    <string name="alarm_empty_list">등록된 알람이 없습니다.</string>
+    <string name="alarm_add">추가</string>
+    <string name="alarm_app_bar_title">산책 리마인더</string>
+    <string name="alarm_dialog_move">이동</string>
+    <string name="alarm_request_exact_alarm_permission">정확한 알람을 위한 알람/리마인더 설정 허용이 필요합니다.</string>
+    <string name="alarm_need_permission_msg">알람 노출을 위한 알림 권한 부여가 필요합니다.</string>
 </resources>

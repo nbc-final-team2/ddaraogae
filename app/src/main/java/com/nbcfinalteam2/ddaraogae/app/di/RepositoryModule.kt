@@ -1,11 +1,13 @@
 package com.nbcfinalteam2.ddaraogae.app.di
 
+import com.nbcfinalteam2.ddaraogae.data.repository.AlarmRepositoryImpl
 import com.nbcfinalteam2.ddaraogae.data.repository.AuthRepositoryImpl
 import com.nbcfinalteam2.ddaraogae.data.repository.DogRepositoryImpl
 import com.nbcfinalteam2.ddaraogae.data.repository.StampRepositoryImpl
 import com.nbcfinalteam2.ddaraogae.data.repository.StoreRepositoryImpl
 import com.nbcfinalteam2.ddaraogae.data.repository.WalkingRepositoryImpl
 import com.nbcfinalteam2.ddaraogae.data.repository.WeatherRepositoryImpl
+import com.nbcfinalteam2.ddaraogae.domain.repository.AlarmRepository
 import com.nbcfinalteam2.ddaraogae.domain.repository.AuthRepository
 import com.nbcfinalteam2.ddaraogae.domain.repository.DogRepository
 import com.nbcfinalteam2.ddaraogae.domain.repository.StampRepository
@@ -57,4 +59,10 @@ abstract class RepositoryModule {
     abstract fun storeRepository(
         storeRepositoryImpl: StoreRepositoryImpl
     ): StoreRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAlarmRepository(
+        alarmRepositoryImpl: AlarmRepositoryImpl
+    ): AlarmRepository
 }
