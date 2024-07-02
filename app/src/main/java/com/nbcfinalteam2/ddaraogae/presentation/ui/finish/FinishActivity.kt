@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -99,7 +100,9 @@ class FinishActivity : FragmentActivity() {
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra(LOCATIONLIST, LatLng::class.java)?.toList().orEmpty()
         } else {
-            (intent.getParcelableArrayExtra(LOCATIONLIST) as? Array<LatLng>)?.toList().orEmpty()
+            (intent.getParcelableArrayExtra(LOCATIONLIST) as? Array<Parcelable>)?.mapNotNull {
+                it as? LatLng
+            }.orEmpty()
         }
 
         val walkingUiModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
