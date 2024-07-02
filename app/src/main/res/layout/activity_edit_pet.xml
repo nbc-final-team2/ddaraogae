@@ -186,6 +186,7 @@
                 android:background="@drawable/bg_edit_area"
                 android:hint="@string/mypage_edit_pet_dog_age_hint"
                 android:inputType="number"
+                android:maxLength="2"
                 android:padding="@dimen/padding_small"
                 android:textColorHint="@color/brown"
                 android:textSize="@dimen/text_caption"

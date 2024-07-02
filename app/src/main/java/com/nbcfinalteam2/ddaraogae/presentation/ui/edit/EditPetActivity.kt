@@ -129,9 +129,6 @@ class EditPetActivity : AppCompatActivity() {
             if (etName.text.toString().isEmpty()) {
                 Toast.makeText(this@EditPetActivity, R.string.home_add_please_add_name, Toast.LENGTH_SHORT).show()
             }
-            else if (etAge.text.toString().toInt() > 100) {
-                Toast.makeText(this@EditPetActivity, R.string.home_add_please_write_under_100, Toast.LENGTH_SHORT).show()
-            }
             else {
                 val dogId = dogData?.id
                 val name = etName.text.toString()

@@ -108,9 +108,6 @@ class AddActivity : AppCompatActivity() {
             if (etName.text.toString().isBlank()) {
                 Toast.makeText(this@AddActivity, R.string.home_add_please_add_name, Toast.LENGTH_SHORT).show()
             }
-            else if (etAge.text.toString().toInt() > 100) {
-                Toast.makeText(this@AddActivity, R.string.home_add_please_write_under_100, Toast.LENGTH_SHORT).show()
-            }
             else {
                 val name = etName.text.toString()
                 val gender = if(rgGenderGroup.checkedRadioButtonId==rbFemale.id) 1 else 0
