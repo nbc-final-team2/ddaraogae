@@ -1,5 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.domain.usecase
 
 interface DeleteAccountUseCase {
-    suspend operator fun invoke()
+    suspend operator fun invoke(credential: String)
 }
