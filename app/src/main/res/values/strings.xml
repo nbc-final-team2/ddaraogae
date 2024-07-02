@@ -88,8 +88,8 @@
     <string name="home_add_dog_name_title">이름*</string>
     <string name="home_add_dog_name_hint">이름</string>
     <string name="home_add_dog_gender_title">성별*</string>
-    <string name="home_add_dog_gender_male">남자</string>
-    <string name="home_add_dog_gender_female">여자</string>
+    <string name="home_add_dog_gender_male">남아</string>
+    <string name="home_add_dog_gender_female">여아</string>
     <string name="home_add_dog_age_title">나이</string>
     <string name="home_add_dog_age_hint">나이를 입력해주세요.</string>
     <string name="home_add_dog_breed_title">견종</string>
@@ -147,7 +147,7 @@
     <!-- mypage -->
     <string name="mypage_title">마이페이지</string>
     <string name="mypage_information_edit_title">정보 수정</string>
-    <string name="mypage_information_dog_edit">나의 반려견 정보 수정</string>
+    <string name="mypage_information_dog_edit">나의 반려견 정보</string>
     <string name="mypage_information_dog_add">나의 반려견 정보 추가</string>
     <string name="mypage_setting_title">설정</string>
     <string name="mypage_setting_dark_theme">다크테마</string>
@@ -175,11 +175,12 @@
     <!-- mypage - edit - pet -->
     <string name="mypage_edit_pet_title">반려견 정보</string>
     <string name="mypage_edit_pet_edit_button">수정하기</string>
+    <string name="mypage_add_dog">추가하기</string>
     <string name="mypage_edit_pet_dog_name_title">이름*</string>
     <string name="mypage_edit_pet_dog_name_hint">이름</string>
     <string name="mypage_edit_pet_dog_gender_title">성별*</string>
-    <string name="mypage_edit_pet_dog_gender_male">남자</string>
-    <string name="mypage_edit_pet_dog_gender_female">여자</string>
+    <string name="mypage_edit_pet_dog_gender_male">남아</string>
+    <string name="mypage_edit_pet_dog_gender_female">여아</string>
     <string name="mypage_edit_pet_dog_age_title">나이</string>
     <string name="mypage_edit_pet_dog_age_hint">나이를 입력해주세요.</string>
     <string name="mypage_edit_pet_dog_breed_title">견종</string>
@@ -187,7 +188,7 @@
     <string name="mypage_edit_pet_dog_memo_title">메모</string>
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
-    <string name="mypage_delete_dog">삭제 하기</string>
+    <string name="mypage_delete_dog">삭제하기</string>
     <string name="mypage_delete_dog_thumbnail_message">기본 이미지로 변경하시겠습니까?</string>
     <string name="mypage_delete_dog_thumbnail_positive">확인</string>
     <string name="mypage_delete_dog_thumbnail_negative">취소</string>

@@ -47,16 +47,13 @@
             android:name=".presentation.ui.add.AddActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.ui.dog.MyPetActivity"
+            android:exported="false"/>
+        <activity
             android:name=".presentation.ui.history.HistoryActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.finish.FinishActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.ui.edit.EditPetActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.ui.dog.DetailPetActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.main.MainActivity"
@@ -69,6 +66,9 @@
             android:exported="true"/>
         <activity
             android:name=".presentation.ui.mypage.MypageAgreementPrivacy"
+            android:exported="true"/>
+        <activity
+            android:name=".presentation.ui.edit.EditPetActivity"
             android:exported="true"/>
         <activity
             android:name=".presentation.ui.login.LoginActivity"

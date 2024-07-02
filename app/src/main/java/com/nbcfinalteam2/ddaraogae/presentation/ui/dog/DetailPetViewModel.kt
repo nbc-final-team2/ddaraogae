@@ -3,7 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.dog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
-import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
@@ -20,33 +20,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailPetViewModel @Inject constructor(
-    private val deleteDogUseCase: DeleteDogUseCase,
     private val getDogListUseCase: GetDogListUseCase,
+    private val getDogByIdUseCase: GetDogByIdUseCase,
 ) : ViewModel() {
-
-    private val _detailUiState = MutableStateFlow(DetailUiState.init())
-    val detailUiState: StateFlow<DetailUiState> = _detailUiState.asStateFlow()
-
     private val _dogListState = MutableStateFlow<List<DogInfo>>(emptyList())
     val dogListState: StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
 
     private val _selectedDogState = MutableStateFlow<DogInfo?>(null)
     val selectedDogState: StateFlow<DogInfo?> = _selectedDogState.asStateFlow()
 
-    private val _deleteEvent = MutableSharedFlow<DefaultEvent>()
-    val deleteEvent: SharedFlow<DefaultEvent> = _deleteEvent.asSharedFlow()
+    private val _selectedDogIdState = MutableStateFlow<String?>(null)
+    val selectedDogIdState: StateFlow<String?> = _selectedDogIdState.asStateFlow()
 
     private val _loadEvent = MutableSharedFlow<DefaultEvent>()
     val loadEvent: SharedFlow<DefaultEvent> = _loadEvent.asSharedFlow()
+
+    private val _loadDisplayEvent = MutableStateFlow<String?>(null)
+    val loadDisplayEvent: StateFlow<String?> = _loadDisplayEvent.asStateFlow()
 
     init {
         getDogList()
     }
 
-    private fun getDogList() = viewModelScope.launch {
-        _detailUiState.update {
-            it.copy(isLoading = true)
-        }
+    fun getDogList() = viewModelScope.launch {
         runCatching {
             val dogList = getDogListUseCase().mapIndexed { ind, dogEntity ->
                 DogInfo(
@@ -63,90 +59,28 @@ class DetailPetViewModel @Inject constructor(
             _dogListState.update {
                 dogList
             }
-            _selectedDogState.update {
-                _dogListState.value.firstOrNull()
-            }
         }.onSuccess {
-            _detailUiState.update {
-                it.copy(isLoading = false)
-            }
+
             _loadEvent.emit(DefaultEvent.Success)
         }.onFailure {
-            _detailUiState.update {
-                it.copy(isLoading = false)
-            }
             _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
         }
     }
-
-    fun refreshDogList() = viewModelScope.launch {
-        _detailUiState.update {
-            it.copy(isLoading = true)
+    fun getDogData(dogId : String) = viewModelScope.launch{
+        var dogInfo = getDogByIdUseCase(dogId)?.let{
+            DogInfo(
+                id = it.id,
+                name = it.name,
+                gender = it.gender,
+                age = it.age,
+                lineage = it.lineage,
+                memo = it.memo,
+                thumbnailUrl = it.thumbnailUrl,
+                isSelected = true
+            )
         }
-        runCatching {
-            var selectedDogInd: Int? = null
-
-            val dogList = getDogListUseCase().mapIndexed { ind, dogEntity ->
-                DogInfo(
-                    id = dogEntity.id,
-                    name = dogEntity.name,
-                    gender = dogEntity.gender,
-                    age = dogEntity.age,
-                    lineage = dogEntity.lineage,
-                    memo = dogEntity.memo,
-                    thumbnailUrl = dogEntity.thumbnailUrl,
-                    isSelected = selectedDogState.value?.let {
-                        if(it.id == dogEntity.id) {
-                            selectedDogInd = ind
-                            true
-                        } else {
-                            false
-                        }
-                    }?:false
-                )
-            }.toMutableList()
-
-            _dogListState.update {
-                selectedDogInd?.let {
-                    dogList
-                }?:dogList.apply { if(this.isNotEmpty()) this[0].isSelected=true }
-            }
-            _selectedDogState.update {
-                selectedDogInd?.let {
-                    dogList[it]
-                }?: dogList.firstOrNull()
-            }
-        }.onSuccess {
-            _detailUiState.update {
-                it.copy(isLoading = false)
-            }
-            _loadEvent.emit(DefaultEvent.Success)
-        }.onFailure {
-            _detailUiState.update {
-                it.copy(isLoading = false)
-            }
-            _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_changes_fail))
-        }
-    }
-
-    fun deleteSelectedDogData() = viewModelScope.launch {
-        _detailUiState.update {
-            it.copy(isLoading = true)
-        }
-        runCatching {
-            selectedDogState.value?.let {
-                deleteDogUseCase(it.id!!)
-            }
-        }.onSuccess {
-            _deleteEvent.emit(DefaultEvent.Success)
-            _detailUiState.update {
-                it.copy(isLoading = false)
-            }
-        }.onFailure {
-            _deleteEvent.emit(DefaultEvent.Failure(R.string.msg_delete_dog_fail))
-            _detailUiState.update {
-                it.copy(isLoading = false)
-            }
+        _selectedDogState.update {
+            dogInfo
         }
     }
 
@@ -158,8 +92,13 @@ class DetailPetViewModel @Inject constructor(
                 )
             }
         }
-        _selectedDogState.update {
-            dogInfo
+        _selectedDogIdState.update {
+            dogInfo.id
+        }
+    }
+    fun saveDisplayState(kind:String) = viewModelScope.launch {
+        _loadDisplayEvent.update {
+            kind
         }
     }
 }
