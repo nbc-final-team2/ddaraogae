@@ -55,11 +55,11 @@ class AuthRepositoryImpl @Inject constructor(
             if(it.displayName == PROVIDER_GOOGLE) {
                 it.reauthenticate(
                     GoogleAuthProvider.getCredential(credential, null)
-                )
+                ).await()
             } else {
                 it.reauthenticate(
                     EmailAuthProvider.getCredential(it.email.toString(), credential)
-                )
+                ).await()
             }
         }
 

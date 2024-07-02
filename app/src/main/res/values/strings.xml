@@ -161,6 +161,7 @@
     <string name="msg_delete_user_fail">회원 탈퇴에 실패했습니다</string>
     <string name="mypage_function_set_title">기능 설정</string>
     <string name="mypage_set_alarm">산책 리마인더 설정</string>
+    <string name="mypage_check_password">비밀번호가 틀렸습니다.</string>
 
     <string name="msg_logout">로그아웃 하시겠습니까?</string>
     <string name="msg_delete_account">계정을 삭제하시겠습니까?</string>
