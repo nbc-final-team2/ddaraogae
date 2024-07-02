@@ -33,23 +33,9 @@ class HomeViewModel @Inject constructor(
     private val getStampNumByPeriodUseCase: GetStampNumByPeriodUseCase
 ) : ViewModel() {
 
-    private val _dogListState = MutableStateFlow<List<DogInfo>>(emptyList())
-    val dogListState: StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
+    private val _homeUiState = MutableStateFlow(HomeUiState())
+    val homeUiState: StateFlow<HomeUiState> = _homeUiState.asStateFlow()
 
-    private val _selectDogState = MutableStateFlow<DogInfo?>(null)
-    val selectDogState = _selectDogState.asStateFlow()
-
-    private val _selectDogWithTimeState = MutableStateFlow<Int?>(null)
-    val selectDogWithTimeState = _selectDogWithTimeState.asStateFlow()
-
-    private val _walkListState = MutableStateFlow<List<WalkingInfo>>(emptyList())
-    val walkListState = _walkListState.asStateFlow()
-
-    private val _weatherInfoState = MutableStateFlow<WeatherInfo?>(null)
-    val weatherInfoState = _weatherInfoState.asStateFlow()
-
-    private val _stampProgressState = MutableStateFlow(0)
-    val stampProgressState = _stampProgressState.asStateFlow()
     private val _loadDogEvent = MutableSharedFlow<DefaultEvent>()
     val loadDogEvent: SharedFlow<DefaultEvent> = _loadDogEvent.asSharedFlow()
 
@@ -86,13 +72,12 @@ class HomeViewModel @Inject constructor(
                         isSelected = ind == 0
                     )
                 }
-                _dogListState.update {
-                    dogInfo
+                _homeUiState.update {
+                    it.copy(
+                        dogList = dogInfo,
+                        selectedDog = dogInfo.firstOrNull()
+                    )
                 }
-                _selectDogState.update {
-                    _dogListState.value.firstOrNull()
-                }
-
                 _loadDogEvent.emit(DefaultEvent.Success)
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -114,7 +99,7 @@ class HomeViewModel @Inject constructor(
                     lineage = dogEntity.lineage,
                     memo = dogEntity.memo,
                     thumbnailUrl = dogEntity.thumbnailUrl,
-                    isSelected = selectDogState.value?.let {
+                    isSelected = _homeUiState.value.selectedDog?.let {
                         if (it.id == dogEntity.id) {
                             selectedDogInd = ind
                             true
@@ -125,15 +110,11 @@ class HomeViewModel @Inject constructor(
                 )
             }.toMutableList()
 
-            _dogListState.update {
-                selectedDogInd?.let {
-                    dogList
-                } ?: dogList.apply { if (this.isNotEmpty()) this[0].isSelected = true }
-            }
-            _selectDogState.update {
-                selectedDogInd?.let {
-                    dogList[it]
-                } ?: dogList.firstOrNull()
+            _homeUiState.update {
+                it.copy(
+                    dogList = dogList,
+                    selectedDog = selectedDogInd?.let { dogList[it] } ?: dogList.firstOrNull()
+                )
             }
         }.onSuccess {
             _updateDogEvent.emit(DefaultEvent.Success)
@@ -145,7 +126,7 @@ class HomeViewModel @Inject constructor(
     fun loadSelectedDogWalkGraph() {
         viewModelScope.launch {
             try {
-                selectDogState.value?.id?.let { dogId ->
+                homeUiState.value.selectedDog?.id?.let { dogId ->
                     val startDate = DateFormatter.getStartDateForWeek()
                     val endDate = DateFormatter.getEndDateForWeek()
                     val walkEntities =
@@ -161,8 +142,12 @@ class HomeViewModel @Inject constructor(
                             walkingImage = it.walkingImage
                         )
                     }
-                    _selectDogWithTimeState.value = getAFewHoursAgo(walkInfo.lastOrNull()?.endDateTime)
-                    _walkListState.value = walkInfo
+                    _homeUiState.update { currentState ->
+                        currentState.copy(
+                            selectedDogWithTime = getAFewHoursAgo(walkInfo.lastOrNull()?.endDateTime),
+                            walkList = walkInfo
+                        )
+                    }
                     _loadWalkDataEvent.emit(DefaultEvent.Success)
                 }
             } catch (exception: Exception) {
@@ -173,10 +158,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun selectDog(dogInfo: DogInfo) {
-        _selectDogState.value = dogInfo
-        _dogListState.value = dogListState.value.orEmpty().map {
+        _homeUiState.update {
             it.copy(
-                isSelected = dogInfo.id == it.id
+                selectedDog = dogInfo,
+                dogList = it.dogList.map {
+                    it.copy(isSelected = dogInfo.id == it.id)
+                }
             )
         }
     }
@@ -196,7 +183,11 @@ class HomeViewModel @Inject constructor(
                     ultraFineDustStatus = getUltraFineDustStatus(weatherEntity.pm25)
                 )
 
-                _weatherInfoState.value = weatherInfo
+                _homeUiState.update {
+                    it.copy(
+                        weatherInfo = weatherInfo
+                    )
+                }
                 _loadWeatherEvent.emit(DefaultEvent.Success)
 
             } catch (e: Exception) {
@@ -268,7 +259,11 @@ class HomeViewModel @Inject constructor(
             val startDate = DateFormatter.getStartDateForWeek()
             val endDate = DateFormatter.getEndDateForWeek()
             val stampNum = getStampNumByPeriodUseCase(startDate, endDate)
-            _stampProgressState.value = stampNum
+            _homeUiState.update {
+                it.copy(
+                    stampProgress = stampNum
+                )
+            }
         }.onSuccess {
             _loadStampEvent.emit(DefaultEvent.Success)
         }.onFailure {

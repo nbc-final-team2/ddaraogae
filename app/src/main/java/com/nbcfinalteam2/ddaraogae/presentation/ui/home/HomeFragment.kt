@@ -104,56 +104,56 @@ class HomeFragment : Fragment() {
     private fun initViewModels() {
 
         lifecycleScope.launch {
-            homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { dogList ->
-                    dogProfileAdapter.submitList(dogList)
-                    changeDogPortrait(dogList)
+            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    dogProfileAdapter.submitList(state.dogList)
+                    changeDogPortrait(state.dogList)
                 }
         }
 
         lifecycleScope.launch {
-            homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { endDateTime ->
-                    if (endDateTime == null) {
+            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    if (state.selectedDogWithTime == null) {
                         binding.tvBeforetime.text = getString(R.string.home_time_none)
-                    } else if (endDateTime == 0) {
+                    } else if (state.selectedDogWithTime == 0) {
                         binding.tvBeforetime.text = getString(R.string.home_time_just_now)
-                    } else if (endDateTime < 24) {
+                    } else if (state.selectedDogWithTime < 24) {
                         binding.tvBeforetime.text =
-                            "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
-                    } else if (endDateTime > 24) {
+                            "${state.selectedDogWithTime} ${getString(R.string.home_a_few_hours_ago)}"
+                    } else if (state.selectedDogWithTime > 24) {
                         binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
                     }
                 }
         }
 
         lifecycleScope.launch {
-            homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { dogData ->
-                    if (dogData != null) {
-                        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
+            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    if (state.selectedDog != null) {
+                        binding.tvDogGraph.text = "${state.selectedDog.name}의 산책 그래프"
                         homeViewModel.loadSelectedDogWalkGraph()
                     }
                 }
         }
 
         lifecycleScope.launch {
-            homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { walkData ->
-                    if (walkData.isEmpty()) {
+            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    if (state.walkList.isEmpty()) {
                         setupWalkGraphForEmptyData()
                         binding.tvWalkData.visibility = View.VISIBLE
                     } else {
-                        setupWalkGraphForHaveData(walkData)
+                        setupWalkGraphForHaveData(state.walkList)
                         binding.tvWalkData.visibility = View.GONE
                     }
                 }
         }
 
         lifecycleScope.launch {
-            homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { weatherInfo ->
-                    updateWeatherUI(weatherInfo)
+            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    updateWeatherUI(state.weatherInfo)
                 }
         }
 
@@ -165,10 +165,10 @@ class HomeFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            homeViewModel.stampProgressState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { progress ->
-                    binding.progressbarWalkStampRate.progress = progress
-                    binding.tvWalkStampRate.text = "14개 중 ${progress}개 흭득"
+            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    binding.progressbarWalkStampRate.progress = state.stampProgress
+                    binding.tvWalkStampRate.text = "14개 중 ${state.stampProgress}개 흭득"
                 }
         }
 
@@ -432,7 +432,7 @@ class HomeFragment : Fragment() {
 
     private fun moveToHistory() {
         binding.tvMoveToHistoryGraph.setOnClickListener {
-            val dogInfo = homeViewModel.selectDogState.value
+            val dogInfo = homeViewModel.homeUiState.value.selectedDog
             if (dogInfo != null) {
                 val intent = Intent(context, HistoryActivity::class.java)
                 intent.putExtra("DOG_INFO", dogInfo)
