@@ -119,6 +119,9 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     //UnitTest
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)

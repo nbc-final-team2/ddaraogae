@@ -13,8 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
+import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
-import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.DetailPetActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.alarm.AlarmActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +44,7 @@ class MypageFragment : Fragment() {
         clickAboutAccountBtn()
         clickAboutPetBtn()
         clickPrivacyBtn()
+        clickAboutFunctionBtn()
         initViewModel()
 
     }
@@ -71,11 +73,9 @@ class MypageFragment : Fragment() {
         }
     }
     private fun clickAboutPetBtn(){
-        binding.tvMyDogAdd.setOnClickListener {
-            startActivity(Intent(requireActivity(), AddActivity::class.java))
-        }
+
         binding.tvMyDogEdit.setOnClickListener {
-            startActivity(Intent(requireActivity(), DetailPetActivity::class.java))
+            startActivity(Intent(requireActivity(), MyPetActivity::class.java))
         }
     }
     private fun clickPrivacyBtn(){
@@ -87,6 +87,11 @@ class MypageFragment : Fragment() {
         }
         binding.tvAgreementPrivacyPolicy.setOnClickListener {
             startActivity(Intent(requireActivity(), MypageAgreementPrivacy::class.java))
+        }
+    }
+    private fun clickAboutFunctionBtn() {
+        binding.tvSetAlarm.setOnClickListener {
+            startActivity(Intent(requireActivity(), AlarmActivity::class.java))
         }
     }
 
