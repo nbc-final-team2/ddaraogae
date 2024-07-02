@@ -2,10 +2,12 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.edit
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -23,6 +26,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
@@ -66,6 +70,7 @@ class EditPetActivity : AppCompatActivity() {
         uiSetting()
         initView()
         initViewModel()
+        buttonState()
     }
 
     private fun uiSetting() {
@@ -99,7 +104,9 @@ class EditPetActivity : AppCompatActivity() {
             }
         }
 
-        btBack.setOnClickListener { finish() }
+        btBack.setOnClickListener {
+            startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
+        }
 
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -122,9 +129,6 @@ class EditPetActivity : AppCompatActivity() {
             if (etName.text.toString().isEmpty()) {
                 Toast.makeText(this@EditPetActivity, R.string.home_add_please_add_name, Toast.LENGTH_SHORT).show()
             }
-            else if (etAge.text.toString().toInt() > 100) {
-                Toast.makeText(this@EditPetActivity, R.string.home_add_please_write_under_100, Toast.LENGTH_SHORT).show()
-            }
             else {
                 val dogId = dogData?.id
                 val name = etName.text.toString()
@@ -141,7 +145,26 @@ class EditPetActivity : AppCompatActivity() {
 
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
                 viewModel.updateDog(changedDog)
+                startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
             }
+        }
+        tvDelete.setOnClickListener {
+            val builder = AlertDialog.Builder(this@EditPetActivity)
+            builder.setMessage(R.string.detail_pet_delete_message)
+            builder.setPositiveButton(R.string.detail_pet_delete_positive) { _, _ ->
+                viewModel.deleteSelectedDogData(dogData?.id)
+            }
+            builder.setNegativeButton(R.string.detail_pet_delete_negative) { _, _ -> }
+            builder.show()
+        }
+    }
+    private fun buttonState() = with(binding){
+        val bgShape = binding.btnEditCompleted.background as GradientDrawable
+        etName.doOnTextChanged{ text,_,_,_ ->
+                var name = text.isNullOrBlank()
+                if (!name)  bgShape.setColor(resources.getColor(R.color.brown))
+                else bgShape.setColor(resources.getColor(R.color.grey))
+
         }
     }
 
@@ -181,6 +204,20 @@ class EditPetActivity : AppCompatActivity() {
                     DefaultEvent.Success -> {
                         itemChangedEventBus.notifyItemChanged()
                         ToastMaker.make(this@EditPetActivity, R.string.mypage_edit_msg_success_update)
+                        finish()
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.deleteEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@EditPetActivity, event.msg)
+                    DefaultEvent.Success -> {
+                        itemChangedEventBus.notifyItemChanged()
+                        ToastMaker.make(this@EditPetActivity, R.string.detail_pet_delete_complete)
+                        binding.svEditPet.fullScroll(ScrollView.FOCUS_UP)
+                        startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
                         finish()
                     }
                 }
