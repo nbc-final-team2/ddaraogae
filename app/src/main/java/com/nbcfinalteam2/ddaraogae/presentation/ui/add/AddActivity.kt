@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.add
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -70,6 +72,7 @@ class AddActivity : AppCompatActivity() {
         uiSetting()
         initView()
         initViewModel()
+        buttonState()
         binding.ivBack.setOnClickListener { finish() }
     }
 
@@ -121,6 +124,16 @@ class AddActivity : AppCompatActivity() {
 
                 viewModel.insertDog(newDog)
             }
+        }
+    }
+    private fun buttonState() = with(binding){
+        val bgShape = binding.btnEditCompleted.background as GradientDrawable
+        bgShape.setColor(resources.getColor(R.color.grey))
+        etName.doOnTextChanged{ text,_,_,_ ->
+            var name = text.isNullOrBlank()
+            if (!name)  bgShape.setColor(resources.getColor(R.color.brown))
+            else bgShape.setColor(resources.getColor(R.color.grey))
+
         }
     }
 

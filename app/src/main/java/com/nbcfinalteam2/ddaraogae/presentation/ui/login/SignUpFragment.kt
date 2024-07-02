@@ -125,7 +125,7 @@ class SignUpFragment : Fragment() {
         }
     }
     private fun buttonState(){
-        var bgShape = binding.btSignup.background as GradientDrawable
+        val bgShape = binding.btSignup.background as GradientDrawable
         if (correctEmail && correctPassword && correctPasswordCheck) {
             if(useTerms && privacyPolicy && agreementPrivacyPolicy) bgShape.setColor(resources.getColor(R.color.brown))
             else bgShape.setColor(resources.getColor(R.color.grey))

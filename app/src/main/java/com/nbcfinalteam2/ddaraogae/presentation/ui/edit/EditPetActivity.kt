@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.edit
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -68,6 +70,7 @@ class EditPetActivity : AppCompatActivity() {
         uiSetting()
         initView()
         initViewModel()
+        buttonState()
     }
 
     private fun uiSetting() {
@@ -156,6 +159,15 @@ class EditPetActivity : AppCompatActivity() {
             }
             builder.setNegativeButton(R.string.detail_pet_delete_negative) { _, _ -> }
             builder.show()
+        }
+    }
+    private fun buttonState() = with(binding){
+        val bgShape = binding.btnEditCompleted.background as GradientDrawable
+        etName.doOnTextChanged{ text,_,_,_ ->
+                var name = text.isNullOrBlank()
+                if (!name)  bgShape.setColor(resources.getColor(R.color.brown))
+                else bgShape.setColor(resources.getColor(R.color.grey))
+
         }
     }
 
