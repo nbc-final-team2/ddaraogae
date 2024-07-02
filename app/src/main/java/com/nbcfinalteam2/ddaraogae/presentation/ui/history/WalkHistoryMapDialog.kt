@@ -30,9 +30,17 @@ class WalkHistoryMapDialog : DialogFragment() {
     private val binding get() = _binding!!
     private var walkInfo: WalkingInfo? = null
     private var walkHistoryMap: String? = null
-    private var timeTaken = ""
-    private var distance = ""
-    private var dogName = ""
+    private var timeTaken: String? = null
+    private var distance: String? = null
+    private var dogName: String? = null
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("walkHistoryMap", walkHistoryMap)
+        outState.putString("timeTaken", timeTaken)
+        outState.putString("distance", distance)
+        outState.putString("dogName", dogName)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +53,14 @@ class WalkHistoryMapDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.let {
+            walkHistoryMap = it.getString("walkHistoryMap")
+            timeTaken = it.getString("timeTaken")
+            distance = it.getString("distance")
+            dogName = it.getString("dogName")
+        }
+
         setupView()
         setupListener()
     }
@@ -52,7 +68,7 @@ class WalkHistoryMapDialog : DialogFragment() {
     private fun setupView() {
         Glide.with(this)
             .load(walkHistoryMap)
-            .transform(WalkingImageTransformation(timeTaken, distance, dogName))
+            .transform(WalkingImageTransformation(timeTaken ?: "", distance ?: "", dogName ?: ""))
             .error(R.drawable.img_map_default)
             .fallback(R.drawable.img_map_default)
             .listener(object : RequestListener<Drawable> {
@@ -91,7 +107,7 @@ class WalkHistoryMapDialog : DialogFragment() {
         Glide.with(this)
             .asBitmap()
             .load(walkHistoryMap)
-            .transform(WalkingImageTransformation(timeTaken, distance, dogName))
+            .transform(WalkingImageTransformation(timeTaken ?: "", distance ?: "", dogName ?: ""))
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
             .into(object : CustomTarget<Bitmap>() {

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.entity.DogEntity
+import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateDogUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
@@ -21,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditPetViewModel @Inject constructor(
+    private val deleteDogUseCase: DeleteDogUseCase,
     private val updateDogUseCase: UpdateDogUseCase
 ) : ViewModel() {
 
@@ -29,6 +31,9 @@ class EditPetViewModel @Inject constructor(
 
     private val _editUiState = MutableStateFlow(EditUiState.init())
     val editUiState: StateFlow<EditUiState> = _editUiState.asStateFlow()
+
+    private val _deleteEvent = MutableSharedFlow<DefaultEvent>()
+    val deleteEvent: SharedFlow<DefaultEvent> = _deleteEvent.asSharedFlow()
 
     private var imgByteArray: ByteArray? = null
 
@@ -83,5 +88,15 @@ class EditPetViewModel @Inject constructor(
             isThumbnailVisible = imageUrl != null,
             isInit = true
         )
+    }
+    fun deleteSelectedDogData(dogId : String?) = viewModelScope.launch {
+        runCatching {
+            deleteDogUseCase(dogId!!)
+        }.onSuccess {
+            _deleteEvent.emit(DefaultEvent.Success)
+
+        }.onFailure {
+            _deleteEvent.emit(DefaultEvent.Failure(R.string.msg_delete_dog_fail))
+        }
     }
 }
