@@ -166,6 +166,8 @@
     <string name="msg_delete_account">계정을 삭제하시겠습니까?</string>
     <string name="msg_delete_account_context">계정 삭제 시 \n산책, 반려견 데이터가 삭제됩니다. \n정말 삭제하시겠습니까?</string>
 
+    <string name="msg_not_found_file">파일을 찾을 수 없습니다.</string>
+
     <!-- mypage - privacy -->
     <string name="mypage_privacy_title">개인정보처리방침</string>
     <string name="mypage_privacy_text">본 개인정보 처리방침은..</string>
