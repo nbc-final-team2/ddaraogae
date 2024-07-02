@@ -176,7 +176,7 @@
                 android:background="@drawable/bg_edit_area"
                 android:hint="@string/home_add_dog_age_hint"
                 android:inputType="number"
-                android:maxLength="5"
+                android:maxLength="2"
                 android:maxLines="1"
                 android:padding="@dimen/padding_small"
                 android:singleLine="true"
