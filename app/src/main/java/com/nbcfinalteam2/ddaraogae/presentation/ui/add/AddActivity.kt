@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -22,6 +23,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.shared.KeyboardCleaner
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
@@ -38,6 +40,10 @@ class AddActivity : AppCompatActivity() {
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private var loadingDialog: LoadingDialog? = null
+
+    private val keyboardCleaner: KeyboardCleaner by lazy {
+        KeyboardCleaner(this)
+    }
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -166,4 +172,12 @@ class AddActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if(ev.action == MotionEvent.ACTION_UP) keyboardCleaner.setPrevFocus(currentFocus)
+        val result = super.dispatchTouchEvent(ev)
+        keyboardCleaner.handleTouchEvent(ev)
+        return result
+    }
+
 }
