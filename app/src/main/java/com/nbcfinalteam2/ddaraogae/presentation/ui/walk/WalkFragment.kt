@@ -27,10 +27,12 @@ import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MapConstants
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
@@ -172,7 +174,7 @@ class WalkFragment : Fragment() {
     private fun initMapView() {
         val fm = childFragmentManager
         val mapFragment = fm.findFragmentById(R.id.fragment_walk) as MapFragment?
-            ?: MapFragment.newInstance().also {
+            ?: MapFragment.newInstance(NaverMapOptions().extent(MapConstants.EXTENT_KOREA)).also {
                 fm.beginTransaction().add(R.id.fragment_walk, it).commit()
             }
 
@@ -374,8 +376,8 @@ class WalkFragment : Fragment() {
 
             val contentString = """
                 ${store.placeName} | ${store.categoryGroupName}
-                    ${store.address}
-                    ${store.phone} 
+                ${store.address}
+                ${store.phone} 
                 """.trimIndent()
 
             val infoWindow = InfoWindow().apply {
@@ -482,6 +484,7 @@ class WalkFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+//        trackingModeJob = null
     }
 
     private fun updateDistanceText(dist: Double) {
