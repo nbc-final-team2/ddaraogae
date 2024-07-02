@@ -118,9 +118,9 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun deleteAccount() = viewModelScope.launch{
+    fun deleteAccount(password: String) = viewModelScope.launch{
         try {
-            deleteAccountUseCase()
+            deleteAccountUseCase(password)
         }catch (e:IOException){
             _isPossible.emit(98)
             Log.e("[signUpPage]IOException!", "$e")
