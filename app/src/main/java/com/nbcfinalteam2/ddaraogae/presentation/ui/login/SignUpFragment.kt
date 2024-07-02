@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,10 @@ class SignUpFragment : Fragment() {
     private var correctEmail = false
     private var correctPassword = false
     private var correctPasswordCheck = false
+
+    private var useTerms = false
+    private var privacyPolicy = false
+    private var agreementPrivacyPolicy = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,6 +50,8 @@ class SignUpFragment : Fragment() {
         checkSignUpState()
         checkAuthentication()
         clickSignupButton()
+        checkAgreement()
+        buttonState()
 
         binding.ibtBack.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
@@ -70,6 +77,17 @@ class SignUpFragment : Fragment() {
             .replace(R.id.activity_login, LoginFragment())
             .commit()
     }
+    private fun checkAgreement(){
+        binding.cbSignupTerms.setOnCheckedChangeListener{ _, isChecked ->
+            useTerms = isChecked
+        }
+        binding.cbSignupPersonalTerms.setOnCheckedChangeListener{ _, isChecked ->
+            privacyPolicy = isChecked
+        }
+        binding.cbSignupPersonalAgreeTerms.setOnCheckedChangeListener{ _, isChecked ->
+            agreementPrivacyPolicy = isChecked
+        }
+    }
 
 
     //회원가입 버튼 클릭 시 동작
@@ -80,10 +98,14 @@ class SignUpFragment : Fragment() {
                 R.string.signup_account_warning,
                 Toast.LENGTH_SHORT
             ).show()
+            else if(!useTerms || !privacyPolicy || !agreementPrivacyPolicy) Toast.makeText(
+                requireContext(),
+                R.string.signup_check_terms,
+                Toast.LENGTH_SHORT
+            ).show()
             else {
                 viewModel.signUp(email, password)
             }
-
         }
 
     }
@@ -91,13 +113,23 @@ class SignUpFragment : Fragment() {
     private fun checkAuthentication() = with(binding) {
         etSignupEmail.doOnTextChanged { _, _, _, _ ->
             correctEmail = checkEmail()
+            buttonState()
         }
         etSignupPassword.doOnTextChanged { _, _, _, _ ->
             correctPassword = checkPassword()
+            buttonState()
         }
         etSignupPasswordCheck.doOnTextChanged { _, _, _, _ ->
             correctPasswordCheck = checkPasswordAgain()
+            buttonState()
         }
+    }
+    private fun buttonState(){
+        val bgShape = binding.btSignup.background as GradientDrawable
+        if (correctEmail && correctPassword && correctPasswordCheck) {
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) bgShape.setColor(resources.getColor(R.color.brown))
+            else bgShape.setColor(resources.getColor(R.color.grey))
+        } else bgShape.setColor(resources.getColor(R.color.grey))
     }
 
     //email, password 유효성 검사
