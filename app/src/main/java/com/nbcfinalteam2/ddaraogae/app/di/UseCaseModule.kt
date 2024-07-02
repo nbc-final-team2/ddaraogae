@@ -4,14 +4,20 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.CheckStampConditionUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.CheckStampConditionUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAlarmUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAlarmUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteDogUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetAlarmListUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetAlarmListUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampNumByPeriodUseCase
@@ -24,6 +30,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriod
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWalkingListByDogIdAndPeriodUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetWeatherDataUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertAlarmUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertAlarmUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertDogUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.InsertStampUseCase
@@ -42,6 +50,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignUpWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignUpWithEmailUseCaseImpl
+import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateAlarmUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateAlarmUseCaseImpl
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateDogUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.UpdateDogUseCaseImpl
 import dagger.Binds
@@ -185,4 +195,34 @@ abstract class UseCaseModule {
     abstract fun bindCheckStampConditionUseCase(
         checkStampConditionUseCaseImpl: CheckStampConditionUseCaseImpl
     ): CheckStampConditionUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGetStampInfoListUseCase(
+        getStampInfoListUseCaseImpl: GetStampInfoListUseCaseImpl
+    ): GetStampInfoListUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindInsertAlarmUseCase(
+        insertAlarmUseCaseImpl: InsertAlarmUseCaseImpl
+    ): InsertAlarmUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGetAlarmListUseCase(
+        getAlarmListUseCaseImpl: GetAlarmListUseCaseImpl
+    ): GetAlarmListUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindUpdateAlarmUseCase(
+        updateAlarmUseCaseImpl: UpdateAlarmUseCaseImpl
+    ): UpdateAlarmUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindDeleteAlarmUseCase(
+        deleteAlarmUseCaseImpl: DeleteAlarmUseCaseImpl
+    ): DeleteAlarmUseCase
 }

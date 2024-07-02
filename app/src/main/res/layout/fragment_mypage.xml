@@ -111,6 +111,38 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_signOut" />
 
         <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_signDelete" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_titleFunctionManager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="30dp"
+            android:text="@string/mypage_function_set_title"
+            android:textSize="@dimen/text_text"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_setAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            android:text="@string/mypage_set_alarm"
+            android:textSize="@dimen/text_caption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_titleFunctionManager" />
+
+        <View
             android:id="@+id/tv_withdrawal"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -118,7 +150,7 @@
             android:background="@color/grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_signDelete" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_setAlarm" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_useTerms"

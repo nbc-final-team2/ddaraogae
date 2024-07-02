@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase
 
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
+import com.nbcfinalteam2.ddaraogae.domain.entity.StampInfoEntity
 import java.util.Date
 
 data class StampInfo(
@@ -12,6 +13,12 @@ data class StampInfo(
         getDateTime = getDateTime,
         name = title
     )
+
+    fun toEntity() = StampInfoEntity(
+        num = num,
+        title = title
+    )
+
     companion object {
         val STAMP_0 = StampInfo(0, "UNKNOWN")
         val STAMP_1 = StampInfo(1, "오늘의 산책 완료")
@@ -22,5 +29,16 @@ data class StampInfo(
         val STAMP_6 = StampInfo(6, "단거리 마라토너")
         val STAMP_7 = StampInfo(7, "중거리 마라토너")
         val STAMP_8 = StampInfo(8, "장거리 마라토너")
+
+        val stampInfoList = listOf(
+            STAMP_1,
+            STAMP_2,
+            STAMP_3,
+            STAMP_4,
+            STAMP_5,
+            STAMP_6,
+            STAMP_7,
+            STAMP_8,
+        )
     }
 }

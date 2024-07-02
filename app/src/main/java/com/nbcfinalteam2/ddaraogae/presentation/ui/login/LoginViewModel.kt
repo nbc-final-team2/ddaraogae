@@ -42,7 +42,6 @@ class LoginViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(700)
             _isLoading.value = false
         }
     }

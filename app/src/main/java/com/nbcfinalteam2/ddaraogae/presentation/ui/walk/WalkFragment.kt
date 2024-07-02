@@ -42,7 +42,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.FinishActivity.Compani
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.FinishActivity.Companion.WALKINGDOGS
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.FinishActivity.Companion.WALKINGUIMODEL
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
-import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToString
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -98,6 +98,7 @@ class WalkFragment : Fragment() {
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
 
     private var markerList = mutableListOf<Marker>()
+    var infoWindowBackup : InfoWindow? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -191,6 +192,8 @@ class WalkFragment : Fragment() {
             naverMap.locationOverlay.circleRadius = 20
             naverMap.locationOverlay.circleColor = Color.RED
 //            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
+            naverMap.uiSettings.isLocationButtonEnabled = true
+            naverMap.setContentPadding(0, 0, 0, 200)
 
             // 카메라 설정
             lifecycleScope.launch {
@@ -220,12 +223,6 @@ class WalkFragment : Fragment() {
             walkViewModel.walkToggle()
         }
         binding.rvWalkDogs.adapter = walkDogAdapter
-        binding.ibWalkLocation.setOnClickListener {
-            if(::naverMap.isInitialized && ::cameraPosition.isInitialized) {
-                naverMap.moveCamera(CameraUpdate.toCameraPosition(cameraPosition)) // 현재 위치로 초기화 하기
-            }
-        }
-
     }
 
     private fun checkServicePermission() {
@@ -379,10 +376,17 @@ class WalkFragment : Fragment() {
             marker.setOnClickListener {
                 if (infoWindow.isAdded) {
                     infoWindow.close()
+                    true
                 } else {
                     infoWindow.open(marker)
+                    if (infoWindowBackup == null) {
+                        infoWindowBackup = infoWindow
+                    } else {
+                        infoWindowBackup!!.close()
+                        infoWindowBackup = infoWindow
+                    }
+                    true
                 }
-                true
             }
         }
     }
@@ -471,6 +475,6 @@ class WalkFragment : Fragment() {
     }
 
     private fun updateTimerText(time: Int) {
-        binding.tvWalkTime.text = timeIntToString(time)
+        binding.tvWalkTime.text = timeIntToStringForWalk(time)
     }
 }

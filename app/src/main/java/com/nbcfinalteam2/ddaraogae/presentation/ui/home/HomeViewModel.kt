@@ -12,6 +12,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter.getAFewHoursAgo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +38,9 @@ class HomeViewModel @Inject constructor(
 
     private val _selectDogState = MutableStateFlow<DogInfo?>(null)
     val selectDogState = _selectDogState.asStateFlow()
+
+    private val _selectDogWithTimeState = MutableStateFlow<Int?>(null)
+    val selectDogWithTimeState = _selectDogWithTimeState.asStateFlow()
 
     private val _walkListState = MutableStateFlow<List<WalkingInfo>>(emptyList())
     val walkListState = _walkListState.asStateFlow()
@@ -156,6 +161,7 @@ class HomeViewModel @Inject constructor(
                             walkingImage = it.walkingImage
                         )
                     }
+                    _selectDogWithTimeState.value = getAFewHoursAgo(walkInfo.lastOrNull()?.endDateTime)
                     _walkListState.value = walkInfo
                     _loadWalkDataEvent.emit(DefaultEvent.Success)
                 }

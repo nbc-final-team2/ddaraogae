@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.history
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -59,7 +62,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         setupAdapter()
         setupListener()
         setupViewModels()
-        getDogInfo()
     }
 
     private fun uiSetting() {
@@ -100,13 +102,22 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupAdapter() {
         walkHistoryAdapter = WalkHistoryAdapter(
-            onMapClick = { walkMap ->
+            onMapClick = { walkingInfo ->
                 val dialog = WalkHistoryMapDialog()
-                dialog.setEnlargementOfImage(walkMap)
+                dialog.setInfo(walkingInfo, dogInfo.name ?: "")
                 dialog.show(supportFragmentManager, "")
             }
         )
         binding.rvWalkHistoryArea.adapter = walkHistoryAdapter
+        binding.rvWalkHistoryArea.layoutManager = LinearLayoutManager(this)
+        binding.rvWalkHistoryArea.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!binding.rvWalkHistoryArea.canScrollVertically(1)) {
+                    historyViewModel.loadMoreWalkData()
+                }
+            }
+        })
     }
 
     private fun setupListener() {
@@ -116,12 +127,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun setupDatePicker() {
         binding.tvSelectedCalendar.setOnClickListener {
-            val dialog = CalendarDialog()
-            dialog.setOnMonthClickListener(this)
-            dialog.show(supportFragmentManager, "")
-        }
-
-        binding.ivSelectedCalendar.setOnClickListener {
             val dialog = CalendarDialog()
             dialog.setOnMonthClickListener(this)
             dialog.show(supportFragmentManager, "")
@@ -136,9 +141,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         }
         lifecycleScope.launch {
             historyViewModel.selectDogState.flowWithLifecycle(lifecycle).collectLatest { dog ->
-                if (dog != null) {
-                    binding.tvWalkGraphDogName.text = "${dog.name}의 산책 그래프"
-                }
+                binding.tvWalkGraphDogName.text = "${dog?.name}의 산책 그래프"
             }
         }
         lifecycleScope.launch {
@@ -154,7 +157,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                 } else {
                     setupWalkGraphForHaveData(walkData, year, month)
                     binding.tvWalkData.visibility = View.GONE
-                    walkHistoryAdapter.submitList(walkData.sortedByDescending { it.startDateTime })
+                    walkHistoryAdapter.submitList(walkData)
                     binding.tvWalkHistoryData.visibility = View.GONE
                     binding.rvWalkHistoryArea.visibility = View.VISIBLE
                 }
@@ -163,7 +166,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         lifecycleScope.launch {
             historyViewModel.loadWalkEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when (event) {
+                when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@HistoryActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
@@ -203,7 +206,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
 
-        val dataSet = LineDataSet(entries, "선택한 날짜에 대한 한달 그래프").apply {
+        val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
@@ -220,27 +223,22 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
-        val calendar = Calendar.getInstance()
-        val today = calendar.get(Calendar.DAY_OF_MONTH) - 1
-        lineChart.moveViewToX(today - 3.toFloat())
-
         lineChart.invalidate()
     }
 
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.isEnabled = true
+            legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
             setTouchEnabled(true)
-            setPinchZoom(true)
-            setScaleEnabled(true)
-            isDoubleTapToZoomEnabled = true
+            setPinchZoom(false)
+            setScaleEnabled(false)
             isDragXEnabled = true
-            isDragYEnabled = true
-            setVisibleXRangeMaximum(7f)
+            isDragYEnabled = false
+            setVisibleXRange(0f, 7f)
         }
         lineChart.invalidate()
     }
@@ -260,7 +258,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             axisMinimum = 0f
             axisMaximum = (dates.size - 1).toFloat()
             valueFormatter = formatter
-            granularity = 1f
+            isGranularityEnabled = true
         }
     }
 
@@ -275,9 +273,13 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return String.format("%.1fkm", value)
+                    return "${value}km"
                 }
             }
         }
+    }
+
+    companion object {
+        const val VISIBLE_THRESHOLD = 2
     }
 }
