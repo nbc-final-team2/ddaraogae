@@ -8,6 +8,8 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampInfoListUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetStampListByPeriodUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -19,17 +21,17 @@ class StampDetailViewModel @Inject constructor(
     private val getStampInfoListUseCase: GetStampInfoListUseCase
 ) : ViewModel() {
 
-    private val _stampDetail = MutableLiveData<StampModel>()
-    val stampDetail: LiveData<StampModel> = _stampDetail
+    private val _stampDetailState = MutableStateFlow<StampModel?>(null)
+    val stampDetailState: StateFlow<StampModel?> = _stampDetailState
 
-    private val _stampList = MutableLiveData<List<StampModel>>()
-    val stampList: LiveData<List<StampModel>> = _stampList
+    private val _stampListState = MutableStateFlow<List<StampModel>>(emptyList())
+    val stampListState: StateFlow<List<StampModel>> = _stampListState
 
     fun loadStampDetail(stampId: Int) {
         viewModelScope.launch {
             val stampInfo = getStampInfoListUseCase().find { it.num == stampId }
             if (stampInfo != null) {
-                _stampDetail.value = StampModel(
+                _stampDetailState.value = StampModel(
                     id = null,
                     stampNum = null,
                     getDateTime = null,
@@ -59,7 +61,7 @@ class StampDetailViewModel @Inject constructor(
                         description = stampInfo.description
                     )
                 }
-                _stampList.value = stampModels
+                _stampListState.value = stampModels
             }
         }
     }

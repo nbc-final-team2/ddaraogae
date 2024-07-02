@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentStampDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StampDetailFragment : Fragment() {
@@ -38,20 +42,29 @@ class StampDetailFragment : Fragment() {
     }
 
     private fun setupViewModel() {
-        stampDetailViewModel.stampDetail.observe(viewLifecycleOwner) { stampInfo ->
-            binding.tvStampName.text = stampInfo.title
-            binding.tvStampDescription.text = stampInfo.description
+        lifecycleScope.launch {
+            stampDetailViewModel.stampDetailState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { stampInfo ->
+                    stampInfo?.let {
+                        binding.tvStampName.text = it.title
+                        binding.tvStampDescription.text = it.description
+                    }
+                }
         }
 
-        stampDetailViewModel.stampList.observe(viewLifecycleOwner) { stampList ->
-            stampDetailAdapter.submitList(stampList)
-            if (stampList.isEmpty()) {
-                binding.cvEmptyData.visibility = View.VISIBLE
-            } else {
-                binding.cvEmptyData.visibility = View.INVISIBLE
-            }
+        lifecycleScope.launch {
+            stampDetailViewModel.stampListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { stampList ->
+                    stampDetailAdapter.submitList(stampList)
+                    if (stampList.isEmpty()) {
+                        binding.cvEmptyData.visibility = View.VISIBLE
+                    } else {
+                        binding.cvEmptyData.visibility = View.INVISIBLE
+                    }
+                }
         }
     }
+
 
     private fun getStampInfo() {
         val stampId = arguments?.getInt("stampId") ?: 0
