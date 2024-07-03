@@ -265,7 +265,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadStampProgress() = viewModelScope.launch {
         runCatching {
-            val startDate = DateFormatter.getStartDateForWeek()
+            val startDate = DateFormatter.getCurrentMonday()
             val endDate = DateFormatter.getEndDateForWeek()
             val stampNum = getStampNumByPeriodUseCase(startDate, endDate)
             _stampProgressState.value = stampNum
