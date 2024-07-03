@@ -97,7 +97,7 @@ class MypageFragment : Fragment() {
 
     private fun initViewModel() {
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.restartEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 when(it) {
                     is DefaultEvent.Failure -> {}
@@ -112,7 +112,7 @@ class MypageFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mypageEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
@@ -121,7 +121,7 @@ class MypageFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mypageUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { state->
                 if (state.isLoading) {
                     loadingDialog = LoadingDialog()
