@@ -43,6 +43,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -110,30 +111,43 @@ class HomeFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { endDateTime ->
+            combine(
+                homeViewModel.selectDogState,
+                homeViewModel.selectDogWithTimeState
+            ) { dogInfo, endDateTime ->
+                Pair(dogInfo, endDateTime)
+            }.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { (dogInfo, endDateTime) ->
+                if (dogInfo == null) {
+                    binding.tvBeforeTime.text = getString(R.string.home_walk_add_dog)
+                    binding.tvDogGraph.text = getString(R.string.home_walk_graph_title)
+                } else {
+                    binding.tvDogGraph.text = "${dogInfo.name}의 산책 그래프"
+                    homeViewModel.loadSelectedDogWalkGraph()
                     if (endDateTime == null) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_none)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_none)
                     } else if (endDateTime == 0) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_just_now)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_just_now)
                     } else if (endDateTime < 24) {
-                        binding.tvBeforetime.text =
-                            "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
+                        binding.tvBeforeTime.text = "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
                     } else if (endDateTime > 24) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_more_than_a_day)
                     }
                 }
+            }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { dogData ->
-                    if (dogData != null) {
-                        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
-                        homeViewModel.loadSelectedDogWalkGraph()
-                    }
-                }
-        }
+
+//        lifecycleScope.launch {
+//            homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+//                .collectLatest { dogData ->
+//                    if (dogData != null) {
+//                        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
+//                        homeViewModel.loadSelectedDogWalkGraph()
+//                    } else {
+//                        binding.tvDogGraph.text = getString(R.string.home_walk_graph_title)
+//                    }
+//                }
+//        }
 
         lifecycleScope.launch {
             homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
