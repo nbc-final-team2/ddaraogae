@@ -120,19 +120,19 @@ class HomeFragment : Fragment() {
                 Pair(dogInfo, endDateTime)
             }.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { (dogInfo, endDateTime) ->
                 if (dogInfo == null) {
-                    binding.tvBeforetime.text = getString(R.string.home_time_none)
+                    binding.tvBeforeTime.text = getString(R.string.home_walk_add_dog)
                     binding.tvDogGraph.text = getString(R.string.home_walk_graph_title)
                 } else {
                     binding.tvDogGraph.text = "${dogInfo.name}의 산책 그래프"
                     homeViewModel.loadSelectedDogWalkGraph()
                     if (endDateTime == null) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_none)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_none)
                     } else if (endDateTime == 0) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_just_now)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_just_now)
                     } else if (endDateTime < 24) {
-                        binding.tvBeforetime.text = "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
+                        binding.tvBeforeTime.text = "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
                     } else if (endDateTime > 24) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_more_than_a_day)
                     }
                 }
             }
