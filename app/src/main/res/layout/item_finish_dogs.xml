@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_finish_dogs_item"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        tools:src="@drawable/ic_dog_default_thumbnail"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/iv_finish_dog_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:civ_border_color="@color/light_grey"
+        app:civ_border_width="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_dog_default_thumbnail" />
+
+    <TextView
+        android:id="@+id/tv_finish_dog_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_smaller"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_mini"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/iv_finish_dog_image"
+        app:layout_constraintStart_toStartOf="@+id/iv_finish_dog_image"
+        app:layout_constraintTop_toBottomOf="@+id/iv_finish_dog_image"
+        tools:text="dog name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,75 +45,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_appBar" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ScrollView
+        android:id="@+id/sv_terms_contents"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/cl_appbar"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_appbar">
+
+        <TextView
+            android:id="@+id/tv_terms_contents"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/terms1"
-                android:layout_width="wrap_content"
-                android:layout_height="600dp"
-                android:src="@drawable/terms_of_use_1"
-                android:scaleType="centerCrop"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/terms2"
-                android:layout_width="wrap_content"
-                android:layout_height="600dp"
-                android:src="@drawable/terms_of_use_2"
-                android:scaleType="centerCrop"
-                app:layout_constraintTop_toBottomOf="@+id/terms1"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/terms3"
-                android:layout_width="wrap_content"
-                android:layout_height="600dp"
-                android:src="@drawable/terms_of_use_3"
-                android:scaleType="centerCrop"
-                app:layout_constraintTop_toBottomOf="@+id/terms2"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/terms4"
-                android:layout_width="wrap_content"
-                android:layout_height="600dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/terms_of_use_4"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/terms3" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/terms5"
-                android:layout_width="wrap_content"
-                android:layout_height="600dp"
-                android:src="@drawable/terms_of_use_5"
-                android:scaleType="centerCrop"
-                app:layout_constraintTop_toBottomOf="@+id/terms4"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/terms6"
-                android:layout_width="wrap_content"
-                android:layout_height="600dp"
-                android:src="@drawable/terms_of_use_6"
-                android:scaleType="centerCrop"
-                app:layout_constraintTop_toBottomOf="@+id/terms5"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:paddingStart="@dimen/margin_extra_small_10"
+            android:paddingEnd="@dimen/margin_extra_small_10" />
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,16 +36,15 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.history.HistoryActivity
-import com.nbcfinalteam2.ddaraogae.presentation.ui.stamp.AllStampActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.stamp.StampActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import com.nbcfinalteam2.ddaraogae.presentation.util.GraphUtils
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.util.Date
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -265,7 +264,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.tvMoveToAllStamp.setOnClickListener {
-            val intent = Intent(context, AllStampActivity::class.java)
+            val intent = Intent(context, StampActivity::class.java)
             startActivity(intent)
         }
     }
