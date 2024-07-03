@@ -112,7 +112,7 @@ class HomeViewModel @Inject constructor(
 
             _homeUiState.update {
                 it.copy(
-                    dogList = dogList,
+                    dogList = dogList.apply { if (this.isNotEmpty()) this[0].isSelected = true },
                     selectedDog = selectedDogInd?.let { dogList[it] } ?: dogList.firstOrNull()
                 )
             }
@@ -142,8 +142,8 @@ class HomeViewModel @Inject constructor(
                             walkingImage = it.walkingImage
                         )
                     }
-                    _homeUiState.update { currentState ->
-                        currentState.copy(
+                    _homeUiState.update {
+                        it.copy(
                             selectedDogWithTime = getAFewHoursAgo(walkInfo.lastOrNull()?.endDateTime),
                             walkList = walkInfo
                         )
