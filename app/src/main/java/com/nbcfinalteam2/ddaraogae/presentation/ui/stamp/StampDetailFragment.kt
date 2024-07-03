@@ -42,7 +42,7 @@ class StampDetailFragment : Fragment() {
     }
 
     private fun setupViewModel() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             stampDetailViewModel.stampDetailState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { stampInfo ->
                     stampInfo?.let {
@@ -52,7 +52,7 @@ class StampDetailFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             stampDetailViewModel.stampListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { stampList ->
                     stampDetailAdapter.submitList(stampList)
