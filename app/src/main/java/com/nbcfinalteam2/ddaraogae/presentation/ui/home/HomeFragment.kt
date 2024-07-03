@@ -143,6 +143,7 @@ class HomeFragment : Fragment() {
                         }
                     } else {
                         binding.tvBeforeTime.text = getString(R.string.home_time_none)
+                        binding.tvDogGraph.text = getString(R.string.home_walk_graph_title)
                     }
                 }
         }
