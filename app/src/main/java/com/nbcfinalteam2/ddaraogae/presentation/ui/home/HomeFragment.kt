@@ -116,7 +116,6 @@ class HomeFragment : Fragment() {
                     if (state.selectedDog != null) {
                         binding.tvDogGraph.text = "${state.selectedDog.name}의 산책 그래프"
                         homeViewModel.loadSelectedDogWalkGraph()
-                    } else {
                         if (state.walkList.isEmpty()) {
                             binding.tvBeforeTime.text = getString(R.string.home_time_none)
                             setupWalkGraphForEmptyData()
@@ -134,7 +133,7 @@ class HomeFragment : Fragment() {
                                     )
                                 } ?: 0) < 24) {
                                 binding.tvBeforeTime.text =
-                                    "${state} ${getString(R.string.home_a_few_hours_ago)}"
+                                    "${state.walkList.last().endDateTime?.let { DateFormatter.getAFewHoursAgo(it) }} ${getString(R.string.home_a_few_hours_ago)}"
                             } else {
                                 binding.tvBeforeTime.text =
                                     getString(R.string.home_time_more_than_a_day)
@@ -142,6 +141,8 @@ class HomeFragment : Fragment() {
                             setupWalkGraphForHaveData(state.walkList)
                             binding.tvWalkData.visibility = View.GONE
                         }
+                    } else {
+                        binding.tvBeforeTime.text = getString(R.string.home_time_none)
                     }
                 }
         }
