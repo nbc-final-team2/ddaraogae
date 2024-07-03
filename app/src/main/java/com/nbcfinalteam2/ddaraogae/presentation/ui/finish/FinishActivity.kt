@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -58,6 +59,7 @@ class FinishActivity : FragmentActivity() {
     private lateinit var naverMap: NaverMap
     private var polyline = PolylineOverlay()
     private lateinit var locationList: List<LatLng>
+    private var distance = 0.0
 
     private var loadingDialog: LoadingDialog? = null
 
@@ -99,7 +101,9 @@ class FinishActivity : FragmentActivity() {
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra(LOCATIONLIST, LatLng::class.java)?.toList().orEmpty()
         } else {
-            (intent.getParcelableArrayExtra(LOCATIONLIST) as? Array<LatLng>)?.toList().orEmpty()
+            (intent.getParcelableArrayExtra(LOCATIONLIST) as? Array<Parcelable>)?.mapNotNull {
+                it as? LatLng
+            }.orEmpty()
         }
 
         val walkingUiModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -107,6 +111,8 @@ class FinishActivity : FragmentActivity() {
         } else {
             intent.getParcelableExtra(WALKINGUIMODEL)
         }
+
+        distance = walkingUiModel?.distance ?: 0.0
 
         val walkingDogs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayListExtra(WALKINGDOGS, DogInfo::class.java).orEmpty()
@@ -266,7 +272,11 @@ class FinishActivity : FragmentActivity() {
             }
             val bounds = boundsBuilder.build()
 
-            val padding = 100
+            val padding = if (distance >= 1.0) {
+                100
+            } else {
+                250
+            }
 
             val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
             naverMap.moveCamera(cameraUpdate)
