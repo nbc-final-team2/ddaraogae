@@ -5,29 +5,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeAllStampBinding
+import com.nbcfinalteam2.ddaraogae.databinding.ItemStampDetailBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
+import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 
-class AllStampAdapter(private val onClick: (StampModel) -> Unit) : ListAdapter<StampModel, AllStampAdapter.ViewHolder>(DIFF_CALLBACK) {
-
+class StampDetailAdapter : ListAdapter<StampModel, StampDetailAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemHomeAllStampBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemStampDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), onClick)
+        holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemHomeAllStampBinding) :
+    class ViewHolder(private val binding: ItemStampDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: StampModel, onClick: (StampModel) -> Unit) {
+        fun bind(item: StampModel) {
             with(binding) {
-                tvStampName.text = item.title
-                btnStampClick.setOnClickListener {
-                    onClick(item)
-                }
+                tvStampDetailDate.text =
+                    item.getDateTime?.let { DateFormatter.getDateFormatter(it) }
             }
         }
     }
@@ -35,7 +33,7 @@ class AllStampAdapter(private val onClick: (StampModel) -> Unit) : ListAdapter<S
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StampModel>() {
             override fun areItemsTheSame(oldItem: StampModel, newItem: StampModel): Boolean {
-                return oldItem.num == newItem.num
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: StampModel, newItem: StampModel): Boolean {
@@ -44,4 +42,3 @@ class AllStampAdapter(private val onClick: (StampModel) -> Unit) : ListAdapter<S
         }
     }
 }
-

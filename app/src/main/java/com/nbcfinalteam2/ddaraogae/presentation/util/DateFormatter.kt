@@ -5,6 +5,10 @@ import android.provider.Settings.Global.getString
 import android.util.Log
 import com.nbcfinalteam2.ddaraogae.R
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.temporal.TemporalAdjusters
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -83,7 +87,7 @@ object DateFormatter {
         return todayDateFormat.format(Date())
     }
 
-    fun getHistoryDate(walkEndTime: Date): String {
+    fun getDateFormatter(walkEndTime: Date): String {
         val format = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
         return format.format(walkEndTime)
     }
@@ -100,5 +104,14 @@ object DateFormatter {
         val hours = minutes / 60
 
         return hours.toInt()
+    }
+
+    fun getCurrentMonday() : Date{
+        val now = LocalDateTime.now()
+        val monday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val mondayMidnight = monday.toLocalDate().atStartOfDay()
+        val seoulZoneId = ZoneId.of("Asia/Seoul")
+        val instant = mondayMidnight.atZone(seoulZoneId).toInstant()
+        return Date.from(instant)
     }
 }

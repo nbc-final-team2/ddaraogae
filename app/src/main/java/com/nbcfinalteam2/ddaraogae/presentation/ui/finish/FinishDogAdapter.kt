@@ -1,34 +1,44 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.finish
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
+import com.nbcfinalteam2.ddaraogae.databinding.ItemFinishDogsBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 
-class FinishDogAdapter(private val dogList: List<DogInfo>) : RecyclerView.Adapter<FinishDogAdapter.FinishDogViewHolder>() {
-
-    class FinishDogViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.iv_finish_dogs_item)
-    }
+class FinishDogAdapter(private val dogList: List<DogInfo>) :
+    RecyclerView.Adapter<FinishDogAdapter.FinishDogViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FinishDogViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_finish_dogs, parent, false)
-        return FinishDogViewHolder(view)
+        return FinishDogViewHolder(
+            ItemFinishDogsBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: FinishDogViewHolder, position: Int) {
-        val item = dogList[position]
-        Glide.with(holder.itemView.context)
-            .load(item.thumbnailUrl)
-            .error(R.drawable.ic_dog_default_thumbnail)
-            .fallback(R.drawable.ic_dog_default_thumbnail)
-            .into(holder.imageView)
+        holder.bind(dogList[position])
     }
 
     override fun getItemCount(): Int = dogList.size
+
+    class FinishDogViewHolder(
+        private val binding: ItemFinishDogsBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(dogData: DogInfo) {
+            Glide.with(binding.ivFinishDogImage)
+                .load(dogData.thumbnailUrl)
+                .error(R.drawable.ic_dog_default_thumbnail)
+                .fallback(R.drawable.ic_dog_default_thumbnail)
+                .into(binding.ivFinishDogImage)
+
+            binding.tvFinishDogName.text = dogData.name
+        }
+    }
 }
