@@ -60,8 +60,8 @@ class SignUpFragment : Fragment() {
         }
     }
     private fun checkSignUpState() {
-        lifecycleScope.launch {
-            viewModel.userState.flowWithLifecycle(lifecycle)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collect { state ->
                     if (state == 0) logIn()
                     if (state == 1) Toast.makeText(requireContext(), R.string.signup_fail, Toast.LENGTH_SHORT).show()
