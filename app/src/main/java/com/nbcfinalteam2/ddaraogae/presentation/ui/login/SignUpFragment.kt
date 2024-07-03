@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,14 +79,26 @@ class SignUpFragment : Fragment() {
             .commit()
     }
     private fun checkAgreement(){
+        binding.cbTotalAgree.setOnCheckedChangeListener { _, isChecked ->
+                binding.cbSignupTerms.isChecked = isChecked
+                binding.cbSignupPersonalTerms.isChecked = isChecked
+                binding.cbSignupPersonalAgreeTerms.isChecked = isChecked
+                useTerms = isChecked
+                privacyPolicy = isChecked
+                agreementPrivacyPolicy = isChecked
+
+        }
         binding.cbSignupTerms.setOnCheckedChangeListener{ _, isChecked ->
             useTerms = isChecked
+            if(!isChecked) binding.cbTotalAgree.isChecked = false
         }
         binding.cbSignupPersonalTerms.setOnCheckedChangeListener{ _, isChecked ->
             privacyPolicy = isChecked
+            if(!isChecked) binding.cbTotalAgree.isChecked = false
         }
         binding.cbSignupPersonalAgreeTerms.setOnCheckedChangeListener{ _, isChecked ->
             agreementPrivacyPolicy = isChecked
+            if(!isChecked) binding.cbTotalAgree.isChecked = false
         }
     }
 

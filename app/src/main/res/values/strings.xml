@@ -266,6 +266,7 @@
     <string name="signup_personal_terms">개인정보 처리방침(필수)</string>
     <string name="signup_personal_agree_terms">개인정보 처리 동의(필수)</string>
     <string name="signup_check_terms">약관 동의를 해주세요.</string>
+    <string name="signup_total_check">약관 전체 동의</string>
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>
