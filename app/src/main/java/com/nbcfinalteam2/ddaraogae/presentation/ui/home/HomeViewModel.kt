@@ -12,7 +12,6 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
-import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter.getAFewHoursAgo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -141,10 +139,9 @@ class HomeViewModel @Inject constructor(
                             endDateTime = it.endDateTime,
                             walkingImage = it.walkingImage
                         )
-                    }
+                    }.sortedBy { it.endDateTime }
                     _homeUiState.update {
                         it.copy(
-                            selectedDogWithTime = getAFewHoursAgo(walkInfo.lastOrNull()?.endDateTime),
                             walkList = walkInfo
                         )
                     }

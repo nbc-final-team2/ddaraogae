@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
     }
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val homeViewModel: HomeViewModel by viewModels()
+
     @Inject
     lateinit var itemChangedEventBus: ItemChangedEventBus
 
@@ -101,58 +102,47 @@ class HomeFragment : Fragment() {
     }
 
     private fun initViewModels() {
-
         lifecycleScope.launch {
             homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { state ->
                     dogProfileAdapter.submitList(state.dogList)
                     changeDogPortrait(state.dogList)
-                }
-        }
 
-        lifecycleScope.launch {
-            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { state ->
-                    if (state.selectedDogWithTime == null) {
-                        binding.tvBeforeTime.text = getString(R.string.home_time_none)
-                    } else if (state.selectedDogWithTime == 0) {
-                        binding.tvBeforeTime.text = getString(R.string.home_time_just_now)
-                    } else if (state.selectedDogWithTime < 24) {
-                        binding.tvBeforeTime.text =
-                            "${state.selectedDogWithTime} ${getString(R.string.home_a_few_hours_ago)}"
-                    } else if (state.selectedDogWithTime > 24) {
-                        binding.tvBeforeTime.text = getString(R.string.home_time_more_than_a_day)
-                    }
-                }
-        }
+                    updateWeatherUI(state.weatherInfo)
 
-        lifecycleScope.launch {
-            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { state ->
+                    binding.progressbarWalkStampRate.progress = state.stampProgress
+                    binding.tvWalkStampRate.text = "14개 중 ${state.stampProgress}개 흭득"
+
                     if (state.selectedDog != null) {
                         binding.tvDogGraph.text = "${state.selectedDog.name}의 산책 그래프"
                         homeViewModel.loadSelectedDogWalkGraph()
-                    }
-                }
-        }
-
-        lifecycleScope.launch {
-            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { state ->
-                    if (state.walkList.isEmpty()) {
-                        setupWalkGraphForEmptyData()
-                        binding.tvWalkData.visibility = View.VISIBLE
                     } else {
-                        setupWalkGraphForHaveData(state.walkList)
-                        binding.tvWalkData.visibility = View.GONE
+                        if (state.walkList.isEmpty()) {
+                            binding.tvBeforeTime.text = getString(R.string.home_time_none)
+                            setupWalkGraphForEmptyData()
+                            binding.tvWalkData.visibility = View.VISIBLE
+                        } else {
+                            if (state.walkList.last().endDateTime?.let {
+                                    DateFormatter.getAFewHoursAgo(
+                                        it
+                                    )
+                                } == 0) {
+                                binding.tvBeforeTime.text = getString(R.string.home_time_just_now)
+                            } else if ((state.walkList.last().endDateTime?.let {
+                                    DateFormatter.getAFewHoursAgo(
+                                        it
+                                    )
+                                } ?: 0) < 24) {
+                                binding.tvBeforeTime.text =
+                                    "${state} ${getString(R.string.home_a_few_hours_ago)}"
+                            } else {
+                                binding.tvBeforeTime.text =
+                                    getString(R.string.home_time_more_than_a_day)
+                            }
+                            setupWalkGraphForHaveData(state.walkList)
+                            binding.tvWalkData.visibility = View.GONE
+                        }
                     }
-                }
-        }
-
-        lifecycleScope.launch {
-            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { state ->
-                    updateWeatherUI(state.weatherInfo)
                 }
         }
 
@@ -160,14 +150,6 @@ class HomeFragment : Fragment() {
             itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.refreshDogList()
-                }
-        }
-
-        lifecycleScope.launch {
-            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { state ->
-                    binding.progressbarWalkStampRate.progress = state.stampProgress
-                    binding.tvWalkStampRate.text = "14개 중 ${state.stampProgress}개 흭득"
                 }
         }
 
