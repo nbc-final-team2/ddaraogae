@@ -114,14 +114,14 @@ class HomeFragment : Fragment() {
             homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { state ->
                     if (state.selectedDogWithTime == null) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_none)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_none)
                     } else if (state.selectedDogWithTime == 0) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_just_now)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_just_now)
                     } else if (state.selectedDogWithTime < 24) {
-                        binding.tvBeforetime.text =
+                        binding.tvBeforeTime.text =
                             "${state.selectedDogWithTime} ${getString(R.string.home_a_few_hours_ago)}"
                     } else if (state.selectedDogWithTime > 24) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
+                        binding.tvBeforeTime.text = getString(R.string.home_time_more_than_a_day)
                     }
                 }
         }
