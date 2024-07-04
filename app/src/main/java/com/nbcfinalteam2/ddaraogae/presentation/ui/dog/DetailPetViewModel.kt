@@ -43,9 +43,6 @@ class DetailPetViewModel @Inject constructor(
     private val _nullEvent = MutableSharedFlow<NullEvent>()
     val nullEvent: SharedFlow<NullEvent> = _nullEvent.asSharedFlow()
 
-    private val _loadDisplayEvent = MutableStateFlow<String?>(null)
-    val loadDisplayEvent: StateFlow<String?> = _loadDisplayEvent.asStateFlow()
-
     private var selectDogId = ""
 
     init {
@@ -133,11 +130,6 @@ class DetailPetViewModel @Inject constructor(
             _loadEvent.emit(DefaultEvent.Success)
         }.onFailure {
             _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
-        }
-    }
-    fun saveDisplayState(kind:String) = viewModelScope.launch {
-        _loadDisplayEvent.update {
-            kind
         }
     }
 }

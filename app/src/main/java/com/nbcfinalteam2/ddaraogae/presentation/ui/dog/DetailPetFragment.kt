@@ -1,14 +1,10 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.dog
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -17,12 +13,10 @@ import com.bumptech.glide.Glide
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentDetailPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
-import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.ui.edit.EditPetActivity.Companion.DOGDATA
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.ui.edit.EditPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
-import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -74,16 +68,13 @@ class DetailPetFragment : Fragment() {
                     viewModel.refreshDogInfo()
                 }
         }
-        lifecycleScope.launch {
-            viewModel.nullEvent.flowWithLifecycle(lifecycle).collectLatest {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fl_my_pet, PetListFragment())
-                    .commit()
-                viewModel.saveDisplayState("petList")
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.nullEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
+                parentFragmentManager.popBackStack()
             }
         }
-        lifecycleScope.launch {
-            viewModel.detailUiState.flowWithLifecycle(lifecycle).collectLatest { state ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.detailUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { state ->
                 if (state.isLoading) {
                     loadingDialog = LoadingDialog()
                     loadingDialog?.show(parentFragmentManager, null)
@@ -97,7 +88,6 @@ class DetailPetFragment : Fragment() {
 
     private fun initView(){
         binding.btBack.setOnClickListener {
-            viewModel.saveDisplayState("petList")
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fl_my_pet, PetListFragment())
                 .commit()

@@ -2,18 +2,13 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.dog
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,9 +30,9 @@ class PetListFragment:Fragment() {
     private val adapter:PetListAdapter by lazy {
         PetListAdapter{ item ->
             viewModel.selectDog(item)
-            viewModel.saveDisplayState("detailPet")
             parentFragmentManager.beginTransaction()
                 .add(R.id.fl_my_pet, DetailPetFragment())
+                .addToBackStack(null)
                 .commit()
         }
     }
@@ -63,6 +58,7 @@ class PetListFragment:Fragment() {
         super.onStart()
         viewModel.getDogList()
     }
+
     private fun setButtonAction() = with(binding){
         tvAdd.setOnClickListener {
             startActivity(Intent(this@PetListFragment.activity, AddActivity::class.java))
