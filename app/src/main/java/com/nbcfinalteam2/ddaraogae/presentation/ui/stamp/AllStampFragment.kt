@@ -61,13 +61,13 @@ class AllStampFragment : Fragment() {
     }
 
     private fun setupViewModel() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             allStampViewModel.stampListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { stampList ->
                 allStampAdapter.submitList(stampList)
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             allStampViewModel.loadStampEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
@@ -76,7 +76,7 @@ class AllStampFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 allStampViewModel.loadStampList()
             }

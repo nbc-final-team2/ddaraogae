@@ -69,8 +69,8 @@ class LoginFragment : Fragment() {
     }
 
     private fun checkIsPossible() {
-        lifecycleScope.launch {
-            viewModel.userState.flowWithLifecycle(lifecycle)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collect { state ->
                     if (state == 0) successLogIn()
                     if (state == 1) viewModel.checkVerified()
