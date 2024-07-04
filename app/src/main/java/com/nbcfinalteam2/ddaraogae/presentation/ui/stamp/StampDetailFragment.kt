@@ -73,7 +73,7 @@ class StampDetailFragment : Fragment() {
 
     private fun setupListener() {
         binding.btnBack.setOnClickListener {
-            requireActivity().finish()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 

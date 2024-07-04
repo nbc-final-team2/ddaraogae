@@ -92,9 +92,7 @@ object DateFormatter {
         return format.format(walkEndTime)
     }
 
-    fun getAFewHoursAgo(date: Date?): Int? {
-        if (date == null) return null
-
+    fun getAFewHoursAgo(date: Date): Int {
         val now: Long = System.currentTimeMillis()
         val nowDate = Date(now)
         val timeDifference = nowDate.time - date.time
