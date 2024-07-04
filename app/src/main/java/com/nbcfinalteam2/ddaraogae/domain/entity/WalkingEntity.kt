@@ -4,7 +4,6 @@ import java.util.Date
 
 data class WalkingEntity (
     val id: String?,
-    val dogId: String?,
     val timeTaken: Int?,
     val distance: Double?,
     val startDateTime: Date?,

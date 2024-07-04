@@ -2,8 +2,10 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.add
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -22,6 +25,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityAddBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.shared.KeyboardCleaner
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
@@ -38,6 +42,10 @@ class AddActivity : AppCompatActivity() {
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private var loadingDialog: LoadingDialog? = null
+
+    private val keyboardCleaner: KeyboardCleaner by lazy {
+        KeyboardCleaner(this)
+    }
 
     private val galleryPermissionLauncher =
         registerForActivityResult(
@@ -70,12 +78,13 @@ class AddActivity : AppCompatActivity() {
         uiSetting()
         initView()
         initViewModel()
+        buttonState()
         binding.ivBack.setOnClickListener { finish() }
     }
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
             view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
@@ -118,6 +127,16 @@ class AddActivity : AppCompatActivity() {
 
                 viewModel.insertDog(newDog)
             }
+        }
+    }
+    private fun buttonState() = with(binding){
+        val bgShape = binding.btnEditCompleted.background as GradientDrawable
+        bgShape.setColor(resources.getColor(R.color.grey))
+        etName.doOnTextChanged{ text,_,_,_ ->
+            var name = text.isNullOrBlank()
+            if (!name)  bgShape.setColor(resources.getColor(R.color.brown))
+            else bgShape.setColor(resources.getColor(R.color.grey))
+
         }
     }
 
@@ -163,4 +182,12 @@ class AddActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if(ev.action == MotionEvent.ACTION_UP) keyboardCleaner.setPrevFocus(currentFocus)
+        val result = super.dispatchTouchEvent(ev)
+        keyboardCleaner.handleTouchEvent(ev)
+        return result
+    }
+
 }

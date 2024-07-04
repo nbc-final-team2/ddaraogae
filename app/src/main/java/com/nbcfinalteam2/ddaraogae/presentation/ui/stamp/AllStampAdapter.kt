@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeAllStampBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.StampModel
 
-class AllStampAdapter : ListAdapter<StampModel, AllStampAdapter.ViewHolder>(DIFF_CALLBACK) {
+class AllStampAdapter(private val onClick: (StampModel) -> Unit) : ListAdapter<StampModel, AllStampAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -17,15 +17,17 @@ class AllStampAdapter : ListAdapter<StampModel, AllStampAdapter.ViewHolder>(DIFF
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onClick)
     }
 
     class ViewHolder(private val binding: ItemHomeAllStampBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: StampModel) {
+        fun bind(item: StampModel, onClick: (StampModel) -> Unit) {
             with(binding) {
-                tvStampName.text = item.name
-                tvStampNum.text = item.stampNum.toString()
+                tvStampName.text = item.title
+                btnStampClick.setOnClickListener {
+                    onClick(item)
+                }
             }
         }
     }
@@ -33,7 +35,7 @@ class AllStampAdapter : ListAdapter<StampModel, AllStampAdapter.ViewHolder>(DIFF
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StampModel>() {
             override fun areItemsTheSame(oldItem: StampModel, newItem: StampModel): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.num == newItem.num
             }
 
             override fun areContentsTheSame(oldItem: StampModel, newItem: StampModel): Boolean {
@@ -42,3 +44,4 @@ class AllStampAdapter : ListAdapter<StampModel, AllStampAdapter.ViewHolder>(DIFF
         }
     }
 }
+

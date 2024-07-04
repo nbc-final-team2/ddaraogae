@@ -6,5 +6,5 @@ import javax.inject.Inject
 class DeleteAccountUseCaseImpl @Inject constructor(
     private val authRepository: AuthRepository
 ): DeleteAccountUseCase {
-    override suspend fun invoke() = authRepository.deleteAccount()
+    override suspend fun invoke(credential: String) = authRepository.deleteAccount(credential)
 }

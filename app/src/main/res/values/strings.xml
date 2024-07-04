@@ -36,6 +36,7 @@
     <string name="home_stamp_title">금주 산책 도장 달성률</string>
     <string name="home_stamp_see_more">전체 보기</string>
     <string name="home_walk_graph_move_to_history">상세 보기</string>
+    <string name="home_walk_add_dog">반려견을 추가해 주세요!</string>
 
     <string name="msg_load_walking_data_fail">산책 데이터 불러오기에 실패했습니다.</string>
     <string name="msg_load_weather_fail">날씨 데이터를 불러오지 못했습니다.</string>
@@ -88,8 +89,8 @@
     <string name="home_add_dog_name_title">이름*</string>
     <string name="home_add_dog_name_hint">이름</string>
     <string name="home_add_dog_gender_title">성별*</string>
-    <string name="home_add_dog_gender_male">남자</string>
-    <string name="home_add_dog_gender_female">여자</string>
+    <string name="home_add_dog_gender_male">남아</string>
+    <string name="home_add_dog_gender_female">여아</string>
     <string name="home_add_dog_age_title">나이</string>
     <string name="home_add_dog_age_hint">나이를 입력해주세요.</string>
     <string name="home_add_dog_breed_title">견종</string>
@@ -98,16 +99,24 @@
     <string name="home_add_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="home_add_edit_completed_button">완료</string>
     <string name="home_add_please_add_name">이름은 필수 작성 항목입니다!</string>
+    <string name="home_add_please_write_under_100">100 이하의 나이를 입력해주세요.</string>
     <string name="home_add_msg_fail_insert">반려견 정보 업로드에 실패했습니다.</string>
     <string name="home_add_msg_success_insert">반려견 정보가 추가되었습니다.</string>
 
     <!-- home - All - Stamp -->
     <string name="home_all_stamp_msg_data_fail">도장 데이터를 불러오기에 실패했습니다.</string>
     <string name="home_all_stamp_msg_load_changes_fail">변경된 도장 데이터를 정상적으로 불러오지 못했습니다.</string>
-    <string name="home_all_stamp_title">내 산책 도장 목록</string>
+    <string name="home_all_stamp_title">모든 산책 도장 목록</string>
     <string name="home_all_stamp_item_stamp_title">다다익선</string>
-    <string name="home_all_stamp_item_stamp_sum">총 얻은 도장 갯수</string>
-    <string name="home_all_stamp_item_stamp_num">5</string>
+    <string name="home_all_stamp_item_stamp_num_title">내가 얻은 도장 보러가기</string>
+    <string name="home_all_stamp_item_stamp_click_button">Click</string>
+
+    <!-- stamp - detail -->
+    <string name="stamp_detail_title">산책 도장 정보</string>
+    <string name="stamp_detail_stamp_title">다다익선</string>
+    <string name="stamp_detail_stamp_description">다다익선은 어쩌구..저쩌구..</string>
+    <string name="stamp_detail_item_stamp_date">2024.06.18 23:22</string>
+    <string name="stamp_detail_empty_data">흭득한 산책 도장이 없습니다.</string>
 
     <!-- walk -->
     <string name="walk_start">산책하기</string>
@@ -146,7 +155,7 @@
     <!-- mypage -->
     <string name="mypage_title">마이페이지</string>
     <string name="mypage_information_edit_title">정보 수정</string>
-    <string name="mypage_information_dog_edit">나의 반려견 정보 수정</string>
+    <string name="mypage_information_dog_edit">나의 반려견 정보</string>
     <string name="mypage_information_dog_add">나의 반려견 정보 추가</string>
     <string name="mypage_setting_title">설정</string>
     <string name="mypage_setting_dark_theme">다크테마</string>
@@ -158,6 +167,16 @@
     <string name="mypage_agree_privacy_policy">개인정보처리방침 동의</string>
     <string name="msg_sign_out_fail">로그아웃에 실패했습니다</string>
     <string name="msg_delete_user_fail">회원 탈퇴에 실패했습니다</string>
+    <string name="mypage_function_set_title">기능 설정</string>
+    <string name="mypage_set_alarm">산책 리마인더 설정</string>
+    <string name="mypage_check_password">비밀번호가 틀렸습니다.</string>
+
+    <string name="msg_logout">로그아웃 하시겠습니까?</string>
+    <string name="msg_delete_account">계정을 삭제하시겠습니까?</string>
+    <string name="msg_delete_account_context">계정 삭제 시 \n산책, 반려견 데이터가 삭제됩니다. \n정말 삭제하시겠습니까?</string>
+    <string name="email_delete_account_title">계정 삭제를 위해 비밀번호를 입력해 주세요.</string>
+
+    <string name="msg_not_found_file">파일을 찾을 수 없습니다.</string>
 
     <!-- mypage - privacy -->
     <string name="mypage_privacy_title">개인정보처리방침</string>
@@ -166,11 +185,12 @@
     <!-- mypage - edit - pet -->
     <string name="mypage_edit_pet_title">반려견 정보</string>
     <string name="mypage_edit_pet_edit_button">수정하기</string>
+    <string name="mypage_add_dog">추가하기</string>
     <string name="mypage_edit_pet_dog_name_title">이름*</string>
     <string name="mypage_edit_pet_dog_name_hint">이름</string>
     <string name="mypage_edit_pet_dog_gender_title">성별*</string>
-    <string name="mypage_edit_pet_dog_gender_male">남자</string>
-    <string name="mypage_edit_pet_dog_gender_female">여자</string>
+    <string name="mypage_edit_pet_dog_gender_male">남아</string>
+    <string name="mypage_edit_pet_dog_gender_female">여아</string>
     <string name="mypage_edit_pet_dog_age_title">나이</string>
     <string name="mypage_edit_pet_dog_age_hint">나이를 입력해주세요.</string>
     <string name="mypage_edit_pet_dog_breed_title">견종</string>
@@ -178,7 +198,7 @@
     <string name="mypage_edit_pet_dog_memo_title">메모</string>
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
-    <string name="mypage_delete_dog">삭제 하기</string>
+    <string name="mypage_delete_dog">삭제하기</string>
     <string name="mypage_delete_dog_thumbnail_message">기본 이미지로 변경하시겠습니까?</string>
     <string name="mypage_delete_dog_thumbnail_positive">확인</string>
     <string name="mypage_delete_dog_thumbnail_negative">취소</string>
@@ -248,6 +268,7 @@
     <string name="signup_personal_terms">개인정보 처리방침(필수)</string>
     <string name="signup_personal_agree_terms">개인정보 처리 동의(필수)</string>
     <string name="signup_check_terms">약관 동의를 해주세요.</string>
+    <string name="signup_total_check">약관 전체 동의</string>
 
     <!-- location service -->
     <string name="is_walking">산책 중..</string>
@@ -277,4 +298,19 @@
     <string name="finish_dialog_msg">이대로 나가면 산책 결과가 저장되지 않습니다.\n그래도 나가시겠습니까?</string>
     <string name="finish_dialog_confirm">확인</string>
     <string name="finish_dialog_cancel">취소</string>
+
+    <!-- alarm -->
+    <string name="alarm_am">오전</string>
+    <string name="alarm_pm">오후</string>
+    <string name="alarm_time_text">%02d:%02d</string>
+    <string name="alarm_notification_content">등록하신 산책 시간이에요!</string>
+    <string name="alarm_dialog_set_time">알림 시간 설정</string>
+    <string name="alarm_dialog_cancel">취소</string>
+    <string name="alarm_dialog_confirm">확인</string>
+    <string name="alarm_empty_list">등록된 알람이 없습니다.</string>
+    <string name="alarm_add">추가</string>
+    <string name="alarm_app_bar_title">산책 리마인더</string>
+    <string name="alarm_dialog_move">이동</string>
+    <string name="alarm_request_exact_alarm_permission">정확한 알람을 위한 알람/리마인더 설정 허용이 필요합니다.</string>
+    <string name="alarm_need_permission_msg">알람 노출을 위한 알림 권한 부여가 필요합니다.</string>
 </resources>

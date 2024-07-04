@@ -5,8 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".presentation.ui.dog.DetailPetActivity">
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_appbar"
@@ -85,27 +84,14 @@
     <ScrollView
         android:id="@+id/sc_detail_pet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/cl_appbar">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/cl_appbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/margin_medium">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_dogArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@+id/iv_dogThumbnail"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/item_edit_pet_dog_selection" />
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_dogThumbnail"
                 android:layout_width="130dp"
@@ -113,9 +99,10 @@
                 android:layout_marginTop="50dp"
                 app:civ_border_color="@color/brown"
                 app:civ_border_width="1dp"
+                app:layout_goneMarginTop="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_dogArea"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_dog_default_thumbnail" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -280,21 +267,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_memo" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/bt_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="120dp"
-                android:background="@drawable/rec_finish_done"
-                android:text="@string/mypage_delete_dog"
-                android:textColor="@color/white_fix"
-                android:textSize="@dimen/text_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_name"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pet_memo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

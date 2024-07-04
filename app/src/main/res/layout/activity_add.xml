@@ -8,47 +8,50 @@
     android:background="@color/white"
     tools:context=".presentation.ui.add.AddActivity">
 
-    <ScrollView
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_appBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        android:gravity="center"
+        android:text="@string/home_add_title"
+        android:textSize="@dimen/text_body"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_back"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="@dimen/margin_medium"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toTopOf="@+id/topBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_appBar" />
+
+    <ScrollView
+        android:id="@+id/sv_add"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/btn_editCompleted"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_appBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:gravity="center"
-                android:text="@string/home_add_title"
-                android:textSize="@dimen/text_body"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_back"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="@dimen/margin_medium"
-                android:src="@drawable/ic_back"
-                app:layout_constraintBottom_toTopOf="@+id/topBar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/topBar"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:background="@color/grey"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_appBar" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_dogThumbnail"
@@ -60,7 +63,14 @@
                 app:civ_border_width="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/topBar" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/camera"
+                app:layout_constraintEnd_toEndOf="@+id/iv_dogThumbnail"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_dogThumbnail"/>
 
             <ImageView
                 android:id="@+id/iv_remove_thumbnail"
@@ -168,7 +178,7 @@
                 android:background="@drawable/bg_edit_area"
                 android:hint="@string/home_add_dog_age_hint"
                 android:inputType="number"
-                android:maxLength="5"
+                android:maxLength="2"
                 android:maxLines="1"
                 android:padding="@dimen/padding_small"
                 android:singleLine="true"
@@ -241,25 +251,26 @@
                 android:textColor="@color/black_fix"
                 android:textColorHint="@color/brown"
                 android:textSize="@dimen/text_caption"
-                app:layout_constraintBottom_toTopOf="@+id/btn_editCompleted"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_memo" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_editCompleted"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/bg_btn_edit"
-                android:clickable="true"
-                android:text="@string/home_add_edit_completed_button"
-                android:textColor="@color/white_fix"
-                android:textSize="@dimen/text_body"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_editCompleted"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        android:background="@drawable/bg_btn_edit"
+        android:clickable="true"
+        android:text="@string/home_add_edit_completed_button"
+        android:textColor="@color/white_fix"
+        android:textSize="@dimen/text_body"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sv_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

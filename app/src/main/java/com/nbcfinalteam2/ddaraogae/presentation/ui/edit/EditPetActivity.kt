@@ -2,10 +2,13 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.edit
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MotionEvent
 import android.view.View
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -23,6 +27,8 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.shared.KeyboardCleaner
+import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
@@ -36,6 +42,10 @@ class EditPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPetBinding
     private val viewModel: EditPetViewModel by viewModels()
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
+    private val keyboardCleaner: KeyboardCleaner by lazy {
+        KeyboardCleaner(this)
+    }
 
     private var dogData: DogInfo? = null
     private var loadingDialog: LoadingDialog? = null
@@ -66,11 +76,12 @@ class EditPetActivity : AppCompatActivity() {
         uiSetting()
         initView()
         initViewModel()
+        buttonState()
     }
 
     private fun uiSetting() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
             view.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
@@ -99,7 +110,9 @@ class EditPetActivity : AppCompatActivity() {
             }
         }
 
-        btBack.setOnClickListener { finish() }
+        btBack.setOnClickListener {
+            startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
+        }
 
         ivDogThumbnail.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -138,7 +151,26 @@ class EditPetActivity : AppCompatActivity() {
 
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
                 viewModel.updateDog(changedDog)
+                startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
             }
+        }
+        tvDelete.setOnClickListener {
+            val builder = AlertDialog.Builder(this@EditPetActivity)
+            builder.setMessage(R.string.detail_pet_delete_message)
+            builder.setPositiveButton(R.string.detail_pet_delete_positive) { _, _ ->
+                viewModel.deleteSelectedDogData(dogData?.id)
+            }
+            builder.setNegativeButton(R.string.detail_pet_delete_negative) { _, _ -> }
+            builder.show()
+        }
+    }
+    private fun buttonState() = with(binding){
+        val bgShape = binding.btnEditCompleted.background as GradientDrawable
+        etName.doOnTextChanged{ text,_,_,_ ->
+                var name = text.isNullOrBlank()
+                if (!name)  bgShape.setColor(resources.getColor(R.color.brown))
+                else bgShape.setColor(resources.getColor(R.color.grey))
+
         }
     }
 
@@ -183,6 +215,27 @@ class EditPetActivity : AppCompatActivity() {
                 }
             }
         }
+        lifecycleScope.launch {
+            viewModel.deleteEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+                when(event) {
+                    is DefaultEvent.Failure -> ToastMaker.make(this@EditPetActivity, event.msg)
+                    DefaultEvent.Success -> {
+                        itemChangedEventBus.notifyItemChanged()
+                        ToastMaker.make(this@EditPetActivity, R.string.detail_pet_delete_complete)
+                        binding.svEditPet.fullScroll(ScrollView.FOCUS_UP)
+                        startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
+                        finish()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if(ev.action == MotionEvent.ACTION_UP) keyboardCleaner.setPrevFocus(currentFocus)
+        val result = super.dispatchTouchEvent(ev)
+        keyboardCleaner.handleTouchEvent(ev)
+        return result
     }
 
     companion object {

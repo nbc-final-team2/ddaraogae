@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".app.DdaraogaeApplication"
@@ -39,22 +41,20 @@
         </provider>
 
         <activity
-            android:name=".presentation.ui.stamp.AllStampActivity"
+            android:name=".presentation.ui.stamp.StampActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.add.AddActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".presentation.ui.dog.MyPetActivity"
+            android:exported="false"/>
         <activity
             android:name=".presentation.ui.history.HistoryActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.finish.FinishActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.ui.edit.EditPetActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.ui.dog.DetailPetActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.main.MainActivity"
@@ -69,6 +69,10 @@
             android:name=".presentation.ui.mypage.MypageAgreementPrivacy"
             android:exported="true"/>
         <activity
+            android:name=".presentation.ui.edit.EditPetActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name=".presentation.ui.login.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
@@ -78,11 +82,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.ui.alarm.AlarmActivity"
+            android:exported="false"/>
 
         <service
             android:name=".presentation.service.LocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
+
+        <receiver
+            android:name=".presentation.alarm_core.AlarmReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

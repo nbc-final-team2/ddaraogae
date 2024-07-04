@@ -42,7 +42,6 @@ object FirebaseMapper {
 
     fun WalkingDto.toEntity(id: String) = WalkingEntity(
         id = id,
-        dogId = dogId,
         timeTaken = timeTaken,
         distance = distance,
         startDateTime = startDateTime,
@@ -51,7 +50,6 @@ object FirebaseMapper {
     )
 
     fun WalkingEntity.toDto() = WalkingDto(
-        dogId = dogId,
         timeTaken = timeTaken,
         distance = distance,
         startDateTime = startDateTime,

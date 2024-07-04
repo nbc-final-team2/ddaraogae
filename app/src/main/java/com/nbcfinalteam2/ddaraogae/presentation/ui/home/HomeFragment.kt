@@ -36,16 +36,15 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WeatherInfo
 import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.history.HistoryActivity
-import com.nbcfinalteam2.ddaraogae.presentation.ui.stamp.AllStampActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.stamp.StampActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
 import com.nbcfinalteam2.ddaraogae.presentation.util.GraphUtils
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.util.Date
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -103,73 +102,56 @@ class HomeFragment : Fragment() {
     }
 
     private fun initViewModels() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    dogProfileAdapter.submitList(state.dogList)
+                    changeDogPortrait(state.dogList)
 
-        lifecycleScope.launch {
-            homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { dogList ->
-                    dogProfileAdapter.submitList(dogList)
-                    changeDogPortrait(dogList)
-                }
-        }
+                    updateWeatherUI(state.weatherInfo)
 
-        lifecycleScope.launch {
-            homeViewModel.selectDogWithTimeState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { endDateTime ->
-                    if (endDateTime == null) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_none)
-                    } else if (endDateTime == 0) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_just_now)
-                    } else if (endDateTime < 24) {
-                        binding.tvBeforetime.text =
-                            "$endDateTime ${getString(R.string.home_a_few_hours_ago)}"
-                    } else if (endDateTime > 24) {
-                        binding.tvBeforetime.text = getString(R.string.home_time_more_than_a_day)
-                    }
-                }
-        }
+                    binding.progressbarWalkStampRate.progress = state.stampProgress
+                    binding.tvWalkStampRate.text = "14개 중 ${state.stampProgress}개 흭득"
 
-        lifecycleScope.launch {
-            homeViewModel.selectDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { dogData ->
-                    if (dogData != null) {
-                        binding.tvDogGraph.text = "${dogData.name}의 산책 그래프"
+                    if (state.selectedDog != null) {
+                        binding.tvDogGraph.text = "${state.selectedDog.name}의 산책 그래프"
                         homeViewModel.loadSelectedDogWalkGraph()
-                    }
-                }
-        }
-
-        lifecycleScope.launch {
-            homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { walkData ->
-                    if (walkData.isEmpty()) {
-                        setupWalkGraphForEmptyData()
-                        binding.tvWalkData.visibility = View.VISIBLE
+                        if (state.walkList.isEmpty()) {
+                            binding.tvBeforeTime.text = getString(R.string.home_time_none)
+                            setupWalkGraphForEmptyData()
+                            binding.tvWalkData.visibility = View.VISIBLE
+                        } else {
+                            if (state.walkList.last().endDateTime?.let {
+                                    DateFormatter.getAFewHoursAgo(
+                                        it
+                                    )
+                                } == 0) {
+                                binding.tvBeforeTime.text = getString(R.string.home_time_just_now)
+                            } else if ((state.walkList.last().endDateTime?.let {
+                                    DateFormatter.getAFewHoursAgo(
+                                        it
+                                    )
+                                } ?: 0) < 24) {
+                                binding.tvBeforeTime.text =
+                                    "${state.walkList.last().endDateTime?.let { DateFormatter.getAFewHoursAgo(it) }} ${getString(R.string.home_a_few_hours_ago)}"
+                            } else {
+                                binding.tvBeforeTime.text =
+                                    getString(R.string.home_time_more_than_a_day)
+                            }
+                            setupWalkGraphForHaveData(state.walkList)
+                            binding.tvWalkData.visibility = View.GONE
+                        }
                     } else {
-                        setupWalkGraphForHaveData(walkData)
-                        binding.tvWalkData.visibility = View.GONE
+                        binding.tvBeforeTime.text = getString(R.string.home_time_none)
+                        binding.tvDogGraph.text = getString(R.string.home_walk_graph_title)
                     }
                 }
         }
 
-        lifecycleScope.launch {
-            homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { weatherInfo ->
-                    updateWeatherUI(weatherInfo)
-                }
-        }
-
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.refreshDogList()
-                }
-        }
-
-        lifecycleScope.launch {
-            homeViewModel.stampProgressState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collectLatest { progress ->
-                    binding.progressbarWalkStampRate.progress = progress
-                    binding.tvWalkStampRate.text = "14개 중 ${progress}개 흭득"
                 }
         }
 
@@ -183,7 +165,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.updateDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -193,7 +175,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadWalkDataEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -203,7 +185,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -219,7 +201,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadStampEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -229,7 +211,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             itemChangedEventBus.stampChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.loadStampProgress()
@@ -266,7 +248,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.tvMoveToAllStamp.setOnClickListener {
-            val intent = Intent(context, AllStampActivity::class.java)
+            val intent = Intent(context, StampActivity::class.java)
             startActivity(intent)
         }
     }
@@ -433,7 +415,7 @@ class HomeFragment : Fragment() {
 
     private fun moveToHistory() {
         binding.tvMoveToHistoryGraph.setOnClickListener {
-            val dogInfo = homeViewModel.selectDogState.value
+            val dogInfo = homeViewModel.homeUiState.value.selectedDog
             if (dogInfo != null) {
                 val intent = Intent(context, HistoryActivity::class.java)
                 intent.putExtra("DOG_INFO", dogInfo)

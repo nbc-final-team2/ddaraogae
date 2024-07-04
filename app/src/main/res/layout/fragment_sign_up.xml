@@ -47,7 +47,7 @@
             android:id="@+id/et_signup_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/login_box"
             android:hint="@string/signup_email"
             android:maxLength="30"
@@ -86,6 +86,16 @@
             app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
             app:layout_constraintTop_toBottomOf="@+id/et_signup_email" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_password_visible_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/et_signup_password"
+            app:layout_constraintBottom_toBottomOf="@id/et_signup_password"
+            app:layout_constraintEnd_toEndOf="@id/et_signup_password"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:srcCompat="@drawable/ic_visibility_off_grey_24"/>
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_signup_password_warning"
             android:layout_width="wrap_content"
@@ -114,6 +124,16 @@
             app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
             app:layout_constraintTop_toBottomOf="@+id/et_signup_password" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_password_check_visible_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/et_signup_password_check"
+            app:layout_constraintBottom_toBottomOf="@id/et_signup_password_check"
+            app:layout_constraintEnd_toEndOf="@id/et_signup_password_check"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:srcCompat="@drawable/ic_visibility_off_grey_24"/>
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_signup_password_check_warning"
             android:layout_width="wrap_content"
@@ -125,14 +145,23 @@
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
             app:layout_constraintTop_toBottomOf="@+id/et_signup_password_check" />
+        
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cb_total_agree"
+            android:text="@string/signup_total_check"
+            app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+            app:layout_constraintTop_toBottomOf="@+id/tv_signup_password_check_warning"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_signup_terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_smaller"
             android:text="@string/signup_terms"
             app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
-            app:layout_constraintTop_toBottomOf="@+id/tv_signup_password_check_warning" />
+            app:layout_constraintTop_toBottomOf="@+id/cb_total_agree" />
 
         <ImageButton
             android:id="@+id/ib_signup_terms"
@@ -149,7 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signup_personal_terms"
-            app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+            app:layout_constraintStart_toStartOf="@+id/cb_signup_terms"
             app:layout_constraintTop_toBottomOf="@+id/cb_signup_terms" />
 
         <ImageButton
@@ -167,7 +196,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signup_personal_agree_terms"
-            app:layout_constraintStart_toStartOf="@+id/et_signup_password_check"
+            app:layout_constraintStart_toStartOf="@+id/cb_signup_terms"
             app:layout_constraintTop_toBottomOf="@+id/cb_signup_personal_terms" />
 
         <ImageButton

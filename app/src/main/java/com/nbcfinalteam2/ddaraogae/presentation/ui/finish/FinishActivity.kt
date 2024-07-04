@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -15,8 +15,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
@@ -58,10 +56,12 @@ class FinishActivity : FragmentActivity() {
     private lateinit var naverMap: NaverMap
     private var polyline = PolylineOverlay()
     private lateinit var locationList: List<LatLng>
+    private var distance = 0.0
 
     private var loadingDialog: LoadingDialog? = null
 
-    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+    @Inject
+    lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -99,7 +99,9 @@ class FinishActivity : FragmentActivity() {
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra(LOCATIONLIST, LatLng::class.java)?.toList().orEmpty()
         } else {
-            (intent.getParcelableArrayExtra(LOCATIONLIST) as? Array<LatLng>)?.toList().orEmpty()
+            (intent.getParcelableArrayExtra(LOCATIONLIST) as? Array<Parcelable>)?.mapNotNull {
+                it as? LatLng
+            }.orEmpty()
         }
 
         val walkingUiModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -107,6 +109,8 @@ class FinishActivity : FragmentActivity() {
         } else {
             intent.getParcelableExtra(WALKINGUIMODEL)
         }
+
+        distance = walkingUiModel?.distance ?: 0.0
 
         val walkingDogs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayListExtra(WALKINGDOGS, DogInfo::class.java).orEmpty()
@@ -118,7 +122,7 @@ class FinishActivity : FragmentActivity() {
 
         lifecycleScope.launch {
             viewModel.insertEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@FinishActivity, event.msg)
                     DefaultEvent.Success -> viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
                 }
@@ -127,7 +131,7 @@ class FinishActivity : FragmentActivity() {
 
         lifecycleScope.launch {
             viewModel.stampEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@FinishActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
@@ -239,7 +243,6 @@ class FinishActivity : FragmentActivity() {
 
     private fun drawPolyLine() {
         if (locationList.isNotEmpty()) {
-            Log.d("drawPolyLine", "Invoked with ${locationList.size} locations")
             if (locationList.size >= 2) {
                 lifecycleScope.launch(Dispatchers.Main) {
                     polyline.apply {
@@ -247,14 +250,9 @@ class FinishActivity : FragmentActivity() {
                         color = resources.getColor(R.color.red, null)
                         coords = locationList
                         map = naverMap
-                        Log.d("drawPolyLine", "Polyline drawn with ${coords.size} points")
                     }
                 }
-            } else {
-                Log.d("drawPolyLine", "Not enough points to draw polyline")
             }
-        } else {
-            Log.d("drawPolyLine", "Location list is empty")
         }
     }
 
@@ -266,26 +264,24 @@ class FinishActivity : FragmentActivity() {
             }
             val bounds = boundsBuilder.build()
 
-            val padding = 100
-
+            val padding = if (distance >= 1.0) {
+                100
+            } else {
+                250
+            }
             val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
             naverMap.moveCamera(cameraUpdate)
-            Log.d("setCameraOnPolyLine", "Camera moved to fit bounds")
-        } else {
-            Log.d("setCameraOnPolyLine", "Location list is empty, cannot set camera")
         }
     }
 
-    private fun finishWalking(walkingUiModel: WalkingInfo, walkingDogs: List<DogInfo>) {
+    private fun finishWalking(walkingInfo: WalkingInfo, walkingDogs: List<DogInfo>) {
         if (::naverMap.isInitialized) {
             naverMap.takeSnapshot {
                 val mapImage = bitmapToByteArray(it)
                 viewModel.insertWalkingData(
-                    walkingDogs.map { dog ->
-                        walkingUiModel.copy(
-                            dogId = dog.id
-                        )
-                    } to mapImage!!
+                    walkingInfo = walkingInfo,
+                    dogIdList = walkingDogs.map { dog -> dog.id?:"" },
+                    imageByteArray = mapImage!!
                 )
             }
         }

@@ -2,22 +2,30 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType.TYPE_CLASS_TEXT
+import android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+import android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
-import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
-import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.DetailPetActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.alarm.AlarmActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class MypageFragment : Fragment() {
@@ -41,25 +49,38 @@ class MypageFragment : Fragment() {
         clickAboutAccountBtn()
         clickAboutPetBtn()
         clickPrivacyBtn()
+        clickAboutFunctionBtn()
         initViewModel()
 
     }
 
     private fun clickAboutAccountBtn(){
         binding.tvSignOut.setOnClickListener {
-            viewModel.logOut()
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setMessage(R.string.msg_logout)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                viewModel.logOut()
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
         }
 
         binding.tvSignDelete.setOnClickListener {
-            viewModel.deleteUser()
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle(R.string.msg_delete_account)
+            builder.setMessage(R.string.msg_delete_account_context)
+            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                viewModel.isGoogleUser()
+            }
+            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+            builder.show()
+
         }
     }
     private fun clickAboutPetBtn(){
-        binding.tvMyDogAdd.setOnClickListener {
-            startActivity(Intent(requireActivity(), AddActivity::class.java))
-        }
+
         binding.tvMyDogEdit.setOnClickListener {
-            startActivity(Intent(requireActivity(), DetailPetActivity::class.java))
+            startActivity(Intent(requireActivity(), MyPetActivity::class.java))
         }
     }
     private fun clickPrivacyBtn(){
@@ -73,10 +94,15 @@ class MypageFragment : Fragment() {
             startActivity(Intent(requireActivity(), MypageAgreementPrivacy::class.java))
         }
     }
+    private fun clickAboutFunctionBtn() {
+        binding.tvSetAlarm.setOnClickListener {
+            startActivity(Intent(requireActivity(), AlarmActivity::class.java))
+        }
+    }
 
     private fun initViewModel() {
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.restartEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest {
                 when(it) {
                     is DefaultEvent.Failure -> {}
@@ -91,7 +117,7 @@ class MypageFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mypageEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
@@ -100,7 +126,7 @@ class MypageFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mypageUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { state->
                 if (state.isLoading) {
                     loadingDialog = LoadingDialog()
@@ -109,6 +135,31 @@ class MypageFragment : Fragment() {
                     loadingDialog?.dismiss()
                     loadingDialog = null
                 }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.isGoogleLogin.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { state->
+               if (state){
+                   val googleToken = GoogleSignIn.getLastSignedInAccount(requireActivity())
+                   googleToken?.idToken?.let{
+                       viewModel.deleteUser(it)
+                   }
+               }
+                else{
+                   val builder = AlertDialog.Builder(requireContext())
+                   builder.setTitle(R.string.email_delete_account_title)
+
+                   val inputPassword = EditText(requireContext())
+                   inputPassword.inputType = TYPE_CLASS_TEXT or TYPE_TEXT_VARIATION_PASSWORD
+                   builder.setView(inputPassword)
+
+                   builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
+                       val password = inputPassword.text.toString()
+                       viewModel.deleteUser(password)
+                   }
+                   builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
+                   builder.show()
+               }
             }
         }
     }

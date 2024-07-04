@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_beforetime"
+                android:id="@+id/tv_beforeTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
@@ -54,7 +54,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_beforetime"
+                app:layout_constraintTop_toBottomOf="@+id/tv_beforeTime"
                 tools:listitem="@layout/item_home_dog_selection" />
 
             <de.hdodenhof.circleimageview.CircleImageView

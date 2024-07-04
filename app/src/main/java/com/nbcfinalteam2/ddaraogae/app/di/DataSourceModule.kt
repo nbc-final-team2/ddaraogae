@@ -1,5 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.app.di
 
+import com.nbcfinalteam2.ddaraogae.data.datasource.local.AlarmDataSource
+import com.nbcfinalteam2.ddaraogae.data.datasource.local.AlarmDataSourceImpl
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.FirebaseDataSource
 import com.nbcfinalteam2.ddaraogae.data.datasource.remote.firebase.FirebaseDataSourceImpl
 import dagger.Binds
@@ -18,4 +20,9 @@ abstract class DataSourceModule {
         firebaseDataSourceImpl: FirebaseDataSourceImpl
     ): FirebaseDataSource
 
+    @Binds
+    @Singleton
+    abstract fun bindAlarmDataSource(
+        alarmDataSourceImpl: AlarmDataSourceImpl
+    ): AlarmDataSource
 }

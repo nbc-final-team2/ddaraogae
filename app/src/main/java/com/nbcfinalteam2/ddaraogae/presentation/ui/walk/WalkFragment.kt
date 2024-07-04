@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -21,16 +20,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.floatingactionbutton.FloatingActionButton.SIZE_AUTO
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MapConstants
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
@@ -46,6 +48,7 @@ import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStri
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -90,15 +93,17 @@ class WalkFragment : Fragment() {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private lateinit var naverMap: NaverMap
-    private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
+    private lateinit var locationSource: FusedLocationSource
     private lateinit var cameraPosition: CameraPosition
 
     private var locationService: LocationService? = null
     private var bound = false
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
+    private var collectServiceFlowJob: Job? = null
 
     private var markerList = mutableListOf<Marker>()
-    var infoWindowBackup : InfoWindow? = null
+    private var infoWindowBackup: InfoWindow? = null
+    private var trackingModeJob: Job? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -170,32 +175,27 @@ class WalkFragment : Fragment() {
     private fun initMapView() {
         val fm = childFragmentManager
         val mapFragment = fm.findFragmentById(R.id.fragment_walk) as MapFragment?
-            ?: MapFragment.newInstance().also {
+            ?: MapFragment.newInstance(NaverMapOptions().extent(MapConstants.EXTENT_KOREA)).also {
                 fm.beginTransaction().add(R.id.fragment_walk, it).commit()
             }
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        // fragment의 getMapAsync() 메서드로 OnMapReadyCallback 콜백을 등록하면 비동기로 NaverMap 객체를 얻을 수 있다.
         mapFragment.getMapAsync { map ->
             naverMap = map
-            // 현재 위치 활성화
             naverMap.locationSource = locationSource
+            // 위치 추적, 이게 없으면 현재 위치 감지를 못한다.
+            naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
-            // 위치를 추적하면서 카메라도 따라 움직인다.
-            naverMap.locationTrackingMode = LocationTrackingMode.Follow
-            // 나침반 비활성화
             naverMap.uiSettings.isCompassEnabled = false
-            // 현재 위치 버튼 비활성화
-            naverMap.uiSettings.isLocationButtonEnabled = false
-            
-            naverMap.locationOverlay.circleRadius = 20
-            naverMap.locationOverlay.circleColor = Color.RED
-//            naverMap.locationOverlay.icon = OverlayImage.fromResource(R.drawable.locationcircle)
-            naverMap.uiSettings.isLocationButtonEnabled = true
+            // 하단에 padding으로 현재 위치랑 로고 가리는 문제 해결
             naverMap.setContentPadding(0, 0, 0, 200)
+            naverMap.minZoom = 7.0
+            naverMap.maxZoom = 18.0
 
-            // 카메라 설정
+            naverMap.locationOverlay.circleRadius = SIZE_AUTO
+            naverMap.locationOverlay.iconHeight = SIZE_AUTO
+
             lifecycleScope.launch {
                 walkViewModel.storeListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                     .collectLatest {
@@ -205,7 +205,18 @@ class WalkFragment : Fragment() {
             }
             naverMap.addOnLocationChangeListener {
                 setCamera(it)
-                walkViewModel.fetchStoreData(it.latitude, it.longitude) // 위치 데이터 가져오기(꼭 있어야함)
+                walkViewModel.fetchStoreData(it.latitude, it.longitude)
+            }
+
+            naverMap.addOnCameraChangeListener { reason, animated ->
+                if (reason == CameraUpdate.REASON_GESTURE) {
+                    trackingModeJob?.cancel()
+
+                    trackingModeJob = viewLifecycleOwner.lifecycleScope.launch {
+                        delay(10000)
+                        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                    }
+                }
             }
         }
     }
@@ -276,7 +287,6 @@ class WalkFragment : Fragment() {
 
         val walkingUiModel = WalkingInfo(
             id = null,
-            dogId = null,
             timeTaken = serviceInfoStateFlow?.value?.time,
             distance = serviceInfoStateFlow?.value?.distance,
             startDateTime = locationService?.savedStartDate,
@@ -288,7 +298,7 @@ class WalkFragment : Fragment() {
 
         endLocationService()
 
-        if(locationList.size<2) {
+        if (locationList.size < 2) {
             ToastMaker.make(requireContext(), getString(R.string.msg_short_walking_time))
             return
         }
@@ -297,10 +307,10 @@ class WalkFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
-                    if(it.isLoading) {
+                    if (it.isLoading) {
                         binding.btnWalkStart.isEnabled = false
                     } else {
                         binding.btnWalkStart.isEnabled = true
@@ -316,21 +326,22 @@ class WalkFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.dogSelectionState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     walkDogAdapter.submitList(it.dogList)
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
-                    when(event) {
+                    when (event) {
                         is WalkEvent.Error -> ToastMaker.make(requireContext(), event.strResId)
                         is WalkEvent.StartWalking -> {
                             startServiceAndWalk()
                         }
+
                         is WalkEvent.StopWalking -> {
                             walkViewModel.setLoading()
                             stopServiceAndWalk()
@@ -347,8 +358,6 @@ class WalkFragment : Fragment() {
     }
 
     private fun addMarkers(storeListState: StoreListState) {
-        /* TODO:
-        *   클릭시 정보창 띄우기로 변경, 마커 사이즈 줄이기, bound는 어떻게 */
         storeListState.storeList.forEach { store ->
             val latLng = LatLng(store.lat!!.toDouble(), store.lng!!.toDouble())
             val marker = Marker()
@@ -361,8 +370,8 @@ class WalkFragment : Fragment() {
 
             val contentString = """
                 ${store.placeName} | ${store.categoryGroupName}
-                    ${store.address}
-                    ${store.phone} 
+                ${store.address}
+                ${store.phone} 
                 """.trimIndent()
 
             val infoWindow = InfoWindow().apply {
@@ -411,7 +420,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun startCollectingServiceFlow() {
-        lifecycleScope.launch {
+        collectServiceFlowJob = viewLifecycleOwner.lifecycleScope.launch {
             serviceInfoStateFlow?.flowWithLifecycle(viewLifecycleOwner.lifecycle)?.collectLatest {
                 updateDistanceText(it.distance)
                 updateTimerText(it.time)
@@ -420,15 +429,12 @@ class WalkFragment : Fragment() {
     }
 
     private fun unbindFromService() {
-        stopCollectingServiceFlow()
         requireContext().unbindService(serviceConnection)
         bound = false
     }
 
     private fun stopCollectingServiceFlow() {
-        serviceInfoStateFlow?.let { _ ->
-            viewLifecycleOwner.lifecycleScope.coroutineContext[Job]?.cancel()
-        }
+        collectServiceFlowJob?.cancel()
     }
 
     private fun endLocationService() {
@@ -460,14 +466,15 @@ class WalkFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         if (bound) {
-            stopCollectingServiceFlow()
             unbindFromService()
         }
+        trackingModeJob?.cancel()
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+//        trackingModeJob = null
     }
 
     private fun updateDistanceText(dist: Double) {
