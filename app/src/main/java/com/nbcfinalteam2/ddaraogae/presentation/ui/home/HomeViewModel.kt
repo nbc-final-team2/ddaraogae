@@ -110,7 +110,9 @@ class HomeViewModel @Inject constructor(
 
             _homeUiState.update {
                 it.copy(
-                    dogList = dogList.apply { if (this.isNotEmpty()) this[0].isSelected = true },
+                    dogList = selectedDogInd?.let {
+                        dogList
+                    } ?: dogList.apply { if (this.isNotEmpty()) this[0].isSelected = true },
                     selectedDog = selectedDogInd?.let { dogList[it] } ?: dogList.firstOrNull()
                 )
             }
