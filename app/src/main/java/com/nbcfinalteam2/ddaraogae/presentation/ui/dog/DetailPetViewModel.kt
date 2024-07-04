@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.dog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
@@ -7,6 +8,7 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogByIdUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetDogListUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +25,9 @@ class DetailPetViewModel @Inject constructor(
     private val getDogListUseCase: GetDogListUseCase,
     private val getDogByIdUseCase: GetDogByIdUseCase,
 ) : ViewModel() {
+    private val _detailUiState = MutableStateFlow(DetailUiState.init())
+    val detailUiState: StateFlow<DetailUiState> = _detailUiState.asStateFlow()
+
     private val _dogListState = MutableStateFlow<List<DogInfo>>(emptyList())
     val dogListState: StateFlow<List<DogInfo>> = _dogListState.asStateFlow()
 
@@ -35,8 +40,13 @@ class DetailPetViewModel @Inject constructor(
     private val _loadEvent = MutableSharedFlow<DefaultEvent>()
     val loadEvent: SharedFlow<DefaultEvent> = _loadEvent.asSharedFlow()
 
+    private val _nullEvent = MutableSharedFlow<NullEvent>()
+    val nullEvent: SharedFlow<NullEvent> = _nullEvent.asSharedFlow()
+
     private val _loadDisplayEvent = MutableStateFlow<String?>(null)
     val loadDisplayEvent: StateFlow<String?> = _loadDisplayEvent.asStateFlow()
+
+    private var selectDogId = ""
 
     init {
         getDogList()
@@ -60,27 +70,46 @@ class DetailPetViewModel @Inject constructor(
                 dogList
             }
         }.onSuccess {
-
             _loadEvent.emit(DefaultEvent.Success)
         }.onFailure {
             _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
         }
     }
     fun getDogData(dogId : String) = viewModelScope.launch{
-        var dogInfo = getDogByIdUseCase(dogId)?.let{
-            DogInfo(
-                id = it.id,
-                name = it.name,
-                gender = it.gender,
-                age = it.age,
-                lineage = it.lineage,
-                memo = it.memo,
-                thumbnailUrl = it.thumbnailUrl,
-                isSelected = true
+        _detailUiState.update {
+            it.copy(
+                isLoading = true
             )
         }
-        _selectedDogState.update {
-            dogInfo
+        runCatching {
+            val getDogInfo = getDogByIdUseCase(dogId)
+            if(getDogInfo == null) {
+                _nullEvent.emit(NullEvent.NullData)
+            }
+            var dogInfo = getDogInfo?.let {
+                DogInfo(
+                    id = it.id,
+                    name = it.name,
+                    gender = it.gender,
+                    age = it.age,
+                    lineage = it.lineage,
+                    memo = it.memo,
+                    thumbnailUrl = it.thumbnailUrl,
+                    isSelected = true
+                )
+            }
+            _selectedDogState.update {
+                dogInfo
+            }
+        }.onSuccess {
+            _loadEvent.emit(DefaultEvent.Success)
+            _detailUiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
+        }.onFailure {
+            _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
         }
     }
 
@@ -94,6 +123,16 @@ class DetailPetViewModel @Inject constructor(
         }
         _selectedDogIdState.update {
             dogInfo.id
+        }
+        if(dogInfo.id != null ) selectDogId = dogInfo.id
+    }
+    fun refreshDogInfo() = viewModelScope.launch {
+        runCatching {
+            selectedDogIdState.value?.let { getDogData(it) }
+        }.onSuccess {
+            _loadEvent.emit(DefaultEvent.Success)
+        }.onFailure {
+            _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
         }
     }
     fun saveDisplayState(kind:String) = viewModelScope.launch {
