@@ -85,13 +85,14 @@
         android:id="@+id/sc_detail_pet"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/cl_appbar"
+        android:layout_marginBottom="@dimen/margin_medium"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/margin_medium">
+        app:layout_constraintTop_toBottomOf="@+id/cl_appbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_dogThumbnail"
                 android:layout_width="130dp"
@@ -99,10 +100,10 @@
                 android:layout_marginTop="50dp"
                 app:civ_border_color="@color/brown"
                 app:civ_border_width="1dp"
-                app:layout_goneMarginTop="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginTop="50dp"
                 tools:src="@drawable/ic_dog_default_thumbnail" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -163,7 +164,7 @@
                 android:background="@drawable/radio_button_selected"
                 android:gravity="center"
                 android:text="@string/mypage_edit_pet_dog_gender_male"
-                android:textColor="@color/black"
+                android:textColor="@color/black_white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
@@ -176,7 +177,7 @@
                 android:background="@drawable/radio_button_unselected"
                 android:gravity="center"
                 android:text="@string/mypage_edit_pet_dog_gender_female"
-                android:textColor="@color/black"
+                android:textColor="@color/black_white"
                 app:layout_constraintLeft_toRightOf="@+id/tv_male"
                 app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 

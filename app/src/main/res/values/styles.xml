@@ -12,6 +12,9 @@
     <style name="customEditTextFontStyle" parent="Widget.AppCompat.EditText">
         <item name="fontFamily">@font/font_sf</item>
     </style>
+    <style name="customEditTextFontStyleNight" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/white_fix</item>
+    </style>
     <style name="customRadioButtonFontStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="fontFamily">@font/font_sf</item>
     </style>

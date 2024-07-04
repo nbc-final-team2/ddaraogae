@@ -69,8 +69,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/camera"
-                app:layout_constraintEnd_toEndOf="@+id/iv_dogThumbnail"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_dogThumbnail"/>
+                app:layout_constraintBottom_toBottomOf="@+id/iv_dogThumbnail"
+                app:layout_constraintEnd_toEndOf="@+id/iv_dogThumbnail" />
 
             <ImageView
                 android:id="@+id/iv_remove_thumbnail"
@@ -106,7 +106,6 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/black_fix"
                 android:textColorHint="@color/brown_trans"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -143,7 +142,8 @@
                     android:button="@android:color/transparent"
                     android:checked="true"
                     android:gravity="center"
-                    android:text="@string/home_add_dog_gender_male" />
+                    android:text="@string/home_add_dog_gender_male"
+                    android:textColor="@color/black_white" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rb_female"
@@ -153,7 +153,8 @@
                     android:background="@drawable/radio_button_selector"
                     android:button="@android:color/transparent"
                     android:gravity="center"
-                    android:text="@string/home_add_dog_gender_female" />
+                    android:text="@string/home_add_dog_gender_female"
+                    android:textColor="@color/black_white" />
             </RadioGroup>
 
             <androidx.appcompat.widget.AppCompatTextView

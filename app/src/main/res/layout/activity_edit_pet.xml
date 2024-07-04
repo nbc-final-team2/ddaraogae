@@ -20,16 +20,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_delete"
         android:layout_marginRight="@dimen/margin_medium"
-        android:textSize="@dimen/text_text"
         android:text="@string/mypage_delete_dog"
+        android:textSize="@dimen/text_text"
         app:layout_constraintBottom_toBottomOf="@+id/tv_appBar"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_appBar"/>
+        app:layout_constraintTop_toTopOf="@+id/tv_appBar" />
 
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -76,12 +77,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_dog_default_thumbnail" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/camera"
-                app:layout_constraintEnd_toEndOf="@+id/iv_dogThumbnail"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_dogThumbnail"/>
+                app:layout_constraintBottom_toBottomOf="@+id/iv_dogThumbnail"
+                app:layout_constraintEnd_toEndOf="@+id/iv_dogThumbnail" />
+
             <ImageView
                 android:id="@+id/iv_remove_thumbnail"
                 android:layout_width="wrap_content"
@@ -115,7 +118,6 @@
                 android:hint="@string/mypage_edit_pet_dog_name_hint"
                 android:maxLength="20"
                 android:maxLines="1"
-                android:textColor="@color/black_fix"
                 android:textColorHint="@color/brown_trans"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -153,7 +155,7 @@
                     android:checked="true"
                     android:gravity="center"
                     android:text="@string/mypage_edit_pet_dog_gender_male"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black_white" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rb_female"
@@ -164,7 +166,7 @@
                     android:button="@android:color/transparent"
                     android:gravity="center"
                     android:text="@string/mypage_edit_pet_dog_gender_female"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black_white" />
             </RadioGroup>
 
             <androidx.appcompat.widget.AppCompatTextView

@@ -22,6 +22,7 @@
 
     <color name="white_fix">#FFFFFFFF</color>
     <color name="black_fix">#FF000000</color>
+    <color name="black_white">#FF000000</color>
     <color name="brown_trans">#6F4E37</color>
     <color name="grey_trans">#D9D9D9</color>
 </resources>
