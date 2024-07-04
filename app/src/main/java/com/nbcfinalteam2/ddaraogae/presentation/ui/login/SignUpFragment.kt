@@ -16,6 +16,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentSignUpBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageAgreementPrivacy
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypagePrivacyActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageTermsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -118,6 +121,9 @@ class SignUpFragment : Fragment() {
             }
             if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
         }
+        binding.ibSignupTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypageTermsActivity::class.java)) }
+        binding.ibSignupPersonalTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java)) }
+        binding.ibSignupPersonalAgreeTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypageAgreementPrivacy::class.java)) }
     }
 
 
