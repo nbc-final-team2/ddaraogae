@@ -100,12 +100,10 @@
   <tbody>
     <tr>
       <td align="center"><a href="https://github.com/winteryy"><img src="https://avatars.githubusercontent.com/u/84631435?s=400&v=4" width="100px;"><br /><sub><b>winteryy</b></sub></a><br /></a></td>
-      <td align="center"><a href="https://github.com/juseonghyun"><img src="https://avatars.githubusercontent.com/u/43128821?v=4" width="100px;"><br /><sub><b>juseonghyun</b></sub></a><br /></a></td>
+      <td align="center"><a href="https://github.com/IamJuco"><img src="https://avatars.githubusercontent.com/u/43128821?v=4" width="100px;"><br /><sub><b>IamJuco</b></sub></a><br /></a></td>
       <td align="center"><a href="https://github.com/theBettor"><img src="https://avatars.githubusercontent.com/u/89888486?v=4" width="100px;"><br /><sub><b>theBettor</b></sub></a><br /></a></td>
       <td align="center"><a href="https://github.com/neoneoneo123"><img src="https://avatars.githubusercontent.com/u/128209823?v=4" width="100px;"><br /><sub><b>neoneoneo123</b></sub></a><br /></a></td>
-      <td align="center"><a href="https://github.com/JYeyun
-"><img src="https://avatars.githubusercontent.com/u/117142316?v=4" width="100px;"><br /><sub><b>JYeyun
-</b></sub></a><br /></a></td>
+      <td align="center"><a href="https://github.com/JYeyun"><img src="https://avatars.githubusercontent.com/u/117142316?v=4" width="100px;"><br /><sub><b>JYeyun</b></sub></a><br /></a></td>
      <tr/>
   </tbody>
 </table>
