@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
@@ -26,6 +27,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.ActivityEditPetBinding
 import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
+import com.nbcfinalteam2.ddaraogae.presentation.shared.KeyboardCleaner
 import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
@@ -40,6 +42,10 @@ class EditPetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditPetBinding
     private val viewModel: EditPetViewModel by viewModels()
     @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+
+    private val keyboardCleaner: KeyboardCleaner by lazy {
+        KeyboardCleaner(this)
+    }
 
     private var dogData: DogInfo? = null
     private var loadingDialog: LoadingDialog? = null
@@ -223,6 +229,13 @@ class EditPetActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if(ev.action == MotionEvent.ACTION_UP) keyboardCleaner.setPrevFocus(currentFocus)
+        val result = super.dispatchTouchEvent(ev)
+        keyboardCleaner.handleTouchEvent(ev)
+        return result
     }
 
     companion object {
