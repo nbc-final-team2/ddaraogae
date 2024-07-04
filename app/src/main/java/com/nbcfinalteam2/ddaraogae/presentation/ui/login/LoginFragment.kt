@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
+import com.nbcfinalteam2.ddaraogae.presentation.util.setPasswordToggle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -56,10 +58,16 @@ class LoginFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         checkIsPossible()
         clickLoginButton()
         viewModel.getCurrentUser()
     }
+
+    private fun initView() {
+        binding.ivPasswordVisibleToggle.setPasswordToggle(binding.etLoginPassword)
+    }
+
     private fun checkIsPossible() {
         lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(lifecycle)
