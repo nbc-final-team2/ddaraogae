@@ -7,7 +7,6 @@ import java.util.Date
 @Parcelize
 data class WalkingInfo(
     val id: String?,
-    val dogId: String?,
     val timeTaken: Int?,
     val distance: Double?,
     val startDateTime: Date?,

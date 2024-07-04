@@ -293,7 +293,6 @@ class WalkFragment : Fragment() {
 
         val walkingUiModel = WalkingInfo(
             id = null,
-            dogId = null,
             timeTaken = serviceInfoStateFlow?.value?.time,
             distance = serviceInfoStateFlow?.value?.distance,
             startDateTime = locationService?.savedStartDate,
