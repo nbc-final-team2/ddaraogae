@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -63,6 +64,9 @@ class LoginFragment : Fragment() {
         initView()
         checkIsPossible()
         clickLoginButton()
+
+        val bgShape = binding.btLogin.background as GradientDrawable
+        bgShape.setColor(resources.getColor(R.color.brown))
         viewModel.getCurrentUser()
     }
 

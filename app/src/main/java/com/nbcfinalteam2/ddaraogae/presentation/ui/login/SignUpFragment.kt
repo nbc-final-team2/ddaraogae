@@ -99,8 +99,8 @@ class SignUpFragment : Fragment() {
                 binding.cbSignupPersonalTerms.isChecked = isChecked
                 binding.cbSignupPersonalAgreeTerms.isChecked = isChecked
             }
-
             checkTotalBtn = false
+            buttonState()
         }
         binding.cbSignupTerms.setOnCheckedChangeListener{ _, isChecked ->
             useTerms = isChecked
@@ -110,6 +110,7 @@ class SignUpFragment : Fragment() {
                 binding.cbTotalAgree.isChecked = false
             }
             if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
+            buttonState()
         }
         binding.cbSignupPersonalTerms.setOnCheckedChangeListener{ _, isChecked ->
             privacyPolicy = isChecked
@@ -119,6 +120,7 @@ class SignUpFragment : Fragment() {
                 binding.cbTotalAgree.isChecked = false
             }
             if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
+            buttonState()
         }
         binding.cbSignupPersonalAgreeTerms.setOnCheckedChangeListener{ _, isChecked ->
             agreementPrivacyPolicy = isChecked
@@ -128,6 +130,7 @@ class SignUpFragment : Fragment() {
                 binding.cbTotalAgree.isChecked = false
             }
             if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
+            buttonState()
         }
         binding.ibSignupTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypageTermsActivity::class.java)) }
         binding.ibSignupPersonalTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java)) }
