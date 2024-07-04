@@ -51,8 +51,8 @@ class DetailPetFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        lifecycleScope.launch {
-            viewModel.selectedDogIdState.flowWithLifecycle(lifecycle).collectLatest { dogId ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.selectedDogIdState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogId ->
                 dogId?.let {
                     viewModel.getDogData(dogId)
                 }
@@ -76,8 +76,8 @@ class DetailPetFragment : Fragment() {
         }
     }
     private fun getSelectedDogData(){
-        lifecycleScope.launch {
-            viewModel.selectedDogState.flowWithLifecycle(lifecycle).collectLatest { dogInfo ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.selectedDogState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogInfo ->
                 dogInfo?.let {
                     setView(dogInfo)
                 }

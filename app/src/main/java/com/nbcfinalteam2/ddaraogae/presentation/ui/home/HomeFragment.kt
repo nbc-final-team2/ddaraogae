@@ -102,7 +102,7 @@ class HomeFragment : Fragment() {
 
     private fun initViewModels() {
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { dogList ->
                     dogProfileAdapter.submitList(dogList)
@@ -110,7 +110,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             combine(
                 homeViewModel.selectDogState,
                 homeViewModel.selectDogWithTimeState
@@ -149,7 +149,7 @@ class HomeFragment : Fragment() {
 //                }
 //        }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.walkListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { walkData ->
                     if (walkData.isEmpty()) {
@@ -162,21 +162,21 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.weatherInfoState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { weatherInfo ->
                     updateWeatherUI(weatherInfo)
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.refreshDogList()
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.stampProgressState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { progress ->
                     binding.progressbarWalkStampRate.progress = progress
@@ -184,7 +184,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -194,7 +194,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.updateDogEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -204,7 +204,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadWalkDataEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -214,7 +214,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadWeatherEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -230,7 +230,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.loadStampEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -240,7 +240,7 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             itemChangedEventBus.stampChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     homeViewModel.loadStampProgress()
