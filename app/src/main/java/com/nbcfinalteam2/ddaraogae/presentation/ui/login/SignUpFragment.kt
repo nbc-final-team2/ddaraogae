@@ -16,6 +16,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentSignUpBinding
+import com.nbcfinalteam2.ddaraogae.presentation.util.setPasswordToggle
 import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageAgreementPrivacy
 import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypagePrivacyActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageTermsActivity
@@ -51,6 +52,7 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initView()
         checkSignUpState()
         checkAuthentication()
         clickSignupButton()
@@ -63,6 +65,12 @@ class SignUpFragment : Fragment() {
                 .commit()
         }
     }
+
+    private fun initView() {
+        binding.ivPasswordVisibleToggle.setPasswordToggle(binding.etSignupPassword)
+        binding.ivPasswordCheckVisibleToggle.setPasswordToggle(binding.etSignupPasswordCheck)
+    }
+
     private fun checkSignUpState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
