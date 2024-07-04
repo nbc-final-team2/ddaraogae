@@ -64,6 +64,7 @@ class DetailPetFragment : Fragment() {
             parentFragmentManager.beginTransaction()
                 .remove(this)
                 .commit()
+            parentFragmentManager.popBackStack()
         }
         binding.tvEdit.setOnClickListener {
             viewModel.selectedDogState.value?.let {
