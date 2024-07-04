@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
+import com.nbcfinalteam2.ddaraogae.presentation.util.setPasswordToggle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,6 +32,8 @@ class LoginFragment : Fragment() {
     private var _binding:FragmentLogInBinding? = null
     private val binding get() = _binding!!
     private val viewModel: LoginViewModel by viewModels()
+
+    private var password = ""
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private val activityResultLauncher =
@@ -56,13 +60,19 @@ class LoginFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         checkIsPossible()
         clickLoginButton()
         viewModel.getCurrentUser()
     }
+
+    private fun initView() {
+        binding.ivPasswordVisibleToggle.setPasswordToggle(binding.etLoginPassword)
+    }
+
     private fun checkIsPossible() {
-        lifecycleScope.launch {
-            viewModel.userState.flowWithLifecycle(lifecycle)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collect { state ->
                     if (state == 0) successLogIn()
                     if (state == 1) viewModel.checkVerified()
@@ -82,7 +92,7 @@ class LoginFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.login_send_email, Toast.LENGTH_SHORT).show()
             })
             .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _, _ ->
-                viewModel.deleteAccount()
+                viewModel.deleteAccount(password)
                 Toast.makeText(requireContext(), R.string.login_account_delete, Toast.LENGTH_SHORT).show()
             })
             .setCancelable(false)
@@ -92,7 +102,7 @@ class LoginFragment : Fragment() {
         //click LoginButton
         btLogin.setOnClickListener {
             val email = etLoginEmail.text.toString().trim()
-            val password = etLoginPassword.text.toString().trim()
+            password = etLoginPassword.text.toString().trim()
             if(email.isBlank() || password.isBlank()) Toast.makeText(requireContext(), R.string.login_input_account, Toast.LENGTH_SHORT).show()
             else viewModel.signInEmail(email, password)
         }

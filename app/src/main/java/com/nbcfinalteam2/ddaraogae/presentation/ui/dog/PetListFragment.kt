@@ -76,8 +76,8 @@ class PetListFragment:Fragment() {
         rcvPetList.layoutManager = LinearLayoutManager(this@PetListFragment.activity)
     }
     private fun initViewModel(){
-        lifecycleScope.launch {
-            viewModel.dogListState.flowWithLifecycle(lifecycle).collectLatest { dogList ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.dogListState.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { dogList ->
                 adapter.submitList(dogList)
                 if (dogList.isEmpty()) {
                     binding.tvEmptyList.visibility = AppCompatTextView.VISIBLE
@@ -88,8 +88,8 @@ class PetListFragment:Fragment() {
                 }
             }
         }
-        lifecycleScope.launch {
-            viewModel.loadEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.loadEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle).collectLatest { event ->
                 when(event) {
                     is DefaultEvent.Failure -> ToastMaker.make(requireContext(), event.msg)
                     DefaultEvent.Success -> {}

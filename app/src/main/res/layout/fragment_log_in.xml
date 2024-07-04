@@ -62,6 +62,16 @@
             app:layout_constraintStart_toStartOf="@+id/tv_login_title"
             app:layout_constraintTop_toBottomOf="@+id/et_login_email" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_password_visible_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/et_login_password"
+            app:layout_constraintBottom_toBottomOf="@id/et_login_password"
+            app:layout_constraintEnd_toEndOf="@id/et_login_password"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:srcCompat="@drawable/ic_visibility_off_grey_24"/>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_login"
             android:layout_width="0dp"

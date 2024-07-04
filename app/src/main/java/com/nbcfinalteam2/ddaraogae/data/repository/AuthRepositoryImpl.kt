@@ -55,11 +55,11 @@ class AuthRepositoryImpl @Inject constructor(
             if(it.displayName == PROVIDER_GOOGLE) {
                 it.reauthenticate(
                     GoogleAuthProvider.getCredential(credential, null)
-                )
+                ).await()
             } else {
                 it.reauthenticate(
                     EmailAuthProvider.getCredential(it.email.toString(), credential)
-                )
+                ).await()
             }
         }
 
@@ -70,6 +70,9 @@ class AuthRepositoryImpl @Inject constructor(
             it.reference.delete().await()
         }
         firebaseFs.collection(PATH_USERDATA).document(uid).collection(PATH_WALKING).get().await().documents.forEach {
+            it.reference.delete().await()
+        }
+        firebaseFs.collection(PATH_WALKING_DOGS).document(uid).collection(PATH_WALKING_DOGS).get().await().documents.forEach {
             it.reference.delete().await()
         }
 
@@ -112,8 +115,9 @@ class AuthRepositoryImpl @Inject constructor(
         private const val PATH_DOGS = "dogs"
         private const val PATH_WALKING = "walking"
         private const val PATH_STAMPS = "stamps"
+        private const val PATH_WALKING_DOGS = "walking_dogs"
 
-        private const val PROVIDER_GOOGLE = "G"
-        private const val PROVIDER_EMAIL = "E"
+        private const val PROVIDER_GOOGLE = "google_user"
+        private const val PROVIDER_EMAIL = "email_user"
     }
 }
