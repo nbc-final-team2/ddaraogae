@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -16,8 +15,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
@@ -63,7 +60,8 @@ class FinishActivity : FragmentActivity() {
 
     private var loadingDialog: LoadingDialog? = null
 
-    @Inject lateinit var itemChangedEventBus: ItemChangedEventBus
+    @Inject
+    lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -124,7 +122,7 @@ class FinishActivity : FragmentActivity() {
 
         lifecycleScope.launch {
             viewModel.insertEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@FinishActivity, event.msg)
                     DefaultEvent.Success -> viewModel.checkStampCondition(walkingUiModel?.startDateTime!!)
                 }
@@ -133,7 +131,7 @@ class FinishActivity : FragmentActivity() {
 
         lifecycleScope.launch {
             viewModel.stampEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@FinishActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
@@ -245,7 +243,6 @@ class FinishActivity : FragmentActivity() {
 
     private fun drawPolyLine() {
         if (locationList.isNotEmpty()) {
-            Log.d("drawPolyLine", "Invoked with ${locationList.size} locations")
             if (locationList.size >= 2) {
                 lifecycleScope.launch(Dispatchers.Main) {
                     polyline.apply {
@@ -253,14 +250,9 @@ class FinishActivity : FragmentActivity() {
                         color = resources.getColor(R.color.red, null)
                         coords = locationList
                         map = naverMap
-                        Log.d("drawPolyLine", "Polyline drawn with ${coords.size} points")
                     }
                 }
-            } else {
-                Log.d("drawPolyLine", "Not enough points to draw polyline")
             }
-        } else {
-            Log.d("drawPolyLine", "Location list is empty")
         }
     }
 
@@ -277,12 +269,8 @@ class FinishActivity : FragmentActivity() {
             } else {
                 250
             }
-
             val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
             naverMap.moveCamera(cameraUpdate)
-            Log.d("setCameraOnPolyLine", "Camera moved to fit bounds")
-        } else {
-            Log.d("setCameraOnPolyLine", "Location list is empty, cannot set camera")
         }
     }
 
