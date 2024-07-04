@@ -79,26 +79,44 @@ class SignUpFragment : Fragment() {
             .commit()
     }
     private fun checkAgreement(){
+        var checkTotalBtn = false
         binding.cbTotalAgree.setOnCheckedChangeListener { _, isChecked ->
+            if(checkTotalBtn){
+                checkTotalBtn = false
+            } else {
                 binding.cbSignupTerms.isChecked = isChecked
                 binding.cbSignupPersonalTerms.isChecked = isChecked
                 binding.cbSignupPersonalAgreeTerms.isChecked = isChecked
-                useTerms = isChecked
-                privacyPolicy = isChecked
-                agreementPrivacyPolicy = isChecked
+            }
 
+            checkTotalBtn = false
         }
         binding.cbSignupTerms.setOnCheckedChangeListener{ _, isChecked ->
             useTerms = isChecked
-            if(!isChecked) binding.cbTotalAgree.isChecked = false
+            checkTotalBtn = false
+            if(!isChecked) {
+                checkTotalBtn = true
+                binding.cbTotalAgree.isChecked = false
+            }
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
         }
         binding.cbSignupPersonalTerms.setOnCheckedChangeListener{ _, isChecked ->
             privacyPolicy = isChecked
-            if(!isChecked) binding.cbTotalAgree.isChecked = false
+            checkTotalBtn = false
+            if(!isChecked) {
+                checkTotalBtn = true
+                binding.cbTotalAgree.isChecked = false
+            }
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
         }
         binding.cbSignupPersonalAgreeTerms.setOnCheckedChangeListener{ _, isChecked ->
             agreementPrivacyPolicy = isChecked
-            if(!isChecked) binding.cbTotalAgree.isChecked = false
+            checkTotalBtn = false
+            if(!isChecked) {
+                checkTotalBtn = true
+                binding.cbTotalAgree.isChecked = false
+            }
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
         }
     }
 
