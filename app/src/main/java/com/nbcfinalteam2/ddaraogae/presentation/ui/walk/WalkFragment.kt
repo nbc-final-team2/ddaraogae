@@ -93,7 +93,7 @@ class WalkFragment : Fragment() {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private lateinit var naverMap: NaverMap
-    private lateinit var locationSource: FusedLocationSource // callback, providerclient 필요가 없었다.
+    private lateinit var locationSource: FusedLocationSource
     private lateinit var cameraPosition: CameraPosition
 
     private var locationService: LocationService? = null
@@ -180,7 +180,6 @@ class WalkFragment : Fragment() {
             }
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        // fragment의 getMapAsync() 메서드로 OnMapReadyCallback 콜백을 등록하면 비동기로 NaverMap 객체를 얻을 수 있다.
         mapFragment.getMapAsync { map ->
             naverMap = map
             naverMap.locationSource = locationSource
@@ -188,17 +187,15 @@ class WalkFragment : Fragment() {
             naverMap.locationTrackingMode = LocationTrackingMode.Follow
             // 현재 위치 버튼 기능
             naverMap.uiSettings.isLocationButtonEnabled = true
-            // 나침반 비활성화
             naverMap.uiSettings.isCompassEnabled = false
             // 하단에 padding으로 현재 위치랑 로고 가리는 문제 해결
             naverMap.setContentPadding(0, 0, 0, 200)
             naverMap.minZoom = 7.0
             naverMap.maxZoom = 18.0
-            // 반투명 원(위치 정확도 UX) 크기, ZoomLevel에 따라 유동적이지 않게 하기
+
             naverMap.locationOverlay.circleRadius = SIZE_AUTO
             naverMap.locationOverlay.iconHeight = SIZE_AUTO
 
-            // 카메라 설정
             lifecycleScope.launch {
                 walkViewModel.storeListState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                     .collectLatest {
@@ -208,18 +205,15 @@ class WalkFragment : Fragment() {
             }
             naverMap.addOnLocationChangeListener {
                 setCamera(it)
-                walkViewModel.fetchStoreData(it.latitude, it.longitude) // 위치 데이터 가져오기(꼭 있어야함)
+                walkViewModel.fetchStoreData(it.latitude, it.longitude)
             }
 
             naverMap.addOnCameraChangeListener { reason, animated ->
-                // 사용자의 제스쳐로 인해 Camera가 변경된 경우
                 if (reason == CameraUpdate.REASON_GESTURE) {
-                    // 기존 코루틴 취소
                     trackingModeJob?.cancel()
 
-                    // 새로운 코루틴 생성 및 10초 타이머 시작
                     trackingModeJob = viewLifecycleOwner.lifecycleScope.launch {
-                        delay(10000) // 10초 지연
+                        delay(10000)
                         naverMap.locationTrackingMode = LocationTrackingMode.Follow
                     }
                 }
