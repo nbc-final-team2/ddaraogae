@@ -33,6 +33,8 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: LoginViewModel by viewModels()
 
+    private var password = ""
+
     private lateinit var googleSignInClient: GoogleSignInClient
     private val activityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -90,7 +92,7 @@ class LoginFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.login_send_email, Toast.LENGTH_SHORT).show()
             })
             .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _, _ ->
-                viewModel.deleteAccount()
+                viewModel.deleteAccount(password)
                 Toast.makeText(requireContext(), R.string.login_account_delete, Toast.LENGTH_SHORT).show()
             })
             .setCancelable(false)
@@ -100,7 +102,7 @@ class LoginFragment : Fragment() {
         //click LoginButton
         btLogin.setOnClickListener {
             val email = etLoginEmail.text.toString().trim()
-            val password = etLoginPassword.text.toString().trim()
+            password = etLoginPassword.text.toString().trim()
             if(email.isBlank() || password.isBlank()) Toast.makeText(requireContext(), R.string.login_input_account, Toast.LENGTH_SHORT).show()
             else viewModel.signInEmail(email, password)
         }
