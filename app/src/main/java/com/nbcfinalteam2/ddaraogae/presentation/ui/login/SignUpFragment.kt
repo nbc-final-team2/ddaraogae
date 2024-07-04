@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentSignUpBinding
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageAgreementPrivacy
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypagePrivacyActivity
+import com.nbcfinalteam2.ddaraogae.presentation.ui.mypage.MypageTermsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -78,15 +82,48 @@ class SignUpFragment : Fragment() {
             .commit()
     }
     private fun checkAgreement(){
+        var checkTotalBtn = false
+        binding.cbTotalAgree.setOnCheckedChangeListener { _, isChecked ->
+            if(checkTotalBtn){
+                checkTotalBtn = false
+            } else {
+                binding.cbSignupTerms.isChecked = isChecked
+                binding.cbSignupPersonalTerms.isChecked = isChecked
+                binding.cbSignupPersonalAgreeTerms.isChecked = isChecked
+            }
+
+            checkTotalBtn = false
+        }
         binding.cbSignupTerms.setOnCheckedChangeListener{ _, isChecked ->
             useTerms = isChecked
+            checkTotalBtn = false
+            if(!isChecked) {
+                checkTotalBtn = true
+                binding.cbTotalAgree.isChecked = false
+            }
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
         }
         binding.cbSignupPersonalTerms.setOnCheckedChangeListener{ _, isChecked ->
             privacyPolicy = isChecked
+            checkTotalBtn = false
+            if(!isChecked) {
+                checkTotalBtn = true
+                binding.cbTotalAgree.isChecked = false
+            }
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
         }
         binding.cbSignupPersonalAgreeTerms.setOnCheckedChangeListener{ _, isChecked ->
             agreementPrivacyPolicy = isChecked
+            checkTotalBtn = false
+            if(!isChecked) {
+                checkTotalBtn = true
+                binding.cbTotalAgree.isChecked = false
+            }
+            if(useTerms && privacyPolicy && agreementPrivacyPolicy) binding.cbTotalAgree.isChecked = true
         }
+        binding.ibSignupTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypageTermsActivity::class.java)) }
+        binding.ibSignupPersonalTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypagePrivacyActivity::class.java)) }
+        binding.ibSignupPersonalAgreeTerms.setOnClickListener { startActivity(Intent(requireActivity(), MypageAgreementPrivacy::class.java)) }
     }
 
 
