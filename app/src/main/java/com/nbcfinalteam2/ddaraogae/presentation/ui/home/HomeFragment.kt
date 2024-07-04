@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initViewModels() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.homeUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { state ->
                     dogProfileAdapter.submitList(state.dogList)
