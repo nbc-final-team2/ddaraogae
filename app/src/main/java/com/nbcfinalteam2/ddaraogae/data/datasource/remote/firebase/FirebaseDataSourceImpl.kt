@@ -4,9 +4,11 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.nbcfinalteam2.ddaraogae.data.dto.DogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.StampDto
+import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDogDto
 import com.nbcfinalteam2.ddaraogae.data.dto.WalkingDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -267,9 +269,17 @@ class FirebaseDataSourceImpl @Inject constructor(
     ): List<Pair<String, WalkingDto>> {
         val uid = getUserUid()
 
+        val walkingIdList = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING_DOGS)
+            .whereEqualTo(FIELD_DOG_ID, dogId)
+            .orderBy(FIELD_WALKING_ID)
+            .get().await()
+            .map {
+                it.toObject(WalkingDogDto::class.java).walkingId
+            }
+
         val queriedList = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING)
-            .whereEqualTo(FIELD_DOG_ID, dogId)
             .whereGreaterThanOrEqualTo(FIELD_START_DATETIME, start)
             .whereLessThanOrEqualTo(FIELD_START_DATETIME, end)
             .get().await()
@@ -277,7 +287,7 @@ class FirebaseDataSourceImpl @Inject constructor(
                 it.id to it.toObject(WalkingDto::class.java)
             }
 
-        return queriedList
+        return queriedList.filter { walkingIdList.binarySearch(it.first) >= 0 }
     }
 
     override suspend fun getWalkingById(walkingId: String): WalkingDto? {
@@ -289,19 +299,28 @@ class FirebaseDataSourceImpl @Inject constructor(
             .toObject(WalkingDto::class.java)
     }
 
-    override suspend fun insertWalkingData(walkingDto: WalkingDto, mapImage: ByteArray?) {
+    override suspend fun insertWalkingData(walkingDto: WalkingDto, dogIdList: List<String>, mapImage: ByteArray?) {
         val uid = getUserUid()
 
-        val db = firebaseFs.collection(PATH_USERDATA).document(uid)
+        val walkingDb = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING)
-        val newWalkingDoc = db.document()
+        val newWalkingDoc = walkingDb.document()
         val walkingId = newWalkingDoc.id
+
+        val walkingDogsDb = firebaseFs.collection(PATH_USERDATA).document(uid)
+            .collection(PATH_WALKING_DOGS)
 
         newWalkingDoc.set(walkingDto).await()
         updateWalkingData(walkingId, walkingDto, mapImage)
+
+        for(dogId in dogIdList) {
+            walkingDogsDb.add(
+                WalkingDogDto(dogId = dogId, walkingId = walkingId)
+            ).await()
+        }
     }
 
-    override suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: ByteArray?) {
+    private suspend fun updateWalkingData(walkingId: String, walkingDto: WalkingDto, mapImage: ByteArray?) {
         val uid = getUserUid()
         val db = firebaseFs.collection(PATH_USERDATA).document(uid)
             .collection(PATH_WALKING).document(walkingId)
@@ -343,8 +362,10 @@ class FirebaseDataSourceImpl @Inject constructor(
         private const val PATH_DOGS = "dogs"
         private const val PATH_STAMPS = "stamps"
         private const val PATH_WALKING = "walking"
+        private const val PATH_WALKING_DOGS = "walking_dogs"
 
         private const val FIELD_DOG_ID = "dogId"
+        private const val FIELD_WALKING_ID = "walkingId"
         private const val FIELD_GET_DATETIME = "getDateTime"
         private const val FIELD_START_DATETIME = "startDateTime"
         private const val FIELD_DOG_NAME = "name"

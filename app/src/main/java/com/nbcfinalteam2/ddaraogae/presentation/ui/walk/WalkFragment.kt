@@ -99,6 +99,7 @@ class WalkFragment : Fragment() {
     private var locationService: LocationService? = null
     private var bound = false
     private var serviceInfoStateFlow: StateFlow<ServiceInfoState>? = null
+    private var collectServiceFlowJob: Job? = null
 
     private var markerList = mutableListOf<Marker>()
     private var infoWindowBackup: InfoWindow? = null
@@ -292,7 +293,6 @@ class WalkFragment : Fragment() {
 
         val walkingUiModel = WalkingInfo(
             id = null,
-            dogId = null,
             timeTaken = serviceInfoStateFlow?.value?.time,
             distance = serviceInfoStateFlow?.value?.distance,
             startDateTime = locationService?.savedStartDate,
@@ -313,7 +313,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     if (it.isLoading) {
@@ -332,14 +332,14 @@ class WalkFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.dogSelectionState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest {
                     walkDogAdapter.submitList(it.dogList)
                 }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             walkViewModel.walkEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collectLatest { event ->
                     when (event) {
@@ -426,7 +426,7 @@ class WalkFragment : Fragment() {
     }
 
     private fun startCollectingServiceFlow() {
-        lifecycleScope.launch {
+        collectServiceFlowJob = viewLifecycleOwner.lifecycleScope.launch {
             serviceInfoStateFlow?.flowWithLifecycle(viewLifecycleOwner.lifecycle)?.collectLatest {
                 updateDistanceText(it.distance)
                 updateTimerText(it.time)
@@ -435,15 +435,12 @@ class WalkFragment : Fragment() {
     }
 
     private fun unbindFromService() {
-        stopCollectingServiceFlow()
         requireContext().unbindService(serviceConnection)
         bound = false
     }
 
     private fun stopCollectingServiceFlow() {
-        serviceInfoStateFlow?.let { _ ->
-            viewLifecycleOwner.lifecycleScope.coroutineContext[Job]?.cancel()
-        }
+        collectServiceFlowJob?.cancel()
     }
 
     private fun endLocationService() {
@@ -475,7 +472,6 @@ class WalkFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         if (bound) {
-            stopCollectingServiceFlow()
             unbindFromService()
         }
         trackingModeJob?.cancel()

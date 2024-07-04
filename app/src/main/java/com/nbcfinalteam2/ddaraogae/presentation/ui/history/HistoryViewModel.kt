@@ -66,7 +66,6 @@ class HistoryViewModel @Inject constructor(
                 allWalkData = walkEntities.map {
                     WalkingInfo(
                         id = it.id,
-                        dogId = it.dogId,
                         timeTaken = it.timeTaken,
                         distance = it.distance,
                         startDateTime = it.startDateTime,

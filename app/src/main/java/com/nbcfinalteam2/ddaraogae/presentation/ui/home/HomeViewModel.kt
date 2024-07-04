@@ -134,7 +134,6 @@ class HomeViewModel @Inject constructor(
                     val walkInfo = walkEntities.map {
                         WalkingInfo(
                             id = it.id,
-                            dogId = it.dogId,
                             timeTaken = it.timeTaken,
                             distance = it.distance,
                             startDateTime = it.startDateTime,

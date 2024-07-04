@@ -45,7 +45,8 @@
             android:exported="false" />
         <activity
             android:name=".presentation.ui.add.AddActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".presentation.ui.dog.MyPetActivity"
             android:exported="false"/>
@@ -69,7 +70,8 @@
             android:exported="true"/>
         <activity
             android:name=".presentation.ui.edit.EditPetActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".presentation.ui.login.LoginActivity"
             android:exported="true"
