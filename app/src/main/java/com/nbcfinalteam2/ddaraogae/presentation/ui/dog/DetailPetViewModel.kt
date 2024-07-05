@@ -73,11 +73,6 @@ class DetailPetViewModel @Inject constructor(
         }
     }
     fun getDogData(dogId : String) = viewModelScope.launch{
-        _detailUiState.update {
-            it.copy(
-                isLoading = true
-            )
-        }
         runCatching {
             val getDogInfo = getDogByIdUseCase(dogId)
             if(getDogInfo == null) {
@@ -100,11 +95,6 @@ class DetailPetViewModel @Inject constructor(
             }
         }.onSuccess {
             _loadEvent.emit(DefaultEvent.Success)
-            _detailUiState.update {
-                it.copy(
-                    isLoading = false
-                )
-            }
         }.onFailure {
             _loadEvent.emit(DefaultEvent.Failure(R.string.msg_load_dog_fail))
         }

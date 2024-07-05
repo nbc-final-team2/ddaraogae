@@ -88,9 +88,7 @@ class DetailPetFragment : Fragment() {
 
     private fun initView(){
         binding.btBack.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fl_my_pet, PetListFragment())
-                .commit()
+            parentFragmentManager.popBackStack()
         }
         binding.tvEdit.setOnClickListener {
             viewModel.selectedDogState.value?.let {
