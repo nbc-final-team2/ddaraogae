@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.IsGoogleUserUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,13 +19,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val deleteAccountUseCase: DeleteAccountUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val isGoogleUserUseCase: IsGoogleUserUseCase
+    private val isGoogleUserUseCase: IsGoogleUserUseCase,
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
 ) : ViewModel(){
 
     private val _restartEvent = MutableSharedFlow<DefaultEvent>()
@@ -38,6 +41,9 @@ class MyPageViewModel @Inject constructor(
 
     private val _isGoogleLogin = MutableSharedFlow<Boolean>()
     val isGoogleLogin:SharedFlow<Boolean> = _isGoogleLogin.asSharedFlow()
+
+    private val _isGoogleLoginSuccess = MutableSharedFlow<Boolean>()
+    val isGoogleLoginSuccess:SharedFlow<Boolean> = _isGoogleLoginSuccess.asSharedFlow()
 
     fun logOut() = viewModelScope.launch{
         _mypageUiState.update {
@@ -71,8 +77,10 @@ class MyPageViewModel @Inject constructor(
         }
     }
     fun deleteUser(credential : String) = viewModelScope.launch {
-        _mypageUiState.update {
+        if(!_mypageUiState.value.isLoading){
+            _mypageUiState.update {
             it.copy(isLoading = true)
+            }
         }
         runCatching {
             deleteAccountUseCase(credential)
@@ -85,6 +93,38 @@ class MyPageViewModel @Inject constructor(
         }.onFailure {e ->
             if(e is FirebaseAuthInvalidCredentialsException) _mypageEvent.emit(DefaultEvent.Failure(R.string.mypage_check_password))
             else _mypageEvent.emit(DefaultEvent.Failure(R.string.msg_delete_user_fail))
+            _mypageUiState.update {
+                it.copy(isLoading = false)
+            }
+        }
+    }
+    fun signInGoogle(idToken: String) = viewModelScope.launch {
+        try {
+            val isSuccess = signInWithGoogleUseCase(idToken)
+            _isGoogleLoginSuccess.emit(isSuccess)
+
+        } catch (e: IOException){
+            Log.e("[signUpPage]IOException!", "$e")
+            _mypageUiState.update {
+                it.copy(isLoading = false)
+            }
+        }catch (e : Exception){
+            Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
+            _mypageUiState.update {
+                it.copy(isLoading = false)
+            }
+        }
+    }
+    fun googleLogOut() = viewModelScope.launch{
+        _mypageUiState.update {
+            it.copy(isLoading = true)
+        }
+        runCatching {
+            signOutUseCase()
+        }.onSuccess {
+            _mypageEvent.emit(DefaultEvent.Success)
+        }.onFailure {
+            _mypageEvent.emit(DefaultEvent.Failure(R.string.msg_delete_user_fail))
             _mypageUiState.update {
                 it.copy(isLoading = false)
             }
