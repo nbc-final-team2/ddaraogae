@@ -1,5 +1,6 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
+import android.net.ConnectivityManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,6 +29,7 @@ class MyPageViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase,
     private val isGoogleUserUseCase: IsGoogleUserUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val connectivityManager: ConnectivityManager,
 ) : ViewModel(){
 
     private val _restartEvent = MutableSharedFlow<DefaultEvent>()
@@ -119,14 +121,22 @@ class MyPageViewModel @Inject constructor(
         _mypageUiState.update {
             it.copy(isLoading = true)
         }
-        runCatching {
-            signOutUseCase()
-        }.onSuccess {
-            _mypageEvent.emit(DefaultEvent.Success)
-        }.onFailure {
-            _mypageEvent.emit(DefaultEvent.Failure(R.string.msg_delete_user_fail))
+        if(connectivityManager.activeNetwork == null) {
             _mypageUiState.update {
+                _mypageEvent.emit(DefaultEvent.Failure(R.string.login_ioexception))
                 it.copy(isLoading = false)
+            }
+        }
+        else {
+            runCatching {
+                signOutUseCase()
+            }.onSuccess {
+                _mypageEvent.emit(DefaultEvent.Success)
+            }.onFailure {
+                _mypageEvent.emit(DefaultEvent.Failure(R.string.msg_delete_user_fail))
+                _mypageUiState.update {
+                    it.copy(isLoading = false)
+                }
             }
         }
     }
