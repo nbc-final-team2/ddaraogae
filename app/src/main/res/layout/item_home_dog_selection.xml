@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_dogImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="@dimen/margin_extra_smaller"
+        app:civ_border_color="@color/very_soft_orange"
+        app:civ_border_width="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_dog_default_thumbnail" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_dogName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/item_home_dog_selection_name"
+        android:textSize="@dimen/text_caption"
+        app:layout_constraintEnd_toEndOf="@+id/iv_dogImage"
+        app:layout_constraintStart_toStartOf="@+id/iv_dogImage"
+        app:layout_constraintTop_toBottomOf="@+id/iv_dogImage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

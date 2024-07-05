@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".presentation.ui.mypage.EditPetActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_appBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_medium"
+                android:gravity="center"
+                android:text="@string/mypage_edit_pet_title"
+                android:textSize="@dimen/text_body"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/bt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:background="@null"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_appBar"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_appBar" />
+
+            <View
+                android:id="@+id/topBar"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@color/grey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_appBar" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_dogThumbnail"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="50dp"
+                app:civ_border_color="@color/brown"
+                app:civ_border_width="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/topBar"
+                tools:src="@drawable/ic_dog_default_thumbnail" />
+
+            <ImageView
+                android:id="@+id/iv_remove_thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_smaller"
+                android:src="@drawable/ic_remove"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@+id/iv_dogThumbnail"
+                app:layout_constraintTop_toTopOf="@+id/iv_dogThumbnail" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="40dp"
+                android:text="@string/mypage_edit_pet_dog_name_title"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_dogThumbnail" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:backgroundTint="@color/brown"
+                android:hint="@string/mypage_edit_pet_dog_name_hint"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textColorHint="@color/brown"
+                android:textSize="@dimen/text_caption"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="30dp"
+                android:text="@string/mypage_edit_pet_dog_gender_title"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_name" />
+
+            <RadioGroup
+                android:id="@+id/rg_genderGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_gender">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rb_male"
+                    android:layout_width="84dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:background="@drawable/radio_button_selector"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="@string/mypage_edit_pet_dog_gender_male" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rb_female"
+                    android:layout_width="84dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:background="@drawable/radio_button_selector"
+                    android:button="@android:color/transparent"
+                    android:gravity="center"
+                    android:text="@string/mypage_edit_pet_dog_gender_female" />
+            </RadioGroup>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="30dp"
+                android:text="@string/mypage_edit_pet_dog_age_title"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rg_genderGroup" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:background="@drawable/bg_edit_area"
+                android:hint="@string/mypage_edit_pet_dog_age_hint"
+                android:inputType="number"
+                android:padding="@dimen/padding_small"
+                android:textColorHint="@color/brown"
+                android:textSize="@dimen/text_caption"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_age" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_breed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="30dp"
+                android:text="@string/mypage_edit_pet_dog_breed_title"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_age" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_breed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:background="@drawable/bg_edit_area"
+                android:hint="@string/mypage_edit_pet_dog_breed_hint"
+                android:inputType="textMultiLine"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:padding="@dimen/padding_small"
+                android:textColorHint="@color/brown"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_breed" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_memo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="30dp"
+                android:text="@string/mypage_edit_pet_dog_memo_title"
+                android:textSize="@dimen/text_text"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_breed" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_memo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="@drawable/bg_edit_area"
+                android:gravity="clip_horizontal"
+                android:hint="@string/mypage_edit_pet_dog_memo_hint"
+                android:inputType="textMultiLine"
+                android:isScrollContainer="true"
+                android:minHeight="120dp"
+                android:padding="@dimen/padding_small"
+                android:textColorHint="@color/brown"
+                android:textSize="@dimen/text_caption"
+                app:layout_constraintBottom_toTopOf="@+id/btn_editCompleted"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_memo" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_editCompleted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_medium"
+                android:background="@drawable/bg_btn_edit"
+                android:text="@string/mypage_edit_pet_edit_completed_button"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_body"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_memo" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

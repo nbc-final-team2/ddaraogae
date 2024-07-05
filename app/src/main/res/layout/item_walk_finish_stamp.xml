@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_walk_stamp_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_item_stamp"
+        android:layout_width="150sp"
+        android:layout_height="150sp"
+        android:src="@drawable/ic_stamp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_item_stamp_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:text="@string/walk_finish_stamp1"
+        app:layout_constraintEnd_toEndOf="@+id/iv_item_stamp"
+        app:layout_constraintStart_toStartOf="@+id/iv_item_stamp"
+        app:layout_constraintTop_toBottomOf="@+id/iv_item_stamp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
