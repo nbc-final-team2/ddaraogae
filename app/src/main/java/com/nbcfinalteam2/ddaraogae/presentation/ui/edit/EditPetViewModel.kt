@@ -1,6 +1,7 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.edit
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbcfinalteam2.ddaraogae.R
@@ -85,7 +86,7 @@ class EditPetViewModel @Inject constructor(
     fun setImageUrl(imageUrl: String?) {
         _editUiState.value = EditUiState(
             imageSource = imageUrl?.let { ImageSource.ImageUrl(imageUrl) },
-            isThumbnailVisible = imageUrl != null,
+            isThumbnailVisible = !imageUrl.isNullOrBlank(),
             isInit = true
         )
     }

@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
@@ -115,7 +116,7 @@ class EditPetActivity : AppCompatActivity() {
         }
 
         btBack.setOnClickListener {
-            startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
+            finish()
         }
 
         ivDogThumbnail.setOnClickListener {
@@ -152,10 +153,8 @@ class EditPetActivity : AppCompatActivity() {
                         is ImageSource.ImageUrl -> it.value
                     }
                 }
-
                 val changedDog = DogInfo(dogId, name, gender, age, breed, memo, image)
                 viewModel.updateDog(changedDog)
-                startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
             }
         }
         tvDelete.setOnClickListener {
@@ -227,7 +226,6 @@ class EditPetActivity : AppCompatActivity() {
                         itemChangedEventBus.notifyItemChanged()
                         ToastMaker.make(this@EditPetActivity, R.string.detail_pet_delete_complete)
                         binding.svEditPet.fullScroll(ScrollView.FOCUS_UP)
-                        startActivity(Intent(this@EditPetActivity, MyPetActivity::class.java))
                         finish()
                     }
                 }
