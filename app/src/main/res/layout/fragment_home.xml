@@ -49,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 android:visibility="invisible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -62,12 +63,12 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="12dp"
                 android:padding="@dimen/padding_small"
                 android:src="@drawable/ic_dog_add"
                 app:civ_border_color="@color/very_soft_orange"
-                app:layout_constraintBottom_toTopOf="@+id/tv_dogGraph"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_main" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_beforeTime" />
 
             <!-- 반려견 그래프 -->
 
@@ -76,14 +77,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="200dp"
-                android:layout_marginEnd="@dimen/margin_extra_lager"
+                android:layout_marginTop="42dp"
                 android:text="@string/home_walk_graph_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/tv_moveToHistoryGraph"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_main" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_dogAdd" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_moveToHistoryGraph"
@@ -103,9 +103,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_marginEnd="@dimen/margin_medium"
-                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/margin_extra_small"
-                app:cardElevation="@dimen/margin_extra_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_dogGraph">
@@ -129,7 +127,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_empty_data"
-                        android:elevation="8dp"
                         android:padding="@dimen/padding_small"
                         android:text="@string/home_walk_graph_no_data"
                         android:textSize="@dimen/text_mini"
@@ -142,13 +139,12 @@
             </androidx.cardview.widget.CardView>
 
             <!-- 오늘의 날씨 -->
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_stampTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_extra_lager"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:text="@string/home_stamp_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
@@ -174,7 +170,6 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_marginEnd="@dimen/margin_medium"
-                android:elevation="@dimen/margin_extra_small"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:layout_constraintBottom_toTopOf="@+id/tv_todayWeather"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -222,7 +217,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_extra_lager"
+                android:layout_marginTop="@dimen/margin_larger"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_weather_title"
                 android:textSize="@dimen/text_text"
@@ -239,9 +234,7 @@
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginBottom="@dimen/margin_medium"
-                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/margin_extra_small"
-                app:cardElevation="@dimen/margin_extra_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

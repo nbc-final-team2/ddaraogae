@@ -34,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlin.math.floor
 
 @AndroidEntryPoint
 class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
@@ -208,14 +209,17 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
+
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
+            setColor(resources.getColor(R.color.brown, null))
+
             lineWidth = 2f
             setDrawCircles(true)
             setCircleColor(R.color.light_blue)
             setDrawCircleHole(true)
             setDrawValues(true)
-            mode = LineDataSet.Mode.LINEAR
+            mode = LineDataSet.Mode.CUBIC_BEZIER
         }
 
         val lineData = LineData(dataSet)
@@ -229,6 +233,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
+            legend.textColor = resources.getColor(R.color.black, null)
             legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)
@@ -259,16 +264,21 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             axisMaximum = (dates.size - 1).toFloat()
             valueFormatter = formatter
             isGranularityEnabled = true
+            textColor = resources.getColor(R.color.black, null)
         }
     }
 
     private fun walkGraphYAxisForHaveData(yAxis: YAxis, maxDistance: Float) {
         yAxis.apply {
             axisMinimum = 0f
-            axisMaximum = when {
-                maxDistance >= 3 -> (maxDistance / 1).toInt() * 1 + 1f
-                maxDistance >= 1 -> (maxDistance / 0.5).toInt() * 0.5f + 0.5f
-                else -> (maxDistance / 0.1).toInt() * 0.1f + 0.1f
+
+            val adjustedMax = (floor(maxDistance + 10).toInt() / 10) * 10 // 10을 더하고 1의 자리 버림
+            val unit = adjustedMax / 5f // 5개 범위로 나눔
+
+            axisMaximum = if (adjustedMax > 0) {
+                adjustedMax.toFloat()
+            } else {
+                unit
             }
 
             valueFormatter = object : ValueFormatter() {
@@ -276,6 +286,8 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
                     return "${value}km"
                 }
             }
+
+            textColor = resources.getColor(R.color.black, null)
         }
     }
 

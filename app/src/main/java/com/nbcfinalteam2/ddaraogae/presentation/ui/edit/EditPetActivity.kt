@@ -52,10 +52,14 @@ class EditPetActivity : AppCompatActivity() {
     private var loadingDialog: LoadingDialog? = null
 
     private val galleryPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                    .apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "image/*"
+                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    }
                 imageResult.launch(intent)
             }
         }

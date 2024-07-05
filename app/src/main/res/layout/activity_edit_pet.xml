@@ -20,16 +20,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_delete"
         android:layout_marginRight="@dimen/margin_medium"
-        android:textSize="@dimen/text_text"
         android:text="@string/mypage_delete_dog"
+        android:textSize="@dimen/text_text"
         app:layout_constraintBottom_toBottomOf="@+id/tv_appBar"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_appBar"/>
+        app:layout_constraintTop_toTopOf="@+id/tv_appBar" />
 
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -76,12 +77,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_dog_default_thumbnail" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/camera"
-                app:layout_constraintEnd_toEndOf="@+id/iv_dogThumbnail"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_dogThumbnail"/>
+                app:layout_constraintBottom_toBottomOf="@+id/iv_dogThumbnail"
+                app:layout_constraintEnd_toEndOf="@+id/iv_dogThumbnail" />
+
             <ImageView
                 android:id="@+id/iv_remove_thumbnail"
                 android:layout_width="wrap_content"
@@ -109,13 +112,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="@dimen/margin_medium"
-                android:backgroundTint="@color/brown"
+                android:backgroundTint="@color/brown_trans"
                 android:hint="@string/mypage_edit_pet_dog_name_hint"
                 android:maxLength="20"
                 android:maxLines="1"
-                android:textColorHint="@color/brown"
+                android:textColorHint="@color/brown_trans"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +154,8 @@
                     android:button="@android:color/transparent"
                     android:checked="true"
                     android:gravity="center"
-                    android:text="@string/mypage_edit_pet_dog_gender_male" />
+                    android:text="@string/mypage_edit_pet_dog_gender_male"
+                    android:textColor="@color/black_white" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rb_female"
@@ -161,7 +165,8 @@
                     android:background="@drawable/radio_button_selector"
                     android:button="@android:color/transparent"
                     android:gravity="center"
-                    android:text="@string/mypage_edit_pet_dog_gender_female" />
+                    android:text="@string/mypage_edit_pet_dog_gender_female"
+                    android:textColor="@color/black_white" />
             </RadioGroup>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -188,6 +193,7 @@
                 android:inputType="number"
                 android:maxLength="2"
                 android:padding="@dimen/padding_small"
+                android:textColor="@color/black_fix"
                 android:textColorHint="@color/brown"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -219,6 +225,7 @@
                 android:maxLength="20"
                 android:maxLines="1"
                 android:padding="@dimen/padding_small"
+                android:textColor="@color/black_fix"
                 android:textColorHint="@color/brown"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -252,6 +259,7 @@
                 android:isScrollContainer="true"
                 android:minHeight="120dp"
                 android:padding="@dimen/padding_small"
+                android:textColor="@color/black_fix"
                 android:textColorHint="@color/brown"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -269,7 +277,7 @@
         android:layout_margin="@dimen/margin_medium"
         android:background="@drawable/bg_btn_edit"
         android:text="@string/mypage_edit_pet_edit_completed_button"
-        android:textColor="@color/white"
+        android:textColor="@color/white_fix"
         android:textSize="@dimen/text_body"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

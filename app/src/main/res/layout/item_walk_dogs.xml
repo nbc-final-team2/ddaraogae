@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="-8dp"
         android:layout_marginEnd="-4dp"
+        android:background="@color/white_fix"
         app:layout_constraintBottom_toBottomOf="@id/civ_walk_dogs_item"
         app:layout_constraintEnd_toEndOf="@id/civ_walk_dogs_item"
         tools:srcCompat="@drawable/ic_check_box_blank_24" />
@@ -64,7 +65,7 @@
         android:textAlignment="center"
         android:textSize="@dimen/text_mini"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/black_fix"
         android:layout_marginTop="@dimen/margin_extra_smaller"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/iv_check_box"

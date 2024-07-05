@@ -52,6 +52,8 @@
             android:hint="@string/signup_email"
             android:maxLength="30"
             android:paddingLeft="20dp"
+            android:textColor="@color/black_fix"
+            android:textColorHint="@color/grey_trans"
             app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
             app:layout_constraintStart_toStartOf="@id/guideLineStart"
             app:layout_constraintTop_toBottomOf="@+id/tv_signup_title" />
@@ -78,6 +80,8 @@
             android:inputType="textPassword"
             android:maxLength="16"
             android:paddingLeft="20dp"
+            android:textColor="@color/black_fix"
+            android:textColorHint="@color/grey_trans"
             app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
             app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
             app:layout_constraintTop_toBottomOf="@+id/et_signup_email" />
@@ -114,6 +118,8 @@
             android:inputType="textPassword"
             android:maxLength="16"
             android:paddingLeft="20dp"
+            android:textColor="@color/black_fix"
+            android:textColorHint="@color/grey_trans"
             app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
             app:layout_constraintStart_toStartOf="@+id/tv_signup_title"
             app:layout_constraintTop_toBottomOf="@+id/et_signup_password" />
@@ -211,7 +217,7 @@
             android:layout_marginBottom="@dimen/margin_extra_large"
             android:background="@drawable/rec_finish_done"
             android:text="@string/signup_complete"
-            android:textColor="@color/white"
+            android:textColor="@color/white_fix"
             android:textSize="@dimen/text_body"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideLineEnd"
