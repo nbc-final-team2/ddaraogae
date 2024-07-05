@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
 //        }
         enableEdgeToEdge()
         uiSetting()
-        setFragment()
+        setFragment(savedInstanceState)
         setContentView(binding.root)
 
     }
@@ -47,10 +47,12 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFragment(){
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.activity_login, LoginFragment())
-            .commit()
+    private fun setFragment(bundle: Bundle?){
+        if(bundle == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.activity_login, LoginFragment())
+                .commit()
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
