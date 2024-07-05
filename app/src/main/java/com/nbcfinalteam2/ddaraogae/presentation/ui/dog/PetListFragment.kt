@@ -14,18 +14,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentPetListBinding
+import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.ui.add.AddActivity
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PetListFragment:Fragment() {
     private var _binding : FragmentPetListBinding? = null
     private val binding get() = _binding!!
     private val viewModel:DetailPetViewModel by activityViewModels()
+    @Inject
+    lateinit var itemChangedEventBus: ItemChangedEventBus
 
     private val adapter:PetListAdapter by lazy {
         PetListAdapter{ item ->
@@ -47,16 +51,9 @@ class PetListFragment:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setAdapter()
         setButtonAction()
         initViewModel()
-        
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.getDogList()
     }
 
     private fun setButtonAction() = with(binding){
@@ -91,6 +88,12 @@ class PetListFragment:Fragment() {
                     DefaultEvent.Success -> {}
                 }
             }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemChangedEventBus.itemChangedEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest {
+                    viewModel.getDogList()
+                }
         }
     }
 
