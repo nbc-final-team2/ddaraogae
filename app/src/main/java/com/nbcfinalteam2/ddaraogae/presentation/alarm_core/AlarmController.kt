@@ -111,7 +111,13 @@ class AlarmController @Inject constructor(
     }
 
     fun deleteAllAlarms() {
-
+        scope.launch {
+            runCatching {
+                alarmRepository.getAlarmList().onEach {
+                    unsetAlarm(it.id)
+                }
+            }
+        }
     }
 
     private fun unsetAlarm(id: Int) {

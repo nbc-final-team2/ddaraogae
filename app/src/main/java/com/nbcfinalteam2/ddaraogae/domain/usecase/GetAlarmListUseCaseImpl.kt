@@ -8,5 +8,5 @@ import javax.inject.Inject
 class GetAlarmListUseCaseImpl @Inject constructor(
     private val alarmRepository: AlarmRepository
 ): GetAlarmListUseCase {
-    override fun invoke(): Flow<List<AlarmEntity>> = alarmRepository.getAlarmList()
+    override fun invoke(): Flow<List<AlarmEntity>> = alarmRepository.getAlarmListFlow()
 }
