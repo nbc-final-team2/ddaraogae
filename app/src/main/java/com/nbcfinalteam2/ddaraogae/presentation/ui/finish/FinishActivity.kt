@@ -29,8 +29,10 @@ import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
+import com.nbcfinalteam2.ddaraogae.presentation.ui.alarm.AlarmSetDialogFragment
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.StampDialogFragment.Companion.ARG_STAMP_LIST
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogMaker
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
@@ -65,13 +67,21 @@ class FinishActivity : FragmentActivity() {
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            AlertDialog.Builder(this@FinishActivity)
-                .setMessage(getString(R.string.finish_dialog_msg))
-                .setPositiveButton(getString(R.string.finish_dialog_confirm)) { _, _ ->
+//            AlertDialog.Builder(this@FinishActivity)
+//                .setMessage(getString(R.string.finish_dialog_msg))
+//                .setPositiveButton(getString(R.string.finish_dialog_confirm)) { _, _ ->
+//                    finish()
+//                }.setNegativeButton(getString(R.string.finish_dialog_cancel)) { _, _ -> }
+//                .show()
+            val dialog = DialogMaker(object : DialogMaker.DialogButtonListener {
+                override fun onPositiveButtonClicked() {
                     finish()
-                }.setNegativeButton(getString(R.string.finish_dialog_cancel)) { _, _ -> }
-                .show()
-        }
+                }
+
+                override fun onNegativeButtonClicked() {
+
+                }
+            }
 
     }
 
