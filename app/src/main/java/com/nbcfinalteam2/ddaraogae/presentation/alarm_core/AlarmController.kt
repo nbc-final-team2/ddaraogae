@@ -5,18 +5,39 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.nbcfinalteam2.ddaraogae.app.di.DispatcherModule.IoDispatcher
+import com.nbcfinalteam2.ddaraogae.domain.entity.AlarmEntity
 import com.nbcfinalteam2.ddaraogae.domain.repository.AlarmRepository
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_ID
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_SET_TIME
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
 class AlarmController @Inject constructor(
     private val alarmManager: AlarmManager,
     @ApplicationContext private val context: Context,
-    private val alarmRepository: AlarmRepository
+    private val alarmRepository: AlarmRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
+
+    private val scope = CoroutineScope(dispatcher)
+
+    fun createAlarm(setTime: Int) {
+        scope.launch {
+            runCatching {
+                val id = alarmRepository.insertAlarm(
+                    AlarmEntity(-1, setTime)
+                )
+
+                setAlarm(id, setTime)
+            }
+        }
+    }
 
     fun setAlarm(id: Int, setTime: Int) {
         if(!checkExactAlarmPermission()) return
@@ -54,7 +75,48 @@ class AlarmController @Inject constructor(
 
     }
 
+    fun setAllAlarms() {
+        scope.launch {
+            runCatching {
+                alarmRepository.getAlarmList().onEach {
+                    setAlarm(it.id, it.setTime)
+                }
+            }
+        }
+
+    }
+
+    fun getAlarmListFlow(): Flow<List<AlarmEntity>> {
+        return alarmRepository.getAlarmListFlow()
+    }
+
+    fun updateAlarm(id: Int, setTime: Int) {
+        scope.launch {
+            runCatching {
+                alarmRepository.updateAlarm(
+                    AlarmEntity(id, setTime)
+                )
+
+                setAlarm(id, setTime)
+            }
+        }
+    }
+
     fun deleteAlarm(id: Int) {
+        scope.launch {
+            runCatching {
+                alarmRepository.deleteAlarm(id)
+
+                unsetAlarm(id)
+            }
+        }
+    }
+
+    fun deleteAllAlarms() {
+
+    }
+
+    private fun unsetAlarm(id: Int) {
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
         alarmIntent.putExtra(EXTRA_ALARM_ID, id)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -65,10 +127,6 @@ class AlarmController @Inject constructor(
         )
 
         alarmManager.cancel(pendingIntent)
-    }
-
-    fun deleteAllAlarms() {
-
     }
 
     private fun checkExactAlarmPermission(): Boolean {
