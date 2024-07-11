@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
+import com.nbcfinalteam2.ddaraogae.domain.repository.AlarmRepository
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_ID
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_SET_TIME
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class AlarmController @Inject constructor(
     private val alarmManager: AlarmManager,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val alarmRepository: AlarmRepository
 ) {
 
     fun setAlarm(id: Int, setTime: Int) {
@@ -64,6 +65,10 @@ class AlarmController @Inject constructor(
         )
 
         alarmManager.cancel(pendingIntent)
+    }
+
+    fun deleteAllAlarms() {
+
     }
 
     private fun checkExactAlarmPermission(): Boolean {
