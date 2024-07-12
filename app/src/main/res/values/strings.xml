@@ -171,7 +171,6 @@
     <string name="mypage_set_alarm">산책 리마인더 설정</string>
     <string name="mypage_check_password">비밀번호가 틀렸습니다.</string>
 
-    <string name="msg_logout">로그아웃 하시겠습니까?</string>
     <string name="msg_delete_account">계정을 삭제하시겠습니까?</string>
     <string name="msg_delete_account_context">계정 삭제 시 \n산책, 반려견 데이터가 삭제됩니다. \n정말 삭제하시겠습니까?</string>
     <string name="email_delete_account_title">계정 삭제를 위해 비밀번호를 입력해 주세요.</string>
@@ -199,7 +198,6 @@
     <string name="mypage_edit_pet_dog_memo_hint">반려견의 성격이나 메모를 입력해주세요.</string>
     <string name="mypage_edit_pet_edit_completed_button">수정 완료</string>
     <string name="mypage_delete_dog">삭제하기</string>
-    <string name="mypage_delete_dog_thumbnail_message">기본 이미지로 변경하시겠습니까?</string>
     <string name="mypage_delete_dog_thumbnail_positive">확인</string>
     <string name="mypage_delete_dog_thumbnail_negative">취소</string>
     <string name="mypage_edit_msg_fail_update">반려견 정보 업데이트에 실패했습니다.</string>
@@ -208,7 +206,6 @@
 
     <!-- mypage - detail - pet -->
     <string name="detail_pet_empty_list">반려견 정보가 없습니다.</string>
-    <string name="detail_pet_delete_message">정말 삭제하시겠습니까?</string>
     <string name="detail_pet_delete_positive">확인</string>
     <string name="detail_pet_delete_negative">취소</string>
     <string name="detail_pet_delete_complete">삭제되었습니다.</string>
@@ -241,7 +238,6 @@
     <string name="login_success">로그인에 성공하셨습니다.</string>
     <string name="login_fail">로그인에 실패하셨습니다.</string>
     <string name="login_dialog_title">이메일 인증이 되지 않은 계정 입니다!</string>
-    <string name="login_dialog_message">이메일 인증을 진행 해 주세요.</string>
     <string name="login_dialog_ok">인증 하기</string>
     <string name="login_dialog_no">회원 탈퇴</string>
     <string name="login_send_email">이메일이 발송 되었습니다.</string>
@@ -294,11 +290,6 @@
     <string name="fine_dust_status_very_bad">매우나쁨</string>
     <string name="msg_edit_fail">수정사항 업데이트에 실패했습니다</string>
 
-    <!-- finish  -->
-    <string name="finish_dialog_msg">이대로 나가면 산책 결과가 저장되지 않습니다.\n그래도 나가시겠습니까?</string>
-    <string name="finish_dialog_confirm">확인</string>
-    <string name="finish_dialog_cancel">취소</string>
-
     <!-- alarm -->
     <string name="alarm_am">오전</string>
     <string name="alarm_pm">오후</string>
@@ -311,6 +302,19 @@
     <string name="alarm_add">추가</string>
     <string name="alarm_app_bar_title">산책 리마인더</string>
     <string name="alarm_dialog_move">이동</string>
-    <string name="alarm_request_exact_alarm_permission">정확한 알람을 위한 알람/리마인더 설정 허용이 필요합니다.</string>
     <string name="alarm_need_permission_msg">알람 노출을 위한 알림 권한 부여가 필요합니다.</string>
+
+    <!-- InformDialogMaker -->
+    <string name="inform">알림</string>
+    <string name="inform_msg_finish_dialog_">이대로 나가면 산책 결과가 저장되지 않습니다.\n그래도 나가시겠습니까?</string>
+    <string name="inform_msg_mypage_logout">로그아웃 하시겠습니까?</string>
+    <string name="inform_msg_mypage_delete_dog_thumbnail">기본 이미지로 변경하시겠습니까?</string>
+    <string name="inform_msg_alarm_request_exact_alarm_permission">정확한 알람을 위한 알람/리마인더 설정 허용이 필요합니다.</string>
+    <string name="inform_msg_detail_pet_delete">정말 삭제하시겠습니까?</string>
+    <string name="inform_msg_login_dialog">이메일 인증</string>
+    <string name="inform_msg_login_dialog_request">이메일 인증을 진행 해 주세요.\n취소 시, 계정이 삭제 됩니다.</string>
+
+    <string name="inform_dialog_confirm">확인</string>
+    <string name="inform_dialog_cancel">취소</string>
+
 </resources>
