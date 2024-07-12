@@ -7,19 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentSetDialogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DialogMaker(
-    private val dialogButtonListener: DialogButtonListener,
-    private val title: String,
-    private val message: String
-): DialogFragment() {
+) : DialogFragment() {
 
+    private var dialogButtonListener: DialogButtonListener? = null
+    private var title: String = ""
+    private var message: String = ""
     private var _binding: FragmentSetDialogBinding? = null
     private val binding: FragmentSetDialogBinding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        title = arguments?.getString("title") ?: ""
+        message = arguments?.getString("message") ?: ""
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,14 +42,14 @@ class DialogMaker(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvSetTitle.text = title
-        binding.tvSetMessage1.text = message
+        binding.tvSetMessage.text = message
 
         binding.btnConfirm.setOnClickListener {
-            dialogButtonListener.onPositiveButtonClicked()
+            dialogButtonListener?.onPositiveButtonClicked()
             dismiss()
         }
         binding.btnCancel.setOnClickListener {
-            dialogButtonListener.onNegativeButtonClicked()
+            dialogButtonListener?.onNegativeButtonClicked()
             dismiss()
         }
     }
@@ -52,10 +59,34 @@ class DialogMaker(
         _binding = null
     }
 
-    interface DialogButtonListener {
-        fun onPositiveButtonClicked()
-        fun onNegativeButtonClicked()
+    fun registerCallBackLister(dialogButtonListener: DialogButtonListener) {
+        this.dialogButtonListener = dialogButtonListener
+
     }
+
+    private fun unRegisterCallBackListener() {
+        this.dialogButtonListener = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unRegisterCallBackListener()
+    }
+
+    companion object {
+        fun newInstance(title: String, message: String): DialogMaker {
+            val args = bundleOf("title" to title, "message" to message)
+
+            val fragment = DialogMaker()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+}
+
+interface DialogButtonListener {
+    fun onPositiveButtonClicked()
+    fun onNegativeButtonClicked()
 }
 
 
