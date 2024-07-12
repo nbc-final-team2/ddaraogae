@@ -103,6 +103,7 @@ class LoginFragment : Fragment() {
         val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform_msg_login_dialog), message = getString(R.string.inform_msg_login_dialog_request))
         dialogMaker.show(requireActivity().supportFragmentManager, null)
         dialogMaker.registerCallBackLister(dialogButtonListener)
+        dialogMaker.isCancelable = false
     }
     private fun clickLoginButton() = with(binding) {
         //click LoginButton
