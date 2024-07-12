@@ -13,7 +13,7 @@ import com.nbcfinalteam2.ddaraogae.databinding.FragmentSetDialogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DialogMaker(
+class InformDialogMaker(
 ) : DialogFragment() {
 
     private var dialogButtonListener: DialogButtonListener? = null
@@ -74,10 +74,10 @@ class DialogMaker(
     }
 
     companion object {
-        fun newInstance(title: String, message: String): DialogMaker {
+        fun newInstance(title: String, message: String): InformDialogMaker {
             val args = bundleOf("title" to title, "message" to message)
 
-            val fragment = DialogMaker()
+            val fragment = InformDialogMaker()
             fragment.arguments = args
             return fragment
         }
