@@ -8,7 +8,6 @@ import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -29,11 +28,11 @@ import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
-import com.nbcfinalteam2.ddaraogae.presentation.ui.alarm.AlarmSetDialogFragment
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.StampDialogFragment.Companion.ARG_STAMP_LIST
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
-import com.nbcfinalteam2.ddaraogae.presentation.util.DialogMaker
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListener
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMaker
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
@@ -48,12 +47,23 @@ import javax.inject.Inject
 class FinishActivity : FragmentActivity() {
     private val binding by lazy { ActivityFinishBinding.inflate(layoutInflater) }
     private val viewModel: FinishViewModel by viewModels()
-
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private val PERMISSIONS = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
+    private val dialogButtonListener by lazy {
+        object : DialogButtonListener {
+            override fun onPositiveButtonClicked() {
+                finish()
+            }
+
+            override fun onNegativeButtonClicked() {
+
+            }
+
+        }
+    }
 
     private lateinit var naverMap: NaverMap
     private var polyline = PolylineOverlay()
@@ -67,22 +77,10 @@ class FinishActivity : FragmentActivity() {
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-//            AlertDialog.Builder(this@FinishActivity)
-//                .setMessage(getString(R.string.finish_dialog_msg))
-//                .setPositiveButton(getString(R.string.finish_dialog_confirm)) { _, _ ->
-//                    finish()
-//                }.setNegativeButton(getString(R.string.finish_dialog_cancel)) { _, _ -> }
-//                .show()
-            val dialog = DialogMaker(object : DialogMaker.DialogButtonListener {
-                override fun onPositiveButtonClicked() {
-                    finish()
-                }
-
-                override fun onNegativeButtonClicked() {
-
-                }
-            }
-
+            val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_finish_dialog_))
+            dialogMaker.show(supportFragmentManager, null)
+            dialogMaker.registerCallBackLister(dialogButtonListener)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
