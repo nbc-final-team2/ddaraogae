@@ -12,17 +12,17 @@
         android:layout_height="wrap_content"
         android:text="@string/alarm_dialog_set_time"
         android:textSize="@dimen/text_body"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_set_message_1"
+        android:id="@+id/tv_set_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="어떤 내용을 담을까?"
-        android:textSize="10dp"
+        android:layout_marginTop="@dimen/margin_extra_small_10"
+        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_set_title" />
@@ -35,7 +35,7 @@
         android:background="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_set_message_1" />
+        app:layout_constraintTop_toBottomOf="@id/tv_set_message" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/btn_cancel"
