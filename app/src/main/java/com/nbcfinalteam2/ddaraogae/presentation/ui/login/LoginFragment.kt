@@ -1,18 +1,14 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 
-import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,6 +21,8 @@ import com.google.android.gms.common.api.ApiException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentLogInBinding
 import com.nbcfinalteam2.ddaraogae.presentation.ui.main.MainActivity
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListener
+import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMaker
 import com.nbcfinalteam2.ddaraogae.presentation.util.setPasswordToggle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -34,6 +32,19 @@ class LoginFragment : Fragment() {
     private var _binding:FragmentLogInBinding? = null
     private val binding get() = _binding!!
     private val viewModel: LoginViewModel by viewModels()
+    private val dialogButtonListener by lazy {
+        object : DialogButtonListener {
+            override fun onPositiveButtonClicked() {
+                viewModel.sendEmail()
+                Toast.makeText(requireContext(), R.string.login_send_email, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNegativeButtonClicked() {
+                viewModel.deleteAccount(password)
+                Toast.makeText(requireContext(), R.string.login_account_delete, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private var password = ""
 
@@ -89,19 +100,9 @@ class LoginFragment : Fragment() {
         }
     }
     private fun sendEmail() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(R.string.login_dialog_title)
-            .setMessage(R.string.login_dialog_message)
-            .setPositiveButton(R.string.login_dialog_ok, DialogInterface.OnClickListener { _, _ ->
-                viewModel.sendEmail()
-                Toast.makeText(requireContext(), R.string.login_send_email, Toast.LENGTH_SHORT).show()
-            })
-            .setNegativeButton(R.string.login_dialog_no, DialogInterface.OnClickListener { _, _ ->
-                viewModel.deleteAccount(password)
-                Toast.makeText(requireContext(), R.string.login_account_delete, Toast.LENGTH_SHORT).show()
-            })
-            .setCancelable(false)
-        builder.show()
+        val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform_msg_login_dialog), message = getString(R.string.inform_msg_login_dialog_request))
+        dialogMaker.show(requireActivity().supportFragmentManager, null)
+        dialogMaker.registerCallBackLister(dialogButtonListener)
     }
     private fun clickLoginButton() = with(binding) {
         //click LoginButton
