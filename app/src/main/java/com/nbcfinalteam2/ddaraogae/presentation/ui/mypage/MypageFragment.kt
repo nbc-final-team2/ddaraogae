@@ -1,11 +1,9 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.mypage
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType.TYPE_CLASS_TEXT
 import android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
-import android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,18 +17,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentMypageBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.ui.alarm.AlarmActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
-import com.nbcfinalteam2.ddaraogae.presentation.ui.login.LoginFragment
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListener
+import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMaker
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +39,16 @@ class MypageFragment : Fragment() {
     private var _binding:FragmentMypageBinding ?= null
     private val binding get() = _binding!!
     private val viewModel : MyPageViewModel by viewModels()
+    private val dialogButtonListener by lazy {
+        object : DialogButtonListener {
+            override fun onPositiveButtonClicked() {
+                viewModel.logOut()
+            }
+            override fun onNegativeButtonClicked() {
+            }
+
+        }
+    }
 
     private var loadingDialog: LoadingDialog? = null
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -88,13 +95,9 @@ class MypageFragment : Fragment() {
 
     private fun clickAboutAccountBtn(){
         binding.tvSignOut.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setMessage(R.string.msg_logout)
-            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-                viewModel.logOut()
-            }
-            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
-            builder.show()
+            val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_mypage_logout))
+            dialogMaker.show(requireActivity().supportFragmentManager, null)
+            dialogMaker.registerCallBackLister(dialogButtonListener)
         }
 
         binding.tvSignDelete.setOnClickListener {
