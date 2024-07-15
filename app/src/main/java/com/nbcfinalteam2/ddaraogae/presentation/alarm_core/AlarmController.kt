@@ -116,7 +116,7 @@ class AlarmController @Inject constructor(
                 alarmRepository.getAlarmList(uid).onEach {
                     alarmRepository.deleteAlarm(it.id)
                 }
-                unsetAllAlarms()
+                unsetAllAlarms(uid)
             }
         }
     }

@@ -9,12 +9,14 @@ object AlarmMapper {
 
     private fun AlarmPreference.toEntity() = AlarmEntity(
         id = id,
-        setTime = setTime
+        setTime = setTime,
+        uid = uid
     )
 
     private fun AlarmEntity.toPreference() = AlarmPreference(
         id = id,
-        setTime = setTime
+        setTime = setTime,
+        uid = uid
     )
 
     fun entityToJson(alarmEntity: AlarmEntity) = gson.toJson(alarmEntity.toPreference())
