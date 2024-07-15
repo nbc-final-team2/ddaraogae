@@ -139,6 +139,7 @@ class LoginFragment : Fragment() {
 
     private fun successLogIn() {
         Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
+        viewModel.loadAlarms()
         requireActivity().startActivity(Intent(requireActivity(), MainActivity::class.java))
         requireActivity().finish()
     }

@@ -76,7 +76,7 @@ class AlarmController @Inject constructor(
     fun setAllAlarms(uid: String) {
         scope.launch {
             runCatching {
-                alarmRepository.getAlarmList(uid).onEach {
+                alarmRepository.getAlarmList(uid).forEach {
                     setAlarm(it.id, it.setTime)
                 }
             }
@@ -113,7 +113,7 @@ class AlarmController @Inject constructor(
     fun deleteAllAlarm(uid: String) {
         scope.launch {
             runCatching {
-                alarmRepository.getAlarmList(uid).onEach {
+                alarmRepository.getAlarmList(uid).forEach {
                     alarmRepository.deleteAlarm(it.id)
                 }
                 unsetAllAlarms(uid)
@@ -134,10 +134,10 @@ class AlarmController @Inject constructor(
         alarmManager.cancel(pendingIntent)
     }
 
-        fun unsetAllAlarms(uid: String) {
+    fun unsetAllAlarms(uid: String) {
         scope.launch {
             runCatching {
-                alarmRepository.getAlarmList(uid).onEach {
+                alarmRepository.getAlarmList(uid).forEach {
                     unsetAlarm(it.id)
                 }
             }
