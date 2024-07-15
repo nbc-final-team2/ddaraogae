@@ -18,17 +18,21 @@ class AlarmRepositoryImpl @Inject constructor(
             alarmEntity
         )
 
-    override suspend fun getAlarmList(): List<AlarmEntity> {
+    override suspend fun getAlarmList(uid: String): List<AlarmEntity> {
         return alarmDataSource.getAlarmList().asMap().values.map { value ->
             AlarmMapper.jsonToEntity(value as String)
-        }.sortedBy { it.setTime }
+        }
+            .filter { it.uid==uid }
+            .sortedBy { it.setTime }
     }
 
-    override fun getAlarmListFlow(): Flow<List<AlarmEntity>> {
+    override fun getAlarmListFlow(uid: String): Flow<List<AlarmEntity>> {
         return alarmDataSource.getAlarmListFlow().map { preferences ->
             preferences.asMap().values.map { value ->
                 AlarmMapper.jsonToEntity(value as String)
-            }.sortedBy { it.setTime }
+            }
+                .filter { it.uid==uid }
+                .sortedBy { it.setTime }
         }
     }
 

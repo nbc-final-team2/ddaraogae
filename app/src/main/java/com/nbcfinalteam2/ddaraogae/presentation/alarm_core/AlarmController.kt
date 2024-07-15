@@ -25,11 +25,11 @@ class AlarmController @Inject constructor(
 
     private val scope = CoroutineScope(dispatcher)
 
-    fun createAlarm(setTime: Int) {
+    fun createAlarm(setTime: Int, uid: String) {
         scope.launch {
             runCatching {
                 val id = alarmRepository.insertAlarm(
-                    AlarmEntity(-1, setTime)
+                    AlarmEntity(-1, setTime, uid)
                 )
 
                 setAlarm(id, setTime)
@@ -73,10 +73,10 @@ class AlarmController @Inject constructor(
 
     }
 
-    fun setAllAlarms() {
+    fun setAllAlarms(uid: String) {
         scope.launch {
             runCatching {
-                alarmRepository.getAlarmList().onEach {
+                alarmRepository.getAlarmList(uid).onEach {
                     setAlarm(it.id, it.setTime)
                 }
             }
@@ -84,15 +84,15 @@ class AlarmController @Inject constructor(
 
     }
 
-    fun getAlarmListFlow(): Flow<List<AlarmEntity>> {
-        return alarmRepository.getAlarmListFlow()
+    fun getAlarmListFlow(uid: String): Flow<List<AlarmEntity>> {
+        return alarmRepository.getAlarmListFlow(uid)
     }
 
-    fun updateAlarm(id: Int, setTime: Int) {
+    fun updateAlarm(id: Int, setTime: Int, uid: String) {
         scope.launch {
             runCatching {
                 alarmRepository.updateAlarm(
-                    AlarmEntity(id, setTime)
+                    AlarmEntity(id, setTime, uid)
                 )
 
                 setAlarm(id, setTime)
@@ -110,12 +110,13 @@ class AlarmController @Inject constructor(
         }
     }
 
-    fun deleteAllAlarms() {
+    fun deleteAllAlarm(uid: String) {
         scope.launch {
             runCatching {
-                alarmRepository.getAlarmList().onEach {
-                    unsetAlarm(it.id)
+                alarmRepository.getAlarmList(uid).onEach {
+                    alarmRepository.deleteAlarm(it.id)
                 }
+                unsetAllAlarms()
             }
         }
     }
@@ -131,6 +132,16 @@ class AlarmController @Inject constructor(
         )
 
         alarmManager.cancel(pendingIntent)
+    }
+
+        fun unsetAllAlarms(uid: String) {
+        scope.launch {
+            runCatching {
+                alarmRepository.getAlarmList(uid).onEach {
+                    unsetAlarm(it.id)
+                }
+            }
+        }
     }
 
     private fun checkExactAlarmPermission(): Boolean {
