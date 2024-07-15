@@ -2,6 +2,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.alarm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmController
 import com.nbcfinalteam2.ddaraogae.presentation.model.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,10 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
-    private val alarmController: AlarmController
+    private val alarmController: AlarmController,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ): ViewModel() {
 
-    val alarmUiState: StateFlow<AlarmUiState> = alarmController.getAlarmListFlow()
+    val alarmUiState: StateFlow<AlarmUiState> = alarmController.getAlarmListFlow(getCurrentUserUseCase()?.uid!!)
         .map { entityList ->
             AlarmUiState( entityList.map { it.toModel() })
         }
@@ -27,9 +29,9 @@ class AlarmViewModel @Inject constructor(
         )
 
 
-    fun insertAlarm(setTime: Int) = alarmController.createAlarm(setTime)
+    fun insertAlarm(setTime: Int) = alarmController.createAlarm(setTime, getCurrentUserUseCase()?.uid!!)
 
-    fun updateAlarm(alarmId: Int, setTime: Int) = alarmController.updateAlarm(alarmId, setTime)
+    fun updateAlarm(alarmId: Int, setTime: Int) = alarmController.updateAlarm(alarmId, setTime, getCurrentUserUseCase()?.uid!!)
 
     fun deleteAlarm(alarmId: Int) = alarmController.deleteAlarm(alarmId)
 

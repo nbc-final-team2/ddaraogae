@@ -9,6 +9,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.nbcfinalteam2.ddaraogae.R
+import com.nbcfinalteam2.ddaraogae.domain.repository.AuthRepository
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.CHANNEL_ID
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_ID
 import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmConstant.EXTRA_ALARM_SET_TIME
@@ -20,12 +21,17 @@ import javax.inject.Inject
 class AlarmReceiver: BroadcastReceiver() {
 
     @Inject lateinit var alarmController: AlarmController
+    @Inject lateinit var authRepository: AuthRepository
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            alarmController.setAllAlarms()
+            authRepository.getCurrentUser()?.let {
+                alarmController.setAllAlarms(it.uid!!)
+            }
         } else if (intent.action == AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED) {
-            alarmController.setAllAlarms()
+            authRepository.getCurrentUser()?.let {
+                alarmController.setAllAlarms(it.uid!!)
+            }
         } else {
             val manager = getSystemService(context, NotificationManager::class.java)
             createNotificationChannel(notificationManager = manager)
