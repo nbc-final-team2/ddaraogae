@@ -275,7 +275,7 @@ class FinishActivity : FragmentActivity() {
             val padding = if (distance >= 1.0) {
                 100
             } else {
-                250
+                320
             }
             val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
             naverMap.moveCamera(cameraUpdate)
