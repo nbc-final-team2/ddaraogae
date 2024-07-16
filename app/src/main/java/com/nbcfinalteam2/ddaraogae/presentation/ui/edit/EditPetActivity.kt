@@ -145,6 +145,7 @@ class EditPetActivity : AppCompatActivity() {
             val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_mypage_delete_dog_thumbnail))
             dialogMaker.show(supportFragmentManager, null)
             dialogMaker.registerCallBackLister(dialogButtonListener)
+            ivRemoveThumbnail.isActivated = true
         }
 
         btnEditCompleted.setOnClickListener {
@@ -172,6 +173,7 @@ class EditPetActivity : AppCompatActivity() {
             val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_detail_pet_delete))
             dialogMaker.show(supportFragmentManager, null)
             dialogMaker.registerCallBackLister(dialogButtonListener)
+            tvDelete.isActivated = true
         }
     }
     private fun buttonState() = with(binding){
