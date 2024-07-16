@@ -103,8 +103,6 @@ class FinishActivity : FragmentActivity() {
     }
 
     private fun getDataForInitView() {
-        requestPermissionForMap()
-
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra(LOCATIONLIST, LatLng::class.java)?.toList().orEmpty()
         } else {
@@ -173,6 +171,7 @@ class FinishActivity : FragmentActivity() {
                 }
             }
         }
+        requestPermissionForMap()
     }
 
     private fun requestPermissionForMap() {
