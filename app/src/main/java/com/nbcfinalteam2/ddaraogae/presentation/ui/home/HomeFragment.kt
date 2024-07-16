@@ -448,7 +448,7 @@ class HomeFragment : Fragment() {
         val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
-        val dataSet = LineDataSet(entries, "최근 1주일 산책 그래프").apply {
+        val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
 
             color = R.color.light_blue
@@ -471,8 +471,7 @@ class HomeFragment : Fragment() {
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.isEnabled = true
-            legend.textColor = resources.getColor(R.color.black, null)
+            legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
