@@ -22,6 +22,8 @@
         android:layout_height="wrap_content"
         android:text="어떤 내용을 담을까?"
         android:layout_marginTop="@dimen/margin_extra_small_10"
+        android:layout_marginStart="@dimen/margin_extra_smaller"
+        android:layout_marginEnd="@dimen/margin_extra_smaller"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
