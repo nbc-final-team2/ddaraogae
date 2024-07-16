@@ -65,10 +65,19 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="12dp"
                 android:padding="@dimen/padding_small"
-                android:src="@drawable/ic_dog_add"
+                android:src="@drawable/ic_dog_default_thumbnail"
                 app:civ_border_color="@color/very_soft_orange"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_beforeTime" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dog_add"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/iv_dogAdd"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_dogAdd" />
 
             <!-- 반려견 그래프 -->
 
