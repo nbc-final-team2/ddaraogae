@@ -6,6 +6,7 @@ import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,26 +50,25 @@ class InformDialogMaker(
         height: Float,
     ) {
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        if (Build.VERSION.SDK_INT < 30) {
-            val display = windowManager.defaultDisplay
-            val size = Point()
+        val window = dialogFragment.dialog?.window
+        if (window != null) {
+            if (Build.VERSION.SDK_INT < 30) {
+                val display = windowManager.defaultDisplay
+                val size = Point()
+                display.getSize(size)
+                val x = (size.x * width).toInt()
+                val y = (size.y * height).toInt()
+                window.setLayout(x, y)
+            } else {
+                val rect = windowManager.currentWindowMetrics.bounds
+                val x = (rect.width() * width).toInt()
+                val y = (rect.height() * height).toInt()
+                window.setLayout(x, y)
+            }
 
-            display.getSize(size)
-
-            val window = dialogFragment.dialog?.window
-
-            val x = (size.x * width).toInt()
-            val y = (size.y * height).toInt()
-            window?.setLayout(x, y)
-        } else {
-            val rect = windowManager.currentWindowMetrics.bounds
-
-            val window = dialogFragment.dialog?.window
-
-            val x = (rect.width() * width).toInt()
-            val y = (rect.height() * height).toInt()
-
-            window?.setLayout(x, y)
+            val params = window.attributes
+            params.gravity = Gravity.CENTER
+            window.attributes = params
         }
     }
 
@@ -89,7 +89,7 @@ class InformDialogMaker(
 
     override fun onResume() {
         super.onResume()
-        requireContext().dialogFragmentResize(this@InformDialogMaker, 0.5f, 0.2f)
+        requireContext().dialogFragmentResize(this@InformDialogMaker, 0.5f, 0.15f)
 
     }
 
