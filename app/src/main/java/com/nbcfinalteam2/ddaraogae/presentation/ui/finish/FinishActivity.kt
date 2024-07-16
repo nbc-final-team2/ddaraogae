@@ -18,6 +18,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -271,14 +272,22 @@ class FinishActivity : FragmentActivity() {
                 boundsBuilder.include(latLng)
             }
             val bounds = boundsBuilder.build()
-
-            val padding = if (distance >= 1.0) {
-                100
+            val padding = 100
+            if (distance < 1) {
+                val zoomLevel = 16.5
+                val cameraUpdate = CameraUpdate.toCameraPosition(
+                    CameraPosition(
+                        bounds.center,
+                        zoomLevel,
+                        0.0,
+                        0.0
+                    )
+                )
+                naverMap.moveCamera(cameraUpdate)
             } else {
-                320
+                val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
+                naverMap.moveCamera(cameraUpdate)
             }
-            val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
-            naverMap.moveCamera(cameraUpdate)
         }
     }
 
