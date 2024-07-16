@@ -1,12 +1,16 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
+import android.content.Context
 import android.graphics.Color
+import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.nbcfinalteam2.ddaraogae.databinding.FragmentSetDialogBinding
@@ -26,6 +30,7 @@ class InformDialogMaker(
         super.onCreate(savedInstanceState)
         title = arguments?.getString("title") ?: ""
         message = arguments?.getString("message") ?: ""
+        requireContext().dialogFragmentResize(this, 0.9f, 0.8f)
     }
 
     override fun onCreateView(
@@ -37,6 +42,35 @@ class InformDialogMaker(
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         return binding.root
+    }
+
+    private fun Context.dialogFragmentResize(
+        dialogFragment: DialogFragment,
+        width: Float,
+        height: Float,
+    ) {
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        if (Build.VERSION.SDK_INT < 30) {
+            val display = windowManager.defaultDisplay
+            val size = Point()
+
+            display.getSize(size)
+
+            val window = dialogFragment.dialog?.window
+
+            val x = (size.x * width).toInt()
+            val y = (size.y * height).toInt()
+            window?.setLayout(x, y)
+        } else {
+            val rect = windowManager.currentWindowMetrics.bounds
+
+            val window = dialogFragment.dialog?.window
+
+            val x = (rect.width() * width).toInt()
+            val y = (rect.height() * height).toInt()
+
+            window?.setLayout(x, y)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
