@@ -1,12 +1,8 @@
 package com.nbcfinalteam2.ddaraogae.presentation.ui.edit
 
-import android.Manifest
-import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ScrollView
@@ -51,24 +47,9 @@ class EditPetActivity : AppCompatActivity() {
     private var dogData: DogInfo? = null
     private var loadingDialog: LoadingDialog? = null
 
-    private val galleryPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    .apply {
-                        addCategory(Intent.CATEGORY_OPENABLE)
-                        type = "image/*"
-                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    }
-                imageResult.launch(intent)
-            }
-        }
-
-    private val imageResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            viewModel.setImageUri(result.data?.data, uriToByteArray(result.data?.data, this))
+    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            viewModel.setImageUri(uri, uriToByteArray(uri, this))
         }
     }
 
@@ -120,10 +101,7 @@ class EditPetActivity : AppCompatActivity() {
         }
 
         ivDogThumbnail.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
-            else
-                galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            galleryLauncher.launch("image/*")
         }
 
         ivRemoveThumbnail.setOnClickListener {
