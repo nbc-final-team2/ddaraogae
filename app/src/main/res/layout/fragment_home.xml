@@ -133,6 +133,7 @@
                         android:text="@string/home_walk_graph_no_data"
                         android:textSize="@dimen/text_mini"
                         android:visibility="visible"
+                        android:elevation="4dp"
                         app:layout_constraintBottom_toBottomOf="@+id/lc_area"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/lc_area"
