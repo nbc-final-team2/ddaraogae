@@ -222,9 +222,11 @@ class HomeFragment : Fragment() {
     private fun changeDogPortrait(dogList: List<DogInfo>) {
         if (dogList.isEmpty()) {
             binding.ivDogAdd.visibility = CircleImageView.VISIBLE
+            binding.ivDogAddPlus.visibility = CircleImageView.VISIBLE
             binding.rvDogArea.visibility = RecyclerView.INVISIBLE
         } else {
             binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
+            binding.ivDogAddPlus.visibility = CircleImageView.INVISIBLE
             binding.rvDogArea.visibility = RecyclerView.VISIBLE
         }
     }
