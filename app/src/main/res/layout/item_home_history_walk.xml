@@ -13,6 +13,7 @@
         android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_extra_small"
         app:cardCornerRadius="8dp"
+        app:cardElevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
