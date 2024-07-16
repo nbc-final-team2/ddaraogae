@@ -30,7 +30,6 @@ class InformDialogMaker(
         super.onCreate(savedInstanceState)
         title = arguments?.getString("title") ?: ""
         message = arguments?.getString("message") ?: ""
-        requireContext().dialogFragmentResize(this, 0.9f, 0.8f)
     }
 
     override fun onCreateView(
@@ -86,6 +85,12 @@ class InformDialogMaker(
             dialogButtonListener?.onNegativeButtonClicked()
             dismiss()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireContext().dialogFragmentResize(this@InformDialogMaker, 0.5f, 0.2f)
+
     }
 
     override fun onDestroyView() {
