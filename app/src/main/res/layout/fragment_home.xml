@@ -81,9 +81,19 @@
                 android:text="@string/home_walk_graph_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/tv_moveToHistoryGraph"
+                app:layout_constraintEnd_toStartOf="@+id/iv_walkGraphInformation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_dogAdd" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_walkGraphInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_information"
+                android:padding="@dimen/margin_extra_small"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_dogGraph"
+                app:layout_constraintEnd_toStartOf="@+id/tv_moveToHistoryGraph"
+                app:layout_constraintTop_toTopOf="@+id/tv_dogGraph" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_moveToHistoryGraph"
