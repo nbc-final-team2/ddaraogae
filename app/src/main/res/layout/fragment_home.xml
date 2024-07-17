@@ -65,10 +65,20 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="12dp"
                 android:padding="@dimen/padding_small"
-                android:src="@drawable/ic_dog_add"
+                android:src="@drawable/ic_dog_default_thumbnail"
                 app:civ_border_color="@color/very_soft_orange"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_beforeTime" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_dogAddPlus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dog_add"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/iv_dogAdd"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_dogAdd" />
 
             <!-- 반려견 그래프 -->
 
@@ -81,9 +91,20 @@
                 android:text="@string/home_walk_graph_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/tv_moveToHistoryGraph"
+                app:layout_constraintEnd_toStartOf="@+id/iv_walkGraphInformation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_dogAdd" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_walkGraphInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_extra_small"
+                android:src="@drawable/ic_information"
+                android:tooltipText="@string/home_walk_graph_information"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_dogGraph"
+                app:layout_constraintEnd_toStartOf="@+id/tv_moveToHistoryGraph"
+                app:layout_constraintTop_toTopOf="@+id/tv_dogGraph" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_moveToHistoryGraph"
@@ -91,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_walk_graph_move_to_history"
+                android:textColor="@color/dark_grey"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_dogGraph"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -103,6 +125,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_marginEnd="@dimen/margin_medium"
+                app:cardElevation="1dp"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -127,6 +150,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_empty_data"
+                        android:elevation="4dp"
                         android:padding="@dimen/padding_small"
                         android:text="@string/home_walk_graph_no_data"
                         android:textSize="@dimen/text_mini"
@@ -144,7 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_larger"
+                android:layout_marginTop="@dimen/margin_extra_lager"
                 android:text="@string/home_stamp_title"
                 android:textSize="@dimen/text_text"
                 android:textStyle="bold"
@@ -158,6 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_stamp_see_more"
+                android:textColor="@color/dark_grey"
                 android:textSize="@dimen/text_caption"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_stampTitle"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -170,6 +195,7 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_marginEnd="@dimen/margin_medium"
+                app:cardElevation="1dp"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:layout_constraintBottom_toTopOf="@+id/tv_todayWeather"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -217,7 +243,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_larger"
+                android:layout_marginTop="@dimen/margin_extra_lager"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/home_weather_title"
                 android:textSize="@dimen/text_text"
@@ -234,6 +260,7 @@
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:layout_marginBottom="@dimen/margin_medium"
+                app:cardElevation="1dp"
                 app:cardCornerRadius="@dimen/margin_extra_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -266,7 +293,7 @@
                         android:layout_marginTop="@dimen/margin_extra_small"
                         android:layout_marginEnd="@dimen/margin_extra_small"
                         android:text="@string/home_weather_real_time_data"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/dark_grey"
                         android:textSize="@dimen/text_mini"
                         android:visibility="invisible"
                         app:layout_constraintEnd_toStartOf="@+id/iv_weatherRenewal"

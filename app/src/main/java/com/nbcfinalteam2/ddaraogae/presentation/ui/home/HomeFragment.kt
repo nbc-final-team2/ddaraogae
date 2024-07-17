@@ -222,9 +222,11 @@ class HomeFragment : Fragment() {
     private fun changeDogPortrait(dogList: List<DogInfo>) {
         if (dogList.isEmpty()) {
             binding.ivDogAdd.visibility = CircleImageView.VISIBLE
+            binding.ivDogAddPlus.visibility = CircleImageView.VISIBLE
             binding.rvDogArea.visibility = RecyclerView.INVISIBLE
         } else {
             binding.ivDogAdd.visibility = CircleImageView.INVISIBLE
+            binding.ivDogAddPlus.visibility = CircleImageView.INVISIBLE
             binding.rvDogArea.visibility = RecyclerView.VISIBLE
         }
     }
@@ -448,7 +450,7 @@ class HomeFragment : Fragment() {
         val maxDistance = entries.maxOfOrNull { it.y } ?: 0f
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
-        val dataSet = LineDataSet(entries, "최근 1주일 산책 그래프").apply {
+        val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
 
             color = R.color.light_blue
@@ -471,8 +473,7 @@ class HomeFragment : Fragment() {
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.isEnabled = true
-            legend.textColor = resources.getColor(R.color.black, null)
+            legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
