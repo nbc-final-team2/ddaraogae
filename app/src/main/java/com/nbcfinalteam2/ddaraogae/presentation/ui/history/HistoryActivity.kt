@@ -213,7 +213,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
             setColor(resources.getColor(R.color.brown, null))
-
             lineWidth = 2f
             setDrawCircles(true)
             setCircleColor(R.color.light_blue)
@@ -233,7 +232,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
             axisRight.isEnabled = false
-            legend.textColor = resources.getColor(R.color.black, null)
             legend.isEnabled = false
             description.isEnabled = false
             setDrawGridBackground(true)

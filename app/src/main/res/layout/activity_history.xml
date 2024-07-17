@@ -87,9 +87,21 @@
                         android:text="@string/home_history_walk_graph_title"
                         android:textSize="@dimen/text_text"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/iv_walkGraphInformation"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_selectedCalendar" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_walkGraphInformation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_information"
+                        android:layout_marginEnd="@dimen/margin_medium"
+                        android:tooltipText="@string/home_history_walk_graph_information"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_walkGraphDogName"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tv_walkGraphDogName"
+                        app:layout_constraintTop_toTopOf="@+id/tv_walkGraphDogName" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/lc_area"
@@ -132,6 +144,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_medium"
             android:fillViewport="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 

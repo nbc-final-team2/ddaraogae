@@ -59,6 +59,7 @@
     <string name="home_history_walk_graph_no_data">최근 산책 데이터가 없어요.</string>
     <string name="home_history_walk_graph_select_calendar">날짜 선택</string>
     <string name="home_history_walk_history_no_data">이번달 산책 기록이 없습니다.</string>
+    <string name="home_history_walk_graph_information">선택한 반려견의 최근 한 달간의 산책 그래프입니다.</string>
 
     <!-- home - history - dialog -->
     <string name="home_history_dialog_year">2024</string>
