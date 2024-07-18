@@ -169,7 +169,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         lifecycleScope.launch {
             historyViewModel.loadWalkEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@HistoryActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
@@ -236,7 +236,16 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             }
         }
 
-        lineChart.setXAxisRenderer(CustomXAxisRenderer(this, lineChart.viewPortHandler, lineChart.xAxis, lineChart.getTransformer(YAxis.AxisDependency.LEFT), currentDate, dates))
+        lineChart.setXAxisRenderer(
+            CustomXAxisRenderer(
+                this,
+                lineChart.viewPortHandler,
+                lineChart.xAxis,
+                lineChart.getTransformer(YAxis.AxisDependency.LEFT),
+                currentDate,
+                dates
+            )
+        )
 
         lineChart.invalidate()
     }
