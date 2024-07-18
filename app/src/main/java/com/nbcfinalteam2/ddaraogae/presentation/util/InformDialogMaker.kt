@@ -87,9 +87,9 @@ class InformDialogMaker(
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireContext().dialogFragmentResize(this@InformDialogMaker, 0.5f, 0.15f)
+    override fun onStart() {
+        super.onStart()
+        requireContext().dialogFragmentResize(this@InformDialogMaker, 0.5f, 0.2f)
 
     }
 
