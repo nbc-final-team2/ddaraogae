@@ -1,9 +1,5 @@
 package com.nbcfinalteam2.ddaraogae.presentation.util
 
-import android.content.Context
-import android.provider.Settings.Global.getString
-import android.util.Log
-import com.nbcfinalteam2.ddaraogae.R
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -17,7 +13,7 @@ import java.util.TimeZone
 object DateFormatter {
 
     private val timeZone = TimeZone.getTimeZone("Asia/Seoul")
-    private val dateFormat = SimpleDateFormat("MM/dd", Locale.getDefault()).apply {
+    val dateFormat = SimpleDateFormat("MM/dd", Locale.getDefault()).apply {
         timeZone = this@DateFormatter.timeZone
     }
     private val todayDateFormat = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
