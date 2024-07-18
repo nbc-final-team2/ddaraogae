@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -34,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Date
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -209,7 +211,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
-
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
             setColor(resources.getColor(R.color.brown, null))
@@ -226,8 +227,20 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
 
+        val currentDate = DateFormatter.dateFormat.format(Date())
+
+        lineChart.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        }
+
+        lineChart.setXAxisRenderer(CustomXAxisRenderer(this, lineChart.viewPortHandler, lineChart.xAxis, lineChart.getTransformer(YAxis.AxisDependency.LEFT), currentDate, dates))
+
         lineChart.invalidate()
     }
+
 
     private fun walkGraphSettingsForHaveData(lineChart: LineChart) {
         lineChart.apply {
@@ -248,19 +261,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun walkGraphXAxisForHaveData(xAxis: XAxis, year: Int, month: Int) {
         val dates = DateFormatter.generateDatesForMonth(year, month)
-        val formatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                val index = value.toInt()
-                return if (index >= 0 && index < dates.size) dates[index] else ""
-            }
-        }
 
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(dates.size, false)
             axisMinimum = 0f
             axisMaximum = (dates.size - 1).toFloat()
-            valueFormatter = formatter
             isGranularityEnabled = true
             textColor = resources.getColor(R.color.black, null)
         }
