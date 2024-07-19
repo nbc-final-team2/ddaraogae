@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
+import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.IsGoogleUserUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmController
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,6 +32,8 @@ class MyPageViewModel @Inject constructor(
     private val isGoogleUserUseCase: IsGoogleUserUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val connectivityManager: ConnectivityManager,
+    private val alarmController: AlarmController,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel(){
 
     private val _restartEvent = MutableSharedFlow<DefaultEvent>()
@@ -52,6 +56,7 @@ class MyPageViewModel @Inject constructor(
             it.copy(isLoading = true)
         }
         runCatching {
+            alarmController.unsetAllAlarms(getCurrentUserUseCase()?.uid!!)
             signOutUseCase()
         }.onSuccess {
             _mypageEvent.emit(DefaultEvent.Success)
@@ -85,7 +90,9 @@ class MyPageViewModel @Inject constructor(
             }
         }
         runCatching {
+            val uid = getCurrentUserUseCase()?.uid!!
             deleteAccountUseCase(credential)
+            alarmController.deleteAllAlarm(uid)
         }.onSuccess {
             _mypageEvent.emit(DefaultEvent.Success)
             _mypageUiState.update {

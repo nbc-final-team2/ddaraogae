@@ -12,6 +12,7 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,6 +32,7 @@ class LoginViewModel @Inject constructor(
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
     private val signOutUseCase: SignOutUseCase,
+    private val alarmController: AlarmController
 ) : ViewModel() {
     //0 : 로그인 성공 / 1: 계정 존재 / 2: 로그인 실패 / 3:인증 메일 보내기 /98: IOException/ 99: 그 외
     private val _isPossible = MutableSharedFlow<Int>(replay = 1)
@@ -130,5 +132,9 @@ class LoginViewModel @Inject constructor(
     }
     fun initState() = viewModelScope.launch{
         _isPossible.emit(-1)
+    }
+
+    fun loadAlarms() = getCurrentUserUseCase()?.uid?.let {
+        alarmController.setAllAlarms(it)
     }
 }

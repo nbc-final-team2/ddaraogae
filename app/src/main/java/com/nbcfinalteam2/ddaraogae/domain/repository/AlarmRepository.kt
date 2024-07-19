@@ -5,7 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface AlarmRepository {
     suspend fun insertAlarm(alarmEntity: AlarmEntity): Int
-    fun getAlarmList(): Flow<List<AlarmEntity>>
+    suspend fun getAlarmList(uid: String): List<AlarmEntity>
+    fun getAlarmListFlow(uid: String): Flow<List<AlarmEntity>>
     suspend fun updateAlarm(alarmEntity: AlarmEntity)
     suspend fun deleteAlarm(alarmId: Int)
 }
