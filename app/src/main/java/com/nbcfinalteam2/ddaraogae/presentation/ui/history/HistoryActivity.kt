@@ -220,7 +220,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             setCircleColor(R.color.light_blue)
             setDrawCircleHole(true)
             setDrawValues(true)
-            mode = LineDataSet.Mode.CUBIC_BEZIER
+            mode = LineDataSet.Mode.LINEAR
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return if (value < 1) {
