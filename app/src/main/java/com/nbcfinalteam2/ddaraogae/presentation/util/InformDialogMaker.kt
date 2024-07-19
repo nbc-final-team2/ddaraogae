@@ -24,6 +24,7 @@ class InformDialogMaker(
     private var dialogButtonListener: DialogButtonListener? = null
     private var title: String = ""
     private var message: String = ""
+    private var customView: View? = null
     private var _binding: FragmentSetDialogBinding? = null
     private val binding: FragmentSetDialogBinding get() = _binding!!
 
@@ -77,6 +78,17 @@ class InformDialogMaker(
         binding.tvSetTitle.text = title
         binding.tvSetMessage.text = message
 
+        // messageView가 설정되어 있으면 이를 사용하고, 그렇지 않으면 기본 메시지를 설정합니다.
+        if (customView != null) {
+            // 기존 messageView에 해당하는 TextView를 messageView로 교체
+            val index = (binding.root as ViewGroup).indexOfChild(binding.tvSetView)
+            (binding.root as ViewGroup).removeViewAt(index)
+            (binding.root as ViewGroup).addView(customView, index)
+        } else {
+            binding.tvSetView.text = arguments?.getString("customView") ?: ""
+        }
+
+
         binding.btnConfirm.setOnClickListener {
             dialogButtonListener?.onPositiveButtonClicked()
             dismiss()
@@ -85,6 +97,10 @@ class InformDialogMaker(
             dialogButtonListener?.onNegativeButtonClicked()
             dismiss()
         }
+    }
+
+    fun setCustomView(view: View) {
+        customView = view
     }
 
     override fun onStart() {
