@@ -30,17 +30,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_set_title" />
 
-    <TextView
-        android:id="@+id/tv_set_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_set_message"
-        />
-
     <View
         android:id="@+id/vw_btn_line"
         android:layout_width="0dp"
@@ -49,7 +38,7 @@
         android:background="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_set_view" />
+        app:layout_constraintTop_toBottomOf="@id/tv_set_message" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/btn_cancel"
