@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.ceil
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -462,7 +463,16 @@ class HomeFragment : Fragment() {
             setCircleColor(R.color.light_blue)
             setDrawCircleHole(true)
             setDrawValues(true)
-            mode = LineDataSet.Mode.CUBIC_BEZIER
+            mode = LineDataSet.Mode.LINEAR
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return if (value < 1) {
+                        String.format("%.0fm", floor(value * 1000))
+                    } else {
+                        String.format("%.1fkm", value)
+                    }
+                }
+            }
         }
         val lineData = LineData(dataSet)
         lineChart.data = lineData
@@ -478,11 +488,11 @@ class HomeFragment : Fragment() {
             setDrawGridBackground(true)
             setGridBackgroundColor(resources.getColor(R.color.white, null))
             setTouchEnabled(true)
-            setPinchZoom(true)
-            setScaleEnabled(true)
-            isDoubleTapToZoomEnabled = true
-            isDragXEnabled = true
-            isDragYEnabled = true
+            setPinchZoom(false)
+            setScaleEnabled(false)
+            isDoubleTapToZoomEnabled = false
+            isDragXEnabled = false
+            isDragYEnabled = false
         }
         lineChart.invalidate()
     }
@@ -510,21 +520,36 @@ class HomeFragment : Fragment() {
         yAxis.apply {
             axisMinimum = 0f
 
-            val adjustedMax = (floor(maxDistance + 10).toInt() / 10) * 10 // 10을 더하고 1의 자리 버림
-            val unit = adjustedMax / 5f // 5개 범위로 나눔
+            val adjustedMax: Float
+            val unit: Float
+            val formatter: ValueFormatter
+
+            if (maxDistance < 1) {
+                adjustedMax = ((ceil(maxDistance * 1000 / 10.0) * 10).toFloat() / 1000) * 1.1f
+                unit = 0.01f
+                formatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return String.format("%.0fm", value * 1000) // m 단위로 변환
+                    }
+                }
+            } else {
+                adjustedMax = (ceil(maxDistance / 0.1) * 0.1).toFloat() * 1.1f
+                unit = 0.1f
+                formatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return String.format("%.1fkm", value)
+                    }
+                }
+            }
 
             axisMaximum = if (adjustedMax > 0) {
-                adjustedMax.toFloat()
+                adjustedMax
             } else {
                 unit
             }
 
-            valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return String.format("%.1fkm", value)
-                }
-            }
-
+            granularity = unit
+            valueFormatter = formatter
             textColor = resources.getColor(R.color.black, null)
         }
     }
