@@ -26,7 +26,9 @@ import com.nbcfinalteam2.ddaraogae.presentation.ui.alarm.AlarmActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
 import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListener
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListenerForSignDelete
 import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMaker
+import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMakerForSignDelete
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -38,6 +40,7 @@ class MypageFragment : Fragment() {
     private var _binding:FragmentMypageBinding ?= null
     private val binding get() = _binding!!
     private val viewModel : MyPageViewModel by viewModels()
+    private lateinit var inputPassword: EditText
     private val dialogButtonListener by lazy {
         object : DialogButtonListener {
             override fun onPositiveButtonClicked() {
@@ -47,6 +50,18 @@ class MypageFragment : Fragment() {
                 if (binding.tvSignDelete.isActivated) {
                     viewModel.isGoogleUser()
                 }
+            }
+            override fun onNegativeButtonClicked() {
+            }
+
+        }
+    }
+    private val dialogButtonListenerForSignDelete by lazy {
+        object : DialogButtonListenerForSignDelete {
+            override fun onPositiveButtonClicked() {
+                val password = inputPassword.text.toString()
+                viewModel.deleteUser(password)
+
             }
             override fun onNegativeButtonClicked() {
             }
@@ -186,19 +201,12 @@ class MypageFragment : Fragment() {
                    activityResultLauncher.launch(signInIntent)
                }
                 else{
-                   val builder = AlertDialog.Builder(requireContext())
-                   builder.setTitle(R.string.email_delete_account_title)
-
+                    val dialogMakerForSignDelete = InformDialogMakerForSignDelete.newInstance(title = getString(R.string.email_delete_account_title))
+                   dialogMakerForSignDelete.show(requireActivity().supportFragmentManager, null)
+                   dialogMakerForSignDelete.registerCallBackLister(dialogButtonListenerForSignDelete)
                    val inputPassword = EditText(requireContext())
                    inputPassword.inputType = TYPE_CLASS_TEXT or TYPE_TEXT_VARIATION_PASSWORD
-                   builder.setView(inputPassword)
-
-                   builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-                       val password = inputPassword.text.toString()
-                       viewModel.deleteUser(password)
-                   }
-                   builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
-                   builder.show()
+                   dialogMakerForSignDelete.setCustomView(inputPassword)
                }
             }
         }
