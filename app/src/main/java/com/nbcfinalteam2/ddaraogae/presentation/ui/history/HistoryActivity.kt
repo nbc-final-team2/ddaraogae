@@ -135,6 +135,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             dialog.setOnMonthClickListener(this)
             dialog.show(supportFragmentManager, "")
         }
+
+        binding.ivSelectedCalendar.setOnClickListener {
+            val dialog = CalendarDialog()
+            dialog.setOnMonthClickListener(this)
+            dialog.show(supportFragmentManager, "")
+        }
     }
 
     private fun setupViewModels() {
@@ -284,7 +290,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(dates.size, false)
             axisMinimum = 0f
-            axisMaximum = (dates.size - 1).toFloat()
+            axisMaximum = dates.size.toFloat()
             isGranularityEnabled = true
             textColor = resources.getColor(R.color.black, null)
         }
