@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -44,6 +43,9 @@ class MypageFragment : Fragment() {
             override fun onPositiveButtonClicked() {
                 if (binding.tvSignOut.isActivated) {
                     viewModel.logOut()
+                }
+                if (binding.tvSignDelete.isActivated) {
+                    viewModel.isGoogleUser()
                 }
             }
             override fun onNegativeButtonClicked() {
@@ -104,15 +106,10 @@ class MypageFragment : Fragment() {
         }
 
         binding.tvSignDelete.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(R.string.msg_delete_account)
-            builder.setMessage(R.string.msg_delete_account_context)
-            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-                viewModel.isGoogleUser()
-            }
-            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
-            builder.show()
-
+            val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.msg_delete_account), message = getString(R.string.msg_delete_account_context))
+            dialogMaker.show(requireActivity().supportFragmentManager, null)
+            dialogMaker.registerCallBackLister(dialogButtonListener)
+            binding.tvSignDelete.isActivated = true
         }
     }
     private fun clickAboutPetBtn(){
