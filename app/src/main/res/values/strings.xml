@@ -240,6 +240,7 @@
     <string name="login_sns">SNS 로그인</string>
     <string name="login_google">Google 로그인</string>
     <string name="login_error">유효하지 않은 계정입니다.</string>
+    <string name="login_ioexeption">존재하지 않는 계정입니다.</string>
     <string name="login_success">로그인에 성공하셨습니다.</string>
     <string name="login_fail">로그인에 실패하셨습니다.</string>
     <string name="login_dialog_title">이메일 인증이 되지 않은 계정 입니다!</string>

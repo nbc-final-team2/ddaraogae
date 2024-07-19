@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
@@ -11,6 +12,7 @@ import com.nbcfinalteam2.ddaraogae.domain.usecase.SendVerificationEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithEmailUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignInWithGoogleUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.SignOutUseCase
+import com.nbcfinalteam2.ddaraogae.presentation.alarm_core.AlarmController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,6 +32,7 @@ class LoginViewModel @Inject constructor(
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
     private val signOutUseCase: SignOutUseCase,
+    private val alarmController: AlarmController
 ) : ViewModel() {
     //0 : 로그인 성공 / 1: 계정 존재 / 2: 로그인 실패 / 3:인증 메일 보내기 /98: IOException/ 99: 그 외
     private val _isPossible = MutableSharedFlow<Int>(replay = 1)
@@ -68,6 +71,9 @@ class LoginViewModel @Inject constructor(
             if(isSuccess)_isPossible.emit(1)
             else _isPossible.emit(2)
 
+        } catch (e: FirebaseAuthInvalidCredentialsException){
+            _isPossible.emit(97)
+            Log.e("[signUpPage]IOException!", "$e")
         }catch (e:IOException){
             _isPossible.emit(98)
             Log.e("[signUpPage]IOException!", "$e")
@@ -109,10 +115,7 @@ class LoginViewModel @Inject constructor(
             val isSuccess = signInWithGoogleUseCase(idToken)
             if(isSuccess)_isPossible.emit(0)
             else _isPossible.emit(2)
-        } catch (e:IOException){
-            _isPossible.emit(98)
-            Log.e("[signUpPage]IOException!", "$e")
-        }catch (e : Exception){
+        } catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
@@ -121,9 +124,6 @@ class LoginViewModel @Inject constructor(
     fun deleteAccount(password: String) = viewModelScope.launch{
         try {
             deleteAccountUseCase(password)
-        }catch (e:IOException){
-            _isPossible.emit(98)
-            Log.e("[signUpPage]IOException!", "$e")
         }catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
@@ -132,5 +132,9 @@ class LoginViewModel @Inject constructor(
     }
     fun initState() = viewModelScope.launch{
         _isPossible.emit(-1)
+    }
+
+    fun loadAlarms() = getCurrentUserUseCase()?.uid?.let {
+        alarmController.setAllAlarms(it)
     }
 }
