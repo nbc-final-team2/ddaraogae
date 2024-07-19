@@ -42,7 +42,9 @@ class MypageFragment : Fragment() {
     private val dialogButtonListener by lazy {
         object : DialogButtonListener {
             override fun onPositiveButtonClicked() {
-                viewModel.logOut()
+                if (binding.tvSignOut.isActivated) {
+                    viewModel.logOut()
+                }
             }
             override fun onNegativeButtonClicked() {
             }
@@ -98,6 +100,7 @@ class MypageFragment : Fragment() {
             val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_mypage_logout))
             dialogMaker.show(requireActivity().supportFragmentManager, null)
             dialogMaker.registerCallBackLister(dialogButtonListener)
+            binding.tvSignOut.isActivated = true
         }
 
         binding.tvSignDelete.setOnClickListener {
