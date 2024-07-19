@@ -83,7 +83,9 @@ class LoginFragment : Fragment() {
                     if (state == 1) viewModel.checkVerified()
                     if (state == 2) Toast.makeText(requireContext(), R.string.login_fail, Toast.LENGTH_SHORT).show()
                     if (state == 3) sendEmail()
-                    if (state > 10) Toast.makeText(
+                    if (state == 97)Toast.makeText(
+                        requireContext(), R.string.login_ioexeption, Toast.LENGTH_SHORT).show()
+                    if (state >= 98) Toast.makeText(
                         requireContext(), R.string.login_unknown_error, Toast.LENGTH_SHORT).show()
                 }
         }

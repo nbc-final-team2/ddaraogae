@@ -3,6 +3,7 @@ package com.nbcfinalteam2.ddaraogae.presentation.ui.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.nbcfinalteam2.ddaraogae.domain.entity.EmailAuthEntity
 import com.nbcfinalteam2.ddaraogae.domain.usecase.DeleteAccountUseCase
 import com.nbcfinalteam2.ddaraogae.domain.usecase.GetCurrentUserUseCase
@@ -68,6 +69,9 @@ class LoginViewModel @Inject constructor(
             if(isSuccess)_isPossible.emit(1)
             else _isPossible.emit(2)
 
+        } catch (e: FirebaseAuthInvalidCredentialsException){
+            _isPossible.emit(97)
+            Log.e("[signUpPage]IOException!", "$e")
         }catch (e:IOException){
             _isPossible.emit(98)
             Log.e("[signUpPage]IOException!", "$e")
@@ -109,10 +113,7 @@ class LoginViewModel @Inject constructor(
             val isSuccess = signInWithGoogleUseCase(idToken)
             if(isSuccess)_isPossible.emit(0)
             else _isPossible.emit(2)
-        } catch (e:IOException){
-            _isPossible.emit(98)
-            Log.e("[signUpPage]IOException!", "$e")
-        }catch (e : Exception){
+        } catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
         }
@@ -121,9 +122,6 @@ class LoginViewModel @Inject constructor(
     fun deleteAccount(password: String) = viewModelScope.launch{
         try {
             deleteAccountUseCase(password)
-        }catch (e:IOException){
-            _isPossible.emit(98)
-            Log.e("[signUpPage]IOException!", "$e")
         }catch (e : Exception){
             _isPossible.emit(99)
             Log.e("[signUpPage]UNKNOWN ERROR!", "$e")
