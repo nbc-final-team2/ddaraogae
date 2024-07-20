@@ -11,6 +11,7 @@ import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ItemHomeHistoryWalkBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.util.DateFormatter
+import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter
 
 class WalkHistoryAdapter(private val onMapClick: (WalkingInfo) -> Unit) :
     ListAdapter<WalkingInfo, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
@@ -40,11 +41,7 @@ class WalkHistoryAdapter(private val onMapClick: (WalkingInfo) -> Unit) :
                 tvWalkHistoryDate.text = DateFormatter.getDateFormatter(item.startDateTime ?: return)
 
                 val distance = item.distance ?: 0.0
-                tvDistance.text = if (distance >= 1) {
-                    String.format("%.1f km", distance / 1)
-                } else {
-                    String.format("%d m", distance.toInt())
-                } // "home_history_walk_adapter_km"
+                tvDistance.text = TextConverter.distanceDoubleToString(distance)
 
                 val timeTaken = item.timeTaken ?: 0
                 val hours = timeTaken / 3600

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -34,6 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Date
+import kotlin.math.ceil
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -132,6 +135,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             dialog.setOnMonthClickListener(this)
             dialog.show(supportFragmentManager, "")
         }
+
+        binding.ivSelectedCalendar.setOnClickListener {
+            val dialog = CalendarDialog()
+            dialog.setOnMonthClickListener(this)
+            dialog.show(supportFragmentManager, "")
+        }
     }
 
     private fun setupViewModels() {
@@ -167,7 +176,7 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         lifecycleScope.launch {
             historyViewModel.loadWalkEvent.flowWithLifecycle(lifecycle).collectLatest { event ->
-                when(event) {
+                when (event) {
                     is DefaultEvent.Failure -> ToastMaker.make(this@HistoryActivity, event.msg)
                     DefaultEvent.Success -> {}
                 }
@@ -209,7 +218,6 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
         val dataSet = LineDataSet(entries, "").apply {
             axisDependency = YAxis.AxisDependency.LEFT
-
             color = R.color.light_blue
             valueTextColor = resources.getColor(R.color.black, null)
             setColor(resources.getColor(R.color.brown, null))
@@ -218,13 +226,42 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
             setCircleColor(R.color.light_blue)
             setDrawCircleHole(true)
             setDrawValues(true)
-            mode = LineDataSet.Mode.CUBIC_BEZIER
+            mode = LineDataSet.Mode.LINEAR
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return if (value < 1) {
+                        String.format("%.0fm", floor(value * 1000))
+                    } else {
+                        String.format("%.1fkm", value)
+                    }
+                }
+            }
         }
 
         val lineData = LineData(dataSet)
         lineChart.data = lineData
 
         walkGraphYAxisForHaveData(lineChart.axisLeft, maxDistance)
+
+        val currentDate = DateFormatter.dateFormat.format(Date())
+
+        lineChart.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < dates.size) dates[index] else ""
+            }
+        }
+
+        lineChart.setXAxisRenderer(
+            CustomXAxisRenderer(
+                this,
+                lineChart.viewPortHandler,
+                lineChart.xAxis,
+                lineChart.getTransformer(YAxis.AxisDependency.LEFT),
+                currentDate,
+                dates
+            )
+        )
 
         lineChart.invalidate()
     }
@@ -248,19 +285,12 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
 
     private fun walkGraphXAxisForHaveData(xAxis: XAxis, year: Int, month: Int) {
         val dates = DateFormatter.generateDatesForMonth(year, month)
-        val formatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                val index = value.toInt()
-                return if (index >= 0 && index < dates.size) dates[index] else ""
-            }
-        }
 
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setLabelCount(dates.size, false)
             axisMinimum = 0f
-            axisMaximum = (dates.size - 1).toFloat()
-            valueFormatter = formatter
+            axisMaximum = dates.size.toFloat()
             isGranularityEnabled = true
             textColor = resources.getColor(R.color.black, null)
         }
@@ -270,21 +300,36 @@ class HistoryActivity : AppCompatActivity(), HistoryOnClickListener {
         yAxis.apply {
             axisMinimum = 0f
 
-            val adjustedMax = (floor(maxDistance + 10).toInt() / 10) * 10 // 10을 더하고 1의 자리 버림
-            val unit = adjustedMax / 5f // 5개 범위로 나눔
+            val adjustedMax: Float
+            val unit: Float
+            val formatter: ValueFormatter
+
+            if (maxDistance < 1) {
+                adjustedMax = ((ceil(maxDistance * 1000 / 10.0) * 10).toFloat() / 1000) * 1.1f
+                unit = 0.01f
+                formatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return String.format("%.0fm", value * 1000) // m 단위로 변환
+                    }
+                }
+            } else {
+                adjustedMax = (ceil(maxDistance / 0.1) * 0.1).toFloat() * 1.1f
+                unit = 0.1f
+                formatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return String.format("%.1fkm", value)
+                    }
+                }
+            }
 
             axisMaximum = if (adjustedMax > 0) {
-                adjustedMax.toFloat()
+                adjustedMax
             } else {
                 unit
             }
 
-            valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return "${value}km"
-                }
-            }
-
+            granularity = unit
+            valueFormatter = formatter
             textColor = resources.getColor(R.color.black, null)
         }
     }
