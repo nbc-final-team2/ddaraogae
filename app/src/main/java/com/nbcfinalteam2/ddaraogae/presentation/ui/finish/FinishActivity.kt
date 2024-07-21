@@ -8,7 +8,6 @@ import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -19,6 +18,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -31,7 +31,9 @@ import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.model.WalkingInfo
 import com.nbcfinalteam2.ddaraogae.presentation.ui.finish.StampDialogFragment.Companion.ARG_STAMP_LIST
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListener
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.bitmapToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMaker
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.dateDateToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.distanceDoubleToString
 import com.nbcfinalteam2.ddaraogae.presentation.util.TextConverter.timeIntToStringForWalk
@@ -46,12 +48,23 @@ import javax.inject.Inject
 class FinishActivity : FragmentActivity() {
     private val binding by lazy { ActivityFinishBinding.inflate(layoutInflater) }
     private val viewModel: FinishViewModel by viewModels()
-
     private val LOCATION_PERMISSION_REQUEST_CODE = 5000
     private val PERMISSIONS = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
+    private val dialogButtonListener by lazy {
+        object : DialogButtonListener {
+            override fun onPositiveButtonClicked() {
+                finish()
+            }
+
+            override fun onNegativeButtonClicked() {
+
+            }
+
+        }
+    }
 
     private lateinit var naverMap: NaverMap
     private var polyline = PolylineOverlay()
@@ -65,14 +78,10 @@ class FinishActivity : FragmentActivity() {
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            AlertDialog.Builder(this@FinishActivity)
-                .setMessage(getString(R.string.finish_dialog_msg))
-                .setPositiveButton(getString(R.string.finish_dialog_confirm)) { _, _ ->
-                    finish()
-                }.setNegativeButton(getString(R.string.finish_dialog_cancel)) { _, _ -> }
-                .show()
+            val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_finish_dialog_))
+            dialogMaker.show(supportFragmentManager, null)
+            dialogMaker.registerCallBackLister(dialogButtonListener)
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,8 +103,6 @@ class FinishActivity : FragmentActivity() {
     }
 
     private fun getDataForInitView() {
-        requestPermissionForMap()
-
         locationList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableArrayExtra(LOCATIONLIST, LatLng::class.java)?.toList().orEmpty()
         } else {
@@ -164,6 +171,7 @@ class FinishActivity : FragmentActivity() {
                 }
             }
         }
+        requestPermissionForMap()
     }
 
     private fun requestPermissionForMap() {
@@ -263,14 +271,22 @@ class FinishActivity : FragmentActivity() {
                 boundsBuilder.include(latLng)
             }
             val bounds = boundsBuilder.build()
-
-            val padding = if (distance >= 1.0) {
-                100
+            val padding = 100
+            if (distance < 1) {
+                val zoomLevel = 16.5
+                val cameraUpdate = CameraUpdate.toCameraPosition(
+                    CameraPosition(
+                        bounds.center,
+                        zoomLevel,
+                        0.0,
+                        0.0
+                    )
+                )
+                naverMap.moveCamera(cameraUpdate)
             } else {
-                250
+                val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
+                naverMap.moveCamera(cameraUpdate)
             }
-            val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
-            naverMap.moveCamera(cameraUpdate)
         }
     }
 

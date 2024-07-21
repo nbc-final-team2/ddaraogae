@@ -10,7 +10,6 @@ import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -22,6 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import com.nbcfinalteam2.ddaraogae.R
 import com.nbcfinalteam2.ddaraogae.databinding.ActivityAlarmBinding
 import com.nbcfinalteam2.ddaraogae.presentation.model.AlarmModel
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListener
+import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMaker
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -37,6 +38,19 @@ class AlarmActivity: AppCompatActivity() {
 
     private val alarmViewModel: AlarmViewModel by viewModels()
     @Inject lateinit var alarmManager: AlarmManager
+    private val dialogButtonListener by lazy {
+        object : DialogButtonListener {
+            override fun onPositiveButtonClicked() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms().not()) {
+                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
+            }
+
+            override fun onNegativeButtonClicked() {
+
+            }
+        }
+    }
 
     private val alarmAdapter: AlarmAdapter by lazy {
         AlarmAdapter(object : AlarmAdapter.AlarmItemListener {
@@ -97,14 +111,10 @@ class AlarmActivity: AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms().not()) {
-            AlertDialog.Builder(this)
-                .setMessage(getString(R.string.alarm_request_exact_alarm_permission))
-                .setPositiveButton(getString(R.string.alarm_dialog_move)) { _, _ ->
-                    startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                }.setNegativeButton(R.string.alarm_dialog_cancel) { _, _ -> }
-                .show()
+            val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_alarm_request_exact_alarm_permission))
+            dialogMaker.show(supportFragmentManager, null)
+            dialogMaker.registerCallBackLister(dialogButtonListener)
         }
-
     }
 
     private fun uiSetting() {
