@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,9 +24,10 @@ import com.nbcfinalteam2.ddaraogae.domain.bus.ItemChangedEventBus
 import com.nbcfinalteam2.ddaraogae.presentation.model.DefaultEvent
 import com.nbcfinalteam2.ddaraogae.presentation.model.DogInfo
 import com.nbcfinalteam2.ddaraogae.presentation.shared.KeyboardCleaner
-import com.nbcfinalteam2.ddaraogae.presentation.ui.dog.MyPetActivity
 import com.nbcfinalteam2.ddaraogae.presentation.ui.loading.LoadingDialog
+import com.nbcfinalteam2.ddaraogae.presentation.util.DialogButtonListener
 import com.nbcfinalteam2.ddaraogae.presentation.util.ImageConverter.uriToByteArray
+import com.nbcfinalteam2.ddaraogae.presentation.util.InformDialogMaker
 import com.nbcfinalteam2.ddaraogae.presentation.util.ToastMaker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -46,6 +46,23 @@ class EditPetActivity : AppCompatActivity() {
 
     private var dogData: DogInfo? = null
     private var loadingDialog: LoadingDialog? = null
+    private val dialogButtonListener by lazy {
+        object : DialogButtonListener {
+            override fun onPositiveButtonClicked() {
+                if (binding.ivRemoveThumbnail.isActivated) {
+                    viewModel.setImageUri(null, null)
+                }
+                if (binding.tvDelete.isActivated) {
+                    viewModel.deleteSelectedDogData(dogData?.id)
+                }
+            }
+
+
+            override fun onNegativeButtonClicked() {
+
+            }
+        }
+    }
 
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
@@ -105,13 +122,10 @@ class EditPetActivity : AppCompatActivity() {
         }
 
         ivRemoveThumbnail.setOnClickListener {
-            val builder = AlertDialog.Builder(this@EditPetActivity)
-            builder.setMessage(R.string.mypage_delete_dog_thumbnail_message)
-            builder.setPositiveButton(R.string.mypage_delete_dog_thumbnail_positive) { _, _ ->
-                viewModel.setImageUri(null, null)
-            }
-            builder.setNegativeButton(R.string.mypage_delete_dog_thumbnail_negative) { _, _ -> }
-            builder.show()
+            val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_mypage_delete_dog_thumbnail))
+            dialogMaker.show(supportFragmentManager, null)
+            dialogMaker.registerCallBackLister(dialogButtonListener)
+            ivRemoveThumbnail.isActivated = true
         }
 
         btnEditCompleted.setOnClickListener {
@@ -136,13 +150,10 @@ class EditPetActivity : AppCompatActivity() {
             }
         }
         tvDelete.setOnClickListener {
-            val builder = AlertDialog.Builder(this@EditPetActivity)
-            builder.setMessage(R.string.detail_pet_delete_message)
-            builder.setPositiveButton(R.string.detail_pet_delete_positive) { _, _ ->
-                viewModel.deleteSelectedDogData(dogData?.id)
-            }
-            builder.setNegativeButton(R.string.detail_pet_delete_negative) { _, _ -> }
-            builder.show()
+            val dialogMaker = InformDialogMaker.newInstance(title = getString(R.string.inform), message = getString(R.string.inform_msg_detail_pet_delete))
+            dialogMaker.show(supportFragmentManager, null)
+            dialogMaker.registerCallBackLister(dialogButtonListener)
+            tvDelete.isActivated = true
         }
     }
     private fun buttonState() = with(binding){
